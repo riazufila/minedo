@@ -1,0 +1,10 @@
+name: MinestormPlugin
+version: 1.0.0
+main: io.github.riazufila.minestormplugin.MinestormPlugin
+description: A plugin specifically made for Minestorm server.
+author: riazufila
+api-version: '1.20'
+commands:
+  spawn:
+    description: "Teleport to spawn point."
+    usage: "/spawn"
