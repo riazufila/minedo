@@ -8,3 +8,6 @@ commands:
   spawn:
     description: "Teleport to spawn point."
     usage: "/spawn"
+depend:
+  - FastAsyncWorldEdit
+  - WorldGuard
