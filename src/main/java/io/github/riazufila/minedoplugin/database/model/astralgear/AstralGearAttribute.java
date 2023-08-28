@@ -1,4 +1,4 @@
-package io.github.riazufila.minedoplugin.betteritem.astralgear;
+package io.github.riazufila.minedoplugin.database.model.astralgear;
 
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
