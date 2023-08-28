@@ -1,6 +1,6 @@
-package io.github.riazufila.minestormplugin.betteritem.astralgear;
+package io.github.riazufila.minedoplugin.betteritem.astralgear;
 
-import io.github.riazufila.minestormplugin.database.Database;
+import io.github.riazufila.minedoplugin.database.Database;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;

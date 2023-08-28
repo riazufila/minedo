@@ -1,4 +1,4 @@
-package io.github.riazufila.minestormplugin.database;
+package io.github.riazufila.minedoplugin.database;
 
 import io.github.cdimascio.dotenv.Dotenv;
 
