@@ -1,6 +1,6 @@
-package io.github.riazufila.minestormplugin.customcommand.spawn;
+package io.github.riazufila.minedoplugin.customcommand.spawn;
 
-import io.github.riazufila.minestormplugin.MinestormPlugin;
+import io.github.riazufila.minedoplugin.MinedoPlugin;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
@@ -49,7 +49,7 @@ public class SpawnCommand implements CommandExecutor, Listener {
                         this.cancel();
                     }
                 }
-            }.runTaskTimer(MinestormPlugin.getInstance(), 20, 20).getTaskId();
+            }.runTaskTimer(MinedoPlugin.getInstance(), 20, 20).getTaskId();
 
             this.teleportingPlayers.put(player.getUniqueId(), teleportTaskId);
             player.sendMessage(Component.text("Teleporting to spawn in 5..").color(NamedTextColor.YELLOW));

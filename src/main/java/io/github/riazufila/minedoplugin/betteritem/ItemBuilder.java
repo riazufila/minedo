@@ -1,10 +1,10 @@
-package io.github.riazufila.minestormplugin.betteritem;
+package io.github.riazufila.minedoplugin.betteritem;
 
-import io.github.riazufila.minestormplugin.MinestormPlugin;
-import io.github.riazufila.minestormplugin.betteritem.astralgear.AstralGear;
-import io.github.riazufila.minestormplugin.betteritem.astralgear.AstralGearAttribute;
-import io.github.riazufila.minestormplugin.betteritem.astralgear.AstralGearEnchantment;
-import io.github.riazufila.minestormplugin.betteritem.astralgear.AstralGearLore;
+import io.github.riazufila.minedoplugin.MinedoPlugin;
+import io.github.riazufila.minedoplugin.betteritem.astralgear.AstralGear;
+import io.github.riazufila.minedoplugin.betteritem.astralgear.AstralGearAttribute;
+import io.github.riazufila.minedoplugin.betteritem.astralgear.AstralGearEnchantment;
+import io.github.riazufila.minedoplugin.betteritem.astralgear.AstralGearLore;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
@@ -53,10 +53,10 @@ public class ItemBuilder {
         ItemMeta meta = betterItem.getItemMeta();
 
         // Set NBT tag.
-        NamespacedKey typeKey = new NamespacedKey(MinestormPlugin.getInstance(), "type");
-        NamespacedKey subTypeKey = new NamespacedKey(MinestormPlugin.getInstance(), "subType");
-        NamespacedKey uuidKey = new NamespacedKey(MinestormPlugin.getInstance(), "uuid");
-        NamespacedKey timestampKey = new NamespacedKey(MinestormPlugin.getInstance(), "timestamp");
+        NamespacedKey typeKey = new NamespacedKey(MinedoPlugin.getInstance(), "type");
+        NamespacedKey subTypeKey = new NamespacedKey(MinedoPlugin.getInstance(), "subType");
+        NamespacedKey uuidKey = new NamespacedKey(MinedoPlugin.getInstance(), "uuid");
+        NamespacedKey timestampKey = new NamespacedKey(MinedoPlugin.getInstance(), "timestamp");
         meta.getPersistentDataContainer().set(typeKey, PersistentDataType.STRING, "ASTRAL_GEAR");
         meta.getPersistentDataContainer().set(subTypeKey, PersistentDataType.STRING, astralGear.getDisplayName());
         meta.getPersistentDataContainer().set(uuidKey, PersistentDataType.STRING, UUID.randomUUID().toString());

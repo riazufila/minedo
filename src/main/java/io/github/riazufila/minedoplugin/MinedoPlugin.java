@@ -1,14 +1,14 @@
-package io.github.riazufila.minestormplugin;
+package io.github.riazufila.minedoplugin;
 
-import io.github.riazufila.minestormplugin.betteritem.BetterItem;
-import io.github.riazufila.minestormplugin.customcommand.spawn.SpawnCommand;
+import io.github.riazufila.minedoplugin.betteritem.BetterItem;
+import io.github.riazufila.minedoplugin.customcommand.spawn.SpawnCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Objects;
 
-public class MinestormPlugin extends JavaPlugin {
+public class MinedoPlugin extends JavaPlugin {
 
-    private static MinestormPlugin instance;
+    private static MinedoPlugin instance;
 
     @Override
     public void onEnable() {
@@ -23,7 +23,7 @@ public class MinestormPlugin extends JavaPlugin {
         Objects.requireNonNull(getCommand("spawn")).setExecutor(spawnCommand);
     }
 
-    public static MinestormPlugin getInstance() {
+    public static MinedoPlugin getInstance() {
         return instance;
     }
 

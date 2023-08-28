@@ -1,4 +1,4 @@
-package io.github.riazufila.minestormplugin.betteritem;
+package io.github.riazufila.minedoplugin.betteritem;
 
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Chest;
