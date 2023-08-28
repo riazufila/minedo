@@ -1,14 +1,14 @@
-package io.github.riazufila.minestormplugin.betteritem.astralgear;
+package io.github.riazufila.minedoplugin.database.model.betteritemlore;
 
 import net.kyori.adventure.text.format.TextDecoration;
 
-public class AstralGearLore {
+public class BetterItemLore {
 
     public int id;
     public String text;
     public String color;
     public TextDecoration decoration;
-    public int astralGearId;
+    public int betterItemId;
 
     public int getId() {
         return id;
@@ -42,12 +42,12 @@ public class AstralGearLore {
         this.decoration = decoration;
     }
 
-    public int getAstralGearId() {
-        return astralGearId;
+    public int getBetterItemId() {
+        return betterItemId;
     }
 
-    public void setAstralGearId(int astralGearId) {
-        this.astralGearId = astralGearId;
+    public void setBetterItemId(int betterItemId) {
+        this.betterItemId = betterItemId;
     }
 
 }
