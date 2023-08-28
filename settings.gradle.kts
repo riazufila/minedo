@@ -1,2 +1,2 @@
-rootProject.name = "minestorm-plugin"
+rootProject.name = "minedo-plugin"
 

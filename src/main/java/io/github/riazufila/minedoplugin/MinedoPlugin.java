@@ -1,6 +1,6 @@
 package io.github.riazufila.minedoplugin;
 
-import io.github.riazufila.minedoplugin.betteritem.BetterItem;
+import io.github.riazufila.minedoplugin.itembuilder.ItemBuilder;
 import io.github.riazufila.minedoplugin.customcommand.spawn.SpawnCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -14,8 +14,8 @@ public class MinedoPlugin extends JavaPlugin {
     public void onEnable() {
         instance = this;
 
-        // Populate newly generated chests with Astral Gears.
-        getServer().getPluginManager().registerEvents(new BetterItem(), this);
+        // Populate newly generated chests with Better Items.
+        getServer().getPluginManager().registerEvents(new ItemBuilder(), this);
 
         // Spawn command and listeners.
         SpawnCommand spawnCommand = new SpawnCommand();

@@ -1,7 +1,7 @@
-name: MinestormPlugin
+name: MinedoPlugin
 version: 1.0.0
-main: io.github.riazufila.minestormplugin.MinestormPlugin
-description: A plugin specifically made for Minestorm server.
+main: io.github.riazufila.minedoplugin.MinedoPlugin
+description: A better Minecraft perhaps.
 author: riazufila
 api-version: '1.20'
 commands:
