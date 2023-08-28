@@ -1,13 +1,13 @@
-package io.github.riazufila.minedoplugin.database.model.astralgear;
+package io.github.riazufila.minedoplugin.database.model.betteritemenchantment;
 
 import org.bukkit.enchantments.Enchantment;
 
-public class AstralGearEnchantment {
+public class BetterItemEnchantment {
 
     public int id;
     public Enchantment enchantment;
     public int level;
-    public int astralGearId;
+    public int betterItemId;
 
     public int getId() {
         return id;
@@ -33,12 +33,12 @@ public class AstralGearEnchantment {
         this.level = level;
     }
 
-    public int getAstralGearId() {
-        return astralGearId;
+    public int getBetterItemId() {
+        return betterItemId;
     }
 
-    public void setAstralGearId(int astralGearId) {
-        this.astralGearId = astralGearId;
+    public void setBetterItemId(int betterItemId) {
+        this.betterItemId = betterItemId;
     }
 
 }

@@ -1,10 +1,10 @@
-package io.github.riazufila.minedoplugin.betteritem;
+package io.github.riazufila.minedoplugin.itembuilder;
 
 import io.github.riazufila.minedoplugin.MinedoPlugin;
-import io.github.riazufila.minedoplugin.database.model.astralgear.AstralGear;
-import io.github.riazufila.minedoplugin.database.model.astralgear.AstralGearAttribute;
-import io.github.riazufila.minedoplugin.database.model.astralgear.AstralGearEnchantment;
-import io.github.riazufila.minedoplugin.database.model.astralgear.AstralGearLore;
+import io.github.riazufila.minedoplugin.database.model.betteritem.BetterItem;
+import io.github.riazufila.minedoplugin.database.model.betteritemattribute.BetterItemAttribute;
+import io.github.riazufila.minedoplugin.database.model.betteritemenchantment.BetterItemEnchantment;
+import io.github.riazufila.minedoplugin.database.model.betteritemlore.BetterItemLore;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
@@ -25,7 +25,7 @@ import org.bukkit.persistence.PersistentDataType;
 import java.time.Instant;
 import java.util.*;
 
-public class BetterItem implements Listener {
+public class ItemBuilder implements Listener {
 
     @EventHandler
     public void onChunkPopulate(ChunkPopulateEvent event) {
@@ -68,9 +68,9 @@ public class BetterItem implements Listener {
         return result;
     }
 
-    public ItemStack buildItem(AstralGear astralGear) {
-        ItemStack betterItem = new ItemStack(astralGear.getMaterial());
-        ItemMeta meta = betterItem.getItemMeta();
+    public ItemStack buildItem(BetterItem betterItem) {
+        ItemStack item = new ItemStack(betterItem.getMaterial());
+        ItemMeta meta = item.getItemMeta();
 
         // Set NBT tag.
         NamespacedKey typeKey = new NamespacedKey(MinedoPlugin.getInstance(), "type");
@@ -78,36 +78,36 @@ public class BetterItem implements Listener {
         NamespacedKey uuidKey = new NamespacedKey(MinedoPlugin.getInstance(), "uuid");
         NamespacedKey timestampKey = new NamespacedKey(MinedoPlugin.getInstance(), "timestamp");
         meta.getPersistentDataContainer().set(typeKey, PersistentDataType.STRING, "ASTRAL_GEAR");
-        meta.getPersistentDataContainer().set(subTypeKey, PersistentDataType.STRING, astralGear.getDisplayName());
+        meta.getPersistentDataContainer().set(subTypeKey, PersistentDataType.STRING, betterItem.getDisplayName());
         meta.getPersistentDataContainer().set(uuidKey, PersistentDataType.STRING, UUID.randomUUID().toString());
         meta.getPersistentDataContainer().set(timestampKey, PersistentDataType.STRING, Instant.now().toString());
 
         // Set display name.
-        Component displayNameComponent = Component.text(astralGear.getDisplayName()).decoration(TextDecoration.ITALIC, false);
+        Component displayNameComponent = Component.text(betterItem.getDisplayName()).decoration(TextDecoration.ITALIC, false);
 
-        if (astralGear.getColor() != null) {
-            displayNameComponent = displayNameComponent.color(TextColor.fromHexString(astralGear.getColor()));
+        if (betterItem.getColor() != null) {
+            displayNameComponent = displayNameComponent.color(TextColor.fromHexString(betterItem.getColor()));
         }
 
-        if (astralGear.getDecoration() != null) {
-            displayNameComponent = displayNameComponent.decorate(astralGear.getDecoration());
+        if (betterItem.getDecoration() != null) {
+            displayNameComponent = displayNameComponent.decorate(betterItem.getDecoration());
         }
 
         meta.displayName(displayNameComponent);
 
         // Set lore.
-        AstralGearLore astralGearLore = astralGear.getLore();
+        BetterItemLore betterItemLore = betterItem.getLore();
         List<Component> list = new ArrayList<>();
 
-        for (String slicedLoreText : this.sliceString(astralGearLore.getText())) {
+        for (String slicedLoreText : this.sliceString(betterItemLore.getText())) {
             Component loreComponent = Component.text(slicedLoreText).decoration(TextDecoration.ITALIC, false);
 
-            if (astralGearLore.getColor() != null) {
-                loreComponent = loreComponent.color(TextColor.fromHexString(astralGearLore.getColor()));
+            if (betterItemLore.getColor() != null) {
+                loreComponent = loreComponent.color(TextColor.fromHexString(betterItemLore.getColor()));
             }
 
-            if (astralGearLore.getDecoration() != null) {
-                loreComponent = loreComponent.decorate(astralGearLore.getDecoration());
+            if (betterItemLore.getDecoration() != null) {
+                loreComponent = loreComponent.decorate(betterItemLore.getDecoration());
             }
 
             list.add(loreComponent);
@@ -116,23 +116,23 @@ public class BetterItem implements Listener {
         meta.lore(list);
 
         // Add enchantments.
-        if (astralGear.getEnchantments() != null) {
-            for (AstralGearEnchantment enchantment : astralGear.getEnchantments()) {
+        if (betterItem.getEnchantments() != null) {
+            for (BetterItemEnchantment enchantment : betterItem.getEnchantments()) {
                 meta.addEnchant(enchantment.enchantment, enchantment.level, true);
             }
         }
 
         // Add attributes.
-        if (astralGear.getAttributes() != null) {
-            for (AstralGearAttribute attribute : astralGear.getAttributes()) {
+        if (betterItem.getAttributes() != null) {
+            for (BetterItemAttribute attribute : betterItem.getAttributes()) {
                 meta.addAttributeModifier(attribute.attribute, new AttributeModifier(UUID.randomUUID(), attribute.attribute.toString(), attribute.modifier, attribute.operation, attribute.slot));
             }
         }
 
         // Set item with new metas.
-        betterItem.setItemMeta(meta);
+        item.setItemMeta(meta);
 
-        return betterItem;
+        return item;
     }
 
     public ItemStack prepareItem() {
@@ -140,21 +140,21 @@ public class BetterItem implements Listener {
 
         // 50% chance to retrieve an item.
         if (random.nextBoolean()) {
-            AstralGear[] astralGearList = AstralGear.getAllAstralGears();
+            BetterItem[] betterItemList = BetterItem.getAllBetterItems();
 
-            double[] probabilities = new double[astralGearList.length];
+            double[] probabilities = new double[betterItemList.length];
             int index = 0;
 
-            for (AstralGear astralGear : astralGearList) {
-                probabilities[index] = astralGear.getProbability().getProbability();
+            for (BetterItem betterItem : betterItemList) {
+                probabilities[index] = betterItem.getProbability().getProbability();
                 index++;
             }
 
-            // Randomly select one Astral Gear.
+            // Randomly select one Better Item.
             UniformRandomProvider rng = RandomSource.XO_RO_SHI_RO_128_PP.create();
-            AstralGear selectedAstralGear = new DiscreteProbabilityCollectionSampler<>(rng, Arrays.asList(astralGearList), probabilities).sample();
+            BetterItem selectedBetterItem = new DiscreteProbabilityCollectionSampler<>(rng, Arrays.asList(betterItemList), probabilities).sample();
 
-            return buildItem(selectedAstralGear);
+            return buildItem(selectedBetterItem);
         }
 
         return null;

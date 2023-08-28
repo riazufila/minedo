@@ -1,17 +1,17 @@
-package io.github.riazufila.minedoplugin.database.model.astralgear;
+package io.github.riazufila.minedoplugin.database.model.betteritemattribute;
 
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.inventory.EquipmentSlot;
 
-public class AstralGearAttribute {
+public class BetterItemAttribute {
 
     public int id;
     public Attribute attribute;
     public double modifier;
     public AttributeModifier.Operation operation;
     public EquipmentSlot slot;
-    public int astralGearId;
+    public int betterItemId;
 
     public int getId() {
         return id;
@@ -53,12 +53,12 @@ public class AstralGearAttribute {
         this.slot = slot;
     }
 
-    public int getAstralGearId() {
-        return astralGearId;
+    public int getBetterItemId() {
+        return betterItemId;
     }
 
-    public void setAstralGearId(int astralGearId) {
-        this.astralGearId = astralGearId;
+    public void setBetterItemId(int betterItemId) {
+        this.betterItemId = betterItemId;
     }
 
 }
