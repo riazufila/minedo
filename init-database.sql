@@ -52,6 +52,18 @@ CREATE TABLE better_item_probability (
     FOREIGN KEY (better_item_id) REFERENCES better_item (id)
 );
 
+CREATE TABLE region (
+    id int NOT NULL,
+    name varchar(20) NOT NULL,
+    minX double NOT NULL,
+    maxX double NOT NULL,
+    minY double NULL,
+    maxY double NULL,
+    minZ double NOT NULL,
+    maxZ double NOT NULL,
+    PRIMARY KEY (id)
+);
+
 -- Insert values.
 INSERT INTO better_item VALUES
 (1,'DIAMOND_HELMET','Moon Knight\'s Helmet','#008B8B','BOLD'),
@@ -93,3 +105,6 @@ INSERT INTO better_item_probability VALUES
 (3,30),
 (4,100),
 (5,10);
+
+INSERT INTO region VALUES
+(1, 'Spawn', -128, 128, NULL, NULL, -128, 128);
