@@ -3,6 +3,7 @@ package io.github.riazufila.minedoplugin.database;
 import io.github.cdimascio.dotenv.Dotenv;
 
 import java.sql.*;
+import java.util.Map;
 
 public class Database {
 
@@ -43,6 +44,24 @@ public class Database {
         try {
             Statement statement = this.connection.createStatement();
             resultSet = statement.executeQuery(sqlQuery);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return resultSet;
+    }
+
+    public ResultSet queryWithWhereClause(String sqlQuery, Map<Integer, String> replacements) {
+        ResultSet resultSet = null;
+
+        try {
+            PreparedStatement preparedStatement = this.connection.prepareStatement(sqlQuery);
+
+            for (var replacement : replacements.entrySet()) {
+                preparedStatement.setString(replacement.getKey(), replacement.getValue());
+            }
+
+            resultSet = preparedStatement.executeQuery();
         } catch (SQLException e) {
             e.printStackTrace();
         }

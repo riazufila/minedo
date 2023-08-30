@@ -55,12 +55,12 @@ CREATE TABLE better_item_probability (
 CREATE TABLE region (
     id int NOT NULL,
     name varchar(20) NOT NULL,
-    minX double NOT NULL,
-    maxX double NOT NULL,
-    minY double NULL,
-    maxY double NULL,
-    minZ double NOT NULL,
-    maxZ double NOT NULL,
+    minX int NOT NULL,
+    maxX int NOT NULL,
+    minY int NULL,
+    maxY int NULL,
+    minZ int NOT NULL,
+    maxZ int NOT NULL,
     PRIMARY KEY (id)
 );
 
