@@ -1,6 +1,7 @@
 package io.github.riazufila.minedoplugin;
 
 import com.sk89q.worldguard.WorldGuard;
+import io.github.riazufila.minedoplugin.constants.worldtype.WorldType;
 import io.github.riazufila.minedoplugin.database.model.region.Region;
 import io.github.riazufila.minedoplugin.itembuilder.ItemBuilder;
 import io.github.riazufila.minedoplugin.customcommand.spawn.SpawnCommand;
@@ -29,8 +30,9 @@ public class MinedoPlugin extends JavaPlugin {
 
         // Spawn regenerations.
         WorldGuard worldGuard = WorldGuard.getInstance();
-        World world = getWorld();
+        World world = Bukkit.getWorld(WorldType.WORLD.getType());
         Region spawnRegion = new Region().getRegionByName("spawn");
+
         getServer().getPluginManager().registerEvents(
                 new RegionRegeneration(world, worldGuard, spawnRegion), this
         );
@@ -38,10 +40,6 @@ public class MinedoPlugin extends JavaPlugin {
 
     public static MinedoPlugin getInstance() {
         return instance;
-    }
-
-    public static World getWorld() {
-        return Bukkit.getWorld("world");
     }
 
 }
