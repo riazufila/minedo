@@ -43,9 +43,13 @@ public class RegionRegeneration implements Listener {
         // Initialize spawn region setup.
         if (this.getRegion() == null) {
             this.setRegion();
+            this.setRegionSnapshot();
         }
 
-        this.setRegionSnapshot();
+        if (!this.getRegionSnapshot()) {
+            this.setRegionSnapshot();
+        }
+
     }
 
     private ProtectedRegion getRegion() {
@@ -74,8 +78,15 @@ public class RegionRegeneration implements Listener {
         Objects.requireNonNull(regionContainer.get(BukkitAdapter.adapt(this.world))).addRegion(protectedRegion);
     }
 
-    private void getRegionSnapshot() {
-        // TODO: Get region snapshot.
+    private boolean getRegionSnapshot() {
+        String fileName = String.format("%s-region.%s", this.region.getName(), FileType.SCHEMATIC.getType());
+        File file = new File(Directory.SCHEMATIC.getDirectory() + fileName);
+
+        if (file.exists()) {
+            return true;
+        }
+
+        return false;
     }
 
     private void setRegionSnapshot() {
