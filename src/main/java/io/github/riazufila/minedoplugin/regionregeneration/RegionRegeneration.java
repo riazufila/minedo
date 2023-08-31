@@ -1,24 +1,38 @@
 package io.github.riazufila.minedoplugin.regionregeneration;
 
+import com.sk89q.worldedit.EditSession;
+import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.extent.clipboard.BlockArrayClipboard;
+import com.sk89q.worldedit.extent.clipboard.io.BuiltInClipboardFormat;
+import com.sk89q.worldedit.extent.clipboard.io.ClipboardWriter;
+import com.sk89q.worldedit.function.operation.ForwardExtentCopy;
+import com.sk89q.worldedit.function.operation.Operations;
 import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
+import io.github.riazufila.minedoplugin.constants.directory.Directory;
+import io.github.riazufila.minedoplugin.constants.filetype.FileType;
 import io.github.riazufila.minedoplugin.database.model.region.Region;
 import org.bukkit.World;
-import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Objects;
+
 public class RegionRegeneration implements Listener {
 
-    private World world;
-    private WorldGuard worldGuard;
-    private Region region;
+    private final World world;
+    private final WorldGuard worldGuard;
+    private final Region region;
 
 
     public RegionRegeneration(World world, WorldGuard worldGuard, Region region) {
@@ -30,14 +44,15 @@ public class RegionRegeneration implements Listener {
         if (this.getRegion() == null) {
             this.setRegion();
         }
+
+        this.setRegionSnapshot();
     }
 
     private ProtectedRegion getRegion() {
         RegionContainer regionContainer = worldGuard.getPlatform().getRegionContainer();
         RegionManager regionManager = regionContainer.get(BukkitAdapter.adapt(this.world));
-        ProtectedRegion protectedRegion = regionManager.getRegion(region.getName());
 
-        return protectedRegion;
+        return Objects.requireNonNull(regionManager).getRegion(region.getName());
     }
 
     private void setRegion() {
@@ -56,7 +71,7 @@ public class RegionRegeneration implements Listener {
         ProtectedRegion protectedRegion = new ProtectedCuboidRegion(region.getName(), min, max);
         RegionContainer regionContainer = worldGuard.getPlatform().getRegionContainer();
 
-        regionContainer.get(BukkitAdapter.adapt(this.world)).addRegion(protectedRegion);
+        Objects.requireNonNull(regionContainer.get(BukkitAdapter.adapt(this.world))).addRegion(protectedRegion);
     }
 
     private void getRegionSnapshot() {
@@ -64,13 +79,39 @@ public class RegionRegeneration implements Listener {
     }
 
     private void setRegionSnapshot() {
-        // TODO: Set region snapshot.
+        RegionContainer container = worldGuard.getPlatform().getRegionContainer();
+        RegionManager regionManager = container.get(BukkitAdapter.adapt(this.world));
+        ProtectedRegion protectedRegion = Objects.requireNonNull(regionManager).getRegion(this.region.getName());
+
+        CuboidRegion cuboidRegion = new CuboidRegion(
+                BukkitAdapter.adapt(this.world),
+                Objects.requireNonNull(protectedRegion).getMinimumPoint(),
+                protectedRegion.getMaximumPoint()
+        );
+
+        BlockArrayClipboard blockArrayClipboard = new BlockArrayClipboard(cuboidRegion);
+        EditSession editSession = WorldEdit.getInstance().newEditSession(BukkitAdapter.adapt(this.world));
+
+        ForwardExtentCopy forwardExtentCopy = new ForwardExtentCopy(
+                editSession,
+                cuboidRegion,
+                blockArrayClipboard,
+                cuboidRegion.getMinimumPoint()
+        );
+        Operations.complete(forwardExtentCopy);
+
+        String fileName = String.format("%s-region.%s", this.region.getName(), FileType.SCHEMATIC.getType());
+        File file = new File(Directory.SCHEMATIC.getDirectory() + fileName);
+
+        try (ClipboardWriter clipboardWriter = BuiltInClipboardFormat.FAST.getWriter(new FileOutputStream(file))) {
+            clipboardWriter.write(blockArrayClipboard);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
-        Block block = event.getBlock();
-
         // TODO: Check if block is in 'spawn' region.
     }
 }
