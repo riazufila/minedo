@@ -33,12 +33,18 @@ public class RegionRegeneration implements Listener {
     private final World world;
     private final WorldGuard worldGuard;
     private final Region region;
+    private final File schematicPath;
 
 
     public RegionRegeneration(World world, WorldGuard worldGuard, Region region) {
         this.world = world;
         this.worldGuard = worldGuard;
         this.region = region;
+        this.schematicPath = new File(Directory.SCHEMATIC.getDirectory() + String.format(
+                "%s-region.%s",
+                this.region.getName(),
+                FileType.SCHEMATIC.getType()
+        ));
 
         // Initialize spawn region setup.
         if (this.getRegion() == null) {
@@ -79,10 +85,7 @@ public class RegionRegeneration implements Listener {
     }
 
     private boolean getRegionSnapshot() {
-        String fileName = String.format("%s-region.%s", this.region.getName(), FileType.SCHEMATIC.getType());
-        File file = new File(Directory.SCHEMATIC.getDirectory() + fileName);
-
-        if (file.exists()) {
+        if (this.schematicPath.exists()) {
             return true;
         }
 
@@ -109,20 +112,25 @@ public class RegionRegeneration implements Listener {
                 blockArrayClipboard,
                 cuboidRegion.getMinimumPoint()
         );
+
         Operations.complete(forwardExtentCopy);
 
-        String fileName = String.format("%s-region.%s", this.region.getName(), FileType.SCHEMATIC.getType());
-        File file = new File(Directory.SCHEMATIC.getDirectory() + fileName);
-
-        try (ClipboardWriter clipboardWriter = BuiltInClipboardFormat.FAST.getWriter(new FileOutputStream(file))) {
+        try (ClipboardWriter clipboardWriter = BuiltInClipboardFormat.FAST.getWriter(
+                new FileOutputStream(this.schematicPath)
+        )) {
             clipboardWriter.write(blockArrayClipboard);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
+    public void restoreChunk() {
+        // TODO: Restore chunk.
+    }
+
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
+
         // TODO: Check if block is in 'spawn' region.
     }
 }
