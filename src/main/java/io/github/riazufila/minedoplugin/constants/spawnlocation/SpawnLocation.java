@@ -1,8 +1,8 @@
 package io.github.riazufila.minedoplugin.constants.spawnlocation;
 
 public enum SpawnLocation {
-    positionX(0),
-    positionZ(0);
+    POSITION_X(0),
+    POSITION_Z(0);
 
     private final int position;
 
