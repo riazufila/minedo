@@ -16,20 +16,20 @@ public class SpawnLocationInitializer {
 
     public void setSpawnLocation() {
         this.world.setSpawnLocation(
-                SpawnLocation.positionX.getPosition(),
+                SpawnLocation.POSITION_X.getPosition(),
                 // Any highest block at Y that isn't air block.
                 this.world.getHighestBlockYAt(
-                        SpawnLocation.positionX.getPosition(),
-                        SpawnLocation.positionZ.getPosition()
+                        SpawnLocation.POSITION_X.getPosition(),
+                        SpawnLocation.POSITION_Z.getPosition()
                 ),
-                SpawnLocation.positionZ.getPosition()
+                SpawnLocation.POSITION_Z.getPosition()
         );
     }
 
     public boolean hasSpawnLocationSet() {
         Location spawnlocation = this.world.getSpawnLocation();
 
-        return spawnlocation.getBlockX() == SpawnLocation.positionX.getPosition()
-                && spawnlocation.getBlockZ() == SpawnLocation.positionZ.getPosition();
+        return spawnlocation.getBlockX() == SpawnLocation.POSITION_X.getPosition()
+                && spawnlocation.getBlockZ() == SpawnLocation.POSITION_Z.getPosition();
     }
 }

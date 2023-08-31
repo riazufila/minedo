@@ -4,13 +4,16 @@ import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.extent.clipboard.BlockArrayClipboard;
-import com.sk89q.worldedit.extent.clipboard.io.BuiltInClipboardFormat;
-import com.sk89q.worldedit.extent.clipboard.io.ClipboardWriter;
+import com.sk89q.worldedit.extent.clipboard.Clipboard;
+import com.sk89q.worldedit.extent.clipboard.io.*;
 import com.sk89q.worldedit.function.operation.ForwardExtentCopy;
+import com.sk89q.worldedit.function.operation.Operation;
 import com.sk89q.worldedit.function.operation.Operations;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.CuboidRegion;
+import com.sk89q.worldedit.session.ClipboardHolder;
 import com.sk89q.worldguard.WorldGuard;
+import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
@@ -18,27 +21,29 @@ import com.sk89q.worldguard.protection.regions.RegionContainer;
 import io.github.riazufila.minedoplugin.constants.directory.Directory;
 import io.github.riazufila.minedoplugin.constants.filetype.FileType;
 import io.github.riazufila.minedoplugin.database.model.region.Region;
+import org.bukkit.Chunk;
 import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.Objects;
 
 public class RegionRegeneration implements Listener {
 
     private final World world;
     private final WorldGuard worldGuard;
+    private final WorldEdit worldEdit;
     private final Region region;
     private final File schematicPath;
 
 
-    public RegionRegeneration(World world, WorldGuard worldGuard, Region region) {
+    public RegionRegeneration(World world, WorldGuard worldGuard, WorldEdit worldEdit, Region region) {
         this.world = world;
         this.worldGuard = worldGuard;
+        this.worldEdit = worldEdit;
         this.region = region;
         this.schematicPath = new File(Directory.SCHEMATIC.getDirectory() + String.format(
                 "%s-region.%s",
@@ -85,11 +90,7 @@ public class RegionRegeneration implements Listener {
     }
 
     private boolean getRegionSnapshot() {
-        if (this.schematicPath.exists()) {
-            return true;
-        }
-
-        return false;
+        return this.schematicPath.exists();
     }
 
     private void setRegionSnapshot() {
@@ -124,13 +125,63 @@ public class RegionRegeneration implements Listener {
         }
     }
 
-    public void restoreChunk() {
-        // TODO: Restore chunk.
+    public void restoreChunk(Chunk chunk) {
+        ClipboardFormat clipboardFormat = ClipboardFormats.findByFile(this.schematicPath);
+
+        try (ClipboardReader clipboardReader = Objects
+                .requireNonNull(clipboardFormat)
+                .getReader(
+                        new FileInputStream(this.schematicPath)
+                )
+        ) {
+            Clipboard clipboard = clipboardReader.read();
+
+            try (EditSession editSession = this.worldEdit.newEditSession(BukkitAdapter.adapt(this.world))) {
+                Operation operation = new ClipboardHolder(clipboard)
+                        .createPaste(editSession)
+                        .to(clipboard.getOrigin())
+                        .ignoreAirBlocks(true)
+                        .copyEntities(false)
+                        .build();
+
+                Operations.complete(operation);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public boolean isChunkDestroyedAboveThreshold(Chunk chunk) {
+        // TODO: Calculate destruction level.
+
+        return true;
+    }
+
+    private boolean isWithinRegion(Block block) {
+        ApplicableRegionSet applicableRegionSet = this.worldGuard
+                .getPlatform()
+                .getRegionContainer()
+                .createQuery()
+                .getApplicableRegions(BukkitAdapter.adapt(block.getLocation()));
+
+        return !applicableRegionSet.getRegions().isEmpty();
     }
 
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
+        Block block = event.getBlock();
 
-        // TODO: Check if block is in 'spawn' region.
+        // Check if block destroyed is in region.
+        if (!isWithinRegion(block)) {
+            return;
+        }
+
+        // Calculate how much of the chunk is destroyed.
+        Chunk chunk = block.getChunk();
+        if (!isChunkDestroyedAboveThreshold(chunk)) {
+            return;
+        }
+
+        restoreChunk(chunk);
     }
 }

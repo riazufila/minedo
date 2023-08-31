@@ -1,7 +1,7 @@
 package io.github.riazufila.minedoplugin;
 
+import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldguard.WorldGuard;
-import io.github.riazufila.minedoplugin.constants.spawnlocation.SpawnLocation;
 import io.github.riazufila.minedoplugin.constants.worldtype.WorldType;
 import io.github.riazufila.minedoplugin.database.model.region.Region;
 import io.github.riazufila.minedoplugin.itembuilder.ItemBuilder;
@@ -37,9 +37,10 @@ public class MinedoPlugin extends JavaPlugin {
 
         // Spawn regenerations.
         WorldGuard worldGuard = getWorldGuardInstance();
+        WorldEdit worldEdit = getWorldEditInstance();
         Region spawnRegion = new Region().getRegionByName("spawn");
         getServer().getPluginManager().registerEvents(
-                new RegionRegeneration(world, worldGuard, spawnRegion), this
+                new RegionRegeneration(world, worldGuard, worldEdit, spawnRegion), this
         );
     }
 
@@ -53,6 +54,10 @@ public class MinedoPlugin extends JavaPlugin {
 
     public static WorldGuard getWorldGuardInstance() {
         return WorldGuard.getInstance();
+    }
+
+    public static WorldEdit getWorldEditInstance() {
+        return WorldEdit.getInstance();
     }
 
 }
