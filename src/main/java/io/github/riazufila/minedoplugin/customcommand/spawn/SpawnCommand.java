@@ -28,6 +28,12 @@ public class SpawnCommand implements CommandExecutor, Listener {
             return true;
         }
 
+        if (teleportingPlayers.containsKey(((Player) sender).getUniqueId())) {
+            player.sendMessage(Component.text("You're already teleporting!").color(NamedTextColor.RED));
+
+            return false;
+        }
+
         if (label.equalsIgnoreCase("spawn")) {
             int teleportTaskId = new BukkitRunnable() {
                 int countdown = 4;
