@@ -21,7 +21,7 @@ public class SpawnLocationInitializer {
                 this.world.getHighestBlockYAt(
                         SpawnLocation.positionX.getPosition(),
                         SpawnLocation.positionZ.getPosition()
-                ) + 1,
+                ),
                 SpawnLocation.positionZ.getPosition()
         );
     }
