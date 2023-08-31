@@ -125,7 +125,7 @@ public class RegionRegeneration implements Listener {
         }
     }
 
-    public void restoreChunk(Chunk chunk) {
+    public void restoreRegion() {
         ClipboardFormat clipboardFormat = ClipboardFormats.findByFile(this.schematicPath);
 
         try (ClipboardReader clipboardReader = Objects
@@ -182,6 +182,6 @@ public class RegionRegeneration implements Listener {
             return;
         }
 
-        restoreChunk(chunk);
+        restoreRegion();
     }
 }
