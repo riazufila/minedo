@@ -42,13 +42,9 @@ public class MinedoPlugin extends JavaPlugin {
         WorldEdit worldEdit = getWorldEditInstance();
         Region spawnRegion = new Region().getRegionByName("spawn");
         getServer().getPluginManager().registerEvents(
-                new RegionRegeneration(world, worldGuard, worldEdit, spawnRegion, logger),
+                new RegionRegeneration(world, worldGuard, worldEdit, spawnRegion, instance, logger),
                 instance
         );
-    }
-
-    public MinedoPlugin getInstance() {
-        return instance;
     }
 
     public Logger getPluginLogger() {

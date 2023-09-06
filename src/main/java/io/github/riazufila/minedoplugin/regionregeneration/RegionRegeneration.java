@@ -4,20 +4,18 @@ import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.extent.clipboard.BlockArrayClipboard;
-import com.sk89q.worldedit.extent.clipboard.Clipboard;
 import com.sk89q.worldedit.extent.clipboard.io.*;
 import com.sk89q.worldedit.function.operation.ForwardExtentCopy;
-import com.sk89q.worldedit.function.operation.Operation;
 import com.sk89q.worldedit.function.operation.Operations;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.CuboidRegion;
-import com.sk89q.worldedit.session.ClipboardHolder;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
+import io.github.riazufila.minedoplugin.MinedoPlugin;
 import io.github.riazufila.minedoplugin.constants.common.Common;
 import io.github.riazufila.minedoplugin.constants.directory.Directory;
 import io.github.riazufila.minedoplugin.constants.filetype.FileType;
@@ -30,10 +28,10 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 
 import java.io.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class RegionRegeneration implements Listener {
 
@@ -41,13 +39,19 @@ public class RegionRegeneration implements Listener {
     private final WorldGuard worldGuard;
     private final WorldEdit worldEdit;
     private final Region region;
+    private final MinedoPlugin pluginInstance;
     private final Logger logger;
+    private Map<String, Integer> restoringChunks = new HashMap<>();
 
-    public RegionRegeneration(World world, WorldGuard worldGuard, WorldEdit worldEdit, Region region, Logger logger) {
+    public RegionRegeneration(
+            World world, WorldGuard worldGuard, WorldEdit worldEdit,
+            Region region, MinedoPlugin pluginInstance, Logger logger
+    ) {
         this.world = world;
         this.worldGuard = worldGuard;
         this.worldEdit = worldEdit;
         this.region = region;
+        this.pluginInstance = pluginInstance;
         this.logger = logger;
 
         // Initialize spawn region setup.
@@ -220,68 +224,29 @@ public class RegionRegeneration implements Listener {
     }
 
     public void restoreRegionChunk(Chunk chunk) {
-        this.logger.info(String.format(
-                "Restoring chunk (%d, %d) in %s region.",
-                chunk.getX(),
-                chunk.getZ(),
-                this.region.getName())
+        RegionRegenerationScheduler regionRegenerationScheduler = new RegionRegenerationScheduler(
+                chunk, this.region, this.world, this.worldEdit, this.logger, this.restoringChunks
         );
 
-        File schematicFile = null;
-        File schematicPath = new File(Directory.SCHEMATIC.getDirectory());
-        File[] files = schematicPath.listFiles();
-
-        String SPAWN_REGION_SCHEMATIC_REGEX = String.format(
-                "%s-region-\\((-?\\d+),(-?\\d+)\\)\\.%s",
-                this.region.getName(),
-                FileType.SCHEMATIC.getType()
-        );
-
-        Pattern pattern = Pattern.compile(SPAWN_REGION_SCHEMATIC_REGEX);
-
-        for (File file : Objects.requireNonNull(files)) {
-            Matcher matcher = pattern.matcher(file.getName());
-
-            if (matcher.matches()) {
-                int chunkX = Integer.parseInt(matcher.group(1));
-                int chunkZ = Integer.parseInt(matcher.group(2));
-
-                if (chunkX == chunk.getX() && chunkZ == chunk.getZ()) {
-                    schematicFile = file;
-                    break;
-                }
-            }
-        }
-
-        ClipboardFormat clipboardFormat = ClipboardFormats.findByFile(Objects.requireNonNull(schematicFile));
-
-        try (ClipboardReader clipboardReader = Objects
-                .requireNonNull(clipboardFormat)
-                .getReader(
-                        new FileInputStream(schematicFile)
-                )
-        ) {
-            Clipboard clipboard = clipboardReader.read();
-
-            try (EditSession editSession = this.worldEdit.newEditSession(BukkitAdapter.adapt(this.world))) {
-                Operation operation = new ClipboardHolder(clipboard)
-                        .createPaste(editSession)
-                        .to(clipboard.getOrigin())
-                        .ignoreAirBlocks(true)
-                        .copyEntities(false)
-                        .build();
-
-                Operations.complete(operation);
-            }
-        } catch (IOException e) {
-            this.logger.severe(String.format(
-                    "Unable to restore chunk (%d, %d) in %s region.",
+        if (restoringChunks.containsKey(String.format("(%d,%d)", chunk.getX(), chunk.getZ()))) {
+            this.logger.info(String.format(
+                    "Chunk (%d, %d) in %s region is already restoring.",
                     chunk.getX(),
                     chunk.getZ(),
-                    this.region.getName())
+                    this.region.getName()
+                    )
             );
-            throw new RuntimeException(e);
+
+            return;
         }
+
+        // Run task timer and get the ID.
+        int restoringTaskId = regionRegenerationScheduler
+                .runTaskTimer(this.pluginInstance, 20, 20)
+                .getTaskId();
+
+        // Place task ID and update restoring chunk details.
+        restoringChunks.put(String.format("(%d,%d)", chunk.getX(), chunk.getZ()), restoringTaskId);
     }
 
     public boolean isChunkDestroyedAboveThreshold(Chunk chunk) {
