@@ -13,6 +13,7 @@ import org.bukkit.World;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Objects;
+import java.util.logging.Logger;
 
 public class MinedoPlugin extends JavaPlugin {
 
@@ -23,16 +24,17 @@ public class MinedoPlugin extends JavaPlugin {
         instance = this;
 
         World world = getWorldInstance();
+        Logger logger = getPluginLogger();
 
         // Set spawn location.
         new SpawnLocationInitializer(world);
 
         // Populate newly generated chests with Better Items.
-        getServer().getPluginManager().registerEvents(new ItemBuilder(), this);
+        getServer().getPluginManager().registerEvents(new ItemBuilder(instance), instance);
 
         // Spawn command and listeners.
-        SpawnCommand spawnCommand = new SpawnCommand();
-        getServer().getPluginManager().registerEvents(spawnCommand, this);
+        SpawnCommand spawnCommand = new SpawnCommand(instance);
+        getServer().getPluginManager().registerEvents(spawnCommand, instance);
         Objects.requireNonNull(getCommand("spawn")).setExecutor(spawnCommand);
 
         // Spawn regenerations.
@@ -40,23 +42,28 @@ public class MinedoPlugin extends JavaPlugin {
         WorldEdit worldEdit = getWorldEditInstance();
         Region spawnRegion = new Region().getRegionByName("spawn");
         getServer().getPluginManager().registerEvents(
-                new RegionRegeneration(world, worldGuard, worldEdit, spawnRegion), this
+                new RegionRegeneration(world, worldGuard, worldEdit, spawnRegion, logger),
+                instance
         );
     }
 
-    public static MinedoPlugin getInstance() {
+    public MinedoPlugin getInstance() {
         return instance;
     }
 
-    public static World getWorldInstance() {
+    public Logger getPluginLogger() {
+        return getLogger();
+    }
+
+    public World getWorldInstance() {
         return Bukkit.getWorld(WorldType.WORLD.getType());
     }
 
-    public static WorldGuard getWorldGuardInstance() {
+    public WorldGuard getWorldGuardInstance() {
         return WorldGuard.getInstance();
     }
 
-    public static WorldEdit getWorldEditInstance() {
+    public WorldEdit getWorldEditInstance() {
         return WorldEdit.getInstance();
     }
 
