@@ -4,7 +4,6 @@ import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.extent.clipboard.BlockArrayClipboard;
-import com.sk89q.worldedit.extent.clipboard.Clipboard;
 import com.sk89q.worldedit.extent.clipboard.io.*;
 import com.sk89q.worldedit.function.operation.ForwardExtentCopy;
 import com.sk89q.worldedit.function.operation.Operations;
@@ -27,14 +26,14 @@ import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockExplodeEvent;
+import org.bukkit.event.entity.EntityExplodeEvent;
 
 import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class RegionRegeneration implements Listener {
 
@@ -262,9 +261,7 @@ public class RegionRegeneration implements Listener {
         return !applicableRegionSet.getRegions().isEmpty();
     }
 
-    @EventHandler
-    public void onBlockBreak(BlockBreakEvent event) {
-        Block block = event.getBlock();
+    private void regenerate(Block block) {
         Chunk chunk = block.getChunk();
 
         // Check if block destroyed is in region.
@@ -274,5 +271,20 @@ public class RegionRegeneration implements Listener {
 
         // Restore chunk.
         restoreRegionChunk(chunk);
+    }
+
+    @EventHandler
+    public void onBlockBreak(BlockBreakEvent event) {
+        this.regenerate(event.getBlock());
+    }
+
+    @EventHandler
+    public void onEntityExplode(EntityExplodeEvent event) {
+        this.regenerate(event.getLocation().getBlock());
+    }
+
+    @EventHandler
+    public void onBlockExplode(BlockExplodeEvent event) {
+        this.regenerate(event.getBlock());
     }
 }
