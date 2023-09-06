@@ -4,6 +4,7 @@ import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.extent.clipboard.BlockArrayClipboard;
+import com.sk89q.worldedit.extent.clipboard.Clipboard;
 import com.sk89q.worldedit.extent.clipboard.io.*;
 import com.sk89q.worldedit.function.operation.ForwardExtentCopy;
 import com.sk89q.worldedit.function.operation.Operations;
@@ -32,6 +33,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class RegionRegeneration implements Listener {
 
@@ -250,9 +253,54 @@ public class RegionRegeneration implements Listener {
     }
 
     public boolean isChunkDestroyedAboveThreshold(Chunk chunk) {
-        // TODO: Calculate destruction level.
+        File schematicFile = null;
+        File schematicPath = new File(Directory.SCHEMATIC.getDirectory());
+        File[] files = schematicPath.listFiles();
 
-        return true;
+        String SPAWN_REGION_SCHEMATIC_REGEX = String.format(
+                "%s-region-\\((-?\\d+),(-?\\d+)\\)\\.%s",
+                this.region.getName(),
+                FileType.SCHEMATIC.getType()
+        );
+
+        Pattern pattern = Pattern.compile(SPAWN_REGION_SCHEMATIC_REGEX);
+
+        for (File file : Objects.requireNonNull(files)) {
+            Matcher matcher = pattern.matcher(file.getName());
+
+            if (matcher.matches()) {
+                int chunkX = Integer.parseInt(matcher.group(1));
+                int chunkZ = Integer.parseInt(matcher.group(2));
+
+                if (chunkX == chunk.getX() && chunkZ == chunk.getZ()) {
+                    schematicFile = file;
+                    break;
+                }
+            }
+        }
+
+        ClipboardFormat clipboardFormat = ClipboardFormats.findByFile(Objects.requireNonNull(schematicFile));
+
+        try (ClipboardReader clipboardReader = Objects
+                .requireNonNull(clipboardFormat)
+                .getReader(
+                        new FileInputStream(schematicFile)
+                )
+        ) {
+            Clipboard clipboard = clipboardReader.read();
+
+            // TODO: Calculate destruction level.
+        } catch (IOException e) {
+            this.logger.severe(String.format(
+                    "Unable to calculate chunk (%d, %d) destruction level in %s region.",
+                    chunk.getX(),
+                    chunk.getZ(),
+                    this.region.getName())
+            );
+            throw new RuntimeException(e);
+        }
+
+        return false;
     }
 
     private boolean isWithinRegion(Block block) {
