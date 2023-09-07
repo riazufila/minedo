@@ -28,7 +28,7 @@ import java.util.regex.Pattern;
 
 public class RegionRegenerationScheduler extends BukkitRunnable {
 
-    private Chunk chunk;
+    private final Chunk chunk;
     private final Region region;
     private final World world;
     private final WorldEdit worldEdit;
@@ -45,10 +45,6 @@ public class RegionRegenerationScheduler extends BukkitRunnable {
         this.worldEdit = worldEdit;
         this.logger = logger;
         this.restoringChunks = restoringChunks;
-    }
-
-    public Map<String, Integer> getRestoringChunks() {
-        return this.restoringChunks;
     }
 
     @Override
