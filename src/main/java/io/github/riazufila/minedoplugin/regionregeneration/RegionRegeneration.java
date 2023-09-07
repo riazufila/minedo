@@ -226,10 +226,6 @@ public class RegionRegeneration implements Listener {
     }
 
     public void restoreRegionChunk(Chunk chunk) {
-        RegionRegenerationScheduler regionRegenerationScheduler = new RegionRegenerationScheduler(
-                chunk, this.region, this.world, this.worldEdit, this.logger, this.restoringChunks
-        );
-
         if (restoringChunks.containsKey(String.format("(%d,%d)", chunk.getX(), chunk.getZ()))) {
             this.logger.info(String.format(
                     "Chunk (%d, %d) in %s region is already restoring.",
@@ -242,7 +238,11 @@ public class RegionRegeneration implements Listener {
             return;
         }
 
-        // Run task timer and get the ID.
+        // Run region regeneration scheduler after 30 seconds.
+        RegionRegenerationScheduler regionRegenerationScheduler = new RegionRegenerationScheduler(
+                chunk, this.region, this.world, this.worldEdit,
+                this.logger, this.pluginInstance, this.restoringChunks
+        );
         int restoringTaskId = regionRegenerationScheduler
                 .runTaskTimer(this.pluginInstance, 600, 600)
                 .getTaskId();
