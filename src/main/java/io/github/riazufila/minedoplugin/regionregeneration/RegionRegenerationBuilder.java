@@ -9,11 +9,14 @@ import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormats;
 import com.sk89q.worldedit.extent.clipboard.io.ClipboardReader;
 import com.sk89q.worldedit.function.operation.Operation;
 import com.sk89q.worldedit.function.operation.Operations;
+import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.session.ClipboardHolder;
+import io.github.riazufila.minedoplugin.constants.common.Common;
 import io.github.riazufila.minedoplugin.constants.directory.Directory;
 import io.github.riazufila.minedoplugin.constants.filetype.FileType;
 import io.github.riazufila.minedoplugin.database.model.region.Region;
 import org.bukkit.Chunk;
+import org.bukkit.Particle;
 import org.bukkit.World;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -101,6 +104,27 @@ public class RegionRegenerationBuilder extends BukkitRunnable {
 
                 Operations.complete(operation);
             }
+
+            BlockVector3 minimumPoint = clipboard.getMinimumPoint();
+            BlockVector3 maximumPoint = clipboard.getMaximumPoint();
+
+            // Add particles to the top part of the chunk.
+            for (int x = minimumPoint.getX(); x <= maximumPoint.getX(); x++) {
+                for (int z = minimumPoint.getZ(); z <= maximumPoint.getZ(); z++) {
+                    int y = this.world.getHighestBlockYAt(x, z);
+                    // Spawn the particle effect
+                    this.world.spawnParticle(
+                            Particle.COMPOSTER,
+                            x,
+                            y,
+                            z,
+                            10,
+                            1,
+                            1,
+                            1
+                    );
+                }
+            }
         } catch (IOException e) {
             this.logger.severe(String.format(
                     "Unable to restore chunk (%d, %d) in %s region.",
@@ -111,7 +135,6 @@ public class RegionRegenerationBuilder extends BukkitRunnable {
             throw new RuntimeException(e);
         } finally {
             this.restoringChunks.remove(String.format("(%d,%d)", chunk.getX(), chunk.getZ()));
-            this.cancel();
         }
     }
 }

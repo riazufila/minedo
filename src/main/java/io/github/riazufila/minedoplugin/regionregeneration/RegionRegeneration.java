@@ -21,6 +21,7 @@ import io.github.riazufila.minedoplugin.constants.directory.Directory;
 import io.github.riazufila.minedoplugin.constants.filetype.FileType;
 import io.github.riazufila.minedoplugin.database.model.region.Region;
 import org.bukkit.Chunk;
+import org.bukkit.Particle;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
@@ -244,7 +245,7 @@ public class RegionRegeneration implements Listener {
                 this.logger, this.pluginInstance, this.restoringChunks
         );
         int restoringTaskId = regionRegenerationScheduler
-                .runTaskTimer(this.pluginInstance, 600, 600)
+                .runTaskLater(this.pluginInstance, 600)
                 .getTaskId();
 
         // Place task ID and update restoring chunk details.

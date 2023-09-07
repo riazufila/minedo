@@ -58,8 +58,6 @@ public class RegionRegenerationScheduler extends BukkitRunnable {
         RegionRegenerationBuilder builder = new RegionRegenerationBuilder(
                 this.chunk, this.region, this.world, this.worldEdit, this.logger, this.restoringChunks
         );
-        builder.runTaskTimer(this.pluginInstance, 20, 20);
-
-        this.cancel();
+        builder.runTaskLater(this.pluginInstance, 20);
     }
 }
