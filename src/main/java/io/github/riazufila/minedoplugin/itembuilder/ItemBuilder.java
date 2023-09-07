@@ -27,6 +27,12 @@ import java.util.*;
 
 public class ItemBuilder implements Listener {
 
+    private final MinedoPlugin pluginInstance;
+
+    public ItemBuilder(MinedoPlugin pluginInstance) {
+        this.pluginInstance = pluginInstance;
+    }
+
     @EventHandler
     public void onChunkPopulate(ChunkPopulateEvent event) {
         BlockState[] tileEntities = event.getChunk().getTileEntities();
@@ -73,10 +79,10 @@ public class ItemBuilder implements Listener {
         ItemMeta meta = item.getItemMeta();
 
         // Set NBT tag.
-        NamespacedKey typeKey = new NamespacedKey(MinedoPlugin.getInstance(), "type");
-        NamespacedKey subTypeKey = new NamespacedKey(MinedoPlugin.getInstance(), "subType");
-        NamespacedKey uuidKey = new NamespacedKey(MinedoPlugin.getInstance(), "uuid");
-        NamespacedKey timestampKey = new NamespacedKey(MinedoPlugin.getInstance(), "timestamp");
+        NamespacedKey typeKey = new NamespacedKey(this.pluginInstance, "type");
+        NamespacedKey subTypeKey = new NamespacedKey(this.pluginInstance, "subType");
+        NamespacedKey uuidKey = new NamespacedKey(this.pluginInstance, "uuid");
+        NamespacedKey timestampKey = new NamespacedKey(this.pluginInstance, "timestamp");
         meta.getPersistentDataContainer().set(typeKey, PersistentDataType.STRING, "ASTRAL_GEAR");
         meta.getPersistentDataContainer().set(subTypeKey, PersistentDataType.STRING, betterItem.getDisplayName());
         meta.getPersistentDataContainer().set(uuidKey, PersistentDataType.STRING, UUID.randomUUID().toString());

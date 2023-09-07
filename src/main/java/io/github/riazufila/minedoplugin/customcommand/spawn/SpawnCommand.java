@@ -20,12 +20,23 @@ import java.util.UUID;
 
 public class SpawnCommand implements CommandExecutor, Listener {
 
+    private final MinedoPlugin pluginInstance;
     private final Map<UUID, Integer> teleportingPlayers = new HashMap<>();
+
+    public SpawnCommand(MinedoPlugin pluginInstance) {
+        this.pluginInstance = pluginInstance;
+    }
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if (!(sender instanceof Player player)) {
             return true;
+        }
+
+        if (teleportingPlayers.containsKey(((Player) sender).getUniqueId())) {
+            player.sendMessage(Component.text("You're already teleporting!").color(NamedTextColor.RED));
+
+            return false;
         }
 
         if (label.equalsIgnoreCase("spawn")) {
@@ -49,7 +60,7 @@ public class SpawnCommand implements CommandExecutor, Listener {
                         this.cancel();
                     }
                 }
-            }.runTaskTimer(MinedoPlugin.getInstance(), 20, 20).getTaskId();
+            }.runTaskTimer(this.pluginInstance, 20, 20).getTaskId();
 
             this.teleportingPlayers.put(player.getUniqueId(), teleportTaskId);
             player.sendMessage(Component.text("Teleporting to spawn in 5..").color(NamedTextColor.YELLOW));
