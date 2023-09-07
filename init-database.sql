@@ -107,4 +107,4 @@ INSERT INTO better_item_probability VALUES
 (5, 10);
 
 INSERT INTO region VALUES
-(1, 'Spawn', -128, 128, NULL, NULL, -128, 128);
+(1, 'Spawn', -128, 127, NULL, NULL, -128, 127);
