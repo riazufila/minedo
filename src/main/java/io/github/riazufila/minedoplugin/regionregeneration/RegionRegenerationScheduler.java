@@ -4,6 +4,7 @@ import com.sk89q.worldedit.WorldEdit;
 import io.github.riazufila.minedoplugin.MinedoPlugin;
 import io.github.riazufila.minedoplugin.database.model.region.Region;
 import org.bukkit.Chunk;
+import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -44,6 +45,7 @@ public class RegionRegenerationScheduler extends BukkitRunnable {
         for (Entity entity : entities) {
             if (entity instanceof Player player) {
 
+                player.playSound(player.getLocation(), Sound.BLOCK_AZALEA_LEAVES_STEP, 1, 1);
                 player.setVelocity(player.getLocation().getDirection().multiply(2).setX(0).setZ(0).setY(2));
                 player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING, 100, 2));
             }
