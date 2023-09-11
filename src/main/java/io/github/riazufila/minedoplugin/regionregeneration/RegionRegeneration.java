@@ -11,6 +11,8 @@ import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
+import com.sk89q.worldguard.protection.flags.Flags;
+import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
@@ -113,6 +115,11 @@ public class RegionRegeneration implements Listener {
         );
 
         ProtectedRegion protectedRegion = new ProtectedCuboidRegion(region.getName(), min, max);
+
+        // Set permissions.
+        protectedRegion.setFlag(Flags.BUILD, StateFlag.State.ALLOW);
+        protectedRegion.setFlag(Flags.BLOCK_BREAK, StateFlag.State.ALLOW);
+
         RegionContainer regionContainer = worldGuard.getPlatform().getRegionContainer();
 
         Objects.requireNonNull(regionContainer.get(BukkitAdapter.adapt(this.world))).addRegion(protectedRegion);
