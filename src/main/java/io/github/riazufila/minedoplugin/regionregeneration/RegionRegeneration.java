@@ -17,13 +17,12 @@ import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
-import io.github.riazufila.minedoplugin.MinedoPlugin;
+import io.github.riazufila.minedoplugin.Minedo;
 import io.github.riazufila.minedoplugin.constants.common.Common;
 import io.github.riazufila.minedoplugin.constants.directory.Directory;
 import io.github.riazufila.minedoplugin.constants.filetype.FileType;
 import io.github.riazufila.minedoplugin.database.model.region.Region;
 import org.bukkit.Chunk;
-import org.bukkit.Particle;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
@@ -44,13 +43,13 @@ public class RegionRegeneration implements Listener {
     private final WorldGuard worldGuard;
     private final WorldEdit worldEdit;
     private final Region region;
-    private final MinedoPlugin pluginInstance;
+    private final Minedo pluginInstance;
     private final Logger logger;
     private Map<String, Integer> restoringChunks = new HashMap<>();
 
     public RegionRegeneration(
             World world, WorldGuard worldGuard, WorldEdit worldEdit,
-            Region region, MinedoPlugin pluginInstance, Logger logger
+            Region region, Minedo pluginInstance, Logger logger
     ) {
         this.world = world;
         this.worldGuard = worldGuard;

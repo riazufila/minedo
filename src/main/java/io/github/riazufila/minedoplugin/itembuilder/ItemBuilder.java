@@ -1,6 +1,6 @@
 package io.github.riazufila.minedoplugin.itembuilder;
 
-import io.github.riazufila.minedoplugin.MinedoPlugin;
+import io.github.riazufila.minedoplugin.Minedo;
 import io.github.riazufila.minedoplugin.database.model.betteritem.BetterItem;
 import io.github.riazufila.minedoplugin.database.model.betteritemattribute.BetterItemAttribute;
 import io.github.riazufila.minedoplugin.database.model.betteritemenchantment.BetterItemEnchantment;
@@ -27,9 +27,9 @@ import java.util.*;
 
 public class ItemBuilder implements Listener {
 
-    private final MinedoPlugin pluginInstance;
+    private final Minedo pluginInstance;
 
-    public ItemBuilder(MinedoPlugin pluginInstance) {
+    public ItemBuilder(Minedo pluginInstance) {
         this.pluginInstance = pluginInstance;
     }
 

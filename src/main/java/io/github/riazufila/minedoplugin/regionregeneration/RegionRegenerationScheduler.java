@@ -1,7 +1,7 @@
 package io.github.riazufila.minedoplugin.regionregeneration;
 
 import com.sk89q.worldedit.WorldEdit;
-import io.github.riazufila.minedoplugin.MinedoPlugin;
+import io.github.riazufila.minedoplugin.Minedo;
 import io.github.riazufila.minedoplugin.database.model.region.Region;
 import org.bukkit.Chunk;
 import org.bukkit.Sound;
@@ -21,14 +21,14 @@ public class RegionRegenerationScheduler extends BukkitRunnable {
     private final Region region;
     private final World world;
     private final WorldEdit worldEdit;
-    private final MinedoPlugin pluginInstance;
+    private final Minedo pluginInstance;
     private final Logger logger;
     private final Map<String, Integer> restoringChunks;
 
     public RegionRegenerationScheduler(
             Chunk chunk, Region region, World world,
             WorldEdit worldEdit, Logger logger,
-            MinedoPlugin pluginInstance, Map<String, Integer> restoringChunks
+            Minedo pluginInstance, Map<String, Integer> restoringChunks
     ) {
         this.chunk = chunk;
         this.region = region;

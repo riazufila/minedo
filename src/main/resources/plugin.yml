@@ -1,6 +1,6 @@
-name: MinedoPlugin
+name: Minedo
 version: 1.0.0
-main: io.github.riazufila.minedoplugin.MinedoPlugin
+main: io.github.riazufila.minedoplugin.Minedo
 description: A better Minecraft perhaps.
 author: riazufila
 api-version: '1.20'
