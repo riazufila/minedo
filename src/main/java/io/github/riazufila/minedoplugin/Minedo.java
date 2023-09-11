@@ -15,9 +15,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.util.Objects;
 import java.util.logging.Logger;
 
-public class MinedoPlugin extends JavaPlugin {
+public class Minedo extends JavaPlugin {
 
-    private static MinedoPlugin instance;
+    private static Minedo instance;
 
     @Override
     public void onEnable() {

@@ -1,6 +1,6 @@
 package io.github.riazufila.minedoplugin.customcommand.spawn;
 
-import io.github.riazufila.minedoplugin.MinedoPlugin;
+import io.github.riazufila.minedoplugin.Minedo;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
@@ -20,10 +20,10 @@ import java.util.UUID;
 
 public class SpawnCommand implements CommandExecutor, Listener {
 
-    private final MinedoPlugin pluginInstance;
+    private final Minedo pluginInstance;
     private final Map<UUID, Integer> teleportingPlayers = new HashMap<>();
 
-    public SpawnCommand(MinedoPlugin pluginInstance) {
+    public SpawnCommand(Minedo pluginInstance) {
         this.pluginInstance = pluginInstance;
     }
 
