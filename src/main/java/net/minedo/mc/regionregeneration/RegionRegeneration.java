@@ -118,13 +118,13 @@ public class RegionRegeneration implements Listener {
     private ProtectedRegion getProtectedRegion() {
         BlockVector3 min = BlockVector3.at(
                 region.getMinX(),
-                region.getMinY() == null ? this.world.getMinHeight() : region.getMinY(),
+                this.world.getMinHeight(),
                 region.getMinZ()
         );
 
         BlockVector3 max = BlockVector3.at(
                 region.getMaxX(),
-                region.getMaxY() == null ? this.world.getMaxHeight() : region.getMaxY(),
+                this.world.getMaxHeight(),
                 region.getMaxZ()
         );
 

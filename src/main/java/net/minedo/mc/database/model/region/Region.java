@@ -14,8 +14,6 @@ public class Region {
     public String name;
     public int minX;
     public int maxX;
-    public Integer minY;
-    public Integer maxY;
     public int minZ;
     public int maxZ;
 
@@ -49,22 +47,6 @@ public class Region {
 
     public void setMaxX(int maxX) {
         this.maxX = maxX;
-    }
-
-    public Integer getMinY() {
-        return minY;
-    }
-
-    public void setMinY(Integer minY) {
-        this.minY = minY;
-    }
-
-    public Integer getMaxY() {
-        return maxY;
-    }
-
-    public void setMaxY(Integer maxY) {
-        this.maxY = maxY;
     }
 
     public int getMinZ() {
@@ -101,8 +83,6 @@ public class Region {
                 String name = resultSet.getString("name");
                 int minX = resultSet.getInt("minX");
                 int maxX = resultSet.getInt("maxX");
-                Integer minY = resultSet.getInt("minY");
-                Integer maxY = resultSet.getInt("maxY");
                 int minZ = resultSet.getInt("minZ");
                 int maxZ = resultSet.getInt("maxZ");
 
@@ -112,8 +92,6 @@ public class Region {
                 region.setName(name);
                 region.setMinX(minX);
                 region.setMaxX(maxX);
-                region.setMinY(minY);
-                region.setMaxY(maxY);
                 region.setMinZ(minZ);
                 region.setMaxZ(maxZ);
 
@@ -146,8 +124,6 @@ public class Region {
                 String name = resultSet.getString("name");
                 int minX = resultSet.getInt("minX");
                 int maxX = resultSet.getInt("maxX");
-                Integer minY = resultSet.getInt("minY");
-                Integer maxY = resultSet.getInt("maxY");
                 int minZ = resultSet.getInt("minZ");
                 int maxZ = resultSet.getInt("maxZ");
 
@@ -156,8 +132,6 @@ public class Region {
                 region.setName(name);
                 region.setMinX(minX);
                 region.setMaxX(maxX);
-                region.setMinY(minY);
-                region.setMaxY(maxY);
                 region.setMinZ(minZ);
                 region.setMaxZ(maxZ);
             }
@@ -189,8 +163,6 @@ public class Region {
                 String name = resultSet.getString("name");
                 int minX = resultSet.getInt("minX");
                 int maxX = resultSet.getInt("maxX");
-                Integer minY = resultSet.getInt("minY");
-                Integer maxY = resultSet.getInt("maxY");
                 int minZ = resultSet.getInt("minZ");
                 int maxZ = resultSet.getInt("maxZ");
 
@@ -199,8 +171,6 @@ public class Region {
                 region.setName(name);
                 region.setMinX(minX);
                 region.setMaxX(maxX);
-                region.setMinY(minY);
-                region.setMaxY(maxY);
                 region.setMinZ(minZ);
                 region.setMaxZ(maxZ);
             }
