@@ -30,6 +30,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 
 import java.io.*;
 import java.util.HashMap;
@@ -285,5 +286,16 @@ public class RegionRegeneration implements Listener {
     @EventHandler
     public void onBlockExplode(BlockExplodeEvent event) {
         this.regenerate(event.getBlock());
+    }
+
+    @EventHandler
+    public void onPlayerDeath(PlayerDeathEvent event) {
+        Block block = event.getEntity().getLocation().getBlock();
+
+        if (isWithinRegion(block)) {
+            event.setKeepInventory(true);
+            event.getDrops().clear();
+            event.setKeepLevel(true);
+        }
     }
 }
