@@ -233,6 +233,10 @@ public class RegionRegeneration implements Listener {
     }
 
     public void restoreRegionChunk(Chunk chunk) {
+        if (restoringChunks.containsKey(String.format("(%d,%d)", chunk.getX(), chunk.getZ()))) {
+            return;
+        }
+
         // Run region regeneration scheduler after 30 seconds.
         RegionRegenerationScheduler regionRegenerationScheduler = new RegionRegenerationScheduler(
                 chunk, this.region, this.world, this.worldEdit,
