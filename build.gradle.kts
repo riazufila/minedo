@@ -3,7 +3,7 @@ plugins {
     id("java")
 }
 
-group = "io.github.riazufila"
+group = "net.minedo.mc"
 version = "1.0.0"
 
 repositories {
