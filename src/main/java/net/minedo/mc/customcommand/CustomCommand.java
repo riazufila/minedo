@@ -22,6 +22,7 @@ public class CustomCommand implements Listener {
     private final Minedo pluginInstance;
     private final Server server;
     private final CustomCommandInterface customCommandInterface;
+    private List<String> customCommands;
     private final List<Region> regions;
 
     public CustomCommand(
@@ -54,6 +55,8 @@ public class CustomCommand implements Listener {
             server.getPluginManager().registerEvents(teleport, this.pluginInstance);
             Objects.requireNonNull(this.customCommandInterface.getCommand(customCommand)).setExecutor(teleport);
         }
+
+        this.customCommands = customCommands;
     }
 
     // Disable commands.
@@ -62,7 +65,7 @@ public class CustomCommand implements Listener {
         Player player = event.getPlayer();
         String command = event.getMessage();
 
-        if (!player.isOp() && !command.substring(1).equals("spawn")) {
+        if (!player.isOp() && !this.customCommands.contains(command.substring(1))) {
             event.setCancelled(true);
         }
     }
@@ -77,7 +80,7 @@ public class CustomCommand implements Listener {
             event.getCommands().clear();
 
             // Add custom commands to be displayed.
-            event.getCommands().add("spawn");
+            event.getCommands().addAll(this.customCommands);
         }
     }
 
