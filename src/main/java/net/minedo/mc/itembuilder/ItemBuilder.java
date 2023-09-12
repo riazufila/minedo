@@ -24,12 +24,15 @@ import org.bukkit.persistence.PersistentDataType;
 
 import java.time.Instant;
 import java.util.*;
+import java.util.logging.Logger;
 
 public class ItemBuilder implements Listener {
 
+    private final Logger logger;
     private final Minedo pluginInstance;
 
-    public ItemBuilder(Minedo pluginInstance) {
+    public ItemBuilder(Logger logger, Minedo pluginInstance) {
+        this.logger = logger;
         this.pluginInstance = pluginInstance;
     }
 
@@ -142,25 +145,32 @@ public class ItemBuilder implements Listener {
     }
 
     public ItemStack prepareItem() {
-        Random random = new Random();
+        try {
+            Random random = new Random();
 
-        // 50% chance to retrieve an item.
-        if (random.nextBoolean()) {
-            BetterItem[] betterItemList = BetterItem.getAllBetterItems();
+            // 50% chance to retrieve an item.
+            if (random.nextBoolean()) {
+                BetterItem[] betterItemList = BetterItem.getAllBetterItems();
 
-            double[] probabilities = new double[betterItemList.length];
-            int index = 0;
+                double[] probabilities = new double[betterItemList.length];
+                int index = 0;
 
-            for (BetterItem betterItem : betterItemList) {
-                probabilities[index] = betterItem.getProbability().getProbability();
-                index++;
+                for (BetterItem betterItem : betterItemList) {
+                    probabilities[index] = betterItem.getProbability().getProbability();
+                    index++;
+                }
+
+                // Randomly select one Better Item.
+                UniformRandomProvider rng = RandomSource.XO_RO_SHI_RO_128_PP.create();
+                BetterItem selectedBetterItem = new DiscreteProbabilityCollectionSampler<>(
+                        rng, Arrays.asList(betterItemList), probabilities
+                ).sample();
+
+                return buildItem(selectedBetterItem);
             }
-
-            // Randomly select one Better Item.
-            UniformRandomProvider rng = RandomSource.XO_RO_SHI_RO_128_PP.create();
-            BetterItem selectedBetterItem = new DiscreteProbabilityCollectionSampler<>(rng, Arrays.asList(betterItemList), probabilities).sample();
-
-            return buildItem(selectedBetterItem);
+        } catch (Exception exception) {
+            this.logger.severe("Unable to prepare better items.");
+            exception.printStackTrace();
         }
 
         return null;

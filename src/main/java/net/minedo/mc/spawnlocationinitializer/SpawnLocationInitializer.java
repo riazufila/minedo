@@ -4,10 +4,15 @@ import net.minedo.mc.constants.spawnlocation.SpawnLocation;
 import org.bukkit.Location;
 import org.bukkit.World;
 
+import java.util.logging.Logger;
+
 public class SpawnLocationInitializer {
     private final World world;
-    public SpawnLocationInitializer(World world) {
+    private final Logger logger;
+
+    public SpawnLocationInitializer(World world, Logger logger) {
         this.world = world;
+        this.logger = logger;
 
         if (!hasSpawnLocationSet()) {
             setSpawnLocation();
@@ -15,15 +20,22 @@ public class SpawnLocationInitializer {
     }
 
     public void setSpawnLocation() {
-        this.world.setSpawnLocation(
-                SpawnLocation.POSITION_X.getPosition(),
-                // Any highest block at Y that isn't air block.
-                this.world.getHighestBlockYAt(
-                        SpawnLocation.POSITION_X.getPosition(),
-                        SpawnLocation.POSITION_Z.getPosition()
-                ),
-                SpawnLocation.POSITION_Z.getPosition()
-        );
+        this.logger.info("Setting spawn location.");
+
+        try {
+            this.world.setSpawnLocation(
+                    SpawnLocation.POSITION_X.getPosition(),
+                    // Any highest block at Y that isn't air block.
+                    this.world.getHighestBlockYAt(
+                            SpawnLocation.POSITION_X.getPosition(),
+                            SpawnLocation.POSITION_Z.getPosition()
+                    ),
+                    SpawnLocation.POSITION_Z.getPosition()
+            );
+        } catch (Exception exception) {
+            this.logger.severe("Unable to set spawn location.");
+            exception.printStackTrace();
+        }
     }
 
     public boolean hasSpawnLocationSet() {
