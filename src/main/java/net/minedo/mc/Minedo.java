@@ -27,10 +27,10 @@ public class Minedo extends JavaPlugin {
         Logger logger = getPluginLogger();
 
         // Set spawn location.
-        new SpawnLocationInitializer(world);
+        new SpawnLocationInitializer(world, logger);
 
         // Populate newly generated chests with Better Items.
-        getServer().getPluginManager().registerEvents(new ItemBuilder(instance), instance);
+        getServer().getPluginManager().registerEvents(new ItemBuilder(logger, instance), instance);
 
         // Spawn command and listeners.
         SpawnCommand spawnCommand = new SpawnCommand(instance);
