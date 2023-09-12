@@ -1,9 +1,10 @@
-package net.minedo.mc.customcommand.spawn;
+package net.minedo.mc.customcommand.teleport;
 
 import net.minedo.mc.Minedo;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -18,17 +19,19 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class SpawnCommand implements CommandExecutor, Listener {
+public class Teleport implements CommandExecutor, Listener {
 
     private final Minedo pluginInstance;
     private final Map<UUID, Integer> teleportingPlayers = new HashMap<>();
 
-    public SpawnCommand(Minedo pluginInstance) {
+    public Teleport(Minedo pluginInstance) {
         this.pluginInstance = pluginInstance;
     }
 
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+    public boolean onCommand(
+            @NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args
+    ) {
         if (!(sender instanceof Player player)) {
             return true;
         }

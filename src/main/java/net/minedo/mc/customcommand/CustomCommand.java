@@ -1,7 +1,7 @@
 package net.minedo.mc.customcommand;
 
 import net.minedo.mc.Minedo;
-import net.minedo.mc.customcommand.spawn.SpawnCommand;
+import net.minedo.mc.customcommand.teleport.Teleport;
 import net.minedo.mc.interfaces.customcommand.CustomCommandInterface;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
@@ -28,9 +28,9 @@ public class CustomCommand implements Listener {
 
     public void setupCustomCommands() {
         // Spawn command and listeners.
-        SpawnCommand spawnCommand = new SpawnCommand(this.pluginInstance);
-        server.getPluginManager().registerEvents(spawnCommand, this.pluginInstance);
-        Objects.requireNonNull(this.customCommandInterface.getCommand("spawn")).setExecutor(spawnCommand);
+        Teleport teleport = new Teleport(this.pluginInstance);
+        server.getPluginManager().registerEvents(teleport, this.pluginInstance);
+        Objects.requireNonNull(this.customCommandInterface.getCommand("spawn")).setExecutor(teleport);
     }
 
     // Disable commands.
