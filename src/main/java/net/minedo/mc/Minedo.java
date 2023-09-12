@@ -36,7 +36,7 @@ public class Minedo extends JavaPlugin {
         server.getPluginManager().registerEvents(new ItemBuilder(logger, instance), instance);
 
         // Register and display only custom commands to players.
-        CustomCommand customCommand = new CustomCommand(instance, server, this::getPluginCommand);
+        CustomCommand customCommand = new CustomCommand(world, instance, server, this::getPluginCommand);
         server.getPluginManager().registerEvents(customCommand, instance);
 
         // Region regenerations.
