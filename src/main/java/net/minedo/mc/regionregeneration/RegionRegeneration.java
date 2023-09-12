@@ -31,6 +31,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
 import java.util.HashMap;
@@ -46,7 +47,7 @@ public class RegionRegeneration implements Listener {
     private final Region region;
     private final Minedo pluginInstance;
     private final Logger logger;
-    private Map<String, Integer> restoringChunks = new HashMap<>();
+    private final Map<String, Integer> restoringChunks = new HashMap<>();
 
     public RegionRegeneration(
             World world, WorldGuard worldGuard, WorldEdit worldEdit,
@@ -76,7 +77,7 @@ public class RegionRegeneration implements Listener {
 
         String fileName = String.format(
                 "%s-region-(%s).%s",
-                this.region.getName(),
+                this.region.getName().toLowerCase(),
                 chunkCoordinate,
                 FileType.SCHEMATIC.getType()
         );
@@ -102,6 +103,19 @@ public class RegionRegeneration implements Listener {
     private void setRegion() {
         this.logger.info(String.format("Setting %s region.", this.region.getName()));
 
+        ProtectedRegion protectedRegion = getProtectedRegion();
+
+        // Set permissions.
+        protectedRegion.setFlag(Flags.BUILD, StateFlag.State.ALLOW);
+        protectedRegion.setFlag(Flags.BLOCK_BREAK, StateFlag.State.ALLOW);
+
+        RegionContainer regionContainer = worldGuard.getPlatform().getRegionContainer();
+
+        Objects.requireNonNull(regionContainer.get(BukkitAdapter.adapt(this.world))).addRegion(protectedRegion);
+    }
+
+    @NotNull
+    private ProtectedRegion getProtectedRegion() {
         BlockVector3 min = BlockVector3.at(
                 region.getMinX(),
                 region.getMinY() == null ? this.world.getMinHeight() : region.getMinY(),
@@ -114,15 +128,7 @@ public class RegionRegeneration implements Listener {
                 region.getMaxZ()
         );
 
-        ProtectedRegion protectedRegion = new ProtectedCuboidRegion(region.getName(), min, max);
-
-        // Set permissions.
-        protectedRegion.setFlag(Flags.BUILD, StateFlag.State.ALLOW);
-        protectedRegion.setFlag(Flags.BLOCK_BREAK, StateFlag.State.ALLOW);
-
-        RegionContainer regionContainer = worldGuard.getPlatform().getRegionContainer();
-
-        Objects.requireNonNull(regionContainer.get(BukkitAdapter.adapt(this.world))).addRegion(protectedRegion);
+        return new ProtectedCuboidRegion(region.getName(), min, max);
     }
 
     private boolean getRegionSnapshot() {

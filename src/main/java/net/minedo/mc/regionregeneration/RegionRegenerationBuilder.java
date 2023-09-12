@@ -63,7 +63,7 @@ public class RegionRegenerationBuilder extends BukkitRunnable {
 
         String SPAWN_REGION_SCHEMATIC_REGEX = String.format(
                 "%s-region-\\((-?\\d+),(-?\\d+)\\)\\.%s",
-                this.region.getName(),
+                this.region.getName().toLowerCase(),
                 FileType.SCHEMATIC.getType()
         );
 
