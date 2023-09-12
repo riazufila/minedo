@@ -170,7 +170,7 @@ public class Region {
         return region;
     }
 
-    public Region getRegionByName(String name) {
+    public Region getRegionByName(String value) {
         Database database = new Database();
         database.connect();
 
@@ -180,12 +180,13 @@ public class Region {
             String query = """
                         SELECT * FROM region WHERE name = ?;
                     """;
-            Map<Integer, String> replacements = Collections.singletonMap(1, name);
+            Map<Integer, String> replacements = Collections.singletonMap(1, value);
             ResultSet resultSet = database.queryWithWhereClause(query, replacements);
 
             if (resultSet.next()) {
                 // Retrieve Region.
                 int id = resultSet.getInt("id");
+                String name = resultSet.getString("name");
                 int minX = resultSet.getInt("minX");
                 int maxX = resultSet.getInt("maxX");
                 Integer minY = resultSet.getInt("minY");
