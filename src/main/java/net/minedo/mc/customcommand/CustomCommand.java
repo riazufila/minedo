@@ -1,7 +1,7 @@
 package net.minedo.mc.customcommand;
 
 import net.minedo.mc.Minedo;
-import net.minedo.mc.customcommand.teleport.Teleport;
+import net.minedo.mc.customcommand.teleport.region.RegionTeleport;
 import net.minedo.mc.database.model.region.Region;
 import net.minedo.mc.interfaces.customcommand.CustomCommandInterface;
 import org.bukkit.Server;
@@ -48,12 +48,12 @@ public class CustomCommand implements Listener {
             customCommands.add(customCommand);
 
             // Setup command and listener.
-            Teleport teleport = new Teleport(
+            RegionTeleport regionTeleport = new RegionTeleport(
                     region.getMinX(), region.getMaxX(), region.getMinZ(), region.getMaxZ(),
                     customCommand, this.world, this.pluginInstance
             );
-            server.getPluginManager().registerEvents(teleport, this.pluginInstance);
-            Objects.requireNonNull(this.customCommandInterface.getCommand(customCommand)).setExecutor(teleport);
+            server.getPluginManager().registerEvents(regionTeleport, this.pluginInstance);
+            Objects.requireNonNull(this.customCommandInterface.getCommand(customCommand)).setExecutor(regionTeleport);
         }
 
         this.customCommands = customCommands;

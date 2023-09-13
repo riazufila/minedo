@@ -1,4 +1,4 @@
-package net.minedo.mc.customcommand.teleport;
+package net.minedo.mc.customcommand.teleport.region;
 
 import net.minedo.mc.Minedo;
 import net.kyori.adventure.text.Component;
@@ -20,7 +20,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 
-public class Teleport implements CommandExecutor, Listener {
+public class RegionTeleport implements CommandExecutor, Listener {
 
     private final double destinationMinX;
     private final double destinationMaxX;
@@ -31,7 +31,7 @@ public class Teleport implements CommandExecutor, Listener {
     private final Minedo pluginInstance;
     private final Map<UUID, Integer> teleportingPlayers = new HashMap<>();
 
-    public Teleport(
+    public RegionTeleport(
             double destinationMinX, double destinationMaxX, double destinationMinZ, double destinationMaxZ,
             String customCommand, World world, Minedo pluginInstance
     ) {
@@ -66,7 +66,7 @@ public class Teleport implements CommandExecutor, Listener {
             double coordinateY = this.world.getHighestBlockYAt((int) coordinateX, (int) coordinateZ);
             Location location = new Location(this.world, coordinateX, coordinateY, coordinateZ);
 
-            int teleportTaskId = new TeleportScheduler(player, location, this.customCommand, this.teleportingPlayers)
+            int teleportTaskId = new RegionTeleportScheduler(player, location, this.customCommand, this.teleportingPlayers)
                     .runTaskTimer(this.pluginInstance, 20, 20)
                     .getTaskId();
 
