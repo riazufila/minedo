@@ -1,4 +1,4 @@
-package net.minedo.mc.customcommand.teleport;
+package net.minedo.mc.customcommand.teleport.region;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -9,7 +9,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.util.Map;
 import java.util.UUID;
 
-public class TeleportScheduler extends BukkitRunnable {
+public class RegionTeleportScheduler extends BukkitRunnable {
 
     private int countdown;
     private final Player player;
@@ -17,7 +17,7 @@ public class TeleportScheduler extends BukkitRunnable {
     private final String customCommand;
     private final Map<UUID, Integer> teleportingPlayers;
 
-    public TeleportScheduler(
+    public RegionTeleportScheduler(
             Player player, Location destination, String customCommand, Map<UUID, Integer> teleportingPlayers
     ) {
         this.countdown = 4;
