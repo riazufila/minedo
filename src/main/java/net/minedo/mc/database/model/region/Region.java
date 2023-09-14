@@ -12,13 +12,13 @@ import java.util.logging.Logger;
 
 public class Region {
 
+    private final Logger logger = Logger.getLogger(this.getClass().getName());
     public int id;
     public String name;
     public int minX;
     public int maxX;
     public int minZ;
     public int maxZ;
-    private final Logger logger = Logger.getLogger(this.getClass().getName());
 
     public int getId() {
         return id;

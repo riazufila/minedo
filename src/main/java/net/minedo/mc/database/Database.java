@@ -11,8 +11,8 @@ public class Database {
     private final String url;
     private final String user;
     private final String password;
-    private Connection connection;
     private final Logger logger = Logger.getLogger(this.getClass().getName());
+    private Connection connection;
 
     public Database() {
         Dotenv dotenv = Dotenv.load();
