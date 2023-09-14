@@ -64,75 +64,82 @@ public class PlayerTeleport implements CommandExecutor, Listener {
 
         String teleportType = args[0];
 
-        if (teleportType.equals("request")) {
-            String teleportTarget = args[1];
-            Player otherPlayer = this.pluginInstance.getServer().getPlayer(teleportTarget);
+        switch (teleportType) {
+            case "request" -> {
+                String teleportTarget = args[1];
+                Player otherPlayer = this.pluginInstance.getServer().getPlayer(teleportTarget);
 
-            if (otherPlayer != null && otherPlayer.isOnline()) {
-                int teleportRequestTaskId = new PlayerTeleportRequestTimer(player, otherPlayer, teleportRequestRequesters, teleportRequestRequestees)
-                        .runTaskLater(this.pluginInstance, 600)
-                        .getTaskId();
+                if (otherPlayer != null && otherPlayer.isOnline()) {
+                    int teleportRequestTaskId = new PlayerTeleportRequestTimer(player, otherPlayer, teleportRequestRequesters, teleportRequestRequestees)
+                            .runTaskLater(this.pluginInstance, 600)
+                            .getTaskId();
 
-                this.teleportRequestRequesters.put(player.getUniqueId(), teleportRequestTaskId);
-                this.teleportRequestRequestees.put(otherPlayer.getUniqueId(), teleportRequestTaskId);
+                    this.teleportRequestRequesters.put(player.getUniqueId(), teleportRequestTaskId);
+                    this.teleportRequestRequestees.put(otherPlayer.getUniqueId(), teleportRequestTaskId);
 
-                otherPlayer.sendMessage(Component
-                        .text(String.format("%s is requesting to teleport..", player.getName()))
-                        .color(NamedTextColor.YELLOW)
-                );
-            } else {
-                player.sendMessage(Component
-                        .text(String.format("%s is not in the server.", teleportTarget))
-                        .color(NamedTextColor.RED)
-                );
-            }
-
-            return true;
-        } else if (teleportType.equals("accept")) {
-            // TODO: Check if player in the requestee map.
-
-            return true;
-        } else if (teleportType.equals("decline")) {
-            Integer teleportRequestTaskId = teleportRequestRequestees.get(player.getUniqueId());
-            UUID otherPlayerUuid = null;
-
-            for (Map.Entry<UUID, Integer> entry : teleportRequestRequesters.entrySet()) {
-                if (entry.getValue().equals(teleportRequestTaskId)) {
-                    otherPlayerUuid = entry.getKey();
+                    otherPlayer.sendMessage(Component
+                            .text(String.format("%s is requesting to teleport..", player.getName()))
+                            .color(NamedTextColor.YELLOW)
+                    );
+                } else {
+                    player.sendMessage(Component
+                            .text(String.format("%s is not in the server.", teleportTarget))
+                            .color(NamedTextColor.RED)
+                    );
                 }
+
+                return true;
             }
 
-            Player otherPlayer = this.pluginInstance.getServer().getPlayer(Objects.requireNonNull(otherPlayerUuid));
+            case "accept" -> {
+                // TODO: Check if player in the requestee map.
 
-            this.teleportRequestRequesters.remove(otherPlayerUuid);
-            this.teleportRequestRequestees.remove(player.getUniqueId());
-
-            Bukkit.getScheduler().cancelTask(teleportRequestTaskId);
-
-            if (otherPlayer != null && otherPlayer.isOnline()) {
-                otherPlayer.sendMessage(Component
-                        .text(String.format("%s declined your teleport request.", player.getName()))
-                        .color(NamedTextColor.RED)
-                );
-                player.sendMessage(Component
-                        .text(String.format("You declined %s request to teleport.", otherPlayer.getName()))
-                        .color(NamedTextColor.RED)
-                );
-            } else {
-                player.sendMessage(Component
-                        .text("You declined the request to teleport.")
-                        .color(NamedTextColor.RED)
-                );
+                return true;
             }
 
-            return true;
-        } else {
-            player.sendMessage(Component
-                    .text("Usage: /teleport <request <player> | accept | decline>")
-                    .color(NamedTextColor.GRAY)
-            );
+            case "decline" -> {
+                Integer teleportRequestTaskId = teleportRequestRequestees.get(player.getUniqueId());
+                UUID otherPlayerUuid = null;
 
-            return true;
+                for (Map.Entry<UUID, Integer> entry : teleportRequestRequesters.entrySet()) {
+                    if (entry.getValue().equals(teleportRequestTaskId)) {
+                        otherPlayerUuid = entry.getKey();
+                    }
+                }
+
+                Player otherPlayer = this.pluginInstance.getServer().getPlayer(Objects.requireNonNull(otherPlayerUuid));
+
+                this.teleportRequestRequesters.remove(otherPlayerUuid);
+                this.teleportRequestRequestees.remove(player.getUniqueId());
+
+                Bukkit.getScheduler().cancelTask(teleportRequestTaskId);
+
+                if (otherPlayer != null && otherPlayer.isOnline()) {
+                    otherPlayer.sendMessage(Component
+                            .text(String.format("%s declined your teleport request.", player.getName()))
+                            .color(NamedTextColor.RED)
+                    );
+                    player.sendMessage(Component
+                            .text(String.format("You declined %s request to teleport.", otherPlayer.getName()))
+                            .color(NamedTextColor.RED)
+                    );
+                } else {
+                    player.sendMessage(Component
+                            .text("You declined the request to teleport.")
+                            .color(NamedTextColor.RED)
+                    );
+                }
+
+                return true;
+            }
+
+            default -> {
+                player.sendMessage(Component
+                        .text("Usage: /teleport <request <player> | accept | decline>")
+                        .color(NamedTextColor.GRAY)
+                );
+                return true;
+            }
         }
     }
 
