@@ -130,8 +130,43 @@ public class PlayerTeleport implements CommandExecutor, Listener {
 
             case "accept" -> {
                 Integer existingTeleportRequestTaskId = teleportRequestRequestees.get(player.getUniqueId());
+
+                if (existingTeleportRequestTaskId == null) {
+                    player.sendMessage(Component
+                            .text("You don't have a teleport request.")
+                            .color(NamedTextColor.RED)
+                    );
+
+                    return true;
+                }
+
                 UUID otherPlayerUuid = this.getOtherPlayerUuidFromPlayer(existingTeleportRequestTaskId);
                 Player otherPlayer = this.removePlayersFromRequestQueue(player, otherPlayerUuid, existingTeleportRequestTaskId);
+
+                if (otherPlayer != null && otherPlayer.isOnline()) {
+                    int teleportingTaskId = new PlayerTeleportScheduler(otherPlayer, player, teleportingRequesters, standingStillRequestees)
+                            .runTaskTimer(this.pluginInstance, 20, 20)
+                            .getTaskId();
+
+                    this.teleportingRequesters.put(player.getUniqueId(), teleportingTaskId);
+                    this.standingStillRequestees.put(otherPlayer.getUniqueId(), teleportingTaskId);
+
+                    player.sendMessage(Component
+                            .text(String.format("Stand still while %s is teleporting..", otherPlayer.getName()))
+                            .color(NamedTextColor.YELLOW)
+                    );
+                    otherPlayer.sendMessage(Component
+                            .text(String.format("Teleporting to %s in 5..", player.getName()))
+                            .color(NamedTextColor.YELLOW)
+                    );
+                } else {
+                    OfflinePlayer otherOfflinePlayer = this.pluginInstance.getServer().getOfflinePlayer(otherPlayerUuid);
+
+                    player.sendMessage(Component
+                            .text(String.format("%s is not in the server.", otherOfflinePlayer))
+                            .color(NamedTextColor.RED)
+                    );
+                }
 
                 return true;
             }
@@ -144,6 +179,7 @@ public class PlayerTeleport implements CommandExecutor, Listener {
                             .text("You don't have a teleport request.")
                             .color(NamedTextColor.RED)
                     );
+
                     return true;
                 }
 
