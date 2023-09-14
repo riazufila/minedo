@@ -1,8 +1,8 @@
 package net.minedo.mc.customcommand.teleport.region;
 
-import net.minedo.mc.Minedo;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.minedo.mc.Minedo;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -94,8 +94,8 @@ public class RegionTeleport implements CommandExecutor, Listener {
     public void onPlayerMove(PlayerMoveEvent event) {
         if (
                 event.getFrom().getBlockX() != event.getTo().getBlockX() ||
-                    event.getFrom().getBlockY() != event.getTo().getBlockY() ||
-                    event.getFrom().getBlockZ() != event.getTo().getBlockZ()
+                        event.getFrom().getBlockY() != event.getTo().getBlockY() ||
+                        event.getFrom().getBlockZ() != event.getTo().getBlockZ()
         ) {
             Player player = event.getPlayer();
             UUID playerUuid = player.getUniqueId();
