@@ -4,6 +4,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.minedo.mc.Minedo;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -124,8 +125,10 @@ public class PlayerTeleport implements CommandExecutor, Listener {
                             .color(NamedTextColor.RED)
                     );
                 } else {
+                    OfflinePlayer otherOfflinePlayer = this.pluginInstance.getServer().getOfflinePlayer(otherPlayerUuid);
+
                     player.sendMessage(Component
-                            .text("You declined the request to teleport.")
+                            .text(String.format("You declined %s request to teleport.", otherOfflinePlayer.getName()))
                             .color(NamedTextColor.RED)
                     );
                 }
