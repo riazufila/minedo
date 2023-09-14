@@ -11,11 +11,11 @@ import java.util.UUID;
 
 public class RegionTeleportScheduler extends BukkitRunnable {
 
-    private int countdown;
     private final Player player;
     private final Location destination;
     private final String customCommand;
     private final Map<UUID, Integer> teleportingPlayers;
+    private int countdown;
 
     public RegionTeleportScheduler(
             Player player, Location destination, String customCommand, Map<UUID, Integer> teleportingPlayers

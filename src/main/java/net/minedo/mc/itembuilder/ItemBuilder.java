@@ -1,13 +1,13 @@
 package net.minedo.mc.itembuilder;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import net.minedo.mc.Minedo;
 import net.minedo.mc.database.model.betteritem.BetterItem;
 import net.minedo.mc.database.model.betteritemattribute.BetterItemAttribute;
 import net.minedo.mc.database.model.betteritemenchantment.BetterItemEnchantment;
 import net.minedo.mc.database.model.betteritemlore.BetterItemLore;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.TextColor;
-import net.kyori.adventure.text.format.TextDecoration;
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.sampling.DiscreteProbabilityCollectionSampler;
 import org.apache.commons.rng.simple.RandomSource;
