@@ -130,10 +130,21 @@ public class PlayerTeleport implements CommandExecutor, Listener {
 
             case "accept" -> {
                 Integer existingTeleportRequestTaskId = teleportRequestRequestees.get(player.getUniqueId());
+                Integer existingTeleportingTaskId = teleportingRequesters.get(player.getUniqueId());
+                Integer existingStandingStillTaskId = standingStillRequestees.get(player.getUniqueId());
 
                 if (existingTeleportRequestTaskId == null) {
                     player.sendMessage(Component
                             .text("You don't have a teleport request.")
+                            .color(NamedTextColor.RED)
+                    );
+
+                    return true;
+                }
+
+                if (existingTeleportingTaskId != null || existingStandingStillTaskId != null) {
+                    player.sendMessage(Component
+                            .text("You're already in a teleportation process.")
                             .color(NamedTextColor.RED)
                     );
 
@@ -158,13 +169,6 @@ public class PlayerTeleport implements CommandExecutor, Listener {
                     otherPlayer.sendMessage(Component
                             .text(String.format("Teleporting to %s in 5..", player.getName()))
                             .color(NamedTextColor.YELLOW)
-                    );
-                } else {
-                    OfflinePlayer otherOfflinePlayer = this.pluginInstance.getServer().getOfflinePlayer(otherPlayerUuid);
-
-                    player.sendMessage(Component
-                            .text(String.format("%s is not in the server.", otherOfflinePlayer))
-                            .color(NamedTextColor.RED)
                     );
                 }
 
