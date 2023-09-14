@@ -169,8 +169,7 @@ public class ItemBuilder implements Listener {
                 return buildItem(selectedBetterItem);
             }
         } catch (Exception exception) {
-            this.logger.severe("Unable to prepare better items.");
-            exception.printStackTrace();
+            this.logger.severe(String.format("Unable to prepare better items: %s", exception.getMessage()));
         }
 
         return null;

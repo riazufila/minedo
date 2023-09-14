@@ -19,11 +19,9 @@ import java.util.logging.Logger;
 
 public class Minedo extends JavaPlugin {
 
-    private static Minedo instance;
-
     @Override
     public void onEnable() {
-        instance = this;
+        Minedo instance = this;
 
         World world = getWorldInstance();
         Logger logger = getPluginLogger();

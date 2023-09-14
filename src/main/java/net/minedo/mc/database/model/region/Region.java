@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 public class Region {
+
     public int id;
     public String name;
     public int minX;
@@ -182,4 +183,5 @@ public class Region {
 
         return region;
     }
+
 }

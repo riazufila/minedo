@@ -1,6 +1,7 @@
 package net.minedo.mc.constants.common;
 
 public enum Common {
+
     CHUNK_SIZE(16);
 
     private final int value;
@@ -12,4 +13,5 @@ public enum Common {
     public int getValue() {
         return value;
     }
+
 }
