@@ -148,8 +148,8 @@ public class PlayerTeleport implements CommandExecutor, Listener {
                             .runTaskTimer(this.pluginInstance, 20, 20)
                             .getTaskId();
 
-                    this.teleportingRequesters.put(player.getUniqueId(), teleportingTaskId);
-                    this.standingStillRequestees.put(otherPlayer.getUniqueId(), teleportingTaskId);
+                    this.teleportingRequesters.put(otherPlayer.getUniqueId(), teleportingTaskId);
+                    this.standingStillRequestees.put(player.getUniqueId(), teleportingTaskId);
 
                     player.sendMessage(Component
                             .text(String.format("Stand still while %s is teleporting..", otherPlayer.getName()))
