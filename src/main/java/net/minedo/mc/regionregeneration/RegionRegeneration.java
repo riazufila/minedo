@@ -301,9 +301,13 @@ public class RegionRegeneration implements Listener {
         Block block = event.getEntity().getLocation().getBlock();
 
         if (isWithinRegion(block)) {
+            // Keep inventory.
             event.setKeepInventory(true);
             event.getDrops().clear();
+
+            // Keep experience.
             event.setKeepLevel(true);
+            event.setDroppedExp(0);
         }
     }
 
