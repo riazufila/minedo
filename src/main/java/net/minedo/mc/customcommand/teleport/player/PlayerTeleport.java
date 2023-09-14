@@ -269,9 +269,9 @@ public class PlayerTeleport implements CommandExecutor, Listener {
             Integer requesteeTeleportTaskId = this.standingStillRequestees.get(playerUuid);
 
             if (requesterTeleportTaskId != null) {
-                this.handleTeleportCancellation(player, requesterTeleportTaskId, teleportingRequesters, true);
+                this.handleTeleportCancellation(player, requesterTeleportTaskId, standingStillRequestees, true);
             } else if (requesteeTeleportTaskId != null) {
-                this.handleTeleportCancellation(player, requesteeTeleportTaskId, standingStillRequestees, false);
+                this.handleTeleportCancellation(player, requesteeTeleportTaskId, teleportingRequesters, false);
             }
         }
     }

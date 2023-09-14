@@ -46,8 +46,8 @@ public class PlayerTeleportScheduler extends BukkitRunnable {
                 );
             }
 
-            teleportingRequesters.remove(teleportingPlayer.getUniqueId());
-            standingStillRequestees.remove(stillPlayer.getUniqueId());
+            teleportingRequesters.remove(this.teleportingPlayer.getUniqueId());
+            standingStillRequestees.remove(this.stillPlayer.getUniqueId());
             this.cancel();
         }
     }
