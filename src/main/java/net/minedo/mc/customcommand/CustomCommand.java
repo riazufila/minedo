@@ -45,8 +45,9 @@ public class CustomCommand {
             Objects.requireNonNull(this.customCommandInterface.getCommand(customCommand)).setExecutor(regionTeleport);
         }
 
-        // Player teleport commands.
+        // Player teleport.
         PlayerTeleport playerTeleport = new PlayerTeleport(this.pluginInstance);
+        server.getPluginManager().registerEvents(playerTeleport, this.pluginInstance);
         this.customCommandInterface.getCommand("teleport").setExecutor(playerTeleport);
     }
 
