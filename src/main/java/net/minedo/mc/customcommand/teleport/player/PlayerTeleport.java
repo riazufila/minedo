@@ -12,9 +12,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
 
 public class PlayerTeleport implements CommandExecutor, Listener {
 
@@ -22,7 +26,7 @@ public class PlayerTeleport implements CommandExecutor, Listener {
     private final Map<UUID, Integer> teleportRequestRequesters = new HashMap<>();
     private final Map<UUID, Integer> teleportRequestRequestees = new HashMap<>();
     private final Map<UUID, Integer> teleportingRequesters = new HashMap<>();
-    private final Map<UUID, Integer> teleportingRequestees = new HashMap<>();
+    private final Map<UUID, Integer> standingStillRequestees = new HashMap<>();
 
     public PlayerTeleport(Minedo pluginInstance) {
         this.pluginInstance = pluginInstance;
@@ -44,6 +48,29 @@ public class PlayerTeleport implements CommandExecutor, Listener {
         }
 
         return false;
+    }
+
+    private UUID getOtherPlayerUuidFromPlayer(Integer teleportRequestTaskId) {
+        UUID otherPlayerUuid = null;
+
+        for (Map.Entry<UUID, Integer> entry : teleportRequestRequesters.entrySet()) {
+            if (entry.getValue().equals(teleportRequestTaskId)) {
+                otherPlayerUuid = entry.getKey();
+            }
+        }
+
+        return otherPlayerUuid;
+    }
+
+    private Player removePlayersFromRequestQueue(Player player, UUID otherPlayerUuid, Integer teleportRequestTaskId) {
+        Player otherPlayer = this.pluginInstance.getServer().getPlayer(Objects.requireNonNull(otherPlayerUuid));
+
+        this.teleportRequestRequesters.remove(otherPlayerUuid);
+        this.teleportRequestRequestees.remove(player.getUniqueId());
+
+        Bukkit.getScheduler().cancelTask(teleportRequestTaskId);
+
+        return otherPlayer;
     }
 
     @Override
@@ -69,6 +96,15 @@ public class PlayerTeleport implements CommandExecutor, Listener {
             case "request" -> {
                 String teleportTarget = args[1];
                 Player otherPlayer = this.pluginInstance.getServer().getPlayer(teleportTarget);
+                Integer existingTeleportRequestTaskId = teleportRequestRequesters.get(player.getUniqueId());
+
+                if (existingTeleportRequestTaskId != null) {
+                    player.sendMessage(Component
+                            .text("You already have a teleport request.")
+                            .color(NamedTextColor.RED)
+                    );
+                    return true;
+                }
 
                 if (otherPlayer != null && otherPlayer.isOnline()) {
                     int teleportRequestTaskId = new PlayerTeleportRequestTimer(player, otherPlayer, teleportRequestRequesters, teleportRequestRequestees)
@@ -93,27 +129,26 @@ public class PlayerTeleport implements CommandExecutor, Listener {
             }
 
             case "accept" -> {
-                // TODO: Check if player in the requestee map.
+                Integer existingTeleportRequestTaskId = teleportRequestRequestees.get(player.getUniqueId());
+                UUID otherPlayerUuid = this.getOtherPlayerUuidFromPlayer(existingTeleportRequestTaskId);
+                Player otherPlayer = this.removePlayersFromRequestQueue(player, otherPlayerUuid, existingTeleportRequestTaskId);
 
                 return true;
             }
 
             case "decline" -> {
-                Integer teleportRequestTaskId = teleportRequestRequestees.get(player.getUniqueId());
-                UUID otherPlayerUuid = null;
+                Integer existingTeleportRequestTaskId = teleportRequestRequestees.get(player.getUniqueId());
 
-                for (Map.Entry<UUID, Integer> entry : teleportRequestRequesters.entrySet()) {
-                    if (entry.getValue().equals(teleportRequestTaskId)) {
-                        otherPlayerUuid = entry.getKey();
-                    }
+                if (existingTeleportRequestTaskId == null) {
+                    player.sendMessage(Component
+                            .text("You don't have a teleport request.")
+                            .color(NamedTextColor.RED)
+                    );
+                    return true;
                 }
 
-                Player otherPlayer = this.pluginInstance.getServer().getPlayer(Objects.requireNonNull(otherPlayerUuid));
-
-                this.teleportRequestRequesters.remove(otherPlayerUuid);
-                this.teleportRequestRequestees.remove(player.getUniqueId());
-
-                Bukkit.getScheduler().cancelTask(teleportRequestTaskId);
+                UUID otherPlayerUuid = this.getOtherPlayerUuidFromPlayer(existingTeleportRequestTaskId);
+                Player otherPlayer = this.removePlayersFromRequestQueue(player, otherPlayerUuid, existingTeleportRequestTaskId);
 
                 if (otherPlayer != null && otherPlayer.isOnline()) {
                     otherPlayer.sendMessage(Component
@@ -164,10 +199,10 @@ public class PlayerTeleport implements CommandExecutor, Listener {
         // Remove from Map.
         if (isRequester) {
             this.teleportingRequesters.remove(playerUuid);
-            this.teleportingRequestees.remove(otherPlayerUuid);
+            this.standingStillRequestees.remove(otherPlayerUuid);
         } else {
             this.teleportingRequesters.remove(otherPlayerUuid);
-            this.teleportingRequestees.remove(playerUuid);
+            this.standingStillRequestees.remove(playerUuid);
         }
 
         // Cancel Bukkit Runnable.
@@ -195,14 +230,27 @@ public class PlayerTeleport implements CommandExecutor, Listener {
             Player player = event.getPlayer();
             UUID playerUuid = player.getUniqueId();
             Integer requesterTeleportTaskId = this.teleportingRequesters.get(playerUuid);
-            Integer requesteeTeleportTaskId = this.teleportingRequestees.get(playerUuid);
+            Integer requesteeTeleportTaskId = this.standingStillRequestees.get(playerUuid);
 
             if (requesterTeleportTaskId != null) {
                 this.handleTeleportCancellation(player, requesterTeleportTaskId, teleportingRequesters, true);
             } else if (requesteeTeleportTaskId != null) {
-                this.handleTeleportCancellation(player, requesteeTeleportTaskId, teleportingRequestees, false);
+                this.handleTeleportCancellation(player, requesteeTeleportTaskId, standingStillRequestees, false);
             }
         }
+    }
+
+    @EventHandler
+    public void onPlayerQuit(PlayerQuitEvent event) {
+        Player player = event.getPlayer();
+        Integer existingTeleportRequestTaskId = teleportRequestRequestees.get(player.getUniqueId());
+
+        if (existingTeleportRequestTaskId == null) {
+            return;
+        }
+
+        UUID otherPlayerUuid = this.getOtherPlayerUuidFromPlayer(existingTeleportRequestTaskId);
+        Player otherPlayer = this.removePlayersFromRequestQueue(player, otherPlayerUuid, existingTeleportRequestTaskId);
     }
 
 }
