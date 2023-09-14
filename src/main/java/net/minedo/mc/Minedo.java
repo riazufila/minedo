@@ -35,9 +35,8 @@ public class Minedo extends JavaPlugin {
         // Populate newly generated chests with Better Items.
         server.getPluginManager().registerEvents(new ItemBuilder(logger, instance), instance);
 
-        // Register and display only custom commands to players.
-        CustomCommand customCommand = new CustomCommand(world, instance, server, this::getPluginCommand);
-        server.getPluginManager().registerEvents(customCommand, instance);
+        // Register and display custom commands to players.
+        new CustomCommand(world, instance, server, this::getPluginCommand);
 
         // Region regenerations.
         WorldGuard worldGuard = getWorldGuardInstance();
