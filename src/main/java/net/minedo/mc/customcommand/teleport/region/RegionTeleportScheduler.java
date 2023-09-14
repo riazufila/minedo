@@ -33,13 +33,13 @@ public class RegionTeleportScheduler extends BukkitRunnable {
             player.sendMessage(Component.text(String.format("%s..", countdown)).color(NamedTextColor.YELLOW));
             countdown--;
         } else {
-            // Check if the player is still online and has not moved
             if (player.isOnline()) {
-                // Teleport the player to the spawn point
                 player.teleport(this.destination);
-                player.sendMessage(Component.text(
-                        String.format("Teleported to %s!", this.customCommand)
-                ).color(NamedTextColor.GREEN));
+
+                player.sendMessage(Component
+                        .text(String.format("Teleported to %s!", this.customCommand))
+                        .color(NamedTextColor.GREEN)
+                );
             }
 
             teleportingPlayers.remove(player.getUniqueId());
