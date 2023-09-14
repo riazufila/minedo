@@ -52,7 +52,16 @@ public class RegionTeleport implements CommandExecutor, Listener {
             return true;
         }
 
-        if (teleportingPlayers.containsKey(((Player) sender).getUniqueId())) {
+        if (args.length > 0) {
+            player.sendMessage(Component
+                    .text(String.format("Usage: /%s", this.customCommand))
+                    .color(NamedTextColor.GRAY)
+            );
+
+            return true;
+        }
+
+        if (teleportingPlayers.containsKey(player.getUniqueId())) {
             player.sendMessage(Component.text("You're already teleporting!").color(NamedTextColor.RED));
 
             return true;
