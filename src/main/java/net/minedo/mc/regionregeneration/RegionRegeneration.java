@@ -49,19 +49,18 @@ public class RegionRegeneration implements Listener {
     private final WorldEdit worldEdit;
     private final Region region;
     private final Minedo pluginInstance;
-    private final Logger logger;
+    private final Logger logger = Logger.getLogger(this.getClass().getName());
     private final Map<String, Integer> restoringChunks = new HashMap<>();
 
     public RegionRegeneration(
             World world, WorldGuard worldGuard, WorldEdit worldEdit,
-            Region region, Minedo pluginInstance, Logger logger
+            Region region, Minedo pluginInstance
     ) {
         this.world = world;
         this.worldGuard = worldGuard;
         this.worldEdit = worldEdit;
         this.region = region;
         this.pluginInstance = pluginInstance;
-        this.logger = logger;
 
         // Initialize spawn region setup.
         if (this.getRegion() == null) {

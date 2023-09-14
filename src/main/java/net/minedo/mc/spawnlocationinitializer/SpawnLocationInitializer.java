@@ -9,11 +9,10 @@ import java.util.logging.Logger;
 public class SpawnLocationInitializer {
 
     private final World world;
-    private final Logger logger;
+    private final Logger logger = Logger.getLogger(this.getClass().getName());
 
-    public SpawnLocationInitializer(World world, Logger logger) {
+    public SpawnLocationInitializer(World world) {
         this.world = world;
-        this.logger = logger;
 
         if (!hasSpawnLocationSet()) {
             setSpawnLocation();
