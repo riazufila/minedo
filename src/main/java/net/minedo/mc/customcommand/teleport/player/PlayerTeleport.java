@@ -50,16 +50,16 @@ public class PlayerTeleport implements CommandExecutor, Listener {
         return false;
     }
 
-    private UUID getOtherPlayerUuidFromPlayer(Integer teleportRequestTaskId) {
-        UUID otherPlayerUuid = null;
+    private UUID getPlayerUuidFromTaskId(Integer teleportTaskId, Map<UUID, Integer> teleportTasks) {
+        UUID playerUuid = null;
 
-        for (Map.Entry<UUID, Integer> entry : teleportRequestRequesters.entrySet()) {
-            if (entry.getValue().equals(teleportRequestTaskId)) {
-                otherPlayerUuid = entry.getKey();
+        for (Map.Entry<UUID, Integer> entry : teleportTasks.entrySet()) {
+            if (entry.getValue().equals(teleportTaskId)) {
+                playerUuid = entry.getKey();
             }
         }
 
-        return otherPlayerUuid;
+        return playerUuid;
     }
 
     private Player removePlayersFromRequestQueue(Player player, UUID otherPlayerUuid, Integer teleportRequestTaskId) {
@@ -151,7 +151,7 @@ public class PlayerTeleport implements CommandExecutor, Listener {
                     return true;
                 }
 
-                UUID otherPlayerUuid = this.getOtherPlayerUuidFromPlayer(existingTeleportRequestTaskId);
+                UUID otherPlayerUuid = this.getPlayerUuidFromTaskId(existingTeleportRequestTaskId, teleportRequestRequesters);
                 Player otherPlayer = this.removePlayersFromRequestQueue(player, otherPlayerUuid, existingTeleportRequestTaskId);
 
                 if (otherPlayer != null && otherPlayer.isOnline()) {
@@ -187,7 +187,7 @@ public class PlayerTeleport implements CommandExecutor, Listener {
                     return true;
                 }
 
-                UUID otherPlayerUuid = this.getOtherPlayerUuidFromPlayer(existingTeleportRequestTaskId);
+                UUID otherPlayerUuid = this.getPlayerUuidFromTaskId(existingTeleportRequestTaskId, teleportRequestRequesters);
                 Player otherPlayer = this.removePlayersFromRequestQueue(player, otherPlayerUuid, existingTeleportRequestTaskId);
 
                 if (otherPlayer != null && otherPlayer.isOnline()) {
@@ -278,19 +278,6 @@ public class PlayerTeleport implements CommandExecutor, Listener {
                 this.handleTeleportCancellation(player, requesteeTeleportTaskId, teleportingRequesters, false);
             }
         }
-    }
-
-    @EventHandler
-    public void onPlayerQuit(PlayerQuitEvent event) {
-        Player player = event.getPlayer();
-        Integer existingTeleportRequestTaskId = teleportRequestRequestees.get(player.getUniqueId());
-
-        if (existingTeleportRequestTaskId == null) {
-            return;
-        }
-
-        UUID otherPlayerUuid = this.getOtherPlayerUuidFromPlayer(existingTeleportRequestTaskId);
-        Player otherPlayer = this.removePlayersFromRequestQueue(player, otherPlayerUuid, existingTeleportRequestTaskId);
     }
 
 }

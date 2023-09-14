@@ -44,6 +44,16 @@ public class PlayerTeleportScheduler extends BukkitRunnable {
                         .text(String.format("%s teleported to you!", this.teleportingPlayer.getName()))
                         .color(NamedTextColor.GREEN)
                 );
+            } else if (!teleportingPlayer.isOnline()) {
+                stillPlayer.sendMessage(Component
+                        .text(String.format("%s went offline.", this.teleportingPlayer.getName()))
+                        .color(NamedTextColor.RED)
+                );
+            } else if (!stillPlayer.isOnline()) {
+                teleportingPlayer.sendMessage(Component
+                        .text(String.format("%s went offline.", this.stillPlayer.getName()))
+                        .color(NamedTextColor.RED)
+                );
             }
 
             teleportingRequesters.remove(this.teleportingPlayer.getUniqueId());
