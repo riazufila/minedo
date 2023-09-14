@@ -23,6 +23,7 @@ import java.util.logging.Logger;
 
 public class BetterItem {
 
+    private final Logger logger = Logger.getLogger(this.getClass().getName());
     private int id;
     private Material material;
     private String displayName;
@@ -32,7 +33,6 @@ public class BetterItem {
     private List<BetterItemEnchantment> enchantments;
     private List<BetterItemAttribute> attributes;
     private BetterItemProbability probability;
-    private final Logger logger = Logger.getLogger(this.getClass().getName());
 
     public BetterItem[] getAllBetterItems() {
         Database database = new Database();
