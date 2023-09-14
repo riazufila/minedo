@@ -1,6 +1,7 @@
 package net.minedo.mc.constants.directory;
 
 public enum Directory {
+
     SCHEMATIC("plugins/FastAsyncWorldEdit/schematics/");
 
     private final String path;
@@ -12,4 +13,5 @@ public enum Directory {
     public String getDirectory() {
         return path;
     }
+
 }

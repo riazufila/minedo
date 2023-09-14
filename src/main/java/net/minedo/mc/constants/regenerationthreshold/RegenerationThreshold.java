@@ -13,4 +13,5 @@ public enum RegenerationThreshold {
     public double getThreshold() {
         return threshold;
     }
+
 }
