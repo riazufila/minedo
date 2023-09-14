@@ -4,6 +4,7 @@ import io.github.cdimascio.dotenv.Dotenv;
 
 import java.sql.*;
 import java.util.Map;
+import java.util.logging.Logger;
 
 public class Database {
 
@@ -11,6 +12,7 @@ public class Database {
     private final String user;
     private final String password;
     private Connection connection;
+    private final Logger logger = Logger.getLogger(this.getClass().getName());
 
     public Database() {
         Dotenv dotenv = Dotenv.load();
@@ -24,7 +26,7 @@ public class Database {
         try {
             this.connection = DriverManager.getConnection(this.url, this.user, this.password);
         } catch (SQLException e) {
-            e.printStackTrace();
+            this.logger.severe(String.format("Unable to connect to the database: %s", e.getMessage()));
         }
     }
 
@@ -33,7 +35,7 @@ public class Database {
             try {
                 this.connection.close();
             } catch (SQLException e) {
-                e.printStackTrace();
+                this.logger.severe(String.format("Unable to disconnect from the database: %s", e.getMessage()));
             }
         }
     }
@@ -45,7 +47,7 @@ public class Database {
             Statement statement = this.connection.createStatement();
             resultSet = statement.executeQuery(sqlQuery);
         } catch (SQLException e) {
-            e.printStackTrace();
+            this.logger.severe(String.format("Unable to query the database: %s", e.getMessage()));
         }
 
         return resultSet;
@@ -63,7 +65,9 @@ public class Database {
 
             resultSet = preparedStatement.executeQuery();
         } catch (SQLException e) {
-            e.printStackTrace();
+            this.logger.severe(
+                    String.format("Unable to query with conditions from the database: %s", e.getMessage())
+            );
         }
 
         return resultSet;

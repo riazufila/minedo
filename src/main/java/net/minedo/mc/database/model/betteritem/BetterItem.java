@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 public class BetterItem {
 
@@ -31,8 +32,9 @@ public class BetterItem {
     private List<BetterItemEnchantment> enchantments;
     private List<BetterItemAttribute> attributes;
     private BetterItemProbability probability;
+    private final Logger logger = Logger.getLogger(this.getClass().getName());
 
-    public static BetterItem[] getAllBetterItems() {
+    public BetterItem[] getAllBetterItems() {
         Database database = new Database();
         database.connect();
 
@@ -238,7 +240,7 @@ public class BetterItem {
                 betterItem.setProbability(probability);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            this.logger.severe(String.format("Unable to get better items: %s", e.getMessage()));
         } finally {
             database.disconnect();
         }

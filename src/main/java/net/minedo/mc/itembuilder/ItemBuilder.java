@@ -28,11 +28,10 @@ import java.util.logging.Logger;
 
 public class ItemBuilder implements Listener {
 
-    private final Logger logger;
+    private final Logger logger = Logger.getLogger(this.getClass().getName());
     private final Minedo pluginInstance;
 
-    public ItemBuilder(Logger logger, Minedo pluginInstance) {
-        this.logger = logger;
+    public ItemBuilder(Minedo pluginInstance) {
         this.pluginInstance = pluginInstance;
     }
 
@@ -150,7 +149,7 @@ public class ItemBuilder implements Listener {
 
             // 50% chance to retrieve an item.
             if (random.nextBoolean()) {
-                BetterItem[] betterItemList = BetterItem.getAllBetterItems();
+                BetterItem[] betterItemList = new BetterItem().getAllBetterItems();
 
                 double[] probabilities = new double[betterItemList.length];
                 int index = 0;
