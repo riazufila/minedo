@@ -6,25 +6,27 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
 public class PlayerTeleportScheduler extends BukkitRunnable {
 
     private final Player player;
-    private final Location destination;
-    private final String customCommand;
-    private final Map<UUID, Integer> teleportingPlayers;
+    private final Player otherPlayer;
+    private final Map<UUID, Integer> teleportingRequesters;
+    private final Map<UUID, Integer> standingStillRequestees;
     private int countdown;
 
     public PlayerTeleportScheduler(
-            Player player, Location destination, String customCommand, Map<UUID, Integer> teleportingPlayers
+            Player player, Player otherPlayer,
+            Map<UUID, Integer> teleportingRequesters, Map<UUID, Integer> standingStillRequestees
     ) {
         this.countdown = 4;
         this.player = player;
-        this.destination = destination;
-        this.customCommand = customCommand;
-        this.teleportingPlayers = teleportingPlayers;
+        this.otherPlayer = otherPlayer;
+        this.teleportingRequesters = teleportingRequesters;
+        this.standingStillRequestees = standingStillRequestees;
     }
 
     @Override
@@ -33,16 +35,19 @@ public class PlayerTeleportScheduler extends BukkitRunnable {
             player.sendMessage(Component.text(String.format("%s..", countdown)).color(NamedTextColor.YELLOW));
             countdown--;
         } else {
-            // Check if the player is still online and has not moved
-            if (player.isOnline()) {
-                // Teleport the player to the spawn point
-                player.teleport(this.destination);
+            if (player.isOnline() && otherPlayer.isOnline()) {
+                player.teleport(this.otherPlayer);
+
                 player.sendMessage(Component.text(
-                        String.format("Teleported to %s!", this.customCommand)
+                        String.format("Teleported to %s!", this.otherPlayer.getName())
                 ).color(NamedTextColor.GREEN));
+                otherPlayer.sendMessage(Component.text(
+                        String.format("%s teleported to you!", this.player.getName())
+                ));
             }
 
-            teleportingPlayers.remove(player.getUniqueId());
+            teleportingRequesters.remove(player.getUniqueId());
+            standingStillRequestees.remove(otherPlayer.getUniqueId());
             this.cancel();
         }
     }
