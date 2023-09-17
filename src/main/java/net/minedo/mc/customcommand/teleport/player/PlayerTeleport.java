@@ -114,6 +114,14 @@ public class PlayerTeleport implements CommandExecutor, Listener {
                 }
 
                 if (otherPlayer != null && otherPlayer.isOnline()) {
+                    if (player.equals(otherPlayer)) {
+                        player.sendMessage(Component
+                                .text("Unable to teleport to yourself.")
+                                .color(NamedTextColor.RED)
+                        );
+                        return true;
+                    }
+
                     int teleportRequestTaskId = new PlayerTeleportRequestTimer(player, otherPlayer, teleportRequestRequesters, teleportRequestRequestees)
                             .runTaskLater(this.pluginInstance, 600)
                             .getTaskId();
