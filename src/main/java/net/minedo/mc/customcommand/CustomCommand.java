@@ -8,7 +8,10 @@ import net.minedo.mc.interfaces.customcommand.CustomCommandInterface;
 import org.bukkit.Server;
 import org.bukkit.World;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 
 public class CustomCommand {
 
