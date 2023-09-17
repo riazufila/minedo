@@ -61,17 +61,6 @@ public class RegionRegeneration implements Listener {
         this.worldEdit = worldEdit;
         this.region = region;
         this.pluginInstance = pluginInstance;
-
-        // Initialize spawn region setup.
-        if (this.getRegion() == null) {
-            this.setRegion();
-            this.setRegionSnapshot();
-        }
-
-        if (!this.getRegionSnapshot()) {
-            this.setRegionSnapshot();
-        }
-
     }
 
     private File getFile(int chunkX, int chunkZ) {
@@ -87,7 +76,7 @@ public class RegionRegeneration implements Listener {
         return new File(Directory.SCHEMATIC.getDirectory() + fileName);
     }
 
-    private ProtectedRegion getRegion() {
+    public ProtectedRegion getRegion() {
         this.logger.info(String.format("Getting %s region.", this.region.getName()));
 
         RegionContainer regionContainer = worldGuard.getPlatform().getRegionContainer();
@@ -102,7 +91,7 @@ public class RegionRegeneration implements Listener {
         return protectedRegion;
     }
 
-    private void setRegion() {
+    public void setRegion() {
         this.logger.info(String.format("Setting %s region.", this.region.getName()));
 
         ProtectedRegion protectedRegion = getProtectedRegion();
@@ -133,7 +122,7 @@ public class RegionRegeneration implements Listener {
         return new ProtectedCuboidRegion(region.getName(), min, max);
     }
 
-    private boolean getRegionSnapshot() {
+    public boolean getRegionSnapshot() {
         this.logger.info(String.format("Getting %s region snapshot.", this.region.getName()));
 
         RegionContainer container = worldGuard.getPlatform().getRegionContainer();
@@ -174,7 +163,7 @@ public class RegionRegeneration implements Listener {
         return true;
     }
 
-    private void setRegionSnapshot() {
+    public void setRegionSnapshot() {
         this.logger.info(String.format("Setting %s region snapshot.", this.region.getName()));
 
         RegionContainer container = worldGuard.getPlatform().getRegionContainer();

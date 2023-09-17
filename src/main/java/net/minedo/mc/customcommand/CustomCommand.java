@@ -30,8 +30,6 @@ public class CustomCommand {
         this.server = server;
         this.customCommandInterface = customCommandInterface;
         this.regions = new Region().getAllRegions();
-
-        this.setupCustomCommands();
     }
 
     public void setupCustomCommands() {
