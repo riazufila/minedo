@@ -13,10 +13,6 @@ public class SpawnLocationInitializer {
 
     public SpawnLocationInitializer(World world) {
         this.world = world;
-
-        if (!hasSpawnLocationSet()) {
-            setSpawnLocation();
-        }
     }
 
     public void setSpawnLocation() {

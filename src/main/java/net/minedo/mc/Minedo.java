@@ -26,13 +26,17 @@ public class Minedo extends JavaPlugin {
         Server server = getPluginServer();
 
         // Set spawn location.
-        new SpawnLocationInitializer(world);
+        SpawnLocationInitializer spawnLocationInitializer = new SpawnLocationInitializer(world);
+        if (!spawnLocationInitializer.hasSpawnLocationSet()) {
+            spawnLocationInitializer.setSpawnLocation();
+        }
 
         // Populate newly generated chests with Better Items.
         server.getPluginManager().registerEvents(new ItemBuilder(instance), instance);
 
         // Register and display custom commands to players.
-        new CustomCommand(world, instance, server, this::getPluginCommand);
+        CustomCommand customCommand = new CustomCommand(world, instance, server, this::getPluginCommand);
+        customCommand.setupCustomCommands();
 
         // Region regenerations.
         WorldGuard worldGuard = getWorldGuardInstance();
@@ -43,6 +47,17 @@ public class Minedo extends JavaPlugin {
             RegionRegeneration regionRegeneration = new RegionRegeneration(
                     world, worldGuard, worldEdit, region, instance
             );
+
+            // Initialize region setup.
+            if (regionRegeneration.getRegion() == null) {
+                regionRegeneration.setRegion();
+                regionRegeneration.setRegionSnapshot();
+            }
+
+            // Initialize region schematics.
+            if (!regionRegeneration.getRegionSnapshot()) {
+                regionRegeneration.setRegionSnapshot();
+            }
 
             server.getPluginManager().registerEvents(regionRegeneration, instance);
         }
