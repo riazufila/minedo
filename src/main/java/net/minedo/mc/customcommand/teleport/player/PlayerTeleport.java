@@ -129,6 +129,10 @@ public class PlayerTeleport implements CommandExecutor, Listener {
                     this.teleportRequestRequesters.put(player.getUniqueId(), teleportRequestTaskId);
                     this.teleportRequestRequestees.put(otherPlayer.getUniqueId(), teleportRequestTaskId);
 
+                    player.sendMessage(Component
+                            .text(String.format("Waiting for %s to respond..", teleportTarget))
+                            .color(NamedTextColor.YELLOW)
+                    );
                     otherPlayer.sendMessage(Component
                             .text(String.format("%s is requesting to teleport..", player.getName()))
                             .color(NamedTextColor.YELLOW)
