@@ -6,6 +6,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -14,16 +15,19 @@ public class RegionTeleportScheduler extends BukkitRunnable {
     private final Player player;
     private final Location destination;
     private final String customCommand;
+    private final List<UUID> globalTeleportingPlayers;
     private final Map<UUID, Integer> teleportingPlayers;
     private int countdown;
 
     public RegionTeleportScheduler(
-            Player player, Location destination, String customCommand, Map<UUID, Integer> teleportingPlayers
+            Player player, Location destination, String customCommand,
+            List<UUID> globalTeleportingPlayers, Map<UUID, Integer> teleportingPlayers
     ) {
         this.countdown = 4;
         this.player = player;
         this.destination = destination;
         this.customCommand = customCommand;
+        this.globalTeleportingPlayers = globalTeleportingPlayers;
         this.teleportingPlayers = teleportingPlayers;
     }
 
@@ -42,7 +46,9 @@ public class RegionTeleportScheduler extends BukkitRunnable {
                 );
             }
 
-            teleportingPlayers.remove(player.getUniqueId());
+            this.globalTeleportingPlayers.remove(player.getUniqueId());
+            this.teleportingPlayers.remove(player.getUniqueId());
+
             this.cancel();
         }
     }

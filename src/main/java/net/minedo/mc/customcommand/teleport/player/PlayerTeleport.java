@@ -12,23 +12,21 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 public class PlayerTeleport implements CommandExecutor, Listener {
 
     private final Minedo pluginInstance;
+    private final List<UUID> globalTeleportingPlayers;
     private final Map<UUID, Integer> teleportRequestRequesters = new HashMap<>();
     private final Map<UUID, Integer> teleportRequestRequestees = new HashMap<>();
     private final Map<UUID, Integer> teleportingRequesters = new HashMap<>();
     private final Map<UUID, Integer> standingStillRequestees = new HashMap<>();
 
-    public PlayerTeleport(Minedo pluginInstance) {
+    public PlayerTeleport(List<UUID> globalTeleportingPlayers, Minedo pluginInstance) {
+        this.globalTeleportingPlayers = globalTeleportingPlayers;
         this.pluginInstance = pluginInstance;
     }
 
@@ -98,6 +96,15 @@ public class PlayerTeleport implements CommandExecutor, Listener {
                 Player otherPlayer = this.pluginInstance.getServer().getPlayer(teleportTarget);
                 Integer existingTeleportRequestTaskId = teleportRequestRequesters.get(player.getUniqueId());
 
+                if (globalTeleportingPlayers.contains(player.getUniqueId())) {
+                    player.sendMessage(Component
+                            .text("Not allowed to perform more than one teleportation at a time.")
+                            .color(NamedTextColor.RED)
+                    );
+
+                    return true;
+                }
+
                 if (existingTeleportRequestTaskId != null) {
                     player.sendMessage(Component
                             .text("You already have a teleport request.")
@@ -155,9 +162,13 @@ public class PlayerTeleport implements CommandExecutor, Listener {
                 Player otherPlayer = this.removePlayersFromRequestQueue(player, otherPlayerUuid, existingTeleportRequestTaskId);
 
                 if (otherPlayer != null && otherPlayer.isOnline()) {
-                    int teleportingTaskId = new PlayerTeleportScheduler(otherPlayer, player, teleportingRequesters, standingStillRequestees)
-                            .runTaskTimer(this.pluginInstance, 20, 20)
-                            .getTaskId();
+                    int teleportingTaskId = new PlayerTeleportScheduler(
+                            otherPlayer, player, teleportingRequesters,
+                            standingStillRequestees, globalTeleportingPlayers
+                    ).runTaskTimer(this.pluginInstance, 20, 20).getTaskId();
+
+                    this.globalTeleportingPlayers.add(player.getUniqueId());
+                    this.globalTeleportingPlayers.add(otherPlayerUuid);
 
                     this.teleportingRequesters.put(otherPlayer.getUniqueId(), teleportingTaskId);
                     this.standingStillRequestees.put(player.getUniqueId(), teleportingTaskId);
@@ -235,6 +246,10 @@ public class PlayerTeleport implements CommandExecutor, Listener {
                 otherPlayer = this.pluginInstance.getServer().getPlayer(otherPlayerUuid);
             }
         }
+
+        // Remove from global teleport list.
+        this.globalTeleportingPlayers.remove(playerUuid);
+        this.globalTeleportingPlayers.remove(otherPlayerUuid);
 
         // Remove from Map.
         if (isRequester) {

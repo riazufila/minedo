@@ -5,6 +5,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -14,17 +15,20 @@ public class PlayerTeleportScheduler extends BukkitRunnable {
     private final Player stillPlayer;
     private final Map<UUID, Integer> teleportingRequesters;
     private final Map<UUID, Integer> standingStillRequestees;
+    private final List<UUID> globalTeleportingPlayers;
     private int countdown;
 
     public PlayerTeleportScheduler(
             Player teleportingPlayer, Player stillPlayer,
-            Map<UUID, Integer> teleportingRequesters, Map<UUID, Integer> standingStillRequestees
+            Map<UUID, Integer> teleportingRequesters, Map<UUID, Integer> standingStillRequestees,
+            List<UUID> globalTeleportingPlayers
     ) {
         this.countdown = 4;
         this.teleportingPlayer = teleportingPlayer;
         this.stillPlayer = stillPlayer;
         this.teleportingRequesters = teleportingRequesters;
         this.standingStillRequestees = standingStillRequestees;
+        this.globalTeleportingPlayers = globalTeleportingPlayers;
     }
 
     @Override
@@ -56,8 +60,12 @@ public class PlayerTeleportScheduler extends BukkitRunnable {
                 );
             }
 
-            teleportingRequesters.remove(this.teleportingPlayer.getUniqueId());
-            standingStillRequestees.remove(this.stillPlayer.getUniqueId());
+            this.globalTeleportingPlayers.remove(this.teleportingPlayer.getUniqueId());
+            this.globalTeleportingPlayers.remove(this.stillPlayer.getUniqueId());
+
+            this.teleportingRequesters.remove(this.teleportingPlayer.getUniqueId());
+            this.standingStillRequestees.remove(this.stillPlayer.getUniqueId());
+
             this.cancel();
         }
     }
