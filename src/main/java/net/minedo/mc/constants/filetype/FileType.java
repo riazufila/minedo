@@ -1,6 +1,7 @@
 package net.minedo.mc.constants.filetype;
 
 public enum FileType {
+
     SCHEMATIC("schem");
 
     private final String type;
@@ -12,4 +13,5 @@ public enum FileType {
     public String getType() {
         return type;
     }
+
 }

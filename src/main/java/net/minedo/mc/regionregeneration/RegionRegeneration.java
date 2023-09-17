@@ -4,7 +4,8 @@ import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.extent.clipboard.BlockArrayClipboard;
-import com.sk89q.worldedit.extent.clipboard.io.*;
+import com.sk89q.worldedit.extent.clipboard.io.BuiltInClipboardFormat;
+import com.sk89q.worldedit.extent.clipboard.io.ClipboardWriter;
 import com.sk89q.worldedit.function.operation.ForwardExtentCopy;
 import com.sk89q.worldedit.function.operation.Operations;
 import com.sk89q.worldedit.math.BlockVector3;
@@ -33,7 +34,9 @@ import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -46,19 +49,18 @@ public class RegionRegeneration implements Listener {
     private final WorldEdit worldEdit;
     private final Region region;
     private final Minedo pluginInstance;
-    private final Logger logger;
+    private final Logger logger = Logger.getLogger(this.getClass().getName());
     private final Map<String, Integer> restoringChunks = new HashMap<>();
 
     public RegionRegeneration(
             World world, WorldGuard worldGuard, WorldEdit worldEdit,
-            Region region, Minedo pluginInstance, Logger logger
+            Region region, Minedo pluginInstance
     ) {
         this.world = world;
         this.worldGuard = worldGuard;
         this.worldEdit = worldEdit;
         this.region = region;
         this.pluginInstance = pluginInstance;
-        this.logger = logger;
 
         // Initialize spawn region setup.
         if (this.getRegion() == null) {
@@ -299,9 +301,14 @@ public class RegionRegeneration implements Listener {
         Block block = event.getEntity().getLocation().getBlock();
 
         if (isWithinRegion(block)) {
+            // Keep inventory.
             event.setKeepInventory(true);
             event.getDrops().clear();
+
+            // Keep experience.
             event.setKeepLevel(true);
+            event.setDroppedExp(0);
         }
     }
+
 }

@@ -29,6 +29,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class RegionRegenerationBuilder extends BukkitRunnable {
+
     private final Chunk chunk;
     private final Region region;
     private final World world;
@@ -136,4 +137,5 @@ public class RegionRegenerationBuilder extends BukkitRunnable {
             this.restoringChunks.remove(String.format("(%d,%d)", chunk.getX(), chunk.getZ()));
         }
     }
+
 }

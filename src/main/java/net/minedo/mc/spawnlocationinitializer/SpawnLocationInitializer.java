@@ -7,12 +7,12 @@ import org.bukkit.World;
 import java.util.logging.Logger;
 
 public class SpawnLocationInitializer {
-    private final World world;
-    private final Logger logger;
 
-    public SpawnLocationInitializer(World world, Logger logger) {
+    private final World world;
+    private final Logger logger = Logger.getLogger(this.getClass().getName());
+
+    public SpawnLocationInitializer(World world) {
         this.world = world;
-        this.logger = logger;
 
         if (!hasSpawnLocationSet()) {
             setSpawnLocation();
@@ -33,8 +33,7 @@ public class SpawnLocationInitializer {
                     SpawnLocation.POSITION_Z.getPosition()
             );
         } catch (Exception exception) {
-            this.logger.severe("Unable to set spawn location.");
-            exception.printStackTrace();
+            this.logger.severe(String.format("Unable to set spawn location: %s", exception.getMessage()));
         }
     }
 
@@ -44,4 +43,5 @@ public class SpawnLocationInitializer {
         return spawnlocation.getBlockX() == SpawnLocation.POSITION_X.getPosition()
                 && spawnlocation.getBlockZ() == SpawnLocation.POSITION_Z.getPosition();
     }
+
 }

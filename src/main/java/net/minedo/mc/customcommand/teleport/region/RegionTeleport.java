@@ -1,8 +1,8 @@
-package net.minedo.mc.customcommand.teleport;
+package net.minedo.mc.customcommand.teleport.region;
 
-import net.minedo.mc.Minedo;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.minedo.mc.Minedo;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -15,31 +15,30 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 
-public class Teleport implements CommandExecutor, Listener {
+public class RegionTeleport implements CommandExecutor, Listener {
 
     private final double destinationMinX;
     private final double destinationMaxX;
     private final double destinationMinZ;
     private final double destinationMaxZ;
     private final String customCommand;
+    private final List<UUID> globalTeleportingPlayers;
     private final World world;
     private final Minedo pluginInstance;
     private final Map<UUID, Integer> teleportingPlayers = new HashMap<>();
 
-    public Teleport(
+    public RegionTeleport(
             double destinationMinX, double destinationMaxX, double destinationMinZ, double destinationMaxZ,
-            String customCommand, World world, Minedo pluginInstance
+            String customCommand, List<UUID> globalTeleportingPlayers, World world, Minedo pluginInstance
     ) {
         this.destinationMinX = destinationMinX;
         this.destinationMaxX = destinationMaxX;
         this.destinationMinZ = destinationMinZ;
         this.destinationMaxZ = destinationMaxZ;
         this.customCommand = customCommand;
+        this.globalTeleportingPlayers = globalTeleportingPlayers;
         this.world = world;
         this.pluginInstance = pluginInstance;
     }
@@ -52,7 +51,25 @@ public class Teleport implements CommandExecutor, Listener {
             return true;
         }
 
-        if (teleportingPlayers.containsKey(((Player) sender).getUniqueId())) {
+        if (args.length > 0) {
+            player.sendMessage(Component
+                    .text(String.format("Usage: /%s", this.customCommand))
+                    .color(NamedTextColor.GRAY)
+            );
+
+            return true;
+        }
+
+        if (globalTeleportingPlayers.contains(player.getUniqueId())) {
+            player.sendMessage(Component
+                    .text("Not allowed to perform more than one teleportation at a time.")
+                    .color(NamedTextColor.RED)
+            );
+
+            return true;
+        }
+
+        if (teleportingPlayers.containsKey(player.getUniqueId())) {
             player.sendMessage(Component.text("You're already teleporting!").color(NamedTextColor.RED));
 
             return true;
@@ -66,10 +83,12 @@ public class Teleport implements CommandExecutor, Listener {
             double coordinateY = this.world.getHighestBlockYAt((int) coordinateX, (int) coordinateZ);
             Location location = new Location(this.world, coordinateX, coordinateY, coordinateZ);
 
-            int teleportTaskId = new TeleportScheduler(player, location, this.customCommand, this.teleportingPlayers)
-                    .runTaskTimer(this.pluginInstance, 20, 20)
-                    .getTaskId();
+            int teleportTaskId = new RegionTeleportScheduler(
+                    player, location, this.customCommand,
+                    this.globalTeleportingPlayers, this.teleportingPlayers
+            ).runTaskTimer(this.pluginInstance, 20, 20).getTaskId();
 
+            this.globalTeleportingPlayers.add(player.getUniqueId());
             this.teleportingPlayers.put(player.getUniqueId(), teleportTaskId);
             player.sendMessage(Component.text(
                     String.format("Teleporting to %s in 5..", customCommand)
@@ -85,14 +104,16 @@ public class Teleport implements CommandExecutor, Listener {
     public void onPlayerMove(PlayerMoveEvent event) {
         if (
                 event.getFrom().getBlockX() != event.getTo().getBlockX() ||
-                    event.getFrom().getBlockY() != event.getTo().getBlockY() ||
-                    event.getFrom().getBlockZ() != event.getTo().getBlockZ()
+                        event.getFrom().getBlockY() != event.getTo().getBlockY() ||
+                        event.getFrom().getBlockZ() != event.getTo().getBlockZ()
         ) {
             Player player = event.getPlayer();
             UUID playerUuid = player.getUniqueId();
             Integer teleportTaskId = this.teleportingPlayers.get(playerUuid);
 
             if (teleportTaskId != null) {
+                // Remove from global teleporting list.
+                this.globalTeleportingPlayers.remove(player.getUniqueId());
                 // Remove from Map.
                 this.teleportingPlayers.remove(playerUuid);
                 // Cancel Bukkit Runnable.

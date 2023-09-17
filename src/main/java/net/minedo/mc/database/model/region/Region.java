@@ -8,8 +8,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 public class Region {
+
+    private final Logger logger = Logger.getLogger(this.getClass().getName());
     public int id;
     public String name;
     public int minX;
@@ -98,7 +101,7 @@ public class Region {
                 regions.add(region);
             }
         } catch (SQLException error) {
-            error.printStackTrace();
+            this.logger.severe(String.format("Unable to get regions: %s", error.getMessage()));
         } finally {
             database.disconnect();
         }
@@ -136,7 +139,7 @@ public class Region {
                 region.setMaxZ(maxZ);
             }
         } catch (SQLException error) {
-            error.printStackTrace();
+            this.logger.severe(String.format("Unable to get region by id: %s", error.getMessage()));
         } finally {
             database.disconnect();
         }
@@ -175,11 +178,12 @@ public class Region {
                 region.setMaxZ(maxZ);
             }
         } catch (SQLException error) {
-            error.printStackTrace();
+            this.logger.severe(String.format("Unable to get region by name: %s", error.getMessage()));
         } finally {
             database.disconnect();
         }
 
         return region;
     }
+
 }

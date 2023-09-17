@@ -15,29 +15,24 @@ import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.List;
-import java.util.logging.Logger;
 
 public class Minedo extends JavaPlugin {
 
-    private static Minedo instance;
-
     @Override
     public void onEnable() {
-        instance = this;
+        Minedo instance = this;
 
         World world = getWorldInstance();
-        Logger logger = getPluginLogger();
         Server server = getPluginServer();
 
         // Set spawn location.
-        new SpawnLocationInitializer(world, logger);
+        new SpawnLocationInitializer(world);
 
         // Populate newly generated chests with Better Items.
-        server.getPluginManager().registerEvents(new ItemBuilder(logger, instance), instance);
+        server.getPluginManager().registerEvents(new ItemBuilder(instance), instance);
 
-        // Register and display only custom commands to players.
-        CustomCommand customCommand = new CustomCommand(world, instance, server, this::getPluginCommand);
-        server.getPluginManager().registerEvents(customCommand, instance);
+        // Register and display custom commands to players.
+        new CustomCommand(world, instance, server, this::getPluginCommand);
 
         // Region regenerations.
         WorldGuard worldGuard = getWorldGuardInstance();
@@ -46,15 +41,11 @@ public class Minedo extends JavaPlugin {
 
         for (Region region : regions) {
             RegionRegeneration regionRegeneration = new RegionRegeneration(
-                    world, worldGuard, worldEdit, region, instance, logger
+                    world, worldGuard, worldEdit, region, instance
             );
 
             server.getPluginManager().registerEvents(regionRegeneration, instance);
         }
-    }
-
-    public Logger getPluginLogger() {
-        return getLogger();
     }
 
     public Server getPluginServer() {

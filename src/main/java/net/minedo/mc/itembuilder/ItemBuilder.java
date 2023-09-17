@@ -1,13 +1,13 @@
 package net.minedo.mc.itembuilder;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import net.minedo.mc.Minedo;
 import net.minedo.mc.database.model.betteritem.BetterItem;
 import net.minedo.mc.database.model.betteritemattribute.BetterItemAttribute;
 import net.minedo.mc.database.model.betteritemenchantment.BetterItemEnchantment;
 import net.minedo.mc.database.model.betteritemlore.BetterItemLore;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.TextColor;
-import net.kyori.adventure.text.format.TextDecoration;
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.sampling.DiscreteProbabilityCollectionSampler;
 import org.apache.commons.rng.simple.RandomSource;
@@ -28,11 +28,10 @@ import java.util.logging.Logger;
 
 public class ItemBuilder implements Listener {
 
-    private final Logger logger;
+    private final Logger logger = Logger.getLogger(this.getClass().getName());
     private final Minedo pluginInstance;
 
-    public ItemBuilder(Logger logger, Minedo pluginInstance) {
-        this.logger = logger;
+    public ItemBuilder(Minedo pluginInstance) {
         this.pluginInstance = pluginInstance;
     }
 
@@ -150,7 +149,7 @@ public class ItemBuilder implements Listener {
 
             // 50% chance to retrieve an item.
             if (random.nextBoolean()) {
-                BetterItem[] betterItemList = BetterItem.getAllBetterItems();
+                BetterItem[] betterItemList = new BetterItem().getAllBetterItems();
 
                 double[] probabilities = new double[betterItemList.length];
                 int index = 0;
@@ -169,8 +168,7 @@ public class ItemBuilder implements Listener {
                 return buildItem(selectedBetterItem);
             }
         } catch (Exception exception) {
-            this.logger.severe("Unable to prepare better items.");
-            exception.printStackTrace();
+            this.logger.severe(String.format("Unable to prepare better items: %s", exception.getMessage()));
         }
 
         return null;

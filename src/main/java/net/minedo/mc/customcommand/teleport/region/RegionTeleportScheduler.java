@@ -1,4 +1,4 @@
-package net.minedo.mc.customcommand.teleport;
+package net.minedo.mc.customcommand.teleport.region;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -6,24 +6,28 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class TeleportScheduler extends BukkitRunnable {
+public class RegionTeleportScheduler extends BukkitRunnable {
 
-    private int countdown;
     private final Player player;
     private final Location destination;
     private final String customCommand;
+    private final List<UUID> globalTeleportingPlayers;
     private final Map<UUID, Integer> teleportingPlayers;
+    private int countdown;
 
-    public TeleportScheduler(
-            Player player, Location destination, String customCommand, Map<UUID, Integer> teleportingPlayers
+    public RegionTeleportScheduler(
+            Player player, Location destination, String customCommand,
+            List<UUID> globalTeleportingPlayers, Map<UUID, Integer> teleportingPlayers
     ) {
         this.countdown = 4;
         this.player = player;
         this.destination = destination;
         this.customCommand = customCommand;
+        this.globalTeleportingPlayers = globalTeleportingPlayers;
         this.teleportingPlayers = teleportingPlayers;
     }
 
@@ -33,17 +37,20 @@ public class TeleportScheduler extends BukkitRunnable {
             player.sendMessage(Component.text(String.format("%s..", countdown)).color(NamedTextColor.YELLOW));
             countdown--;
         } else {
-            // Check if the player is still online and has not moved
             if (player.isOnline()) {
-                // Teleport the player to the spawn point
                 player.teleport(this.destination);
-                player.sendMessage(Component.text(
-                        String.format("Teleported to %s!", this.customCommand)
-                ).color(NamedTextColor.GREEN));
+
+                player.sendMessage(Component
+                        .text(String.format("Teleported to %s!", this.customCommand))
+                        .color(NamedTextColor.GREEN)
+                );
             }
 
-            teleportingPlayers.remove(player.getUniqueId());
+            this.globalTeleportingPlayers.remove(player.getUniqueId());
+            this.teleportingPlayers.remove(player.getUniqueId());
+
             this.cancel();
         }
     }
+
 }

@@ -1,6 +1,7 @@
 package net.minedo.mc.constants.spawnlocation;
 
 public enum SpawnLocation {
+
     POSITION_X(0),
     POSITION_Z(0);
 
@@ -13,4 +14,5 @@ public enum SpawnLocation {
     public int getPosition() {
         return position;
     }
+
 }
