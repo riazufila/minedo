@@ -5,6 +5,7 @@ import net.minedo.mc.customcommand.teleport.player.PlayerTeleport;
 import net.minedo.mc.customcommand.teleport.region.RegionTeleport;
 import net.minedo.mc.models.region.Region;
 import net.minedo.mc.interfaces.customcommand.CustomCommandInterface;
+import net.minedo.mc.repositories.regionrepository.RegionRepository;
 import org.bukkit.Server;
 import org.bukkit.World;
 
@@ -19,7 +20,6 @@ public class CustomCommand {
     private final Minedo pluginInstance;
     private final Server server;
     private final CustomCommandInterface customCommandInterface;
-    private final List<Region> regions;
     private final List<UUID> globalTeleportingPlayers = new ArrayList<>();
 
     public CustomCommand(
@@ -29,10 +29,12 @@ public class CustomCommand {
         this.pluginInstance = pluginInstance;
         this.server = server;
         this.customCommandInterface = customCommandInterface;
-        this.regions = new Region().getAllRegions();
     }
 
     public void setupCustomCommands() {
+        RegionRepository regionRepository = new RegionRepository();
+        List<Region> regions = regionRepository.getAllRegions();
+
         // Setup region teleport commands.
         for (Region region : regions) {
             String customCommand = region.getName().toLowerCase();

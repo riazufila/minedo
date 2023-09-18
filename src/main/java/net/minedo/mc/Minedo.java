@@ -7,6 +7,7 @@ import net.minedo.mc.customcommand.CustomCommand;
 import net.minedo.mc.models.region.Region;
 import net.minedo.mc.itembuilder.ItemBuilder;
 import net.minedo.mc.regionregeneration.RegionRegeneration;
+import net.minedo.mc.repositories.regionrepository.RegionRepository;
 import net.minedo.mc.spawnlocationinitializer.SpawnLocationInitializer;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
@@ -41,7 +42,8 @@ public class Minedo extends JavaPlugin {
         // Region regenerations.
         WorldGuard worldGuard = getWorldGuardInstance();
         WorldEdit worldEdit = getWorldEditInstance();
-        List<Region> regions = new Region().getAllRegions();
+        RegionRepository regionRepository = new RegionRepository();
+        List<Region> regions = regionRepository.getAllRegions();
 
         for (Region region : regions) {
             RegionRegeneration regionRegeneration = new RegionRegeneration(
