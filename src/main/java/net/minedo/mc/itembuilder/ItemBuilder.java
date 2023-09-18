@@ -8,6 +8,7 @@ import net.minedo.mc.models.betteritem.BetterItem;
 import net.minedo.mc.models.betteritemattribute.BetterItemAttribute;
 import net.minedo.mc.models.betteritemenchantment.BetterItemEnchantment;
 import net.minedo.mc.models.betteritemlore.BetterItemLore;
+import net.minedo.mc.repositories.betteritemrepository.BetterItemRepository;
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.sampling.DiscreteProbabilityCollectionSampler;
 import org.apache.commons.rng.simple.RandomSource;
@@ -149,7 +150,8 @@ public class ItemBuilder implements Listener {
 
             // 50% chance to retrieve an item.
             if (random.nextBoolean()) {
-                BetterItem[] betterItemList = new BetterItem().getAllBetterItems();
+                BetterItemRepository betterItemRepository = new BetterItemRepository();
+                BetterItem[] betterItemList = betterItemRepository.getAllBetterItems();
 
                 double[] probabilities = new double[betterItemList.length];
                 int index = 0;
