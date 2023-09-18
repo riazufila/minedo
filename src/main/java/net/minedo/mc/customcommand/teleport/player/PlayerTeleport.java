@@ -8,6 +8,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -16,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
-public class PlayerTeleport implements CommandExecutor, Listener {
+public class PlayerTeleport implements CommandExecutor, Listener, TabCompleter {
 
     private final Minedo pluginInstance;
     private final List<UUID> globalTeleportingPlayers;
@@ -242,6 +243,32 @@ public class PlayerTeleport implements CommandExecutor, Listener {
                 return true;
             }
         }
+    }
+
+    @Override
+    public List<String> onTabComplete(
+            @NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args
+    ) {
+        List<String> completions = new ArrayList<>();
+
+        if (!(sender instanceof Player player)) {
+            return completions;
+        }
+
+        if (args.length == 1) {
+            completions.add("request");
+            completions.add("accept");
+            completions.add("decline");
+        } else if (args.length == 2 && Objects.equals(args[0], "request")) {
+            List<Player> onlinePlayers = this.pluginInstance.getWorldInstance().getPlayers();
+
+            completions.addAll(onlinePlayers.stream()
+                    .filter(onlinePlayer -> onlinePlayer != player)
+                    .map(Player::getName).toList()
+            );
+        }
+
+        return completions;
     }
 
     private void handleTeleportCancellation(
