@@ -1,6 +1,6 @@
-package net.minedo.mc.database.model.region;
+package net.minedo.mc.models.region;
 
-import net.minedo.mc.database.Database;
+import net.minedo.mc.repositories.Database;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

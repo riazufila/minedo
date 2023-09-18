@@ -1,4 +1,4 @@
-package net.minedo.mc.database.model.betteritemprobability;
+package net.minedo.mc.models.betteritemprobability;
 
 public class BetterItemProbability {
 

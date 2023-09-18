@@ -1,4 +1,4 @@
-package net.minedo.mc.database.model.betteritemattribute;
+package net.minedo.mc.models.betteritemattribute;
 
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;

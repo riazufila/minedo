@@ -2,7 +2,7 @@ package net.minedo.mc.regionregeneration;
 
 import com.sk89q.worldedit.WorldEdit;
 import net.minedo.mc.Minedo;
-import net.minedo.mc.database.model.region.Region;
+import net.minedo.mc.models.region.Region;
 import org.bukkit.Chunk;
 import org.bukkit.Sound;
 import org.bukkit.World;

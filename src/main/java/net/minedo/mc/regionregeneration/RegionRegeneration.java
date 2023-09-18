@@ -22,7 +22,7 @@ import net.minedo.mc.Minedo;
 import net.minedo.mc.constants.common.Common;
 import net.minedo.mc.constants.directory.Directory;
 import net.minedo.mc.constants.filetype.FileType;
-import net.minedo.mc.database.model.region.Region;
+import net.minedo.mc.models.region.Region;
 import org.bukkit.Chunk;
 import org.bukkit.World;
 import org.bukkit.block.Block;

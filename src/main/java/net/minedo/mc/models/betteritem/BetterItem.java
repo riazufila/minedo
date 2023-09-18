@@ -1,11 +1,11 @@
-package net.minedo.mc.database.model.betteritem;
+package net.minedo.mc.models.betteritem;
 
 import net.kyori.adventure.text.format.TextDecoration;
-import net.minedo.mc.database.Database;
-import net.minedo.mc.database.model.betteritemattribute.BetterItemAttribute;
-import net.minedo.mc.database.model.betteritemenchantment.BetterItemEnchantment;
-import net.minedo.mc.database.model.betteritemlore.BetterItemLore;
-import net.minedo.mc.database.model.betteritemprobability.BetterItemProbability;
+import net.minedo.mc.models.betteritemattribute.BetterItemAttribute;
+import net.minedo.mc.models.betteritemenchantment.BetterItemEnchantment;
+import net.minedo.mc.models.betteritemprobability.BetterItemProbability;
+import net.minedo.mc.repositories.Database;
+import net.minedo.mc.models.betteritemlore.BetterItemLore;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
