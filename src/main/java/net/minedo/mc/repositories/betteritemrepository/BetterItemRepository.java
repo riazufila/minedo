@@ -1,11 +1,12 @@
-package net.minedo.mc.database.model.betteritem;
+package net.minedo.mc.repositories.betteritemrepository;
 
 import net.kyori.adventure.text.format.TextDecoration;
-import net.minedo.mc.database.Database;
-import net.minedo.mc.database.model.betteritemattribute.BetterItemAttribute;
-import net.minedo.mc.database.model.betteritemenchantment.BetterItemEnchantment;
-import net.minedo.mc.database.model.betteritemlore.BetterItemLore;
-import net.minedo.mc.database.model.betteritemprobability.BetterItemProbability;
+import net.minedo.mc.models.betteritem.BetterItem;
+import net.minedo.mc.models.betteritemattribute.BetterItemAttribute;
+import net.minedo.mc.models.betteritemenchantment.BetterItemEnchantment;
+import net.minedo.mc.models.betteritemlore.BetterItemLore;
+import net.minedo.mc.models.betteritemprobability.BetterItemProbability;
+import net.minedo.mc.repositories.Database;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
@@ -17,22 +18,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
-public class BetterItem {
+public class BetterItemRepository {
 
     private final Logger logger = Logger.getLogger(this.getClass().getName());
-    private int id;
-    private Material material;
-    private String displayName;
-    private String color;
-    private TextDecoration decoration;
-    private BetterItemLore lore;
-    private List<BetterItemEnchantment> enchantments;
-    private List<BetterItemAttribute> attributes;
-    private BetterItemProbability probability;
 
     public BetterItem[] getAllBetterItems() {
         Database database = new Database();
@@ -139,7 +130,7 @@ public class BetterItem {
                 int id = resultSet.getInt("id");
 
                 BetterItem betterItem = betterItemsMap.get(id);
-                if (betterItem.enchantments == null) {
+                if (betterItem.getEnchantments() == null) {
                     betterItem.setEnchantments(new ArrayList<>()); // Initialize BetterItemEnchantment.
                 }
 
@@ -157,7 +148,7 @@ public class BetterItem {
                 enchantment.setBetterItemId(enchantmentBetterItemId);
 
                 // Add the BetterItemEnchantment to the BetterItem.
-                betterItem.enchantments.add(enchantment);
+                betterItem.addEnchantment(enchantment);
             }
 
             // Better Items may have attribute(s).
@@ -184,7 +175,7 @@ public class BetterItem {
                 int id = resultSet.getInt("id");
 
                 BetterItem betterItem = betterItemsMap.get(id);
-                if (betterItem.attributes == null) {
+                if (betterItem.getAttributes() == null) {
                     betterItem.setAttributes(new ArrayList<>()); // Initialize BetterItemAttribute.
                 }
 
@@ -206,7 +197,7 @@ public class BetterItem {
                 attribute.setBetterItemId(attributeBetterItemId);
 
                 // Add the BetterItemAttribute to the BetterItem.
-                betterItem.attributes.add(attribute);
+                betterItem.addAttribute(attribute);
             }
 
             // Better Items must always have probability.
@@ -247,78 +238,6 @@ public class BetterItem {
 
         // Convert Map to Array.
         return betterItemsMap.values().toArray(new BetterItem[0]);
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public Material getMaterial() {
-        return material;
-    }
-
-    public void setMaterial(Material material) {
-        this.material = material;
-    }
-
-    public String getDisplayName() {
-        return displayName;
-    }
-
-    public void setDisplayName(String displayName) {
-        this.displayName = displayName;
-    }
-
-    public String getColor() {
-        return color;
-    }
-
-    public void setColor(String color) {
-        this.color = color;
-    }
-
-    public TextDecoration getDecoration() {
-        return decoration;
-    }
-
-    public void setDecoration(TextDecoration decoration) {
-        this.decoration = decoration;
-    }
-
-    public BetterItemLore getLore() {
-        return lore;
-    }
-
-    public void setLore(BetterItemLore lore) {
-        this.lore = lore;
-    }
-
-    public List<BetterItemEnchantment> getEnchantments() {
-        return enchantments;
-    }
-
-    public void setEnchantments(List<BetterItemEnchantment> enchantments) {
-        this.enchantments = enchantments;
-    }
-
-    public List<BetterItemAttribute> getAttributes() {
-        return attributes;
-    }
-
-    public void setAttributes(List<BetterItemAttribute> attributes) {
-        this.attributes = attributes;
-    }
-
-    public BetterItemProbability getProbability() {
-        return probability;
-    }
-
-    public void setProbability(BetterItemProbability probability) {
-        this.probability = probability;
     }
 
 }

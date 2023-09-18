@@ -13,7 +13,7 @@ import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.session.ClipboardHolder;
 import net.minedo.mc.constants.directory.Directory;
 import net.minedo.mc.constants.filetype.FileType;
-import net.minedo.mc.database.model.region.Region;
+import net.minedo.mc.models.region.Region;
 import org.bukkit.Chunk;
 import org.bukkit.Particle;
 import org.bukkit.World;

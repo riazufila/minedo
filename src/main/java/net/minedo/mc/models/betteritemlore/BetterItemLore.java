@@ -1,4 +1,4 @@
-package net.minedo.mc.database.model.betteritemlore;
+package net.minedo.mc.models.betteritemlore;
 
 import net.kyori.adventure.text.format.TextDecoration;
 

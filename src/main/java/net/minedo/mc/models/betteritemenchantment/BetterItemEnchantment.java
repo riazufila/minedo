@@ -1,4 +1,4 @@
-package net.minedo.mc.database.model.betteritemenchantment;
+package net.minedo.mc.models.betteritemenchantment;
 
 import org.bukkit.enchantments.Enchantment;
 
