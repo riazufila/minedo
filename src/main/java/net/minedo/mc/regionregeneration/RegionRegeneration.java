@@ -99,6 +99,7 @@ public class RegionRegeneration implements Listener {
         // Set permissions.
         protectedRegion.setFlag(Flags.BUILD, StateFlag.State.ALLOW);
         protectedRegion.setFlag(Flags.BLOCK_BREAK, StateFlag.State.ALLOW);
+        protectedRegion.setFlag(Flags.MOB_SPAWNING, StateFlag.State.DENY);
 
         RegionContainer regionContainer = worldGuard.getPlatform().getRegionContainer();
 
