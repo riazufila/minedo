@@ -1,4 +1,4 @@
-package net.minedo.mc.database;
+package net.minedo.mc.repositories;
 
 import io.github.cdimascio.dotenv.Dotenv;
 

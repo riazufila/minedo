@@ -3,7 +3,7 @@ package net.minedo.mc.customcommand;
 import net.minedo.mc.Minedo;
 import net.minedo.mc.customcommand.teleport.player.PlayerTeleport;
 import net.minedo.mc.customcommand.teleport.region.RegionTeleport;
-import net.minedo.mc.database.model.region.Region;
+import net.minedo.mc.models.region.Region;
 import net.minedo.mc.interfaces.customcommand.CustomCommandInterface;
 import org.bukkit.Server;
 import org.bukkit.World;
