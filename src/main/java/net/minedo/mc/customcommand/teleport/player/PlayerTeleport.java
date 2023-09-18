@@ -3,6 +3,7 @@ package net.minedo.mc.customcommand.teleport.player;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.minedo.mc.Minedo;
+import net.minedo.mc.constants.playerteleporttype.PlayerTeleportType;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
@@ -38,11 +39,14 @@ public class PlayerTeleport implements CommandExecutor, Listener, TabCompleter {
 
         String teleportType = args[0];
 
-        if (teleportType.equals("request")) {
+        if (teleportType.equals(PlayerTeleportType.REQUEST.getType())) {
             return args.length == 2;
         }
 
-        if (teleportType.equals("accept") || teleportType.equals("decline")) {
+        if (
+                teleportType.equals(PlayerTeleportType.ACCEPT.getType())
+                        || teleportType.equals(PlayerTeleportType.DECLINE.getType())
+        ) {
             return args.length == 1;
         }
 
@@ -82,7 +86,11 @@ public class PlayerTeleport implements CommandExecutor, Listener, TabCompleter {
 
         if (!this.isCommandValid(args)) {
             player.sendMessage(Component
-                    .text("Usage: /teleport <request <player> | accept | decline>")
+                    .text(String.format("Usage: /teleport <%s <player> | %s | %s>",
+                            PlayerTeleportType.REQUEST.getType(),
+                            PlayerTeleportType.ACCEPT.getType(),
+                            PlayerTeleportType.DECLINE.getType()
+                    ))
                     .color(NamedTextColor.GRAY)
             );
 
@@ -91,157 +99,154 @@ public class PlayerTeleport implements CommandExecutor, Listener, TabCompleter {
 
         String teleportType = args[0];
 
-        switch (teleportType) {
-            case "request" -> {
-                String teleportTarget = args[1];
-                Player otherPlayer = this.pluginInstance.getServer().getPlayer(teleportTarget);
-                Integer existingTeleportRequestTaskId = teleportRequestRequesters.get(player.getUniqueId());
+        if (Objects.equals(teleportType, PlayerTeleportType.REQUEST.getType())) {
+            String teleportTarget = args[1];
+            Player otherPlayer = this.pluginInstance.getServer().getPlayer(teleportTarget);
+            Integer existingTeleportRequestTaskId = teleportRequestRequesters.get(player.getUniqueId());
 
-                if (globalTeleportingPlayers.contains(player.getUniqueId())) {
-                    player.sendMessage(Component
-                            .text("Not allowed to perform more than one teleportation at a time.")
-                            .color(NamedTextColor.RED)
-                    );
-
-                    return true;
-                }
-
-                if (existingTeleportRequestTaskId != null) {
-                    player.sendMessage(Component
-                            .text("You already have a teleport request.")
-                            .color(NamedTextColor.RED)
-                    );
-                    return true;
-                }
-
-                if (otherPlayer != null && otherPlayer.isOnline()) {
-                    if (player.equals(otherPlayer)) {
-                        player.sendMessage(Component
-                                .text("Unable to teleport to yourself.")
-                                .color(NamedTextColor.RED)
-                        );
-                        return true;
-                    }
-
-                    int teleportRequestTaskId = new PlayerTeleportRequestTimer(player, otherPlayer, teleportRequestRequesters, teleportRequestRequestees)
-                            .runTaskLater(this.pluginInstance, 600)
-                            .getTaskId();
-
-                    this.teleportRequestRequesters.put(player.getUniqueId(), teleportRequestTaskId);
-                    this.teleportRequestRequestees.put(otherPlayer.getUniqueId(), teleportRequestTaskId);
-
-                    player.sendMessage(Component
-                            .text(String.format("Waiting for %s to respond..", teleportTarget))
-                            .color(NamedTextColor.YELLOW)
-                    );
-                    otherPlayer.sendMessage(Component
-                            .text(String.format("%s is requesting to teleport..", player.getName()))
-                            .color(NamedTextColor.YELLOW)
-                    );
-                } else {
-                    player.sendMessage(Component
-                            .text(String.format("%s is not in the server.", teleportTarget))
-                            .color(NamedTextColor.RED)
-                    );
-                }
-
-                return true;
-            }
-
-            case "accept" -> {
-                Integer existingTeleportRequestTaskId = teleportRequestRequestees.get(player.getUniqueId());
-                Integer existingTeleportingTaskId = teleportingRequesters.get(player.getUniqueId());
-                Integer existingStandingStillTaskId = standingStillRequestees.get(player.getUniqueId());
-
-                if (existingTeleportRequestTaskId == null) {
-                    player.sendMessage(Component
-                            .text("You don't have a teleport request.")
-                            .color(NamedTextColor.RED)
-                    );
-
-                    return true;
-                }
-
-                if (existingTeleportingTaskId != null || existingStandingStillTaskId != null) {
-                    player.sendMessage(Component
-                            .text("You're already in a teleportation process.")
-                            .color(NamedTextColor.RED)
-                    );
-
-                    return true;
-                }
-
-                UUID otherPlayerUuid = this.getPlayerUuidFromTaskId(existingTeleportRequestTaskId, teleportRequestRequesters);
-                Player otherPlayer = this.removePlayersFromRequestQueue(player, otherPlayerUuid, existingTeleportRequestTaskId);
-
-                if (otherPlayer != null && otherPlayer.isOnline()) {
-                    int teleportingTaskId = new PlayerTeleportScheduler(
-                            otherPlayer, player, teleportingRequesters,
-                            standingStillRequestees, globalTeleportingPlayers
-                    ).runTaskTimer(this.pluginInstance, 20, 20).getTaskId();
-
-                    this.globalTeleportingPlayers.add(player.getUniqueId());
-                    this.globalTeleportingPlayers.add(otherPlayerUuid);
-
-                    this.teleportingRequesters.put(otherPlayer.getUniqueId(), teleportingTaskId);
-                    this.standingStillRequestees.put(player.getUniqueId(), teleportingTaskId);
-
-                    player.sendMessage(Component
-                            .text(String.format("Stand still while %s is teleporting..", otherPlayer.getName()))
-                            .color(NamedTextColor.YELLOW)
-                    );
-                    otherPlayer.sendMessage(Component
-                            .text(String.format("Teleporting to %s in 5..", player.getName()))
-                            .color(NamedTextColor.YELLOW)
-                    );
-                }
-
-                return true;
-            }
-
-            case "decline" -> {
-                Integer existingTeleportRequestTaskId = teleportRequestRequestees.get(player.getUniqueId());
-
-                if (existingTeleportRequestTaskId == null) {
-                    player.sendMessage(Component
-                            .text("You don't have a teleport request.")
-                            .color(NamedTextColor.RED)
-                    );
-
-                    return true;
-                }
-
-                UUID otherPlayerUuid = this.getPlayerUuidFromTaskId(existingTeleportRequestTaskId, teleportRequestRequesters);
-                Player otherPlayer = this.removePlayersFromRequestQueue(player, otherPlayerUuid, existingTeleportRequestTaskId);
-
-                if (otherPlayer != null && otherPlayer.isOnline()) {
-                    otherPlayer.sendMessage(Component
-                            .text(String.format("%s declined your teleport request.", player.getName()))
-                            .color(NamedTextColor.RED)
-                    );
-                    player.sendMessage(Component
-                            .text(String.format("You declined %s request to teleport.", otherPlayer.getName()))
-                            .color(NamedTextColor.RED)
-                    );
-                } else {
-                    OfflinePlayer otherOfflinePlayer = this.pluginInstance.getServer().getOfflinePlayer(otherPlayerUuid);
-
-                    player.sendMessage(Component
-                            .text(String.format("You declined %s request to teleport.", otherOfflinePlayer.getName()))
-                            .color(NamedTextColor.RED)
-                    );
-                }
-
-                return true;
-            }
-
-            default -> {
+            if (globalTeleportingPlayers.contains(player.getUniqueId())) {
                 player.sendMessage(Component
-                        .text("Usage: /teleport <request <player> | accept | decline>")
-                        .color(NamedTextColor.GRAY)
+                        .text("Not allowed to perform more than one teleportation at a time.")
+                        .color(NamedTextColor.RED)
+                );
+
+                return true;
+            }
+
+            if (existingTeleportRequestTaskId != null) {
+                player.sendMessage(Component
+                        .text("You already have a teleport request.")
+                        .color(NamedTextColor.RED)
                 );
                 return true;
             }
+
+            if (otherPlayer != null && otherPlayer.isOnline()) {
+                if (player.equals(otherPlayer)) {
+                    player.sendMessage(Component
+                            .text("Unable to teleport to yourself.")
+                            .color(NamedTextColor.RED)
+                    );
+                    return true;
+                }
+
+                int teleportRequestTaskId = new PlayerTeleportRequestTimer(player, otherPlayer, teleportRequestRequesters, teleportRequestRequestees)
+                        .runTaskLater(this.pluginInstance, 600)
+                        .getTaskId();
+
+                this.teleportRequestRequesters.put(player.getUniqueId(), teleportRequestTaskId);
+                this.teleportRequestRequestees.put(otherPlayer.getUniqueId(), teleportRequestTaskId);
+
+                player.sendMessage(Component
+                        .text(String.format("Waiting for %s to respond..", teleportTarget))
+                        .color(NamedTextColor.YELLOW)
+                );
+                otherPlayer.sendMessage(Component
+                        .text(String.format("%s is requesting to teleport..", player.getName()))
+                        .color(NamedTextColor.YELLOW)
+                );
+            } else {
+                player.sendMessage(Component
+                        .text(String.format("%s is not in the server.", teleportTarget))
+                        .color(NamedTextColor.RED)
+                );
+            }
+
+            return true;
+        } else if (Objects.equals(teleportType, PlayerTeleportType.ACCEPT.getType())) {
+            Integer existingTeleportRequestTaskId = teleportRequestRequestees.get(player.getUniqueId());
+            Integer existingTeleportingTaskId = teleportingRequesters.get(player.getUniqueId());
+            Integer existingStandingStillTaskId = standingStillRequestees.get(player.getUniqueId());
+
+            if (existingTeleportRequestTaskId == null) {
+                player.sendMessage(Component
+                        .text("You don't have a teleport request.")
+                        .color(NamedTextColor.RED)
+                );
+
+                return true;
+            }
+
+            if (existingTeleportingTaskId != null || existingStandingStillTaskId != null) {
+                player.sendMessage(Component
+                        .text("You're already in a teleportation process.")
+                        .color(NamedTextColor.RED)
+                );
+
+                return true;
+            }
+
+            UUID otherPlayerUuid = this.getPlayerUuidFromTaskId(existingTeleportRequestTaskId, teleportRequestRequesters);
+            Player otherPlayer = this.removePlayersFromRequestQueue(player, otherPlayerUuid, existingTeleportRequestTaskId);
+
+            if (otherPlayer != null && otherPlayer.isOnline()) {
+                int teleportingTaskId = new PlayerTeleportScheduler(
+                        otherPlayer, player, teleportingRequesters,
+                        standingStillRequestees, globalTeleportingPlayers
+                ).runTaskTimer(this.pluginInstance, 20, 20).getTaskId();
+
+                this.globalTeleportingPlayers.add(player.getUniqueId());
+                this.globalTeleportingPlayers.add(otherPlayerUuid);
+
+                this.teleportingRequesters.put(otherPlayer.getUniqueId(), teleportingTaskId);
+                this.standingStillRequestees.put(player.getUniqueId(), teleportingTaskId);
+
+                player.sendMessage(Component
+                        .text(String.format("Stand still while %s is teleporting..", otherPlayer.getName()))
+                        .color(NamedTextColor.YELLOW)
+                );
+                otherPlayer.sendMessage(Component
+                        .text(String.format("Teleporting to %s in 5..", player.getName()))
+                        .color(NamedTextColor.YELLOW)
+                );
+            }
+
+            return true;
+        } else if (Objects.equals(teleportType, PlayerTeleportType.DECLINE.getType())) {
+            Integer existingTeleportRequestTaskId = teleportRequestRequestees.get(player.getUniqueId());
+
+            if (existingTeleportRequestTaskId == null) {
+                player.sendMessage(Component
+                        .text("You don't have a teleport request.")
+                        .color(NamedTextColor.RED)
+                );
+
+                return true;
+            }
+
+            UUID otherPlayerUuid = this.getPlayerUuidFromTaskId(existingTeleportRequestTaskId, teleportRequestRequesters);
+            Player otherPlayer = this.removePlayersFromRequestQueue(player, otherPlayerUuid, existingTeleportRequestTaskId);
+
+            if (otherPlayer != null && otherPlayer.isOnline()) {
+                otherPlayer.sendMessage(Component
+                        .text(String.format("%s declined your teleport request.", player.getName()))
+                        .color(NamedTextColor.RED)
+                );
+                player.sendMessage(Component
+                        .text(String.format("You declined %s request to teleport.", otherPlayer.getName()))
+                        .color(NamedTextColor.RED)
+                );
+            } else {
+                OfflinePlayer otherOfflinePlayer = this.pluginInstance.getServer().getOfflinePlayer(otherPlayerUuid);
+
+                player.sendMessage(Component
+                        .text(String.format("You declined %s request to teleport.", otherOfflinePlayer.getName()))
+                        .color(NamedTextColor.RED)
+                );
+            }
+
+            return true;
+        } else {
+            player.sendMessage(Component
+                    .text(String.format("Usage: /teleport <%s <player> | %s | %s>",
+                            PlayerTeleportType.REQUEST.getType(),
+                            PlayerTeleportType.ACCEPT.getType(),
+                            PlayerTeleportType.DECLINE.getType()
+                    ))
+                    .color(NamedTextColor.GRAY)
+            );
+
+            return true;
         }
     }
 
@@ -256,10 +261,10 @@ public class PlayerTeleport implements CommandExecutor, Listener, TabCompleter {
         }
 
         if (args.length == 1) {
-            completions.add("request");
-            completions.add("accept");
-            completions.add("decline");
-        } else if (args.length == 2 && Objects.equals(args[0], "request")) {
+            completions.add(PlayerTeleportType.REQUEST.getType());
+            completions.add(PlayerTeleportType.ACCEPT.getType());
+            completions.add(PlayerTeleportType.DECLINE.getType());
+        } else if (args.length == 2 && Objects.equals(args[0], PlayerTeleportType.REQUEST.getType())) {
             List<Player> onlinePlayers = this.pluginInstance.getWorldInstance().getPlayers();
 
             completions.addAll(onlinePlayers.stream()
