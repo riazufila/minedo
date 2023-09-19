@@ -25,7 +25,7 @@ public class SpawnLocationInitializer {
                     this.world.getHighestBlockYAt(
                             SpawnLocation.POSITION_X.getPosition(),
                             SpawnLocation.POSITION_Z.getPosition()
-                    ),
+                    ) + 1,
                     SpawnLocation.POSITION_Z.getPosition()
             );
         } catch (Exception exception) {
