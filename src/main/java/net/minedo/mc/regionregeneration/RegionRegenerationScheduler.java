@@ -46,7 +46,22 @@ public class RegionRegenerationScheduler extends BukkitRunnable {
             if (entity instanceof Player player) {
                 player.playSound(player.getLocation(), Sound.BLOCK_AZALEA_LEAVES_STEP, 1, 1);
                 player.setVelocity(player.getLocation().getDirection().multiply(2).setX(0).setZ(0).setY(2));
-                player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING, 100, 2));
+
+                PotionEffect existingPotionEffect = player.getPotionEffect(PotionEffectType.SLOW_FALLING);
+                int POTION_EFFECT_DURATION = 100;
+
+                if (existingPotionEffect != null) {
+                    int existingDuration = existingPotionEffect.getDuration();
+
+                    player.addPotionEffect(new PotionEffect(
+                            PotionEffectType.SLOW_FALLING,
+                            existingDuration + POTION_EFFECT_DURATION, 0
+                    ));
+                } else {
+                    player.addPotionEffect(new PotionEffect(
+                            PotionEffectType.SLOW_FALLING, POTION_EFFECT_DURATION, 0
+                    ));
+                }
             }
         }
     }
