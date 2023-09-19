@@ -43,6 +43,10 @@ public class RegionTeleport implements CommandExecutor, Listener {
         this.pluginInstance = pluginInstance;
     }
 
+    private Location getSafeToTeleportCoordinate(double coordinateX, double coordinateY, double coordinateZ) {
+        return new Location(this.world, coordinateX + 0.5, coordinateY + 1, coordinateZ + 0.5);
+    }
+
     @Override
     public boolean onCommand(
             @NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args
@@ -78,10 +82,10 @@ public class RegionTeleport implements CommandExecutor, Listener {
         if (label.equalsIgnoreCase(customCommand)) {
             // Set random location within region.
             Random random = new Random();
-            double coordinateX = random.nextInt((int) (this.destinationMaxX - this.destinationMinX + 1)) + this.destinationMinX;
-            double coordinateZ = random.nextInt((int) (this.destinationMaxZ - this.destinationMinZ + 1)) + this.destinationMinZ;
-            double coordinateY = this.world.getHighestBlockYAt((int) coordinateX, (int) coordinateZ);
-            Location location = new Location(this.world, coordinateX, coordinateY, coordinateZ);
+            int coordinateX = random.nextInt((int) ((this.destinationMaxX - this.destinationMinX + 1) + this.destinationMinX));
+            int coordinateZ = random.nextInt((int) ((this.destinationMaxZ - this.destinationMinZ + 1) + this.destinationMinZ));
+            int coordinateY = this.world.getHighestBlockYAt(coordinateX, coordinateZ);
+            Location location = this.getSafeToTeleportCoordinate(coordinateX, coordinateY, coordinateZ);
 
             int teleportTaskId = new RegionTeleportScheduler(
                     player, location, this.customCommand,
