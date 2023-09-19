@@ -53,7 +53,7 @@ public class RegionRegenerationScheduler extends BukkitRunnable {
 
         for (Entity entity : entities) {
             if (entity instanceof Player player && this.isPlayerWithinLaunchingGround(player)) {
-                player.playSound(player.getLocation(), Sound.BLOCK_AZALEA_LEAVES_STEP, 1, 1);
+                this.world.playSound(player.getLocation(), Sound.BLOCK_AZALEA_LEAVES_STEP, 1, 1);
                 player.setVelocity(player.getLocation().getDirection().multiply(2).setX(0).setZ(0).setY(2));
 
                 PotionEffect existingPotionEffect = player.getPotionEffect(PotionEffectType.SLOW_FALLING);
