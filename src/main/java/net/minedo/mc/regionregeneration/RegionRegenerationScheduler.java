@@ -44,7 +44,6 @@ public class RegionRegenerationScheduler extends BukkitRunnable {
 
         for (Entity entity : entities) {
             if (entity instanceof Player player) {
-
                 player.playSound(player.getLocation(), Sound.BLOCK_AZALEA_LEAVES_STEP, 1, 1);
                 player.setVelocity(player.getLocation().getDirection().multiply(2).setX(0).setZ(0).setY(2));
                 player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING, 100, 2));
@@ -60,6 +59,7 @@ public class RegionRegenerationScheduler extends BukkitRunnable {
         RegionRegenerationBuilder builder = new RegionRegenerationBuilder(
                 this.chunk, this.region, this.world, this.worldEdit, this.logger, this.restoringChunks
         );
+
         builder.runTaskLater(this.pluginInstance, 20);
     }
 
