@@ -92,7 +92,9 @@ public class ItemBuilder implements Listener {
         meta.getPersistentDataContainer().set(timestampKey, PersistentDataType.STRING, Instant.now().toString());
 
         // Set display name.
-        Component displayNameComponent = Component.text(betterItem.getDisplayName()).decoration(TextDecoration.ITALIC, false);
+        Component displayNameComponent = Component
+                .text(betterItem.getDisplayName())
+                .decoration(TextDecoration.ITALIC, false);
 
         if (betterItem.getColor() != null) {
             displayNameComponent = displayNameComponent.color(TextColor.fromHexString(betterItem.getColor()));
@@ -134,7 +136,10 @@ public class ItemBuilder implements Listener {
         // Add attributes.
         if (betterItem.getAttributes() != null) {
             for (BetterItemAttribute attribute : betterItem.getAttributes()) {
-                meta.addAttributeModifier(attribute.attribute, new AttributeModifier(UUID.randomUUID(), attribute.attribute.toString(), attribute.modifier, attribute.operation, attribute.slot));
+                meta.addAttributeModifier(attribute.attribute, new AttributeModifier(
+                        UUID.randomUUID(), attribute.attribute.toString(), attribute.modifier,
+                        attribute.operation, attribute.slot
+                ));
             }
         }
 
