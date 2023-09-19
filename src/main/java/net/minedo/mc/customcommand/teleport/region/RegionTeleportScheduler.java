@@ -3,6 +3,8 @@ package net.minedo.mc.customcommand.teleport.region;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Location;
+import org.bukkit.Sound;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -17,11 +19,12 @@ public class RegionTeleportScheduler extends BukkitRunnable {
     private final String customCommand;
     private final List<UUID> globalTeleportingPlayers;
     private final Map<UUID, Integer> teleportingPlayers;
+    private final World world;
     private int countdown;
 
     public RegionTeleportScheduler(
             Player player, Location destination, String customCommand,
-            List<UUID> globalTeleportingPlayers, Map<UUID, Integer> teleportingPlayers
+            List<UUID> globalTeleportingPlayers, Map<UUID, Integer> teleportingPlayers, World world
     ) {
         this.countdown = 4;
         this.player = player;
@@ -29,6 +32,7 @@ public class RegionTeleportScheduler extends BukkitRunnable {
         this.customCommand = customCommand;
         this.globalTeleportingPlayers = globalTeleportingPlayers;
         this.teleportingPlayers = teleportingPlayers;
+        this.world = world;
     }
 
     @Override
@@ -39,6 +43,7 @@ public class RegionTeleportScheduler extends BukkitRunnable {
         } else {
             if (player.isOnline()) {
                 player.teleport(this.destination);
+                world.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1, 1);
 
                 player.sendMessage(Component
                         .text(String.format("Teleported to %s!", this.customCommand))
