@@ -11,12 +11,11 @@ import com.sk89q.worldedit.function.operation.Operation;
 import com.sk89q.worldedit.function.operation.Operations;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.session.ClipboardHolder;
+import net.minedo.mc.constants.common.Common;
 import net.minedo.mc.constants.directory.Directory;
 import net.minedo.mc.constants.filetype.FileType;
 import net.minedo.mc.models.region.Region;
-import org.bukkit.Chunk;
-import org.bukkit.Particle;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
@@ -47,6 +46,27 @@ public class RegionRegenerationBuilder extends BukkitRunnable {
         this.worldEdit = worldEdit;
         this.logger = logger;
         this.restoringChunks = restoringChunks;
+    }
+
+    private void playSoundAtCenterOfChunk(Chunk chunk) {
+        int CHUNK_SIZE = Common.CHUNK_SIZE.getValue();
+        int coordinateMinX = chunk.getX() * CHUNK_SIZE;
+        int coordinateMinZ = chunk.getZ() * CHUNK_SIZE;
+        // Skip subtracting 1 from max coordinates, as we're looking to
+        // get the closest center coordinate in int.
+        int coordinateMaxX = coordinateMinX + CHUNK_SIZE;
+        int coordinateMaxZ = coordinateMinZ + CHUNK_SIZE;
+        int centerCoordinateX = (coordinateMinX + coordinateMaxX) / 2;
+        int centerCoordinateZ = (coordinateMinZ + coordinateMaxZ) / 2;
+
+        Location location = new Location(
+                this.world,
+                centerCoordinateX,
+                this.world.getHighestBlockYAt(centerCoordinateX, centerCoordinateZ),
+                centerCoordinateZ
+        );
+
+        this.world.playSound(location, Sound.BLOCK_AZALEA_LEAVES_PLACE, 1, 1);
     }
 
     @Override
@@ -103,6 +123,7 @@ public class RegionRegenerationBuilder extends BukkitRunnable {
                         .build();
 
                 Operations.complete(operation);
+                this.playSoundAtCenterOfChunk(this.chunk);
             }
 
             BlockVector3 minimumPoint = clipboard.getMinimumPoint();
