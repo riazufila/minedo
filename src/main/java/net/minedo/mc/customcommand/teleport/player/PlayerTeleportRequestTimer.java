@@ -2,6 +2,7 @@ package net.minedo.mc.customcommand.teleport.player;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.minedo.mc.constants.playerteleportmessage.PlayerTeleportMessage;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -32,7 +33,10 @@ public class PlayerTeleportRequestTimer extends BukkitRunnable {
 
         this.cancel();
 
-        Component timeoutMessage = Component.text("Teleport request timeout.").color(NamedTextColor.RED);
+        Component timeoutMessage = Component
+                .text(PlayerTeleportMessage.ERROR_REQUEST_TIMEOUT.getMessage())
+                .color(NamedTextColor.RED);
+
         requester.sendMessage(timeoutMessage);
         requestee.sendMessage(timeoutMessage);
     }

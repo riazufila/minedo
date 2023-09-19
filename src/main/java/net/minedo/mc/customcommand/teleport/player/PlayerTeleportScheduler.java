@@ -2,6 +2,7 @@ package net.minedo.mc.customcommand.teleport.player;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.minedo.mc.constants.playerteleportmessage.PlayerTeleportMessage;
 import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -18,8 +19,8 @@ public class PlayerTeleportScheduler extends BukkitRunnable {
     private final Map<UUID, Integer> teleportingRequesters;
     private final Map<UUID, Integer> standingStillRequestees;
     private final List<UUID> globalTeleportingPlayers;
-    private int countdown;
     private final World world;
+    private int countdown;
 
     public PlayerTeleportScheduler(
             Player teleportingPlayer, Player stillPlayer,
@@ -38,29 +39,47 @@ public class PlayerTeleportScheduler extends BukkitRunnable {
     @Override
     public void run() {
         if (countdown > 0) {
-            teleportingPlayer.sendMessage(Component.text(String.format("%s..", countdown)).color(NamedTextColor.YELLOW));
+            teleportingPlayer.sendMessage(Component
+                    .text(String.format(PlayerTeleportMessage.INFO_COUNTDOWN.getMessage(), countdown))
+                    .color(NamedTextColor.YELLOW)
+            );
+
             countdown--;
         } else {
             if (teleportingPlayer.isOnline() && stillPlayer.isOnline()) {
                 teleportingPlayer.teleport(this.stillPlayer);
-                this.world.playSound(teleportingPlayer.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1, 1);
+                this.world.playSound(
+                        teleportingPlayer.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1, 1
+                );
 
                 teleportingPlayer.sendMessage(Component
-                        .text(String.format("Teleported to %s!", this.stillPlayer.getName()))
+                        .text(String.format(
+                                PlayerTeleportMessage.SUCCESS_TELEPORT_REQUESTER.getMessage(),
+                                this.stillPlayer.getName()
+                        ))
                         .color(NamedTextColor.GREEN)
                 );
                 stillPlayer.sendMessage(Component
-                        .text(String.format("%s teleported to you!", this.teleportingPlayer.getName()))
+                        .text(String.format(
+                                PlayerTeleportMessage.SUCCESS_TELEPORT_REQUESTEE.getMessage(),
+                                this.teleportingPlayer.getName()
+                        ))
                         .color(NamedTextColor.GREEN)
                 );
             } else if (!teleportingPlayer.isOnline()) {
                 stillPlayer.sendMessage(Component
-                        .text(String.format("%s went offline.", this.teleportingPlayer.getName()))
+                        .text(String.format(
+                                PlayerTeleportMessage.ERROR_TELEPORT_TARGET_OFFLINE.getMessage(),
+                                this.teleportingPlayer.getName()
+                        ))
                         .color(NamedTextColor.RED)
                 );
             } else if (!stillPlayer.isOnline()) {
                 teleportingPlayer.sendMessage(Component
-                        .text(String.format("%s went offline.", this.stillPlayer.getName()))
+                        .text(String.format(
+                                PlayerTeleportMessage.ERROR_TELEPORT_TARGET_OFFLINE.getMessage(),
+                                this.stillPlayer.getName()
+                        ))
                         .color(NamedTextColor.RED)
                 );
             }
