@@ -2,6 +2,8 @@ package net.minedo.mc.customcommand.teleport.player;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import org.bukkit.Sound;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -17,11 +19,12 @@ public class PlayerTeleportScheduler extends BukkitRunnable {
     private final Map<UUID, Integer> standingStillRequestees;
     private final List<UUID> globalTeleportingPlayers;
     private int countdown;
+    private final World world;
 
     public PlayerTeleportScheduler(
             Player teleportingPlayer, Player stillPlayer,
             Map<UUID, Integer> teleportingRequesters, Map<UUID, Integer> standingStillRequestees,
-            List<UUID> globalTeleportingPlayers
+            List<UUID> globalTeleportingPlayers, World world
     ) {
         this.countdown = 4;
         this.teleportingPlayer = teleportingPlayer;
@@ -29,6 +32,7 @@ public class PlayerTeleportScheduler extends BukkitRunnable {
         this.teleportingRequesters = teleportingRequesters;
         this.standingStillRequestees = standingStillRequestees;
         this.globalTeleportingPlayers = globalTeleportingPlayers;
+        this.world = world;
     }
 
     @Override
@@ -39,6 +43,7 @@ public class PlayerTeleportScheduler extends BukkitRunnable {
         } else {
             if (teleportingPlayer.isOnline() && stillPlayer.isOnline()) {
                 teleportingPlayer.teleport(this.stillPlayer);
+                this.world.playSound(teleportingPlayer.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1, 1);
 
                 teleportingPlayer.sendMessage(Component
                         .text(String.format("Teleported to %s!", this.stillPlayer.getName()))

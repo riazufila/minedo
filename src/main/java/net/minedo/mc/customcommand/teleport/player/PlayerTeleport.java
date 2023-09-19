@@ -182,7 +182,8 @@ public class PlayerTeleport implements CommandExecutor, Listener, TabCompleter {
             if (otherPlayer != null && otherPlayer.isOnline()) {
                 int teleportingTaskId = new PlayerTeleportScheduler(
                         otherPlayer, player, teleportingRequesters,
-                        standingStillRequestees, globalTeleportingPlayers
+                        standingStillRequestees, globalTeleportingPlayers,
+                        this.pluginInstance.getWorldInstance()
                 ).runTaskTimer(this.pluginInstance, 20, 20).getTaskId();
 
                 this.globalTeleportingPlayers.add(player.getUniqueId());
