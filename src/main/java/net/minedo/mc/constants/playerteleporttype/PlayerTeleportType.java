@@ -4,7 +4,8 @@ public enum PlayerTeleportType {
 
     REQUEST("request"),
     ACCEPT("accept"),
-    DECLINE("decline");
+    DECLINE("decline"),
+    DISCARD("discard");
 
     private final String type;
 
