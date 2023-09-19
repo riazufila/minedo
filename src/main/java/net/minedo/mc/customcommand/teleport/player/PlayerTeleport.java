@@ -46,6 +46,7 @@ public class PlayerTeleport implements CommandExecutor, Listener, TabCompleter {
         if (
                 teleportType.equals(PlayerTeleportType.ACCEPT.getType())
                         || teleportType.equals(PlayerTeleportType.DECLINE.getType())
+                        || teleportType.equals(PlayerTeleportType.DISCARD.getType())
         ) {
             return args.length == 1;
         }
@@ -65,15 +66,11 @@ public class PlayerTeleport implements CommandExecutor, Listener, TabCompleter {
         return playerUuid;
     }
 
-    private Player removePlayersFromRequestQueue(Player player, UUID otherPlayerUuid, Integer teleportRequestTaskId) {
-        Player otherPlayer = this.pluginInstance.getServer().getPlayer(Objects.requireNonNull(otherPlayerUuid));
-
-        this.teleportRequestRequesters.remove(otherPlayerUuid);
-        this.teleportRequestRequestees.remove(player.getUniqueId());
+    private void removePlayersFromRequestQueue(UUID requesteeUuid, UUID requesterUuid, Integer teleportRequestTaskId) {
+        this.teleportRequestRequesters.remove(requesterUuid);
+        this.teleportRequestRequestees.remove(requesteeUuid);
 
         Bukkit.getScheduler().cancelTask(teleportRequestTaskId);
-
-        return otherPlayer;
     }
 
     @Override
@@ -86,10 +83,11 @@ public class PlayerTeleport implements CommandExecutor, Listener, TabCompleter {
 
         if (!this.isCommandValid(args)) {
             player.sendMessage(Component
-                    .text(String.format("Usage: /teleport <%s <player> | %s | %s>",
+                    .text(String.format("Usage: /teleport <%s <player> | %s | %s | %s>",
                             PlayerTeleportType.REQUEST.getType(),
                             PlayerTeleportType.ACCEPT.getType(),
-                            PlayerTeleportType.DECLINE.getType()
+                            PlayerTeleportType.DECLINE.getType(),
+                            PlayerTeleportType.DISCARD.getType()
                     ))
                     .color(NamedTextColor.GRAY)
             );
@@ -115,7 +113,7 @@ public class PlayerTeleport implements CommandExecutor, Listener, TabCompleter {
 
             if (existingTeleportRequestTaskId != null) {
                 player.sendMessage(Component
-                        .text("You already have a teleport request.")
+                        .text("You already have a teleport request sent out.")
                         .color(NamedTextColor.RED)
                 );
                 return true;
@@ -160,7 +158,7 @@ public class PlayerTeleport implements CommandExecutor, Listener, TabCompleter {
 
             if (existingTeleportRequestTaskId == null) {
                 player.sendMessage(Component
-                        .text("You don't have a teleport request.")
+                        .text("You don't have a teleport request from any players.")
                         .color(NamedTextColor.RED)
                 );
 
@@ -177,7 +175,9 @@ public class PlayerTeleport implements CommandExecutor, Listener, TabCompleter {
             }
 
             UUID otherPlayerUuid = this.getPlayerUuidFromTaskId(existingTeleportRequestTaskId, teleportRequestRequesters);
-            Player otherPlayer = this.removePlayersFromRequestQueue(player, otherPlayerUuid, existingTeleportRequestTaskId);
+            Player otherPlayer = this.pluginInstance.getServer().getPlayer(Objects.requireNonNull(otherPlayerUuid));
+
+            this.removePlayersFromRequestQueue(player.getUniqueId(), otherPlayerUuid, existingTeleportRequestTaskId);
 
             if (otherPlayer != null && otherPlayer.isOnline()) {
                 int teleportingTaskId = new PlayerTeleportScheduler(
@@ -208,7 +208,7 @@ public class PlayerTeleport implements CommandExecutor, Listener, TabCompleter {
 
             if (existingTeleportRequestTaskId == null) {
                 player.sendMessage(Component
-                        .text("You don't have a teleport request.")
+                        .text("You don't have a teleport request from any players.")
                         .color(NamedTextColor.RED)
                 );
 
@@ -216,7 +216,9 @@ public class PlayerTeleport implements CommandExecutor, Listener, TabCompleter {
             }
 
             UUID otherPlayerUuid = this.getPlayerUuidFromTaskId(existingTeleportRequestTaskId, teleportRequestRequesters);
-            Player otherPlayer = this.removePlayersFromRequestQueue(player, otherPlayerUuid, existingTeleportRequestTaskId);
+            Player otherPlayer = this.pluginInstance.getServer().getPlayer(Objects.requireNonNull(otherPlayerUuid));
+
+           this.removePlayersFromRequestQueue(player.getUniqueId(), otherPlayerUuid, existingTeleportRequestTaskId);
 
             if (otherPlayer != null && otherPlayer.isOnline()) {
                 otherPlayer.sendMessage(Component
@@ -237,12 +239,48 @@ public class PlayerTeleport implements CommandExecutor, Listener, TabCompleter {
             }
 
             return true;
-        } else {
+        } else if (Objects.equals(teleportType, PlayerTeleportType.DISCARD.getType())) {
+            Integer existingTeleportRequestTaskId = teleportRequestRequesters.get(player.getUniqueId());
+
+            if (existingTeleportRequestTaskId == null) {
+                player.sendMessage(Component
+                        .text("You didn't send any teleport request.")
+                        .color(NamedTextColor.RED)
+                );
+
+                return true;
+            }
+
+            UUID otherPlayerUuid = this.getPlayerUuidFromTaskId(existingTeleportRequestTaskId, teleportRequestRequestees);
+            Player otherPlayer = this.pluginInstance.getServer().getPlayer(Objects.requireNonNull(otherPlayerUuid));
+
+           this.removePlayersFromRequestQueue(otherPlayerUuid, player.getUniqueId(), existingTeleportRequestTaskId);
+
+            if (otherPlayer != null && otherPlayer.isOnline()) {
+                otherPlayer.sendMessage(Component
+                        .text(String.format("%s discarded the teleport request.", player.getName()))
+                        .color(NamedTextColor.RED)
+                );
+                player.sendMessage(Component
+                        .text("You discarded the teleport request.")
+                        .color(NamedTextColor.RED)
+                );
+            } else {
+                player.sendMessage(Component
+                        .text("You discarded the teleport request.")
+                        .color(NamedTextColor.RED)
+                );
+            }
+
+            return true;
+        }
+        else {
             player.sendMessage(Component
-                    .text(String.format("Usage: /teleport <%s <player> | %s | %s>",
+                    .text(String.format("Usage: /teleport <%s <player> | %s | %s | %s>",
                             PlayerTeleportType.REQUEST.getType(),
                             PlayerTeleportType.ACCEPT.getType(),
-                            PlayerTeleportType.DECLINE.getType()
+                            PlayerTeleportType.DECLINE.getType(),
+                            PlayerTeleportType.DISCARD.getType()
                     ))
                     .color(NamedTextColor.GRAY)
             );
@@ -265,6 +303,7 @@ public class PlayerTeleport implements CommandExecutor, Listener, TabCompleter {
             completions.add(PlayerTeleportType.REQUEST.getType());
             completions.add(PlayerTeleportType.ACCEPT.getType());
             completions.add(PlayerTeleportType.DECLINE.getType());
+            completions.add(PlayerTeleportType.DISCARD.getType());
         } else if (args.length == 2 && Objects.equals(args[0], PlayerTeleportType.REQUEST.getType())) {
             List<Player> onlinePlayers = this.pluginInstance.getWorldInstance().getPlayers();
 
