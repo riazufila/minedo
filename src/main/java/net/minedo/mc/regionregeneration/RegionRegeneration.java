@@ -140,15 +140,9 @@ public class RegionRegeneration implements Listener {
         for (int chunkX = minX / chunkSize; chunkX <= maxX / chunkSize; chunkX++) {
             for (int chunkZ = minZ / chunkSize; chunkZ <= maxZ / chunkSize; chunkZ++) {
                 int chunkMinX = chunkX * chunkSize;
-                int chunkMaxX = chunkMinX + chunkSize;
+                int chunkMaxX = chunkMinX + chunkSize - 1;
                 int chunkMinZ = chunkZ * chunkSize;
-                int chunkMaxZ = chunkMinZ + chunkSize;
-
-                // Ensure chunk coordinates do not exceed the bounds of the region.
-                chunkMinX = Math.max(chunkMinX, minX);
-                chunkMaxX = Math.min(chunkMaxX, maxX);
-                chunkMinZ = Math.max(chunkMinZ, minZ);
-                chunkMaxZ = Math.min(chunkMaxZ, maxZ);
+                int chunkMaxZ = chunkMinZ + chunkSize - 1;
 
                 if (chunkMinX < chunkMaxX && chunkMinZ < chunkMaxZ) {
                     File file = this.getFile(chunkX, chunkZ);
@@ -181,15 +175,9 @@ public class RegionRegeneration implements Listener {
         for (int chunkX = minX / chunkSize; chunkX <= maxX / chunkSize; chunkX++) {
             for (int chunkZ = minZ / chunkSize; chunkZ <= maxZ / chunkSize; chunkZ++) {
                 int chunkMinX = chunkX * chunkSize;
-                int chunkMaxX = chunkMinX + chunkSize;
+                int chunkMaxX = chunkMinX + chunkSize - 1;
                 int chunkMinZ = chunkZ * chunkSize;
-                int chunkMaxZ = chunkMinZ + chunkSize;
-
-                // Ensure chunk coordinates do not exceed the bounds of the region.
-                chunkMinX = Math.max(chunkMinX, minX);
-                chunkMaxX = Math.min(chunkMaxX, maxX);
-                chunkMinZ = Math.max(chunkMinZ, minZ);
-                chunkMaxZ = Math.min(chunkMaxZ, maxZ);
+                int chunkMaxZ = chunkMinZ + chunkSize - 1;
 
                 if (chunkMinX < chunkMaxX && chunkMinZ < chunkMaxZ) {
                     CuboidRegion cuboidRegion = new CuboidRegion(
