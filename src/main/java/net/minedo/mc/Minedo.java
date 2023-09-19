@@ -77,6 +77,14 @@ public class Minedo extends JavaPlugin {
         return Bukkit.getWorld(WorldType.WORLD.getType());
     }
 
+    public World getNetherWorldInstance() {
+        return Bukkit.getWorld(WorldType.NETHER_WORLD.getType());
+    }
+
+    public World getTheEndWorldInstance() {
+        return Bukkit.getWorld(WorldType.THE_END_WORLD.getType());
+    }
+
     public WorldGuard getWorldGuardInstance() {
         return WorldGuard.getInstance();
     }
