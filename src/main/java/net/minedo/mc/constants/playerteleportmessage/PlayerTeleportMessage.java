@@ -24,9 +24,9 @@ public enum PlayerTeleportMessage {
     ERROR_REQUEST_PLAYER_IS_NOT_IN_SERVER("%s is not in the server."),
     ERROR_NO_TELEPORT_REQUEST_FROM_ANY_PLAYER("You don't have a teleport request from any players."),
     ERROR_NO_REQUEST_RECEIVED("You don't have a teleport request from any players."),
+    ERROR_NO_REQUEST_SENT("You didn't send teleport request to any players."),
     ERROR_DECLINED_REQUESTER("%s declined your teleport request."),
     ERROR_DECLINED_REQUESTEE("You declined %s request to teleport."),
-    ERROR_NO_REQUEST_SENT("You declined %s request to teleport."),
     ERROR_TELEPORTATION_CANCELLED("Teleportation cancelled."),
     ERROR_REQUEST_TIMEOUT("Teleport request timeout."),
     ERROR_TELEPORT_TARGET_OFFLINE("%s is offline.");
