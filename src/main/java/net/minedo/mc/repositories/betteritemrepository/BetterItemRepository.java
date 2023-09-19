@@ -119,7 +119,8 @@ public class BetterItemRepository {
                         FROM
                             better_item betterItem
                                 INNER JOIN
-                            better_item_enchantment betterItemEnchantment ON betterItem.id = betterItemEnchantment.better_item_id
+                            better_item_enchantment betterItemEnchantment
+                                ON betterItem.id = betterItemEnchantment.better_item_id
                         ORDER BY betterItem.id;
                     """;
 
@@ -136,7 +137,9 @@ public class BetterItemRepository {
 
                 // Retrieve BetterItemEnchantment.
                 int enchantmentId = resultSet.getInt("better_item_enchantment_id");
-                Enchantment enchantmentType = Enchantment.getByKey(NamespacedKey.minecraft(resultSet.getString("better_item_enchantment_enchantment")));
+                Enchantment enchantmentType = Enchantment.getByKey(
+                        NamespacedKey.minecraft(resultSet.getString("better_item_enchantment_enchantment"))
+                );
                 int enchantmentLevel = resultSet.getInt("better_item_enchantment_level");
                 int enchantmentBetterItemId = resultSet.getInt("better_item_enchantment_better_item_id");
 
@@ -164,7 +167,8 @@ public class BetterItemRepository {
                         FROM
                             better_item betterItem
                                 INNER JOIN
-                            better_item_attribute betterItemAttribute ON betterItem.id = betterItemAttribute.better_item_id
+                            better_item_attribute betterItemAttribute
+                                ON betterItem.id = betterItemAttribute.better_item_id
                         ORDER BY betterItem.id;
                     """;
 
@@ -181,10 +185,16 @@ public class BetterItemRepository {
 
                 // Retrieve BetterItemAttribute.
                 int attributeId = resultSet.getInt("better_item_attribute_id");
-                Attribute attributeType = Attribute.valueOf(resultSet.getString("better_item_attribute_attribute"));
+                Attribute attributeType = Attribute.valueOf(
+                        resultSet.getString("better_item_attribute_attribute")
+                );
                 double attributeModifier = resultSet.getDouble("better_item_attribute_modifier");
-                AttributeModifier.Operation attributeOperation = AttributeModifier.Operation.valueOf(resultSet.getString("better_item_attribute_operation"));
-                EquipmentSlot attributeSlot = EquipmentSlot.valueOf(resultSet.getString("better_item_attribute_slot"));
+                AttributeModifier.Operation attributeOperation = AttributeModifier.Operation.valueOf(
+                        resultSet.getString("better_item_attribute_operation")
+                );
+                EquipmentSlot attributeSlot = EquipmentSlot.valueOf(
+                        resultSet.getString("better_item_attribute_slot")
+                );
                 int attributeBetterItemId = resultSet.getInt("better_item_attribute_better_item_id");
 
                 // Set BetterItemAttribute.
@@ -207,7 +217,8 @@ public class BetterItemRepository {
                         FROM
                             better_item betterItem
                                 INNER JOIN
-                            better_item_probability betterItemProbability ON betterItem.id = betterItemProbability.better_item_id
+                            better_item_probability betterItemProbability
+                                ON betterItem.id = betterItemProbability.better_item_id
                         ORDER BY betterItem.id;
                     """;
 
