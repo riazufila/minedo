@@ -23,6 +23,7 @@ import net.minedo.mc.constants.common.Common;
 import net.minedo.mc.constants.directory.Directory;
 import net.minedo.mc.constants.filetype.FileType;
 import net.minedo.mc.models.region.Region;
+import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -220,8 +221,10 @@ public class RegionRegeneration implements Listener {
     }
 
     public void restoreRegionChunk(Chunk chunk) {
-        if (restoringChunks.containsKey(String.format("(%d,%d)", chunk.getX(), chunk.getZ()))) {
-            return;
+        String restoringChunkKey = String.format("(%d,%d)", chunk.getX(), chunk.getZ());
+
+        if (restoringChunks.containsKey(restoringChunkKey)) {
+            Bukkit.getScheduler().cancelTask(restoringChunks.get(restoringChunkKey));
         }
 
         // Run region regeneration scheduler after 30 seconds.
@@ -234,7 +237,7 @@ public class RegionRegeneration implements Listener {
                 .getTaskId();
 
         // Place task ID and update restoring chunk details.
-        restoringChunks.put(String.format("(%d,%d)", chunk.getX(), chunk.getZ()), restoringTaskId);
+        restoringChunks.put(restoringChunkKey, restoringTaskId);
     }
 
     private boolean isWithinRegion(Block block) {
