@@ -3,8 +3,8 @@ package net.minedo.mc.models.betteritem;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.minedo.mc.models.betteritemattribute.BetterItemAttribute;
 import net.minedo.mc.models.betteritemenchantment.BetterItemEnchantment;
-import net.minedo.mc.models.betteritemprobability.BetterItemProbability;
 import net.minedo.mc.models.betteritemlore.BetterItemLore;
+import net.minedo.mc.models.betteritemprobability.BetterItemProbability;
 import org.bukkit.Material;
 
 import java.util.List;

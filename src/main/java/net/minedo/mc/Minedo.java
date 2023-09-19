@@ -4,8 +4,8 @@ import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldguard.WorldGuard;
 import net.minedo.mc.constants.worldtype.WorldType;
 import net.minedo.mc.customcommand.CustomCommand;
-import net.minedo.mc.models.region.Region;
 import net.minedo.mc.itembuilder.ItemBuilder;
+import net.minedo.mc.models.region.Region;
 import net.minedo.mc.regionregeneration.RegionRegeneration;
 import net.minedo.mc.repositories.regionrepository.RegionRepository;
 import net.minedo.mc.spawnlocationinitializer.SpawnLocationInitializer;
@@ -75,6 +75,14 @@ public class Minedo extends JavaPlugin {
 
     public World getWorldInstance() {
         return Bukkit.getWorld(WorldType.WORLD.getType());
+    }
+
+    public World getNetherWorldInstance() {
+        return Bukkit.getWorld(WorldType.NETHER_WORLD.getType());
+    }
+
+    public World getTheEndWorldInstance() {
+        return Bukkit.getWorld(WorldType.THE_END_WORLD.getType());
     }
 
     public WorldGuard getWorldGuardInstance() {

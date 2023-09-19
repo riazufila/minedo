@@ -9,8 +9,8 @@ commands:
     description: "Teleport to spawn region."
     usage: "/spawn"
   teleport:
-    description: "Request teleport to a player and accept or decline a teleport request."
-    usage: "/teleport <request <player> | accept | decline>"
+    description: "Request teleport to a player and accept, decline, or discard a teleport request."
+    usage: "/teleport <request <player> | accept | decline | discard>"
 depend:
   - FastAsyncWorldEdit
   - WorldGuard

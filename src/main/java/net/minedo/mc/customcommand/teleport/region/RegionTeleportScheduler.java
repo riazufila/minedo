@@ -2,6 +2,7 @@ package net.minedo.mc.customcommand.teleport.region;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.minedo.mc.constants.regionteleportmessage.RegionTeleportMessage;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.World;
@@ -38,7 +39,11 @@ public class RegionTeleportScheduler extends BukkitRunnable {
     @Override
     public void run() {
         if (countdown > 0) {
-            player.sendMessage(Component.text(String.format("%s..", countdown)).color(NamedTextColor.YELLOW));
+            player.sendMessage(Component
+                    .text(String.format(RegionTeleportMessage.INFO_COUNTDOWN.getMessage(), countdown))
+                    .color(NamedTextColor.YELLOW)
+            );
+
             countdown--;
         } else {
             if (player.isOnline()) {
@@ -46,7 +51,7 @@ public class RegionTeleportScheduler extends BukkitRunnable {
                 world.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1, 1);
 
                 player.sendMessage(Component
-                        .text(String.format("Teleported to %s!", this.customCommand))
+                        .text(String.format(RegionTeleportMessage.SUCCESS_TELEPORT.getMessage(), this.customCommand))
                         .color(NamedTextColor.GREEN)
                 );
             }
