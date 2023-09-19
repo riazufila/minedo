@@ -85,7 +85,7 @@ public class RegionTeleport implements CommandExecutor, Listener {
 
             int teleportTaskId = new RegionTeleportScheduler(
                     player, location, this.customCommand,
-                    this.globalTeleportingPlayers, this.teleportingPlayers
+                    this.globalTeleportingPlayers, this.teleportingPlayers, this.world
             ).runTaskTimer(this.pluginInstance, 20, 20).getTaskId();
 
             this.globalTeleportingPlayers.add(player.getUniqueId());
