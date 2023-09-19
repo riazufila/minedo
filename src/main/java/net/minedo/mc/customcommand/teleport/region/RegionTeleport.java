@@ -3,6 +3,8 @@ package net.minedo.mc.customcommand.teleport.region;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.minedo.mc.Minedo;
+import net.minedo.mc.constants.globalteleportmessage.GlobalTeleportMessage;
+import net.minedo.mc.constants.regionteleportmessage.RegionTeleportMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -57,24 +59,21 @@ public class RegionTeleport implements CommandExecutor, Listener {
 
         if (args.length > 0) {
             player.sendMessage(Component
-                    .text(String.format("Usage: /%s", this.customCommand))
+                    .text(String.format(RegionTeleportMessage.ERROR_USAGE.getMessage(), this.customCommand))
                     .color(NamedTextColor.GRAY)
             );
 
             return true;
         }
 
-        if (globalTeleportingPlayers.contains(player.getUniqueId())) {
+        if (
+                globalTeleportingPlayers.contains(player.getUniqueId())
+                        || teleportingPlayers.containsKey(player.getUniqueId())
+        ) {
             player.sendMessage(Component
-                    .text("Not allowed to perform more than one teleportation at a time.")
+                    .text(GlobalTeleportMessage.ERROR_USE_MORE_THAN_ONCE_AT_A_TIME.getMessage())
                     .color(NamedTextColor.RED)
             );
-
-            return true;
-        }
-
-        if (teleportingPlayers.containsKey(player.getUniqueId())) {
-            player.sendMessage(Component.text("You're already teleporting!").color(NamedTextColor.RED));
 
             return true;
         }
@@ -82,8 +81,14 @@ public class RegionTeleport implements CommandExecutor, Listener {
         if (label.equalsIgnoreCase(customCommand)) {
             // Set random location within region.
             Random random = new Random();
-            int coordinateX = random.nextInt((int) ((this.destinationMaxX - this.destinationMinX + 1) + this.destinationMinX));
-            int coordinateZ = random.nextInt((int) ((this.destinationMaxZ - this.destinationMinZ + 1) + this.destinationMinZ));
+
+            int coordinateX = random.nextInt(
+                    (int) ((this.destinationMaxX - this.destinationMinX + 1) + this.destinationMinX)
+            );
+            int coordinateZ = random.nextInt(
+                    (int) ((this.destinationMaxZ - this.destinationMinZ + 1) + this.destinationMinZ)
+            );
+
             int coordinateY = this.world.getHighestBlockYAt(coordinateX, coordinateZ);
             Location location = this.getSafeToTeleportCoordinate(coordinateX, coordinateY, coordinateZ);
 
@@ -95,7 +100,7 @@ public class RegionTeleport implements CommandExecutor, Listener {
             this.globalTeleportingPlayers.add(player.getUniqueId());
             this.teleportingPlayers.put(player.getUniqueId(), teleportTaskId);
             player.sendMessage(Component.text(
-                    String.format("Teleporting to %s in 5..", customCommand)
+                    String.format(RegionTeleportMessage.INFO_TELEPORTING.getMessage(), customCommand)
             ).color(NamedTextColor.YELLOW));
 
             return true;
@@ -123,8 +128,9 @@ public class RegionTeleport implements CommandExecutor, Listener {
                 // Cancel Bukkit Runnable.
                 Bukkit.getScheduler().cancelTask(teleportTaskId);
 
-                player.sendMessage(
-                        Component.text("Don't move if you want to teleport..").color(NamedTextColor.RED)
+                player.sendMessage(Component
+                        .text(RegionTeleportMessage.ERROR_TELEPORTATION_CANCELLED.getMessage())
+                        .color(NamedTextColor.RED)
                 );
             }
         }
