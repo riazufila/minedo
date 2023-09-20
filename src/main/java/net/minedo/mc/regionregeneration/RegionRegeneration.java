@@ -284,7 +284,13 @@ public class RegionRegeneration implements Listener {
                 BukkitAdapter.asBlockVector(location)
         );
 
-        return !applicableRegionSet.getRegions().isEmpty();
+        for (ProtectedRegion protectedRegion : applicableRegionSet.getRegions()) {
+            if (protectedRegion.getId().equalsIgnoreCase(this.region.getName())) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private void regenerate(Block block) {
