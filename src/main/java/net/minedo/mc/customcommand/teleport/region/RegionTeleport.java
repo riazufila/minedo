@@ -5,6 +5,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.minedo.mc.Minedo;
 import net.minedo.mc.constants.globalteleportmessage.GlobalTeleportMessage;
 import net.minedo.mc.constants.regionteleportmessage.RegionTeleportMessage;
+import net.minedo.mc.models.region.Region;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -22,10 +23,7 @@ import java.util.*;
 
 public class RegionTeleport implements CommandExecutor, Listener, TabCompleter {
 
-    private final double destinationMinX;
-    private final double destinationMaxX;
-    private final double destinationMinZ;
-    private final double destinationMaxZ;
+    private final Region region;
     private final String customCommand;
     private final List<UUID> globalTeleportingPlayers;
     private final World world;
@@ -33,21 +31,20 @@ public class RegionTeleport implements CommandExecutor, Listener, TabCompleter {
     private final Map<UUID, Integer> teleportingPlayers = new HashMap<>();
 
     public RegionTeleport(
-            double destinationMinX, double destinationMaxX, double destinationMinZ, double destinationMaxZ,
-            String customCommand, List<UUID> globalTeleportingPlayers, World world, Minedo pluginInstance
+            Region region, String customCommand,
+            List<UUID> globalTeleportingPlayers, World world, Minedo pluginInstance
     ) {
-        this.destinationMinX = destinationMinX;
-        this.destinationMaxX = destinationMaxX;
-        this.destinationMinZ = destinationMinZ;
-        this.destinationMaxZ = destinationMaxZ;
+        this.region = region;
         this.customCommand = customCommand;
         this.globalTeleportingPlayers = globalTeleportingPlayers;
         this.world = world;
         this.pluginInstance = pluginInstance;
     }
 
-    private Location getSafeToTeleportCoordinate(double coordinateX, double coordinateY, double coordinateZ) {
-        return new Location(this.world, coordinateX + 0.5, coordinateY + 1, coordinateZ + 0.5);
+    private Location getSafeToTeleportLocation(Location location) {
+        return new Location(
+                this.world, location.getX() + 0.5, location.getY() + 1, location.getZ() + 0.5
+        );
     }
 
     @Override
@@ -80,18 +77,7 @@ public class RegionTeleport implements CommandExecutor, Listener, TabCompleter {
         }
 
         if (label.equalsIgnoreCase(customCommand)) {
-            // Set random location within region.
-            Random random = new Random();
-
-            int coordinateX = random.nextInt(
-                    (int) ((this.destinationMaxX - this.destinationMinX + 1) + this.destinationMinX)
-            );
-            int coordinateZ = random.nextInt(
-                    (int) ((this.destinationMaxZ - this.destinationMinZ + 1) + this.destinationMinZ)
-            );
-
-            int coordinateY = this.world.getHighestBlockYAt(coordinateX, coordinateZ);
-            Location location = this.getSafeToTeleportCoordinate(coordinateX, coordinateY, coordinateZ);
+            Location location = this.getSafeToTeleportLocation(this.region.getRandomLocation(this.world));
 
             int teleportTaskId = new RegionTeleportScheduler(
                     player, location, this.customCommand,

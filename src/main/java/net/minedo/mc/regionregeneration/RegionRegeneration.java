@@ -35,6 +35,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.util.BoundingBox;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
@@ -321,13 +322,22 @@ public class RegionRegeneration implements Listener {
         LivingEntity entity = event.getEntity();
 
         if (isWithinRegion(location) && entity instanceof Monster) {
-            Location regionCenter = this.region.getCenterOfRegion(this.world);
+            Location regionCenter = this.region.getCenter(this.world);
             Vector awayFromCenter = location.toVector().subtract(regionCenter.toVector()).normalize();
             double MULTIPLIER = 1.0;
 
             this.world.playSound(location, Sound.BLOCK_AMETHYST_BLOCK_HIT, 1, 1);
             this.spawnParticleOnEntity(entity, Particle.CRIT_MAGIC, 1, 15);
             entity.setVelocity(awayFromCenter.multiply(MULTIPLIER));
+        }
+    }
+
+    @EventHandler
+    public void onPlayerRespawn(PlayerRespawnEvent event) {
+        Location location = event.getPlayer().getLocation();
+
+        if (isWithinRegion(location)) {
+            event.setRespawnLocation(this.region.getRandomLocation(this.world));
         }
     }
 
