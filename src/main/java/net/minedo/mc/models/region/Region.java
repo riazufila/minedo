@@ -9,7 +9,7 @@ public class Region {
 
     public int id;
     public String name;
-    public World world;
+    public World worldType;
     public int minX;
     public int maxX;
     public int minZ;
@@ -31,12 +31,12 @@ public class Region {
         this.name = name;
     }
 
-    public World getWorld() {
-        return world;
+    public World getWorldType() {
+        return worldType;
     }
 
-    public void setWorld(World world) {
-        this.world = world;
+    public void setWorldType(World worldType) {
+        this.worldType = worldType;
     }
 
     public int getMinX() {
@@ -77,9 +77,9 @@ public class Region {
         int centerCoordinateZ = (this.minZ + (this.maxZ + 1)) / 2;
 
         return new Location(
-                world,
+                worldType,
                 centerCoordinateX,
-                world.getHighestBlockYAt(centerCoordinateX, centerCoordinateZ),
+                worldType.getHighestBlockYAt(centerCoordinateX, centerCoordinateZ),
                 centerCoordinateZ
         );
     }
@@ -89,9 +89,9 @@ public class Region {
 
         int coordinateX = random.nextInt((this.maxX - this.minX + 1) + this.minX);
         int coordinateZ = random.nextInt((this.maxZ - this.minZ + 1) + this.minZ);
-        int coordinateY = world.getHighestBlockYAt(coordinateX, coordinateZ);
+        int coordinateY = worldType.getHighestBlockYAt(coordinateX, coordinateZ);
 
-        return new Location(world, coordinateX, coordinateY, coordinateZ);
+        return new Location(worldType, coordinateX, coordinateY, coordinateZ);
     }
 
 }

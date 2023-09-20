@@ -55,7 +55,7 @@ CREATE TABLE better_item_probability (
 CREATE TABLE region (
     id int NOT NULL,
     name varchar(20) NOT NULL,
-    world varchar(20) NOT NULL,
+    worldType varchar(20) NOT NULL,
     minX int NOT NULL,
     maxX int NOT NULL,
     minZ int NOT NULL,

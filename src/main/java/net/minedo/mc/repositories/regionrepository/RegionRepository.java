@@ -37,7 +37,7 @@ public class RegionRepository {
                 // Retrieve Region.
                 int id = resultSet.getInt("id");
                 String name = resultSet.getString("name");
-                String world = resultSet.getString("world");
+                String world = resultSet.getString("worldType");
                 int minX = resultSet.getInt("minX");
                 int maxX = resultSet.getInt("maxX");
                 int minZ = resultSet.getInt("minZ");
@@ -47,7 +47,7 @@ public class RegionRepository {
                 Region region = new Region();
                 region.setId(id);
                 region.setName(name);
-                region.setWorld(this.pluginInstance.getWorldBasedOnName(world));
+                region.setWorldType(this.pluginInstance.getWorldBasedOnName(world));
                 region.setMinX(minX);
                 region.setMaxX(maxX);
                 region.setMinZ(minZ);
@@ -81,7 +81,7 @@ public class RegionRepository {
             if (resultSet.next()) {
                 // Retrieve Region.
                 String name = resultSet.getString("name");
-                String world = resultSet.getString("world");
+                String world = resultSet.getString("worldType");
                 int minX = resultSet.getInt("minX");
                 int maxX = resultSet.getInt("maxX");
                 int minZ = resultSet.getInt("minZ");
@@ -90,7 +90,7 @@ public class RegionRepository {
                 // Set Region object return.
                 region.setId(id);
                 region.setName(name);
-                region.setWorld(this.pluginInstance.getWorldBasedOnName(world));
+                region.setWorldType(this.pluginInstance.getWorldBasedOnName(world));
                 region.setMinX(minX);
                 region.setMaxX(maxX);
                 region.setMinZ(minZ);
@@ -122,7 +122,7 @@ public class RegionRepository {
                 // Retrieve Region.
                 int id = resultSet.getInt("id");
                 String name = resultSet.getString("name");
-                String world = resultSet.getString("world");
+                String world = resultSet.getString("worldType");
                 int minX = resultSet.getInt("minX");
                 int maxX = resultSet.getInt("maxX");
                 int minZ = resultSet.getInt("minZ");
@@ -131,7 +131,7 @@ public class RegionRepository {
                 // Set Region object and push to Array.
                 region.setId(id);
                 region.setName(name);
-                region.setWorld(this.pluginInstance.getWorldBasedOnName(world));
+                region.setWorldType(this.pluginInstance.getWorldBasedOnName(world));
                 region.setMinX(minX);
                 region.setMaxX(maxX);
                 region.setMinZ(minZ);

@@ -33,7 +33,7 @@ public class RegionTeleportScheduler extends BukkitRunnable {
     }
 
     private Location getSafeToTeleportLocation(Location location) {
-        World world = this.region.getWorld();
+        World world = this.region.getWorldType();
 
         return new Location(
                 world, location.getX() + 0.5, location.getY() + 1, location.getZ() + 0.5
@@ -44,7 +44,7 @@ public class RegionTeleportScheduler extends BukkitRunnable {
     public void run() {
         Location location = this.getSafeToTeleportLocation(this.region.getRandomLocation());
         World sourceWorld = player.getWorld();
-        World destinationWorld = this.region.getWorld();
+        World destinationWorld = this.region.getWorldType();
 
         if (countdown > 0) {
             player.sendMessage(Component

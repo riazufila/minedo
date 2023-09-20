@@ -32,12 +32,13 @@ public class CustomCommand {
 
         // Region teleport.
         for (Region region : regions) {
+
             RegionTeleport regionTeleport = new RegionTeleport(region, globalTeleportingPlayers, this.pluginInstance);
             server.getPluginManager().registerEvents(regionTeleport, this.pluginInstance);
 
-            Objects.requireNonNull(this.customCommandInterface.getCommand(
+            this.customCommandInterface.getCommand(
                     region.getName().toLowerCase()
-            )).setExecutor(regionTeleport);
+            ).setExecutor(regionTeleport);
         }
 
         // Player teleport.

@@ -46,7 +46,7 @@ public class RegionRegenerationBuilder extends BukkitRunnable {
     }
 
     private Location getCenterLocationOfChunk(Chunk chunk) {
-        World world = this.region.getWorld();
+        World world = this.region.getWorldType();
         int CHUNK_SIZE = Common.CHUNK_SIZE.getValue();
         int coordinateMinX = chunk.getX() * CHUNK_SIZE;
         int coordinateMinZ = chunk.getZ() * CHUNK_SIZE;
@@ -67,7 +67,7 @@ public class RegionRegenerationBuilder extends BukkitRunnable {
 
     private void playSoundAtCenterOfChunk(Chunk chunk) {
         Location location = this.getCenterLocationOfChunk(chunk);
-        this.region.getWorld().playSound(location, Sound.BLOCK_AZALEA_LEAVES_PLACE, 1, 1);
+        this.region.getWorldType().playSound(location, Sound.BLOCK_AZALEA_LEAVES_PLACE, 1, 1);
     }
 
     @Override
@@ -115,7 +115,7 @@ public class RegionRegenerationBuilder extends BukkitRunnable {
         ) {
             Clipboard clipboard = clipboardReader.read();
             WorldEdit worldEdit = this.pluginInstance.getWorldEdit();
-            World world = this.region.getWorld();
+            World world = this.region.getWorldType();
 
             try (EditSession editSession = worldEdit.newEditSession(BukkitAdapter.adapt(world))) {
                 Operation operation = new ClipboardHolder(clipboard)

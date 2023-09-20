@@ -33,7 +33,7 @@ public class RegionRegenerationLauncher extends BukkitRunnable {
 
     private boolean isPlayerWithinLaunchingGround(Player player) {
         Location location = player.getLocation();
-        int highestBlockAtY = this.region.getWorld().getHighestBlockYAt(location.getBlockX(), location.getBlockZ());
+        int highestBlockAtY = this.region.getWorldType().getHighestBlockYAt(location.getBlockX(), location.getBlockZ());
         int LAUNCHING_GROUND_MAX_HEIGHT = 5;
 
         return location.getBlockY() - highestBlockAtY <= LAUNCHING_GROUND_MAX_HEIGHT;
@@ -44,7 +44,7 @@ public class RegionRegenerationLauncher extends BukkitRunnable {
 
         for (Entity entity : entities) {
             if (entity instanceof Player player && this.isPlayerWithinLaunchingGround(player)) {
-                this.region.getWorld().playSound(player.getLocation(), Sound.BLOCK_AZALEA_LEAVES_STEP, 1, 1);
+                this.region.getWorldType().playSound(player.getLocation(), Sound.BLOCK_AZALEA_LEAVES_STEP, 1, 1);
                 player.setVelocity(player.getLocation().getDirection().multiply(2).setX(0).setZ(0).setY(2));
 
                 PotionEffect existingPotionEffect = player.getPotionEffect(PotionEffectType.SLOW_FALLING);
