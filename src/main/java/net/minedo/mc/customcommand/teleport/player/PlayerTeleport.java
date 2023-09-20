@@ -68,11 +68,15 @@ public class PlayerTeleport implements CommandExecutor, Listener, TabCompleter {
         return playerUuid;
     }
 
-    private void removePlayersFromRequestQueue(UUID requesteeUuid, UUID requesterUuid, Integer teleportRequestTaskId) {
-        this.teleportRequestRequesters.remove(requesterUuid);
-        this.teleportRequestRequestees.remove(requesteeUuid);
+    private void removePlayersFromQueueAndCancelRunnable(
+            UUID requesteeUuid, UUID requesterUuid,
+            Map<UUID, Integer> requesteeQueue, Map<UUID, Integer> requesterQueue,
+            Integer taskId
+    ) {
+        requesteeQueue.remove(requesteeUuid);
+        requesterQueue.remove(requesterUuid);
 
-        Bukkit.getScheduler().cancelTask(teleportRequestTaskId);
+        Bukkit.getScheduler().cancelTask(taskId);
     }
 
     @Override
@@ -125,7 +129,7 @@ public class PlayerTeleport implements CommandExecutor, Listener, TabCompleter {
                     return true;
                 }
 
-                int teleportRequestTaskId = new PlayerTeleportRequestTimer(
+                int teleportRequestTaskId = new PlayerTeleportRequestScheduler(
                         player, otherPlayer, teleportRequestRequesters, teleportRequestRequestees
                 )
                         .runTaskLater(this.pluginInstance, 600)
@@ -187,13 +191,17 @@ public class PlayerTeleport implements CommandExecutor, Listener, TabCompleter {
             );
             Player otherPlayer = this.pluginInstance.getServer().getPlayer(Objects.requireNonNull(otherPlayerUuid));
 
-            this.removePlayersFromRequestQueue(player.getUniqueId(), otherPlayerUuid, existingTeleportRequestTaskId);
+            this.removePlayersFromQueueAndCancelRunnable(
+                    player.getUniqueId(), otherPlayerUuid,
+                    this.teleportRequestRequestees,
+                    this.teleportRequestRequesters,
+                    existingTeleportRequestTaskId
+            );
 
             if (otherPlayer != null && otherPlayer.isOnline()) {
                 int teleportingTaskId = new PlayerTeleportScheduler(
                         otherPlayer, player, teleportingRequesters,
-                        standingStillRequestees, globalTeleportingPlayers,
-                        this.pluginInstance.getWorldInstance()
+                        standingStillRequestees, globalTeleportingPlayers
                 ).runTaskTimer(this.pluginInstance, 20, 20).getTaskId();
 
                 this.globalTeleportingPlayers.add(player.getUniqueId());
@@ -236,7 +244,12 @@ public class PlayerTeleport implements CommandExecutor, Listener, TabCompleter {
             );
             Player otherPlayer = this.pluginInstance.getServer().getPlayer(Objects.requireNonNull(otherPlayerUuid));
 
-            this.removePlayersFromRequestQueue(player.getUniqueId(), otherPlayerUuid, existingTeleportRequestTaskId);
+            this.removePlayersFromQueueAndCancelRunnable(
+                    player.getUniqueId(), otherPlayerUuid,
+                    this.teleportRequestRequestees,
+                    this.teleportRequestRequesters,
+                    existingTeleportRequestTaskId
+            );
 
             if (otherPlayer != null && otherPlayer.isOnline()) {
                 otherPlayer.sendMessage(Component
@@ -283,7 +296,12 @@ public class PlayerTeleport implements CommandExecutor, Listener, TabCompleter {
             );
             Player otherPlayer = this.pluginInstance.getServer().getPlayer(Objects.requireNonNull(otherPlayerUuid));
 
-            this.removePlayersFromRequestQueue(otherPlayerUuid, player.getUniqueId(), existingTeleportRequestTaskId);
+            this.removePlayersFromQueueAndCancelRunnable(
+                    otherPlayerUuid, player.getUniqueId(),
+                    this.teleportRequestRequestees,
+                    this.teleportRequestRequesters,
+                    existingTeleportRequestTaskId
+            );
 
             if (otherPlayer != null && otherPlayer.isOnline()) {
                 otherPlayer.sendMessage(Component
@@ -331,7 +349,7 @@ public class PlayerTeleport implements CommandExecutor, Listener, TabCompleter {
             completions.add(PlayerTeleportType.DECLINE.getType());
             completions.add(PlayerTeleportType.DISCARD.getType());
         } else if (args.length == 2 && Objects.equals(args[0], PlayerTeleportType.REQUEST.getType())) {
-            List<Player> onlinePlayers = this.pluginInstance.getWorldInstance().getPlayers();
+            Collection<? extends Player> onlinePlayers = this.pluginInstance.getServer().getOnlinePlayers();
 
             completions.addAll(onlinePlayers.stream()
                     .filter(onlinePlayer -> onlinePlayer != player)

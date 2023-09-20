@@ -23,11 +23,10 @@ public class Minedo extends JavaPlugin {
     public void onEnable() {
         Minedo instance = this;
 
-        World world = getWorldInstance();
         Server server = getPluginServer();
 
         // Set spawn location.
-        SpawnLocationInitializer spawnLocationInitializer = new SpawnLocationInitializer(world);
+        SpawnLocationInitializer spawnLocationInitializer = new SpawnLocationInitializer(this);
         if (!spawnLocationInitializer.hasSpawnLocationSet()) {
             spawnLocationInitializer.setSpawnLocation();
         }
@@ -36,19 +35,15 @@ public class Minedo extends JavaPlugin {
         server.getPluginManager().registerEvents(new ItemBuilder(instance), instance);
 
         // Register and display custom commands to players.
-        CustomCommand customCommand = new CustomCommand(world, instance, server, this::getPluginCommand);
+        CustomCommand customCommand = new CustomCommand(instance, this::getPluginCommand);
         customCommand.setupCustomCommands();
 
         // Region regenerations.
-        WorldGuard worldGuard = getWorldGuardInstance();
-        WorldEdit worldEdit = getWorldEditInstance();
-        RegionRepository regionRepository = new RegionRepository();
+        RegionRepository regionRepository = new RegionRepository(this);
         List<Region> regions = regionRepository.getAllRegions();
 
         for (Region region : regions) {
-            RegionRegeneration regionRegeneration = new RegionRegeneration(
-                    world, worldGuard, worldEdit, region, instance
-            );
+            RegionRegeneration regionRegeneration = new RegionRegeneration(region, instance);
 
             // Initialize region setup.
             if (regionRegeneration.getRegion() == null) {
@@ -73,23 +68,31 @@ public class Minedo extends JavaPlugin {
         return getCommand(command);
     }
 
-    public World getWorldInstance() {
+    public World getWorldBasedOnName(String name) {
+        return Bukkit.getWorld(name);
+    }
+
+    public World getOverworld() {
         return Bukkit.getWorld(WorldType.WORLD.getType());
     }
 
-    public World getNetherWorldInstance() {
+    public World getNetherWorld() {
         return Bukkit.getWorld(WorldType.NETHER_WORLD.getType());
     }
 
-    public World getTheEndWorldInstance() {
+    public World getTheEndWorld() {
         return Bukkit.getWorld(WorldType.THE_END_WORLD.getType());
     }
 
-    public WorldGuard getWorldGuardInstance() {
+    public List<World> getAllWorlds() {
+        return Bukkit.getWorlds();
+    }
+
+    public WorldGuard getWorldGuard() {
         return WorldGuard.getInstance();
     }
 
-    public WorldEdit getWorldEditInstance() {
+    public WorldEdit getWorldEdit() {
         return WorldEdit.getInstance();
     }
 

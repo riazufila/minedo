@@ -9,6 +9,7 @@ public class Region {
 
     public int id;
     public String name;
+    public World world;
     public int minX;
     public int maxX;
     public int minZ;
@@ -28,6 +29,14 @@ public class Region {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public World getWorld() {
+        return world;
+    }
+
+    public void setWorld(World world) {
+        this.world = world;
     }
 
     public int getMinX() {
@@ -62,7 +71,7 @@ public class Region {
         this.maxZ = maxZ;
     }
 
-    public Location getCenter(World world) {
+    public Location getCenter() {
         // Add 1 to max coordinate to conform with chunk size.
         int centerCoordinateX = (this.minX + (this.maxX + 1)) / 2;
         int centerCoordinateZ = (this.minZ + (this.maxZ + 1)) / 2;
@@ -75,7 +84,7 @@ public class Region {
         );
     }
 
-    public Location getRandomLocation(World world) {
+    public Location getRandomLocation() {
         Random random = new Random();
 
         int coordinateX = random.nextInt((this.maxX - this.minX + 1) + this.minX);

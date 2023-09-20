@@ -3,6 +3,7 @@ package net.minedo.mc.customcommand.teleport.region;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.minedo.mc.constants.regionteleportmessage.RegionTeleportMessage;
+import net.minedo.mc.models.region.Region;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.World;
@@ -16,28 +17,35 @@ import java.util.UUID;
 public class RegionTeleportScheduler extends BukkitRunnable {
 
     private final Player player;
-    private final Location destination;
-    private final String customCommand;
+    private final Region region;
     private final List<UUID> globalTeleportingPlayers;
     private final Map<UUID, Integer> teleportingPlayers;
-    private final World world;
-    private int countdown;
+    private int countdown = 4;
 
     public RegionTeleportScheduler(
-            Player player, Location destination, String customCommand,
-            List<UUID> globalTeleportingPlayers, Map<UUID, Integer> teleportingPlayers, World world
+            Player player, Region region, List<UUID> globalTeleportingPlayers,
+            Map<UUID, Integer> teleportingPlayers
     ) {
-        this.countdown = 4;
         this.player = player;
-        this.destination = destination;
-        this.customCommand = customCommand;
+        this.region = region;
         this.globalTeleportingPlayers = globalTeleportingPlayers;
         this.teleportingPlayers = teleportingPlayers;
-        this.world = world;
+    }
+
+    private Location getSafeToTeleportLocation(Location location) {
+        World world = this.region.getWorld();
+
+        return new Location(
+                world, location.getX() + 0.5, location.getY() + 1, location.getZ() + 0.5
+        );
     }
 
     @Override
     public void run() {
+        Location location = this.getSafeToTeleportLocation(this.region.getRandomLocation());
+        World sourceWorld = player.getWorld();
+        World destinationWorld = this.region.getWorld();
+
         if (countdown > 0) {
             player.sendMessage(Component
                     .text(String.format(RegionTeleportMessage.INFO_COUNTDOWN.getMessage(), countdown))
@@ -47,11 +55,16 @@ public class RegionTeleportScheduler extends BukkitRunnable {
             countdown--;
         } else {
             if (player.isOnline()) {
-                player.teleport(this.destination);
-                world.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1, 1);
+                player.teleport(location);
+
+                sourceWorld.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1, 1);
+                destinationWorld.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1, 1);
 
                 player.sendMessage(Component
-                        .text(String.format(RegionTeleportMessage.SUCCESS_TELEPORT.getMessage(), this.customCommand))
+                        .text(String.format(
+                                RegionTeleportMessage.SUCCESS_TELEPORT.getMessage(),
+                                this.region.getName().toLowerCase()
+                        ))
                         .color(NamedTextColor.GREEN)
                 );
             }

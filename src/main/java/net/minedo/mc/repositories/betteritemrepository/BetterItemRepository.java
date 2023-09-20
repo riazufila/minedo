@@ -18,6 +18,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -25,7 +26,7 @@ public class BetterItemRepository {
 
     private final Logger logger = Logger.getLogger(this.getClass().getName());
 
-    public BetterItem[] getAllBetterItems() {
+    public List<BetterItem> getAllBetterItems() {
         Database database = new Database();
         database.connect();
 
@@ -248,7 +249,7 @@ public class BetterItemRepository {
         }
 
         // Convert Map to Array.
-        return betterItemsMap.values().toArray(new BetterItem[0]);
+        return List.of(betterItemsMap.values().toArray(new BetterItem[0]));
     }
 
 }

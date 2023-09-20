@@ -19,13 +19,12 @@ public class PlayerTeleportScheduler extends BukkitRunnable {
     private final Map<UUID, Integer> teleportingRequesters;
     private final Map<UUID, Integer> standingStillRequestees;
     private final List<UUID> globalTeleportingPlayers;
-    private final World world;
     private int countdown;
 
     public PlayerTeleportScheduler(
             Player teleportingPlayer, Player stillPlayer,
             Map<UUID, Integer> teleportingRequesters, Map<UUID, Integer> standingStillRequestees,
-            List<UUID> globalTeleportingPlayers, World world
+            List<UUID> globalTeleportingPlayers
     ) {
         this.countdown = 4;
         this.teleportingPlayer = teleportingPlayer;
@@ -33,11 +32,13 @@ public class PlayerTeleportScheduler extends BukkitRunnable {
         this.teleportingRequesters = teleportingRequesters;
         this.standingStillRequestees = standingStillRequestees;
         this.globalTeleportingPlayers = globalTeleportingPlayers;
-        this.world = world;
     }
 
     @Override
     public void run() {
+        World sourceWorld = teleportingPlayer.getWorld();
+        World destinationWorld = stillPlayer.getWorld();
+
         if (countdown > 0) {
             teleportingPlayer.sendMessage(Component
                     .text(String.format(PlayerTeleportMessage.INFO_COUNTDOWN.getMessage(), countdown))
@@ -48,7 +49,11 @@ public class PlayerTeleportScheduler extends BukkitRunnable {
         } else {
             if (teleportingPlayer.isOnline() && stillPlayer.isOnline()) {
                 teleportingPlayer.teleport(this.stillPlayer);
-                this.world.playSound(
+
+                sourceWorld.playSound(
+                        teleportingPlayer.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1, 1
+                );
+                destinationWorld.playSound(
                         teleportingPlayer.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1, 1
                 );
 
