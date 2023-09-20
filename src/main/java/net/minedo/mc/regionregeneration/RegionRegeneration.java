@@ -148,19 +148,27 @@ public class RegionRegeneration implements Listener {
             ProtectedRegion protectedRegion = Objects.requireNonNull(regionManager).getRegion(this.region.getName());
 
             if (protectedRegion != null) {
-                int chunkSize = Common.CHUNK_SIZE.getValue();
+                int CHUNK_SIZE = Common.CHUNK_SIZE.getValue();
                 int minX = protectedRegion.getMinimumPoint().getBlockX();
                 int maxX = protectedRegion.getMaximumPoint().getBlockX();
                 int minZ = protectedRegion.getMinimumPoint().getBlockZ();
                 int maxZ = protectedRegion.getMaximumPoint().getBlockZ();
 
                 // Iterate through chunks and check if a schematic for each chunk has been created.
-                for (int chunkX = minX / chunkSize; chunkX <= maxX / chunkSize; chunkX++) {
-                    for (int chunkZ = minZ / chunkSize; chunkZ <= maxZ / chunkSize; chunkZ++) {
-                        int chunkMinX = chunkX * chunkSize;
-                        int chunkMaxX = chunkMinX + chunkSize - 1;
-                        int chunkMinZ = chunkZ * chunkSize;
-                        int chunkMaxZ = chunkMinZ + chunkSize - 1;
+                for (
+                        int chunkX = minX / CHUNK_SIZE;
+                        maxX >= 0 ? chunkX <= maxX / CHUNK_SIZE : chunkX < maxX / CHUNK_SIZE;
+                        chunkX++
+                ) {
+                    for (
+                            int chunkZ = minZ / CHUNK_SIZE;
+                            maxZ > 0 ? chunkZ <= maxZ / CHUNK_SIZE : chunkZ < maxZ / CHUNK_SIZE;
+                            chunkZ++
+                    ) {
+                        int chunkMinX = chunkX * CHUNK_SIZE;
+                        int chunkMaxX = chunkMinX + CHUNK_SIZE - 1;
+                        int chunkMinZ = chunkZ * CHUNK_SIZE;
+                        int chunkMaxZ = chunkMinZ + CHUNK_SIZE - 1;
 
                         if (chunkMinX < chunkMaxX && chunkMinZ < chunkMaxZ) {
                             File file = this.getFile(chunkX, chunkZ);
@@ -193,19 +201,27 @@ public class RegionRegeneration implements Listener {
             ProtectedRegion protectedRegion = Objects.requireNonNull(regionManager).getRegion(this.region.getName());
 
             if (protectedRegion != null) {
-                int chunkSize = Common.CHUNK_SIZE.getValue();
+                int CHUNK_SIZE = Common.CHUNK_SIZE.getValue();
                 int minX = protectedRegion.getMinimumPoint().getBlockX();
                 int maxX = protectedRegion.getMaximumPoint().getBlockX();
                 int minZ = protectedRegion.getMinimumPoint().getBlockZ();
                 int maxZ = protectedRegion.getMaximumPoint().getBlockZ();
 
                 // Iterate through chunks and create a schematic for each chunk.
-                for (int chunkX = minX / chunkSize; chunkX <= maxX / chunkSize; chunkX++) {
-                    for (int chunkZ = minZ / chunkSize; chunkZ <= maxZ / chunkSize; chunkZ++) {
-                        int chunkMinX = chunkX * chunkSize;
-                        int chunkMaxX = chunkMinX + chunkSize - 1;
-                        int chunkMinZ = chunkZ * chunkSize;
-                        int chunkMaxZ = chunkMinZ + chunkSize - 1;
+                for (
+                        int chunkX = minX / CHUNK_SIZE;
+                        maxX >= 0 ? chunkX <= maxX / CHUNK_SIZE : chunkX < maxX / CHUNK_SIZE;
+                        chunkX++
+                ) {
+                    for (
+                            int chunkZ = minZ / CHUNK_SIZE;
+                            maxZ > 0 ? chunkZ <= maxZ / CHUNK_SIZE : chunkZ < maxZ / CHUNK_SIZE;
+                            chunkZ++
+                    ) {
+                        int chunkMinX = chunkX * CHUNK_SIZE;
+                        int chunkMaxX = chunkMinX + CHUNK_SIZE - 1;
+                        int chunkMinZ = chunkZ * CHUNK_SIZE;
+                        int chunkMaxZ = chunkMinZ + CHUNK_SIZE - 1;
 
                         if (chunkMinX < chunkMaxX && chunkMinZ < chunkMaxZ) {
                             CuboidRegion cuboidRegion = new CuboidRegion(
