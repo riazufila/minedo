@@ -24,7 +24,10 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.time.Instant;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.UUID;
 import java.util.logging.Logger;
 
 public class ItemBuilder implements Listener {
@@ -42,7 +45,7 @@ public class ItemBuilder implements Listener {
 
         for (BlockState state : tileEntities) {
             if (state.getBlock().getState() instanceof Chest chest) {
-                ItemStack item = this.prepareItem();
+                ItemStack item = this.getBetterItem();
 
                 if (item != null) {
                     chest.getInventory().addItem(item);
@@ -149,16 +152,16 @@ public class ItemBuilder implements Listener {
         return item;
     }
 
-    public ItemStack prepareItem() {
+    public ItemStack getBetterItem() {
         try {
             Random random = new Random();
 
             // 50% chance to retrieve an item.
             if (random.nextBoolean()) {
                 BetterItemRepository betterItemRepository = new BetterItemRepository();
-                BetterItem[] betterItemList = betterItemRepository.getAllBetterItems();
+                List<BetterItem> betterItemList = betterItemRepository.getAllBetterItems();
 
-                double[] probabilities = new double[betterItemList.length];
+                double[] probabilities = new double[betterItemList.size()];
                 int index = 0;
 
                 for (BetterItem betterItem : betterItemList) {
@@ -169,7 +172,7 @@ public class ItemBuilder implements Listener {
                 // Randomly select one Better Item.
                 UniformRandomProvider rng = RandomSource.XO_RO_SHI_RO_128_PP.create();
                 BetterItem selectedBetterItem = new DiscreteProbabilityCollectionSampler<>(
-                        rng, Arrays.asList(betterItemList), probabilities
+                        rng, betterItemList, probabilities
                 ).sample();
 
                 return buildItem(selectedBetterItem);

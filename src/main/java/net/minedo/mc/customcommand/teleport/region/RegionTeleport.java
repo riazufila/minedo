@@ -7,8 +7,6 @@ import net.minedo.mc.constants.globalteleportmessage.GlobalTeleportMessage;
 import net.minedo.mc.constants.regionteleportmessage.RegionTeleportMessage;
 import net.minedo.mc.models.region.Region;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -24,27 +22,16 @@ import java.util.*;
 public class RegionTeleport implements CommandExecutor, Listener, TabCompleter {
 
     private final Region region;
-    private final String customCommand;
     private final List<UUID> globalTeleportingPlayers;
-    private final World world;
     private final Minedo pluginInstance;
     private final Map<UUID, Integer> teleportingPlayers = new HashMap<>();
 
     public RegionTeleport(
-            Region region, String customCommand,
-            List<UUID> globalTeleportingPlayers, World world, Minedo pluginInstance
+            Region region, List<UUID> globalTeleportingPlayers, Minedo pluginInstance
     ) {
         this.region = region;
-        this.customCommand = customCommand;
         this.globalTeleportingPlayers = globalTeleportingPlayers;
-        this.world = world;
         this.pluginInstance = pluginInstance;
-    }
-
-    private Location getSafeToTeleportLocation(Location location) {
-        return new Location(
-                this.world, location.getX() + 0.5, location.getY() + 1, location.getZ() + 0.5
-        );
     }
 
     @Override
@@ -55,9 +42,10 @@ public class RegionTeleport implements CommandExecutor, Listener, TabCompleter {
             return true;
         }
 
+        String regionTeleportCommand = this.region.getName().toLowerCase();
         if (args.length > 0) {
             player.sendMessage(Component
-                    .text(String.format(RegionTeleportMessage.ERROR_USAGE.getMessage(), this.customCommand))
+                    .text(String.format(RegionTeleportMessage.ERROR_USAGE.getMessage(), regionTeleportCommand))
                     .color(NamedTextColor.GRAY)
             );
 
@@ -76,18 +64,17 @@ public class RegionTeleport implements CommandExecutor, Listener, TabCompleter {
             return true;
         }
 
-        if (label.equalsIgnoreCase(customCommand)) {
-            Location location = this.getSafeToTeleportLocation(this.region.getRandomLocation(this.world));
-
+        if (label.equalsIgnoreCase(regionTeleportCommand)) {
             int teleportTaskId = new RegionTeleportScheduler(
-                    player, location, this.customCommand,
-                    this.globalTeleportingPlayers, this.teleportingPlayers, this.world
+                    player, region, this.globalTeleportingPlayers,
+                    this.teleportingPlayers
             ).runTaskTimer(this.pluginInstance, 20, 20).getTaskId();
 
             this.globalTeleportingPlayers.add(player.getUniqueId());
             this.teleportingPlayers.put(player.getUniqueId(), teleportTaskId);
+
             player.sendMessage(Component.text(
-                    String.format(RegionTeleportMessage.INFO_TELEPORTING.getMessage(), customCommand)
+                    String.format(RegionTeleportMessage.INFO_TELEPORTING.getMessage(), regionTeleportCommand)
             ).color(NamedTextColor.YELLOW));
 
             return true;

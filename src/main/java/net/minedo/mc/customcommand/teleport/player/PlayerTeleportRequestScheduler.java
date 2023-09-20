@@ -9,14 +9,14 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.util.Map;
 import java.util.UUID;
 
-public class PlayerTeleportRequestTimer extends BukkitRunnable {
+public class PlayerTeleportRequestScheduler extends BukkitRunnable {
 
     private final Player requester;
     private final Player requestee;
     private final Map<UUID, Integer> teleportRequesters;
     private final Map<UUID, Integer> teleportRequestees;
 
-    public PlayerTeleportRequestTimer(
+    public PlayerTeleportRequestScheduler(
             Player requester, Player requestee,
             Map<UUID, Integer> teleportRequesters, Map<UUID, Integer> teleportRequestees
     ) {

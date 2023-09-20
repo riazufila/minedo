@@ -55,10 +55,9 @@ CREATE TABLE better_item_probability (
 CREATE TABLE region (
     id int NOT NULL,
     name varchar(20) NOT NULL,
+    worldType varchar(20) NOT NULL,
     minX int NOT NULL,
     maxX int NOT NULL,
-    minY int NULL,
-    maxY int NULL,
     minZ int NOT NULL,
     maxZ int NOT NULL,
     PRIMARY KEY (id)
@@ -107,4 +106,4 @@ INSERT INTO better_item_probability VALUES
 (5, 10);
 
 INSERT INTO region VALUES
-(1, 'Spawn', -128, 127, -128, 127);
+(1, 'Spawn', 'world', -128, 127, -128, 127);
