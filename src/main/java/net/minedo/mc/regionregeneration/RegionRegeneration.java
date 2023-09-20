@@ -23,6 +23,7 @@ import net.minedo.mc.Minedo;
 import net.minedo.mc.constants.common.Common;
 import net.minedo.mc.constants.directory.Directory;
 import net.minedo.mc.constants.filetype.FileType;
+import net.minedo.mc.interfaces.chunkprocessor.ChunkProcessor;
 import net.minedo.mc.models.region.Region;
 import org.bukkit.*;
 import org.bukkit.block.Block;
@@ -136,50 +137,46 @@ public class RegionRegeneration implements Listener {
         return new ProtectedCuboidRegion(region.getName(), min, max);
     }
 
-    public boolean getRegionSnapshot() {
-        this.logger.info(String.format("Getting %s region snapshot.", this.region.getName()));
-
+    private boolean processChunks(World world, ChunkProcessor chunkProcessor, boolean isGetter) {
         WorldGuard worldGuard = pluginInstance.getWorldGuard();
-        List<World> worlds = pluginInstance.getAllWorlds();
         RegionContainer container = worldGuard.getPlatform().getRegionContainer();
+        RegionManager regionManager = container.get(BukkitAdapter.adapt(world));
+        ProtectedRegion protectedRegion = Objects.requireNonNull(regionManager).getRegion(this.region.getName());
 
-        for (World world : worlds) {
-            RegionManager regionManager = container.get(BukkitAdapter.adapt(world));
-            ProtectedRegion protectedRegion = Objects.requireNonNull(regionManager).getRegion(this.region.getName());
+        if (protectedRegion != null) {
+            int CHUNK_SIZE = Common.CHUNK_SIZE.getValue();
+            int minX = protectedRegion.getMinimumPoint().getBlockX();
+            int maxX = protectedRegion.getMaximumPoint().getBlockX();
+            int minZ = protectedRegion.getMinimumPoint().getBlockZ();
+            int maxZ = protectedRegion.getMaximumPoint().getBlockZ();
 
-            if (protectedRegion != null) {
-                int CHUNK_SIZE = Common.CHUNK_SIZE.getValue();
-                int minX = protectedRegion.getMinimumPoint().getBlockX();
-                int maxX = protectedRegion.getMaximumPoint().getBlockX();
-                int minZ = protectedRegion.getMinimumPoint().getBlockZ();
-                int maxZ = protectedRegion.getMaximumPoint().getBlockZ();
-
-                // Iterate through chunks and check if a schematic for each chunk has been created.
+            // Iterate through chunks and check if a schematic for each chunk has been created.
+            for (
+                    int chunkX = minX / CHUNK_SIZE;
+                    maxX >= 0 ? chunkX <= maxX / CHUNK_SIZE : chunkX < maxX / CHUNK_SIZE;
+                    chunkX++
+            ) {
                 for (
-                        int chunkX = minX / CHUNK_SIZE;
-                        maxX >= 0 ? chunkX <= maxX / CHUNK_SIZE : chunkX < maxX / CHUNK_SIZE;
-                        chunkX++
+                        int chunkZ = minZ / CHUNK_SIZE;
+                        maxZ > 0 ? chunkZ <= maxZ / CHUNK_SIZE : chunkZ < maxZ / CHUNK_SIZE;
+                        chunkZ++
                 ) {
-                    for (
-                            int chunkZ = minZ / CHUNK_SIZE;
-                            maxZ > 0 ? chunkZ <= maxZ / CHUNK_SIZE : chunkZ < maxZ / CHUNK_SIZE;
-                            chunkZ++
-                    ) {
-                        int chunkMinX = chunkX * CHUNK_SIZE;
-                        int chunkMaxX = chunkMinX + CHUNK_SIZE - 1;
-                        int chunkMinZ = chunkZ * CHUNK_SIZE;
-                        int chunkMaxZ = chunkMinZ + CHUNK_SIZE - 1;
+                    int chunkMinX = chunkX * CHUNK_SIZE;
+                    int chunkMaxX = chunkMinX + CHUNK_SIZE - 1;
+                    int chunkMinZ = chunkZ * CHUNK_SIZE;
+                    int chunkMaxZ = chunkMinZ + CHUNK_SIZE - 1;
 
-                        if (chunkMinX < chunkMaxX && chunkMinZ < chunkMaxZ) {
-                            File file = this.getFile(chunkX, chunkZ);
+                    if (chunkMinX < chunkMaxX && chunkMinZ < chunkMaxZ) {
+                        Object[] params;
 
-                            if (!file.exists()) {
-                                this.logger.severe(String.format(
-                                        "Unable to get %s region snapshot.", this.region.getName()
-                                ));
+                        if (isGetter) {
+                            params = new Object[]{chunkX, chunkZ};
+                        } else {
+                            params = new Object[]{world, chunkMinX, chunkMaxX, chunkMinZ, chunkMaxZ, chunkX, chunkZ};
+                        }
 
-                                return false;
-                            }
+                        if (!chunkProcessor.process(params)) {
+                            return false;
                         }
                     }
                 }
@@ -189,80 +186,90 @@ public class RegionRegeneration implements Listener {
         return true;
     }
 
+    private boolean checkSnapshotFileExists(Object[] params) {
+        int chunkX = (int) params[0];
+        int chunkZ = (int) params[1];
+
+        File file = this.getFile(chunkX, chunkZ);
+
+        if (!file.exists()) {
+            this.logger.severe(String.format(
+                    "Unable to get %s region snapshot.", this.region.getName()
+            ));
+
+            return false;
+        }
+
+        return true;
+    }
+
+    private boolean createSnapshotFile(Object[] params) {
+        World world = (World) params[0];
+        int chunkMinX = (int) params[1];
+        int chunkMaxX = (int) params[2];
+        int chunkMinZ = (int) params[3];
+        int chunkMaxZ = (int) params[4];
+        int chunkX = (int) params[5];
+        int chunkZ = (int) params[6];
+
+        CuboidRegion cuboidRegion = new CuboidRegion(
+                BukkitAdapter.adapt(world),
+                BlockVector3.at(chunkMinX, world.getMinHeight(), chunkMinZ),
+                BlockVector3.at(chunkMaxX, world.getMaxHeight(), chunkMaxZ)
+        );
+
+        BlockArrayClipboard blockArrayClipboard = new BlockArrayClipboard(cuboidRegion);
+        WorldEdit worldEdit = this.pluginInstance.getWorldEdit();
+        EditSession editSession = worldEdit.newEditSession(BukkitAdapter.adapt(world));
+
+        ForwardExtentCopy forwardExtentCopy = new ForwardExtentCopy(
+                editSession,
+                cuboidRegion,
+                blockArrayClipboard,
+                cuboidRegion.getMinimumPoint()
+        );
+
+        Operations.complete(forwardExtentCopy);
+
+        File file = this.getFile(chunkX, chunkZ);
+
+        try (ClipboardWriter clipboardWriter = BuiltInClipboardFormat.FAST.getWriter(
+                new FileOutputStream(file)
+        )) {
+            clipboardWriter.write(blockArrayClipboard);
+        } catch (IOException e) {
+            this.logger.severe(
+                    String.format(
+                            "Unable to set %s region snapshot: %s",
+                            this.region.getName(),
+                            e.getMessage()
+                    )
+            );
+            throw new RuntimeException(e);
+        }
+
+        return true;
+    }
+
+    public boolean getRegionSnapshot() {
+        this.logger.info(String.format("Getting %s region snapshot.", this.region.getName()));
+        List<World> worlds = pluginInstance.getAllWorlds();
+
+        for (World world : worlds) {
+            if (!processChunks(world, this::checkSnapshotFileExists, true)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     public void setRegionSnapshot() {
         this.logger.info(String.format("Setting %s region snapshot.", this.region.getName()));
-
-        WorldGuard worldGuard = this.pluginInstance.getWorldGuard();
-        RegionContainer container = worldGuard.getPlatform().getRegionContainer();
         List<World> worlds = this.pluginInstance.getAllWorlds();
 
         for (World world : worlds) {
-            RegionManager regionManager = container.get(BukkitAdapter.adapt(world));
-            ProtectedRegion protectedRegion = Objects.requireNonNull(regionManager).getRegion(this.region.getName());
-
-            if (protectedRegion != null) {
-                int CHUNK_SIZE = Common.CHUNK_SIZE.getValue();
-                int minX = protectedRegion.getMinimumPoint().getBlockX();
-                int maxX = protectedRegion.getMaximumPoint().getBlockX();
-                int minZ = protectedRegion.getMinimumPoint().getBlockZ();
-                int maxZ = protectedRegion.getMaximumPoint().getBlockZ();
-
-                // Iterate through chunks and create a schematic for each chunk.
-                for (
-                        int chunkX = minX / CHUNK_SIZE;
-                        maxX >= 0 ? chunkX <= maxX / CHUNK_SIZE : chunkX < maxX / CHUNK_SIZE;
-                        chunkX++
-                ) {
-                    for (
-                            int chunkZ = minZ / CHUNK_SIZE;
-                            maxZ > 0 ? chunkZ <= maxZ / CHUNK_SIZE : chunkZ < maxZ / CHUNK_SIZE;
-                            chunkZ++
-                    ) {
-                        int chunkMinX = chunkX * CHUNK_SIZE;
-                        int chunkMaxX = chunkMinX + CHUNK_SIZE - 1;
-                        int chunkMinZ = chunkZ * CHUNK_SIZE;
-                        int chunkMaxZ = chunkMinZ + CHUNK_SIZE - 1;
-
-                        if (chunkMinX < chunkMaxX && chunkMinZ < chunkMaxZ) {
-                            CuboidRegion cuboidRegion = new CuboidRegion(
-                                    BukkitAdapter.adapt(world),
-                                    BlockVector3.at(chunkMinX, world.getMinHeight(), chunkMinZ),
-                                    BlockVector3.at(chunkMaxX, world.getMaxHeight(), chunkMaxZ)
-                            );
-
-                            BlockArrayClipboard blockArrayClipboard = new BlockArrayClipboard(cuboidRegion);
-                            WorldEdit worldEdit = this.pluginInstance.getWorldEdit();
-                            EditSession editSession = worldEdit.newEditSession(BukkitAdapter.adapt(world));
-
-                            ForwardExtentCopy forwardExtentCopy = new ForwardExtentCopy(
-                                    editSession,
-                                    cuboidRegion,
-                                    blockArrayClipboard,
-                                    cuboidRegion.getMinimumPoint()
-                            );
-
-                            Operations.complete(forwardExtentCopy);
-
-                            File file = this.getFile(chunkX, chunkZ);
-
-                            try (ClipboardWriter clipboardWriter = BuiltInClipboardFormat.FAST.getWriter(
-                                    new FileOutputStream(file)
-                            )) {
-                                clipboardWriter.write(blockArrayClipboard);
-                            } catch (IOException e) {
-                                this.logger.severe(
-                                        String.format(
-                                                "Unable to set %s region snapshot: %s",
-                                                this.region.getName(),
-                                                e.getMessage()
-                                        )
-                                );
-                                throw new RuntimeException(e);
-                            }
-                        }
-                    }
-                }
-            }
+            processChunks(world, this::createSnapshotFile, false);
         }
     }
 
