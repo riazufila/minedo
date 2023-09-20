@@ -18,21 +18,25 @@ import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
+import io.papermc.paper.event.entity.EntityMoveEvent;
 import net.minedo.mc.Minedo;
 import net.minedo.mc.constants.common.Common;
 import net.minedo.mc.constants.directory.Directory;
 import net.minedo.mc.constants.filetype.FileType;
 import net.minedo.mc.models.region.Region;
-import org.bukkit.Bukkit;
-import org.bukkit.Chunk;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Monster;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.util.BoundingBox;
+import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -240,12 +244,12 @@ public class RegionRegeneration implements Listener {
         restoringChunks.put(restoringChunkKey, restoringTaskId);
     }
 
-    private boolean isWithinRegion(Block block) {
+    private boolean isWithinRegion(Location location) {
         ApplicableRegionSet applicableRegionSet = this.worldGuard
                 .getPlatform()
                 .getRegionContainer()
                 .createQuery()
-                .getApplicableRegions(BukkitAdapter.adapt(block.getLocation()));
+                .getApplicableRegions(BukkitAdapter.adapt(location));
 
         return !applicableRegionSet.getRegions().isEmpty();
     }
@@ -254,12 +258,25 @@ public class RegionRegeneration implements Listener {
         Chunk chunk = block.getChunk();
 
         // Check if block destroyed is in region.
-        if (!isWithinRegion(block)) {
+        if (!isWithinRegion(block.getLocation())) {
             return;
         }
 
         // Restore chunk.
         restoreRegionChunk(chunk);
+    }
+
+    private Location getCenterOfRegion() {
+        // Add 1 to max coordinate to conform with chunk size.
+        int centerCoordinateX = (this.region.getMinX() + (this.region.getMaxX() + 1)) / 2;
+        int centerCoordinateZ = (this.region.getMinZ() + (this.region.getMaxZ() + 1)) / 2;
+
+        return new Location(
+                this.world,
+                centerCoordinateX,
+                this.world.getHighestBlockYAt(centerCoordinateX, centerCoordinateZ),
+                centerCoordinateZ
+        );
     }
 
     @EventHandler
@@ -281,7 +298,7 @@ public class RegionRegeneration implements Listener {
     public void onPlayerDeath(PlayerDeathEvent event) {
         Block block = event.getEntity().getLocation().getBlock();
 
-        if (isWithinRegion(block)) {
+        if (isWithinRegion(block.getLocation())) {
             // Keep inventory.
             event.setKeepInventory(true);
             event.getDrops().clear();
@@ -289,6 +306,41 @@ public class RegionRegeneration implements Listener {
             // Keep experience.
             event.setKeepLevel(true);
             event.setDroppedExp(0);
+        }
+    }
+
+    public void spawnParticleOnEntity(Entity entity, Particle particle, double density, int count) {
+        BoundingBox boundingBox = entity.getBoundingBox();
+
+        // Calculate the step size based on the density
+        double stepX = boundingBox.getWidthX() / density;
+        double stepY = boundingBox.getHeight() / density;
+        double stepZ = boundingBox.getWidthZ() / density;
+
+        // Iterate over the bounding box and spawn particles
+        for (double x = boundingBox.getMinX(); x <= boundingBox.getMaxX(); x += stepX) {
+            for (double y = boundingBox.getMinY(); y <= boundingBox.getMaxY(); y += stepY) {
+                for (double z = boundingBox.getMinZ(); z <= boundingBox.getMaxZ(); z += stepZ) {
+                    Location particleLocation = new Location(world, x, y, z);
+                    this.world.spawnParticle(particle, particleLocation, count);
+                }
+            }
+        }
+    }
+
+    @EventHandler
+    public void onEntityMoveEvent(EntityMoveEvent event) {
+        Location location = event.getTo();
+        LivingEntity entity = event.getEntity();
+
+        if (isWithinRegion(location) && entity instanceof Monster) {
+            Location regionCenter = this.getCenterOfRegion();
+            Vector awayFromCenter = location.toVector().subtract(regionCenter.toVector()).normalize();
+            double MULTIPLIER = 1.0;
+
+            this.world.playSound(location, Sound.BLOCK_AMETHYST_BLOCK_HIT, 1, 1);
+            this.spawnParticleOnEntity(entity, Particle.CRIT_MAGIC, 1, 15);
+            entity.setVelocity(awayFromCenter.multiply(MULTIPLIER));
         }
     }
 
