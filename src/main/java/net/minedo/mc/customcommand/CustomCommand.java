@@ -41,8 +41,7 @@ public class CustomCommand {
 
             // Setup command and listener.
             RegionTeleport regionTeleport = new RegionTeleport(
-                    region.getMinX(), region.getMaxX(), region.getMinZ(), region.getMaxZ(),
-                    customCommand, globalTeleportingPlayers, this.world, this.pluginInstance
+                    region, customCommand, globalTeleportingPlayers, this.world, this.pluginInstance
             );
             server.getPluginManager().registerEvents(regionTeleport, this.pluginInstance);
             Objects.requireNonNull(this.customCommandInterface.getCommand(customCommand)).setExecutor(regionTeleport);

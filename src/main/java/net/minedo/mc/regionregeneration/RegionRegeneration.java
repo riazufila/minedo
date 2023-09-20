@@ -321,7 +321,7 @@ public class RegionRegeneration implements Listener {
         LivingEntity entity = event.getEntity();
 
         if (isWithinRegion(location) && entity instanceof Monster) {
-            Location regionCenter = this.region.getCenterOfRegion(this.world);
+            Location regionCenter = this.region.getCenter(this.world);
             Vector awayFromCenter = location.toVector().subtract(regionCenter.toVector()).normalize();
             double MULTIPLIER = 1.0;
 

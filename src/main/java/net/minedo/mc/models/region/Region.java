@@ -3,6 +3,8 @@ package net.minedo.mc.models.region;
 import org.bukkit.Location;
 import org.bukkit.World;
 
+import java.util.Random;
+
 public class Region {
 
     public int id;
@@ -60,7 +62,7 @@ public class Region {
         this.maxZ = maxZ;
     }
 
-    public Location getCenterOfRegion(World world) {
+    public Location getCenter(World world) {
         // Add 1 to max coordinate to conform with chunk size.
         int centerCoordinateX = (this.minX + (this.maxX + 1)) / 2;
         int centerCoordinateZ = (this.minZ + (this.maxZ + 1)) / 2;
@@ -71,6 +73,16 @@ public class Region {
                 world.getHighestBlockYAt(centerCoordinateX, centerCoordinateZ),
                 centerCoordinateZ
         );
+    }
+
+    public Location getRandomLocation(World world) {
+        Random random = new Random();
+
+        int coordinateX = random.nextInt((this.maxX - this.minX + 1) + this.minX);
+        int coordinateZ = random.nextInt((this.maxZ - this.minZ + 1) + this.minZ);
+        int coordinateY = world.getHighestBlockYAt(coordinateX, coordinateZ);
+
+        return new Location(world, coordinateX, coordinateY, coordinateZ);
     }
 
 }
