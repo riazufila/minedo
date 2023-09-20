@@ -271,12 +271,18 @@ public class RegionRegeneration implements Listener {
     }
 
     private boolean isWithinRegion(Location location) {
+        World world = this.region.getWorldType();
+
+        if (world != location.getWorld()) {
+            return false;
+        }
+
         WorldGuard worldGuard = this.pluginInstance.getWorldGuard();
-        ApplicableRegionSet applicableRegionSet = worldGuard
-                .getPlatform()
-                .getRegionContainer()
-                .createQuery()
-                .getApplicableRegions(BukkitAdapter.adapt(location));
+        RegionContainer regionContainer = worldGuard.getPlatform().getRegionContainer();
+        RegionManager regionManager = regionContainer.get(BukkitAdapter.adapt(world));
+        ApplicableRegionSet applicableRegionSet = Objects.requireNonNull(regionManager).getApplicableRegions(
+                BukkitAdapter.asBlockVector(location)
+        );
 
         return !applicableRegionSet.getRegions().isEmpty();
     }
