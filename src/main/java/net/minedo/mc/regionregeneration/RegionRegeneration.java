@@ -266,19 +266,6 @@ public class RegionRegeneration implements Listener {
         restoreRegionChunk(chunk);
     }
 
-    private Location getCenterOfRegion() {
-        // Add 1 to max coordinate to conform with chunk size.
-        int centerCoordinateX = (this.region.getMinX() + (this.region.getMaxX() + 1)) / 2;
-        int centerCoordinateZ = (this.region.getMinZ() + (this.region.getMaxZ() + 1)) / 2;
-
-        return new Location(
-                this.world,
-                centerCoordinateX,
-                this.world.getHighestBlockYAt(centerCoordinateX, centerCoordinateZ),
-                centerCoordinateZ
-        );
-    }
-
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
         this.regenerate(event.getBlock());
@@ -334,7 +321,7 @@ public class RegionRegeneration implements Listener {
         LivingEntity entity = event.getEntity();
 
         if (isWithinRegion(location) && entity instanceof Monster) {
-            Location regionCenter = this.getCenterOfRegion();
+            Location regionCenter = this.region.getCenterOfRegion(this.world);
             Vector awayFromCenter = location.toVector().subtract(regionCenter.toVector()).normalize();
             double MULTIPLIER = 1.0;
 
