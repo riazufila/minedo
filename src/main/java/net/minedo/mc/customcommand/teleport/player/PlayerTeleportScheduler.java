@@ -8,22 +8,22 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 public class PlayerTeleportScheduler extends BukkitRunnable {
 
     private final Player teleportingPlayer;
     private final Player stillPlayer;
-    private final Map<UUID, Integer> teleportingRequesters;
-    private final Map<UUID, Integer> standingStillRequestees;
+    private final HashMap<UUID, Integer> teleportingRequesters;
+    private final HashMap<UUID, Integer> standingStillRequestees;
     private final List<UUID> globalTeleportingPlayers;
     private int countdown;
 
     public PlayerTeleportScheduler(
             Player teleportingPlayer, Player stillPlayer,
-            Map<UUID, Integer> teleportingRequesters, Map<UUID, Integer> standingStillRequestees,
+            HashMap<UUID, Integer> teleportingRequesters, HashMap<UUID, Integer> standingStillRequestees,
             List<UUID> globalTeleportingPlayers
     ) {
         this.countdown = 4;

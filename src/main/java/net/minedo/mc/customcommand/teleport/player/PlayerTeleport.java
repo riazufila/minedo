@@ -24,10 +24,10 @@ public class PlayerTeleport implements CommandExecutor, Listener, TabCompleter {
 
     private final Minedo pluginInstance;
     private final List<UUID> globalTeleportingPlayers;
-    private final Map<UUID, Integer> teleportRequestRequesters = new HashMap<>();
-    private final Map<UUID, Integer> teleportRequestRequestees = new HashMap<>();
-    private final Map<UUID, Integer> teleportingRequesters = new HashMap<>();
-    private final Map<UUID, Integer> standingStillRequestees = new HashMap<>();
+    private final HashMap<UUID, Integer> teleportRequestRequesters = new HashMap<>();
+    private final HashMap<UUID, Integer> teleportRequestRequestees = new HashMap<>();
+    private final HashMap<UUID, Integer> teleportingRequesters = new HashMap<>();
+    private final HashMap<UUID, Integer> standingStillRequestees = new HashMap<>();
 
     public PlayerTeleport(List<UUID> globalTeleportingPlayers, Minedo pluginInstance) {
         this.globalTeleportingPlayers = globalTeleportingPlayers;
@@ -56,7 +56,7 @@ public class PlayerTeleport implements CommandExecutor, Listener, TabCompleter {
         return false;
     }
 
-    private UUID getPlayerUuidFromTaskId(Integer teleportTaskId, Map<UUID, Integer> teleportTasks) {
+    private UUID getPlayerUuidFromTaskId(Integer teleportTaskId, HashMap<UUID, Integer> teleportTasks) {
         UUID playerUuid = null;
 
         for (Map.Entry<UUID, Integer> entry : teleportTasks.entrySet()) {
@@ -70,7 +70,7 @@ public class PlayerTeleport implements CommandExecutor, Listener, TabCompleter {
 
     private void removePlayersFromQueueAndCancelRunnable(
             UUID requesteeUuid, UUID requesterUuid,
-            Map<UUID, Integer> requesteeQueue, Map<UUID, Integer> requesterQueue,
+            HashMap<UUID, Integer> requesteeQueue, HashMap<UUID, Integer> requesterQueue,
             Integer taskId
     ) {
         requesteeQueue.remove(requesteeUuid);
@@ -361,7 +361,7 @@ public class PlayerTeleport implements CommandExecutor, Listener, TabCompleter {
     }
 
     private void handleTeleportCancellation(
-            Player player, Integer teleportTaskId, Map<UUID, Integer> teleportingPlayer, Boolean isRequester
+            Player player, Integer teleportTaskId, HashMap<UUID, Integer> teleportingPlayer, Boolean isRequester
     ) {
         Player otherPlayer = null;
         UUID playerUuid = player.getUniqueId();

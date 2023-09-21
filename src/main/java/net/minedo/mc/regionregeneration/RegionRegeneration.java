@@ -37,7 +37,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.logging.Logger;
 
 public class RegionRegeneration implements Listener {
@@ -45,7 +44,7 @@ public class RegionRegeneration implements Listener {
     private final Region region;
     private final Minedo pluginInstance;
     private final Logger logger = Logger.getLogger(this.getClass().getName());
-    private final Map<String, Integer> restoringChunks = new HashMap<>();
+    private final HashMap<String, Integer> restoringChunks = new HashMap<>();
 
     public RegionRegeneration(Region region, Minedo pluginInstance) {
         this.region = region;

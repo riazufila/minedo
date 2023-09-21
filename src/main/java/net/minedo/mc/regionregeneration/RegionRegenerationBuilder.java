@@ -22,7 +22,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Map;
+import java.util.HashMap;
 import java.util.Objects;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -32,12 +32,12 @@ public class RegionRegenerationBuilder extends BukkitRunnable {
 
     private final Chunk chunk;
     private final Region region;
-    private final Map<String, Integer> restoringChunks;
+    private final HashMap<String, Integer> restoringChunks;
     private final Minedo pluginInstance;
     private final Logger logger = Logger.getLogger(this.getClass().getName());
 
     public RegionRegenerationBuilder(
-            Chunk chunk, Region region, Map<String, Integer> restoringChunks, Minedo pluginInstance
+            Chunk chunk, Region region, HashMap<String, Integer> restoringChunks, Minedo pluginInstance
     ) {
         this.chunk = chunk;
         this.region = region;

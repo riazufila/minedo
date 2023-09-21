@@ -10,8 +10,8 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 public class RegionTeleportScheduler extends BukkitRunnable {
@@ -19,12 +19,12 @@ public class RegionTeleportScheduler extends BukkitRunnable {
     private final Player player;
     private final Region region;
     private final List<UUID> globalTeleportingPlayers;
-    private final Map<UUID, Integer> teleportingPlayers;
+    private final HashMap<UUID, Integer> teleportingPlayers;
     private int countdown = 4;
 
     public RegionTeleportScheduler(
             Player player, Region region, List<UUID> globalTeleportingPlayers,
-            Map<UUID, Integer> teleportingPlayers
+            HashMap<UUID, Integer> teleportingPlayers
     ) {
         this.player = player;
         this.region = region;
