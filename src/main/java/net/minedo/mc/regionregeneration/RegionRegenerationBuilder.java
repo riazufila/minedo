@@ -121,8 +121,6 @@ public class RegionRegenerationBuilder extends BukkitRunnable {
                 Operation operation = new ClipboardHolder(clipboard)
                         .createPaste(editSession)
                         .to(clipboard.getOrigin())
-                        .ignoreAirBlocks(true)
-                        .copyEntities(false)
                         .build();
 
                 Operations.complete(operation);
