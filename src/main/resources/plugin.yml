@@ -6,7 +6,7 @@ author: riazufila
 api-version: "1.20"
 
 depend:
-  - FastAsyncWorldEdit
+  - WorldEdit
 
 permissions:
   minedo.group.default:
@@ -46,6 +46,3 @@ commands:
     description: "Request teleport to a player and accept, decline, or discard a teleport request."
     usage: "/teleport <request <player> | accept | decline | discard>"
     permission: "minedo.group.default"
-  debug:
-    description: "Debug."
-    usage: "/debug"

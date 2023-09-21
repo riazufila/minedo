@@ -2,6 +2,7 @@ package net.minedo.mc.regionregeneration;
 
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.WorldEdit;
+import com.sk89q.worldedit.WorldEditException;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.extent.clipboard.BlockArrayClipboard;
 import com.sk89q.worldedit.extent.clipboard.io.BuiltInClipboardFormat;
@@ -149,11 +150,15 @@ public class RegionRegeneration implements Listener {
                 cuboidRegion.getMinimumPoint()
         );
 
-        Operations.complete(forwardExtentCopy);
+        try {
+            Operations.complete(forwardExtentCopy);
+        } catch (WorldEditException e) {
+            throw new RuntimeException(e);
+        }
 
         File file = this.getFile(chunkX, chunkZ);
 
-        try (ClipboardWriter clipboardWriter = BuiltInClipboardFormat.FAST.getWriter(
+        try (ClipboardWriter clipboardWriter = BuiltInClipboardFormat.SPONGE_SCHEMATIC.getWriter(
                 new FileOutputStream(file)
         )) {
             clipboardWriter.write(blockArrayClipboard);

@@ -2,7 +2,7 @@ package net.minedo.mc.constants.directory;
 
 public enum Directory {
 
-    SCHEMATIC("plugins/FastAsyncWorldEdit/schematics/");
+    SCHEMATIC("plugins/WorldEdit/schematics/");
 
     private final String path;
 
