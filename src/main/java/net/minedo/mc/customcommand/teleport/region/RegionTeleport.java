@@ -22,16 +22,28 @@ import java.util.*;
 public class RegionTeleport implements CommandExecutor, Listener, TabCompleter {
 
     private final Region region;
+    private final List<Region> regions;
     private final List<UUID> globalTeleportingPlayers;
     private final Minedo pluginInstance;
     private final Map<UUID, Integer> teleportingPlayers = new HashMap<>();
 
     public RegionTeleport(
-            Region region, List<UUID> globalTeleportingPlayers, Minedo pluginInstance
+            Region region, List<Region> regions, List<UUID> globalTeleportingPlayers, Minedo pluginInstance
     ) {
         this.region = region;
+        this.regions = regions;
         this.globalTeleportingPlayers = globalTeleportingPlayers;
         this.pluginInstance = pluginInstance;
+    }
+
+    private boolean isCommandValid(String[] args) {
+        if (args.length != 1) {
+            return false;
+        }
+
+        String warpDestination = args[0];
+
+        return this.regions.stream().anyMatch(region -> region.getName().toLowerCase().equals(warpDestination));
     }
 
     @Override
@@ -42,10 +54,9 @@ public class RegionTeleport implements CommandExecutor, Listener, TabCompleter {
             return true;
         }
 
-        String regionTeleportCommand = this.region.getName().toLowerCase();
-        if (args.length > 0) {
+        if (!this.isCommandValid(args)) {
             player.sendMessage(Component
-                    .text(String.format(RegionTeleportMessage.ERROR_USAGE.getMessage(), regionTeleportCommand))
+                    .text(String.format(RegionTeleportMessage.ERROR_USAGE.getMessage()))
                     .color(NamedTextColor.GRAY)
             );
 
@@ -64,30 +75,38 @@ public class RegionTeleport implements CommandExecutor, Listener, TabCompleter {
             return true;
         }
 
-        if (label.equalsIgnoreCase(regionTeleportCommand)) {
-            int teleportTaskId = new RegionTeleportScheduler(
-                    player, region, this.globalTeleportingPlayers,
-                    this.teleportingPlayers
-            ).runTaskTimer(this.pluginInstance, 20, 20).getTaskId();
+        String warpDestination = args[0];
 
-            this.globalTeleportingPlayers.add(player.getUniqueId());
-            this.teleportingPlayers.put(player.getUniqueId(), teleportTaskId);
+        int teleportTaskId = new RegionTeleportScheduler(
+                player, region, this.globalTeleportingPlayers,
+                this.teleportingPlayers
+        ).runTaskTimer(this.pluginInstance, 20, 20).getTaskId();
 
-            player.sendMessage(Component.text(
-                    String.format(RegionTeleportMessage.INFO_TELEPORTING.getMessage(), regionTeleportCommand)
-            ).color(NamedTextColor.YELLOW));
+        this.globalTeleportingPlayers.add(player.getUniqueId());
+        this.teleportingPlayers.put(player.getUniqueId(), teleportTaskId);
 
-            return true;
-        }
+        player.sendMessage(Component.text(
+                String.format(RegionTeleportMessage.INFO_TELEPORTING.getMessage(), warpDestination)
+        ).color(NamedTextColor.YELLOW));
 
-        return false;
+        return true;
     }
 
     @Override
     public List<String> onTabComplete(
             @NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args
     ) {
-        return Collections.emptyList();
+        List<String> completions = new ArrayList<>();
+
+        if (!(sender instanceof Player)) {
+            return completions;
+        }
+
+        if (args.length == 1) {
+            completions.addAll(this.regions.stream().map(region -> region.getName().toLowerCase()).toList());
+        }
+
+        return completions;
     }
 
     @EventHandler

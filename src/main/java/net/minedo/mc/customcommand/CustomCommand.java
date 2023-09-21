@@ -31,12 +31,14 @@ public class CustomCommand {
 
         // Region teleport.
         for (Region region : regions) {
+            RegionTeleport regionTeleport = new RegionTeleport(
+                    region, regions, globalTeleportingPlayers, this.pluginInstance
+            );
 
-            RegionTeleport regionTeleport = new RegionTeleport(region, globalTeleportingPlayers, this.pluginInstance);
             server.getPluginManager().registerEvents(regionTeleport, this.pluginInstance);
 
             this.customCommandInterface.getCommand(
-                    region.getName().toLowerCase()
+                    CustomCommandType.REGION_TELEPORT.getMessage()
             ).setExecutor(regionTeleport);
         }
 

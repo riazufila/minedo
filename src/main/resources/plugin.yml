@@ -5,9 +5,9 @@ description: A better Minecraft perhaps.
 author: riazufila
 api-version: "1.20"
 commands:
-  spawn:
-    description: "Teleport to spawn region."
-    usage: "/spawn"
+  warp:
+    description: "Warp to a region."
+    usage: "/warp <region>"
   teleport:
     description: "Request teleport to a player and accept, decline, or discard a teleport request."
     usage: "/teleport <request <player> | accept | decline | discard>"
