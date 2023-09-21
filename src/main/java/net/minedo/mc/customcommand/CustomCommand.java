@@ -25,7 +25,7 @@ public class CustomCommand {
     }
 
     public void setupCustomCommands() {
-        Server server = this.pluginInstance.getPluginServer();
+        Server server = this.pluginInstance.getServer();
         RegionRepository regionRepository = new RegionRepository(this.pluginInstance);
         List<Region> regions = regionRepository.getAllRegions();
 
