@@ -5,6 +5,7 @@ import com.sk89q.worldguard.WorldGuard;
 import net.minedo.mc.constants.worldtype.WorldType;
 import net.minedo.mc.customcommand.CustomCommand;
 import net.minedo.mc.itembuilder.ItemBuilder;
+import net.minedo.mc.joinleavebroadcast.JoinLeaveBroadcast;
 import net.minedo.mc.models.region.Region;
 import net.minedo.mc.regionregeneration.RegionRegeneration;
 import net.minedo.mc.repositories.regionrepository.RegionRepository;
@@ -30,6 +31,9 @@ public class Minedo extends JavaPlugin {
         if (!spawnLocationInitializer.hasSpawnLocationSet()) {
             spawnLocationInitializer.setSpawnLocation();
         }
+
+        // Join and leave broadcast message.
+        server.getPluginManager().registerEvents(new JoinLeaveBroadcast(), instance);
 
         // Populate newly generated chests with Better Items.
         server.getPluginManager().registerEvents(new ItemBuilder(instance), instance);
