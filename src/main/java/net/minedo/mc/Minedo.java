@@ -52,7 +52,6 @@ public class Minedo extends JavaPlugin {
             // Initialize region setup.
             if (regionRegeneration.getRegion() == null) {
                 regionRegeneration.setRegion();
-                regionRegeneration.setRegionSnapshot();
             }
 
             // Initialize region schematics.

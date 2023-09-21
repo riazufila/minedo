@@ -35,6 +35,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.util.BoundingBox;
@@ -111,10 +112,8 @@ public class RegionRegeneration implements Listener {
         // Set permissions.
         protectedRegion.setFlag(Flags.BUILD, StateFlag.State.ALLOW);
         protectedRegion.setFlag(Flags.BLOCK_BREAK, StateFlag.State.ALLOW);
-        protectedRegion.setFlag(Flags.MOB_SPAWNING, StateFlag.State.DENY);
 
         RegionContainer regionContainer = worldGuard.getPlatform().getRegionContainer();
-
         Objects.requireNonNull(regionContainer.get(BukkitAdapter.adapt(world))).addRegion(protectedRegion);
     }
 
@@ -400,6 +399,15 @@ public class RegionRegeneration implements Listener {
 
         if (isWithinRegion(location)) {
             event.setRespawnLocation(this.region.getRandomLocation());
+        }
+    }
+
+    @EventHandler
+    public void onEntitySpawn(EntitySpawnEvent event) {
+        Location location = event.getLocation();
+
+        if (isWithinRegion(location) && event.getEntity() instanceof Monster) {
+            event.setCancelled(true);
         }
     }
 
