@@ -10,14 +10,6 @@ import com.sk89q.worldedit.function.operation.ForwardExtentCopy;
 import com.sk89q.worldedit.function.operation.Operations;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.CuboidRegion;
-import com.sk89q.worldguard.WorldGuard;
-import com.sk89q.worldguard.protection.ApplicableRegionSet;
-import com.sk89q.worldguard.protection.flags.Flags;
-import com.sk89q.worldguard.protection.flags.StateFlag;
-import com.sk89q.worldguard.protection.managers.RegionManager;
-import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
-import com.sk89q.worldguard.protection.regions.ProtectedRegion;
-import com.sk89q.worldguard.protection.regions.RegionContainer;
 import io.papermc.paper.event.entity.EntityMoveEvent;
 import net.minedo.mc.Minedo;
 import net.minedo.mc.constants.common.Common;
@@ -40,7 +32,6 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.util.BoundingBox;
 import org.bukkit.util.Vector;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -48,7 +39,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.logging.Logger;
 
 public class RegionRegeneration implements Listener {
@@ -76,107 +66,40 @@ public class RegionRegeneration implements Listener {
         return new File(Directory.SCHEMATIC.getDirectory() + fileName);
     }
 
-    public ProtectedRegion getRegion() {
-        this.logger.info(String.format("Getting %s region.", this.region.getName()));
-
-        ProtectedRegion protectedRegion = null;
-        WorldGuard worldGuard = pluginInstance.getWorldGuard();
-        List<World> worlds = pluginInstance.getAllWorlds();
-        RegionContainer regionContainer = worldGuard.getPlatform().getRegionContainer();
-
-        for (World world : worlds) {
-            RegionManager regionManager = regionContainer.get(BukkitAdapter.adapt(world));
-            protectedRegion = Objects.requireNonNull(regionManager).getRegion(region.getName());
-
-            if (protectedRegion != null) {
-                break;
-            }
-        }
-
-        if (protectedRegion == null) {
-            this.logger.severe(String.format("Unable to get %s region.", this.region.getName()));
-
-            return null;
-        }
-
-        return protectedRegion;
-    }
-
-    public void setRegion() {
-        this.logger.info(String.format("Setting %s region.", this.region.getName()));
-
-        WorldGuard worldGuard = pluginInstance.getWorldGuard();
-        ProtectedRegion protectedRegion = getProtectedRegion();
-        World world = this.region.getWorldType();
-
-        // Set permissions.
-        protectedRegion.setFlag(Flags.BUILD, StateFlag.State.ALLOW);
-        protectedRegion.setFlag(Flags.BLOCK_BREAK, StateFlag.State.ALLOW);
-
-        RegionContainer regionContainer = worldGuard.getPlatform().getRegionContainer();
-        Objects.requireNonNull(regionContainer.get(BukkitAdapter.adapt(world))).addRegion(protectedRegion);
-    }
-
-    @NotNull
-    private ProtectedRegion getProtectedRegion() {
-        World world = this.region.getWorldType();
-
-        BlockVector3 min = BlockVector3.at(
-                region.getMinX(),
-                world.getMinHeight(),
-                region.getMinZ()
-        );
-
-        BlockVector3 max = BlockVector3.at(
-                region.getMaxX(),
-                world.getMaxHeight(),
-                region.getMaxZ()
-        );
-
-        return new ProtectedCuboidRegion(region.getName(), min, max);
-    }
-
     private boolean processChunks(World world, ChunkProcessor chunkProcessor, boolean isGetter) {
-        WorldGuard worldGuard = pluginInstance.getWorldGuard();
-        RegionContainer container = worldGuard.getPlatform().getRegionContainer();
-        RegionManager regionManager = container.get(BukkitAdapter.adapt(world));
-        ProtectedRegion protectedRegion = Objects.requireNonNull(regionManager).getRegion(this.region.getName());
+        int CHUNK_SIZE = Common.CHUNK_SIZE.getValue();
+        int minX = this.region.getMinX();
+        int maxX = this.region.getMaxX();
+        int minZ = this.region.getMinZ();
+        int maxZ = this.region.getMaxZ();
 
-        if (protectedRegion != null) {
-            int CHUNK_SIZE = Common.CHUNK_SIZE.getValue();
-            int minX = protectedRegion.getMinimumPoint().getBlockX();
-            int maxX = protectedRegion.getMaximumPoint().getBlockX();
-            int minZ = protectedRegion.getMinimumPoint().getBlockZ();
-            int maxZ = protectedRegion.getMaximumPoint().getBlockZ();
-
-            // Iterate through chunks and check if a schematic for each chunk has been created.
+        // Iterate through chunks and check if a schematic for each chunk has been created.
+        for (
+                int chunkX = minX / CHUNK_SIZE;
+                maxX >= 0 ? chunkX <= maxX / CHUNK_SIZE : chunkX < maxX / CHUNK_SIZE;
+                chunkX++
+        ) {
             for (
-                    int chunkX = minX / CHUNK_SIZE;
-                    maxX >= 0 ? chunkX <= maxX / CHUNK_SIZE : chunkX < maxX / CHUNK_SIZE;
-                    chunkX++
+                    int chunkZ = minZ / CHUNK_SIZE;
+                    maxZ > 0 ? chunkZ <= maxZ / CHUNK_SIZE : chunkZ < maxZ / CHUNK_SIZE;
+                    chunkZ++
             ) {
-                for (
-                        int chunkZ = minZ / CHUNK_SIZE;
-                        maxZ > 0 ? chunkZ <= maxZ / CHUNK_SIZE : chunkZ < maxZ / CHUNK_SIZE;
-                        chunkZ++
-                ) {
-                    int chunkMinX = chunkX * CHUNK_SIZE;
-                    int chunkMaxX = chunkMinX + CHUNK_SIZE - 1;
-                    int chunkMinZ = chunkZ * CHUNK_SIZE;
-                    int chunkMaxZ = chunkMinZ + CHUNK_SIZE - 1;
+                int chunkMinX = chunkX * CHUNK_SIZE;
+                int chunkMaxX = chunkMinX + CHUNK_SIZE - 1;
+                int chunkMinZ = chunkZ * CHUNK_SIZE;
+                int chunkMaxZ = chunkMinZ + CHUNK_SIZE - 1;
 
-                    if (chunkMinX < chunkMaxX && chunkMinZ < chunkMaxZ) {
-                        Object[] params;
+                if (chunkMinX < chunkMaxX && chunkMinZ < chunkMaxZ) {
+                    Object[] params;
 
-                        if (isGetter) {
-                            params = new Object[]{chunkX, chunkZ};
-                        } else {
-                            params = new Object[]{world, chunkMinX, chunkMaxX, chunkMinZ, chunkMaxZ, chunkX, chunkZ};
-                        }
+                    if (isGetter) {
+                        params = new Object[]{chunkX, chunkZ};
+                    } else {
+                        params = new Object[]{world, chunkMinX, chunkMaxX, chunkMinZ, chunkMaxZ, chunkX, chunkZ};
+                    }
 
-                        if (!chunkProcessor.process(params)) {
-                            return false;
-                        }
+                    if (!chunkProcessor.process(params)) {
+                        return false;
                     }
                 }
             }
@@ -252,24 +175,13 @@ public class RegionRegeneration implements Listener {
 
     public boolean getRegionSnapshot() {
         this.logger.info(String.format("Getting %s region snapshot.", this.region.getName()));
-        List<World> worlds = pluginInstance.getAllWorlds();
 
-        for (World world : worlds) {
-            if (!processChunks(world, this::checkSnapshotFileExists, true)) {
-                return false;
-            }
-        }
-
-        return true;
+        return processChunks(this.region.getWorldType(), this::checkSnapshotFileExists, true);
     }
 
     public void setRegionSnapshot() {
         this.logger.info(String.format("Setting %s region snapshot.", this.region.getName()));
-        List<World> worlds = this.pluginInstance.getAllWorlds();
-
-        for (World world : worlds) {
-            processChunks(world, this::createSnapshotFile, false);
-        }
+        processChunks(this.region.getWorldType(), this::createSnapshotFile, false);
     }
 
     public void restoreRegionChunk(Chunk chunk) {
@@ -299,20 +211,13 @@ public class RegionRegeneration implements Listener {
             return false;
         }
 
-        WorldGuard worldGuard = this.pluginInstance.getWorldGuard();
-        RegionContainer regionContainer = worldGuard.getPlatform().getRegionContainer();
-        RegionManager regionManager = regionContainer.get(BukkitAdapter.adapt(world));
-        ApplicableRegionSet applicableRegionSet = Objects.requireNonNull(regionManager).getApplicableRegions(
-                BukkitAdapter.asBlockVector(location)
-        );
+        int locationBlockX = location.getBlockX();
+        int locationBlockZ = location.getBlockZ();
 
-        for (ProtectedRegion protectedRegion : applicableRegionSet.getRegions()) {
-            if (protectedRegion.getId().equalsIgnoreCase(this.region.getName())) {
-                return true;
-            }
-        }
-
-        return false;
+        return locationBlockX >= this.region.getMinX()
+                && locationBlockX <= this.region.getMaxX()
+                && locationBlockZ >= this.region.getMinZ()
+                && locationBlockZ <= this.region.getMaxZ();
     }
 
     private void regenerate(Block block) {

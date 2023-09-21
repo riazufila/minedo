@@ -1,7 +1,6 @@
 package net.minedo.mc;
 
 import com.sk89q.worldedit.WorldEdit;
-import com.sk89q.worldguard.WorldGuard;
 import net.minedo.mc.constants.worldtype.WorldType;
 import net.minedo.mc.customcommand.CustomCommand;
 import net.minedo.mc.itembuilder.ItemBuilder;
@@ -49,11 +48,6 @@ public class Minedo extends JavaPlugin {
         for (Region region : regions) {
             RegionRegeneration regionRegeneration = new RegionRegeneration(region, instance);
 
-            // Initialize region setup.
-            if (regionRegeneration.getRegion() == null) {
-                regionRegeneration.setRegion();
-            }
-
             // Initialize region schematics.
             if (!regionRegeneration.getRegionSnapshot()) {
                 regionRegeneration.setRegionSnapshot();
@@ -89,10 +83,6 @@ public class Minedo extends JavaPlugin {
 
     public List<World> getAllWorlds() {
         return Bukkit.getWorlds();
-    }
-
-    public WorldGuard getWorldGuard() {
-        return WorldGuard.getInstance();
     }
 
     public WorldEdit getWorldEdit() {

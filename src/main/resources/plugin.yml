@@ -3,7 +3,7 @@ version: 1.0.0
 main: net.minedo.mc.Minedo
 description: A better Minecraft perhaps.
 author: riazufila
-api-version: '1.20'
+api-version: "1.20"
 commands:
   spawn:
     description: "Teleport to spawn region."
@@ -13,4 +13,3 @@ commands:
     usage: "/teleport <request <player> | accept | decline | discard>"
 depend:
   - FastAsyncWorldEdit
-  - WorldGuard
