@@ -5,7 +5,7 @@ public enum RegionTeleportMessage {
     SUCCESS_TELEPORT("Teleported to %s!"),
     INFO_TELEPORTING("Teleporting to %s in 5.."),
     INFO_COUNTDOWN("%s.."),
-    ERROR_USAGE("Usage: /%s"),
+    ERROR_USAGE("Usage: /warp <region>"),
     ERROR_TELEPORTATION_CANCELLED("Teleportation cancelled.");
 
     private final String message;

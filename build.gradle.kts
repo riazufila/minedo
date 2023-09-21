@@ -19,9 +19,7 @@ dependencies {
     // FAWE Core API.
     implementation(platform("com.intellectualsites.bom:bom-newest:1.37"))
     compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Core")
-
-    // WorldGuard API.
-    compileOnly("com.sk89q.worldguard:worldguard-bukkit:7.1.0-SNAPSHOT")
+    compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit") { isTransitive = false }
 
     // dotenv.
     implementation("io.github.cdimascio:dotenv-java:3.0.0")

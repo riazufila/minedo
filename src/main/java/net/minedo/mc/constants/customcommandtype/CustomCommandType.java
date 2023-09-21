@@ -2,6 +2,7 @@ package net.minedo.mc.constants.customcommandtype;
 
 public enum CustomCommandType {
 
+    REGION_TELEPORT("warp"),
     PLAYER_TELEPORT("teleport");
 
     private final String type;
