@@ -1,6 +1,7 @@
 package net.minedo.mc;
 
 import com.sk89q.worldedit.WorldEdit;
+import net.minedo.mc.chat.ChatTimeout;
 import net.minedo.mc.constants.worldtype.WorldType;
 import net.minedo.mc.customcommand.CustomCommand;
 import net.minedo.mc.itembuilder.ItemBuilder;
@@ -31,7 +32,7 @@ public class Minedo extends JavaPlugin {
         // Populate newly generated chests with Better Items.
         this.getServer().getPluginManager().registerEvents(new ItemBuilder(this), this);
 
-        // Register and display custom commands to players.
+        // Custom commands.
         CustomCommand customCommand = new CustomCommand(this);
         customCommand.setupCustomCommands();
 
@@ -42,13 +43,15 @@ public class Minedo extends JavaPlugin {
         for (Region region : regions) {
             RegionRegeneration regionRegeneration = new RegionRegeneration(region, this);
 
-            // Initialize region schematics.
             if (!regionRegeneration.getRegionSnapshot()) {
                 regionRegeneration.setRegionSnapshot();
             }
 
             this.getServer().getPluginManager().registerEvents(regionRegeneration, this);
         }
+
+        // Chat timeout.
+        this.getServer().getPluginManager().registerEvents(new ChatTimeout(this), this);
     }
 
     public World getWorldBasedOnName(String name) {
