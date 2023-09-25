@@ -15,6 +15,9 @@ permissions:
   minedo.command.teleport:
     description: "Access to /teleport command."
 
+  minedo.command.narrate:
+    description: "Access to /narrate command."
+
   minedo.group.default:
     description: "Default features."
     default: true
@@ -56,6 +59,7 @@ permissions:
     description: "Allow access to Obsidian features, along with Redstone."
     children:
       - "minedo.group.redstone"
+      - "minedo.command.narrate"
 
 commands:
   warp:
@@ -67,3 +71,8 @@ commands:
     description: "Request teleport to a player and accept, decline, or discard a teleport request."
     usage: "/teleport <request <player> | accept | decline | discard>"
     permission: "minedo.command.teleport"
+
+  narrate:
+    description: "Broadcast a message as a narration."
+    usage: "/narrate <message>"
+    permission: "minedo.command.narrate"
