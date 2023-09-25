@@ -10,9 +10,7 @@ import net.minedo.mc.regionregeneration.RegionRegeneration;
 import net.minedo.mc.repositories.regionrepository.RegionRepository;
 import net.minedo.mc.spawnlocationinitializer.SpawnLocationInitializer;
 import org.bukkit.Bukkit;
-import org.bukkit.Server;
 import org.bukkit.World;
-import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.List;
@@ -21,10 +19,6 @@ public class Minedo extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        Minedo instance = this;
-
-        Server server = getPluginServer();
-
         // Set spawn location.
         SpawnLocationInitializer spawnLocationInitializer = new SpawnLocationInitializer(this);
         if (!spawnLocationInitializer.hasSpawnLocationSet()) {
@@ -32,13 +26,13 @@ public class Minedo extends JavaPlugin {
         }
 
         // Join and leave broadcast message.
-        server.getPluginManager().registerEvents(new JoinLeaveBroadcast(), instance);
+        this.getServer().getPluginManager().registerEvents(new JoinLeaveBroadcast(), this);
 
         // Populate newly generated chests with Better Items.
-        server.getPluginManager().registerEvents(new ItemBuilder(instance), instance);
+        this.getServer().getPluginManager().registerEvents(new ItemBuilder(this), this);
 
         // Register and display custom commands to players.
-        CustomCommand customCommand = new CustomCommand(instance, this::getPluginCommand);
+        CustomCommand customCommand = new CustomCommand(this);
         customCommand.setupCustomCommands();
 
         // Region regenerations.
@@ -46,23 +40,15 @@ public class Minedo extends JavaPlugin {
         List<Region> regions = regionRepository.getAllRegions();
 
         for (Region region : regions) {
-            RegionRegeneration regionRegeneration = new RegionRegeneration(region, instance);
+            RegionRegeneration regionRegeneration = new RegionRegeneration(region, this);
 
             // Initialize region schematics.
             if (!regionRegeneration.getRegionSnapshot()) {
                 regionRegeneration.setRegionSnapshot();
             }
 
-            server.getPluginManager().registerEvents(regionRegeneration, instance);
+            this.getServer().getPluginManager().registerEvents(regionRegeneration, this);
         }
-    }
-
-    public Server getPluginServer() {
-        return getServer();
-    }
-
-    public PluginCommand getPluginCommand(String command) {
-        return getCommand(command);
     }
 
     public World getWorldBasedOnName(String name) {

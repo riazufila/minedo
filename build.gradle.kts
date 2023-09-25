@@ -16,10 +16,9 @@ dependencies {
     // Paper API.
     compileOnly("io.papermc.paper:paper-api:1.20.1-R0.1-SNAPSHOT")
 
-    // FAWE Core API.
-    implementation(platform("com.intellectualsites.bom:bom-newest:1.37"))
-    compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Core")
-    compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit") { isTransitive = false }
+    // WorldEdit API.
+    compileOnly("com.sk89q.worldedit:worldedit-core:7.2.9")
+    compileOnly("com.sk89q.worldedit:worldedit-bukkit:7.2.9")
 
     // dotenv.
     implementation("io.github.cdimascio:dotenv-java:3.0.0")

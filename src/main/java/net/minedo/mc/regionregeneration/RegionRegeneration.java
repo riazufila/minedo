@@ -2,6 +2,7 @@ package net.minedo.mc.regionregeneration;
 
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.WorldEdit;
+import com.sk89q.worldedit.WorldEditException;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.extent.clipboard.BlockArrayClipboard;
 import com.sk89q.worldedit.extent.clipboard.io.BuiltInClipboardFormat;
@@ -37,7 +38,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.logging.Logger;
 
 public class RegionRegeneration implements Listener {
@@ -45,7 +45,7 @@ public class RegionRegeneration implements Listener {
     private final Region region;
     private final Minedo pluginInstance;
     private final Logger logger = Logger.getLogger(this.getClass().getName());
-    private final Map<String, Integer> restoringChunks = new HashMap<>();
+    private final HashMap<String, Integer> restoringChunks = new HashMap<>();
 
     public RegionRegeneration(Region region, Minedo pluginInstance) {
         this.region = region;
@@ -150,11 +150,15 @@ public class RegionRegeneration implements Listener {
                 cuboidRegion.getMinimumPoint()
         );
 
-        Operations.complete(forwardExtentCopy);
+        try {
+            Operations.complete(forwardExtentCopy);
+        } catch (WorldEditException e) {
+            throw new RuntimeException(e);
+        }
 
         File file = this.getFile(chunkX, chunkZ);
 
-        try (ClipboardWriter clipboardWriter = BuiltInClipboardFormat.FAST.getWriter(
+        try (ClipboardWriter clipboardWriter = BuiltInClipboardFormat.SPONGE_SCHEMATIC.getWriter(
                 new FileOutputStream(file)
         )) {
             clipboardWriter.write(blockArrayClipboard);

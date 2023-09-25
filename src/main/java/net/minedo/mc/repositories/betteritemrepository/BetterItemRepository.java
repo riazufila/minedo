@@ -19,7 +19,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Logger;
 
 public class BetterItemRepository {
@@ -30,7 +29,7 @@ public class BetterItemRepository {
         Database database = new Database();
         database.connect();
 
-        Map<Integer, BetterItem> betterItemsMap = new HashMap<>();
+        HashMap<Integer, BetterItem> betterItemsMap = new HashMap<>();
 
         // Better Items must always have lore.
         try {

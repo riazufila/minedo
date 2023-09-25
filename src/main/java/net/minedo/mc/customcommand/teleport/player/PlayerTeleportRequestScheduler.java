@@ -6,19 +6,19 @@ import net.minedo.mc.constants.playerteleportmessage.PlayerTeleportMessage;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.Map;
+import java.util.HashMap;
 import java.util.UUID;
 
 public class PlayerTeleportRequestScheduler extends BukkitRunnable {
 
     private final Player requester;
     private final Player requestee;
-    private final Map<UUID, Integer> teleportRequesters;
-    private final Map<UUID, Integer> teleportRequestees;
+    private final HashMap<UUID, Integer> teleportRequesters;
+    private final HashMap<UUID, Integer> teleportRequestees;
 
     public PlayerTeleportRequestScheduler(
             Player requester, Player requestee,
-            Map<UUID, Integer> teleportRequesters, Map<UUID, Integer> teleportRequestees
+            HashMap<UUID, Integer> teleportRequesters, HashMap<UUID, Integer> teleportRequestees
     ) {
         this.requester = requester;
         this.requestee = requestee;

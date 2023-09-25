@@ -17,7 +17,10 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.UUID;
 
 public class RegionTeleport implements CommandExecutor, Listener, TabCompleter {
 
@@ -25,7 +28,7 @@ public class RegionTeleport implements CommandExecutor, Listener, TabCompleter {
     private final List<Region> regions;
     private final List<UUID> globalTeleportingPlayers;
     private final Minedo pluginInstance;
-    private final Map<UUID, Integer> teleportingPlayers = new HashMap<>();
+    private final HashMap<UUID, Integer> teleportingPlayers = new HashMap<>();
 
     public RegionTeleport(
             Region region, List<Region> regions, List<UUID> globalTeleportingPlayers, Minedo pluginInstance
