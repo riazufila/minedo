@@ -17,4 +17,5 @@ public enum ChatColorSymbol {
     public char getSymbol() {
         return symbol;
     }
+
 }
