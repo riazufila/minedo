@@ -46,7 +46,7 @@ public final class ChatUtils {
             }
 
             @RegExp String REGEX_COLOURED_CHAT_SYMBOL = String.format(
-                    "^[%s]+\\s*", chatColorSymbolJoined
+                    "^[ ]*([%s])[ ]*", chatColorSymbolJoined
             );
 
             TextReplacementConfig replacement = TextReplacementConfig.builder()
