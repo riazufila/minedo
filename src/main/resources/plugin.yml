@@ -9,40 +9,61 @@ depend:
   - WorldEdit
 
 permissions:
+  minedo.command.warp:
+    description: "Access to /warp command."
+
+  minedo.command.teleport:
+    description: "Access to /teleport command."
+
   minedo.group.default:
     description: "Default features."
     default: true
+    children:
+      - "minedo.command.warp"
+      - "minedo.command.teleport"
+
   minedo.group.copper:
     description: "Allow access to Copper features, along with the defaults."
     children:
       - "minedo.group.default"
+
   minedo.group.iron:
     description: "Allow access to Iron features, along with Copper."
     children:
       - "minedo.group.copper"
+
   minedo.group.gold:
     description: "Allow access to Gold features, along with Iron."
     children:
       - "minedo.group.iron"
-  minedo.group.diamond:
-    description: "Allow access to Diamond features, along with Gold."
+
+  minedo.group.emerald:
+    description: "Allow access to Emerald features, along with Gold."
     children:
       - "minedo.group.gold"
-  minedo.group.emerald:
-    description: "Allow access to Emerald features, along with Diamond."
-    children:
-      - "minedo.group.diamond"
-  minedo.group.obsidian:
-    description: "Allow access to Obsidian features, along with Emerald."
+
+  minedo.group.diamond:
+    description: "Allow access to Diamond features, along with Emerald."
     children:
       - "minedo.group.emerald"
+
+  minedo.group.redstone:
+    description: "Allow access to Redstone features, along with Diamond."
+    children:
+      - "minedo.group.diamond"
+
+  minedo.group.obsidian:
+    description: "Allow access to Obsidian features, along with Redstone."
+    children:
+      - "minedo.group.redstone"
 
 commands:
   warp:
     description: "Warp to a region."
     usage: "/warp <region>"
-    permission: "minedo.group.default"
+    permission: "minedo.command.warp"
+
   teleport:
     description: "Request teleport to a player and accept, decline, or discard a teleport request."
     usage: "/teleport <request <player> | accept | decline | discard>"
-    permission: "minedo.group.default"
+    permission: "minedo.command.teleport"
