@@ -1,4 +1,4 @@
-package net.minedo.mc.chat;
+package net.minedo.mc.chat.timeout;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -21,11 +21,16 @@ public class ChatTimeoutRelease extends BukkitRunnable {
 
     @Override
     public void run() {
+        Integer chatCount = playerChatCount.get(player.getUniqueId());
+
         playerChatCount.remove(this.player.getUniqueId());
-        player.sendMessage(Component
-                .text(ChatTimeoutMessage.INFO_CHAT_ENABLED.getMessage())
-                .color(NamedTextColor.GREEN)
-        );
+
+        if (chatCount >= 30) {
+            player.sendMessage(Component
+                    .text(ChatTimeoutMessage.INFO_CHAT_ENABLED.getMessage())
+                    .color(NamedTextColor.GREEN)
+            );
+        }
     }
 
 }

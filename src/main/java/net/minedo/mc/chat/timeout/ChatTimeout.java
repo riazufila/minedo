@@ -1,4 +1,4 @@
-package net.minedo.mc.chat;
+package net.minedo.mc.chat.timeout;
 
 import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.text.Component;

@@ -1,7 +1,8 @@
 package net.minedo.mc;
 
 import com.sk89q.worldedit.WorldEdit;
-import net.minedo.mc.chat.ChatTimeout;
+import net.minedo.mc.chat.color.ChatColor;
+import net.minedo.mc.chat.timeout.ChatTimeout;
 import net.minedo.mc.constants.worldtype.WorldType;
 import net.minedo.mc.customcommand.CustomCommand;
 import net.minedo.mc.itembuilder.ItemBuilder;
@@ -52,6 +53,9 @@ public class Minedo extends JavaPlugin {
 
         // Chat timeout.
         this.getServer().getPluginManager().registerEvents(new ChatTimeout(this), this);
+
+        // Chat color.
+        this.getServer().getPluginManager().registerEvents(new ChatColor(), this);
     }
 
     public World getWorldBasedOnName(String name) {
