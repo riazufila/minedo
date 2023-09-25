@@ -1,4 +1,4 @@
-package net.minedo.mc.chat;
+package net.minedo.mc.chat.timeout;
 
 import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.text.Component;
@@ -28,7 +28,7 @@ public class ChatTimeout implements Listener {
         int CHAT_LIMIT = 15;
 
         if (chatCount == null) {
-            new ChatTimeoutRelease(player, playerChatCount).runTaskLater(this.pluginInstance, 600);
+            new ChatTimeoutRelease(player, playerChatCount, CHAT_LIMIT).runTaskLater(this.pluginInstance, 600);
         } else if (chatCount >= CHAT_LIMIT) {
             player.sendMessage(Component
                     .text(ChatTimeoutMessage.ERROR_CHAT_TIMEOUT.getMessage())
