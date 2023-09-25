@@ -29,6 +29,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;
+import org.bukkit.event.entity.EntityTeleportEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.util.BoundingBox;
@@ -38,6 +39,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.logging.Logger;
 
 public class RegionRegeneration implements Listener {
@@ -286,7 +288,7 @@ public class RegionRegeneration implements Listener {
     }
 
     @EventHandler
-    public void onEntityMoveEvent(EntityMoveEvent event) {
+    public void onEntityMove(EntityMoveEvent event) {
         Location location = event.getTo();
         LivingEntity entity = event.getEntity();
 
@@ -296,8 +298,18 @@ public class RegionRegeneration implements Listener {
             double MULTIPLIER = 1.0;
 
             entity.getWorld().playSound(location, Sound.BLOCK_AMETHYST_BLOCK_HIT, 1, 1);
-            this.spawnParticleOnEntity(entity, Particle.CRIT_MAGIC, 1, 15);
+            this.spawnParticleOnEntity(entity, Particle.CRIT_MAGIC, 1, 5);
             entity.setVelocity(awayFromCenter.multiply(MULTIPLIER));
+        }
+    }
+
+    @EventHandler
+    public void onEntityTeleport(EntityTeleportEvent event) {
+        Location location = event.getTo();
+        Entity entity = event.getEntity();
+
+        if (isWithinRegion(Objects.requireNonNull(location)) && entity instanceof Monster) {
+            event.setCancelled(true);
         }
     }
 
