@@ -7,6 +7,7 @@ import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import net.minedo.mc.constants.chatcolorsymbol.ChatColorSymbol;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.entity.Player;
+import org.intellij.lang.annotations.RegExp;
 
 public final class ChatUtils {
 
@@ -38,8 +39,18 @@ public final class ChatUtils {
         }
 
         if (isUpdated) {
+            StringBuilder chatColorSymbolJoined = new StringBuilder(StringUtils.EMPTY);
+
+            for (ChatColorSymbol symbol : ChatColorSymbol.values()) {
+                chatColorSymbolJoined.append(symbol.getSymbol());
+            }
+
+            @RegExp String REGEX_COLOURED_CHAT_SYMBOL = String.format(
+                    "^[%s]+\\s*", chatColorSymbolJoined
+            );
+
             TextReplacementConfig replacement = TextReplacementConfig.builder()
-                    .matchLiteral(String.valueOf(firstCharacter))
+                    .match(REGEX_COLOURED_CHAT_SYMBOL)
                     .replacement(Component.text(StringUtils.EMPTY))
                     .once()
                     .build();
