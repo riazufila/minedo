@@ -2,6 +2,7 @@ package net.minedo.mc;
 
 import com.sk89q.worldedit.WorldEdit;
 import net.minedo.mc.chat.color.ChatColor;
+import net.minedo.mc.chat.prefix.ChatPrefix;
 import net.minedo.mc.chat.timeout.ChatTimeout;
 import net.minedo.mc.constants.worldtype.WorldType;
 import net.minedo.mc.customcommand.CustomCommand;
@@ -56,6 +57,9 @@ public class Minedo extends JavaPlugin {
 
         // Chat color.
         this.getServer().getPluginManager().registerEvents(new ChatColor(), this);
+
+        // Chat prefix.
+        this.getServer().getPluginManager().registerEvents(new ChatPrefix(), this);
     }
 
     public World getWorldBasedOnName(String name) {
