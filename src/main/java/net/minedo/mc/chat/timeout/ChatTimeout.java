@@ -22,7 +22,7 @@ public class ChatTimeout implements Listener {
     }
 
     @EventHandler
-    public void onPlayerChat(AsyncChatEvent event) {
+    public void onAsyncChat(AsyncChatEvent event) {
         Player player = event.getPlayer();
         Integer chatCount = playerChatCount.get(player.getUniqueId());
         int CHAT_LIMIT = 15;
