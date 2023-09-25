@@ -28,10 +28,8 @@ public class ChatTimeout implements Listener {
         int CHAT_LIMIT = 15;
 
         if (chatCount == null) {
-            new ChatTimeoutRelease(player, playerChatCount).runTaskLater(this.pluginInstance, 600);
+            new ChatTimeoutRelease(player, playerChatCount, CHAT_LIMIT).runTaskLater(this.pluginInstance, 600);
         } else if (chatCount >= CHAT_LIMIT) {
-            playerChatCount.put(player.getUniqueId(), chatCount + 1);
-
             player.sendMessage(Component
                     .text(ChatTimeoutMessage.ERROR_CHAT_TIMEOUT.getMessage())
                     .color(NamedTextColor.RED)
