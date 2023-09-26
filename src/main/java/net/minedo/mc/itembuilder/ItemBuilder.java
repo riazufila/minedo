@@ -132,16 +132,16 @@ public class ItemBuilder implements Listener {
         // Add enchantments.
         if (betterItem.getEnchantments() != null) {
             for (BetterItemEnchantment enchantment : betterItem.getEnchantments()) {
-                meta.addEnchant(enchantment.enchantment, enchantment.level, true);
+                meta.addEnchant(enchantment.getEnchantment(), enchantment.getLevel(), true);
             }
         }
 
         // Add attributes.
         if (betterItem.getAttributes() != null) {
             for (BetterItemAttribute attribute : betterItem.getAttributes()) {
-                meta.addAttributeModifier(attribute.attribute, new AttributeModifier(
-                        UUID.randomUUID(), attribute.attribute.toString(), attribute.modifier,
-                        attribute.operation, attribute.slot
+                meta.addAttributeModifier(attribute.getAttribute(), new AttributeModifier(
+                        UUID.randomUUID(), attribute.getAttribute().toString(), attribute.getModifier(),
+                        attribute.getOperation(), attribute.getSlot()
                 ));
             }
         }

@@ -4,10 +4,10 @@ import org.bukkit.enchantments.Enchantment;
 
 public class BetterItemEnchantment {
 
-    public int id;
-    public Enchantment enchantment;
-    public int level;
-    public int betterItemId;
+    private int id;
+    private Enchantment enchantment;
+    private int level;
+    private int betterItemId;
 
     public int getId() {
         return id;

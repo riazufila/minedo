@@ -6,12 +6,12 @@ import org.bukkit.inventory.EquipmentSlot;
 
 public class BetterItemAttribute {
 
-    public int id;
-    public Attribute attribute;
-    public double modifier;
-    public AttributeModifier.Operation operation;
-    public EquipmentSlot slot;
-    public int betterItemId;
+    private int id;
+    private Attribute attribute;
+    private double modifier;
+    private AttributeModifier.Operation operation;
+    private EquipmentSlot slot;
+    private int betterItemId;
 
     public int getId() {
         return id;
