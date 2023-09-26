@@ -1,6 +1,8 @@
 package net.minedo.mc.player;
 
+import net.minedo.mc.models.playerlike.PlayerLike;
 import net.minedo.mc.models.playerprofile.PlayerProfile;
+import net.minedo.mc.repositories.playerlikerepository.PlayerLikeRepository;
 import net.minedo.mc.repositories.playerprofilerepository.PlayerProfileRepository;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -20,7 +22,9 @@ public class PlayerProfileManager implements Listener {
         PlayerProfile playerProfile = playerProfileRepository.getPlayerProfileByUuid(uuid);
 
         if (playerProfile == null) {
-            playerProfileRepository.insertNewPlayerProfile(uuid);
+            Integer playerId = playerProfileRepository.insertNewPlayerProfile(uuid);
+            PlayerLikeRepository playerLikeRepository = new PlayerLikeRepository();
+            playerLikeRepository.insertNewPlayerLike(playerId);
         }
     }
 

@@ -13,10 +13,11 @@ public class PlayerProfileRepository {
 
     private final Logger logger = Logger.getLogger(this.getClass().getName());
 
-    public void insertNewPlayerProfile(UUID playerUuid) {
+    public Integer insertNewPlayerProfile(UUID playerUuid) {
         Database database = new Database();
         database.connect();
 
+        Integer playerId = null;
         String query = """
                     INSERT INTO player_profile (uuid) VALUES (?);
                 """;
@@ -25,23 +26,18 @@ public class PlayerProfileRepository {
         replacements.put(1, playerUuid.toString());
         ResultSet generatedKeys = database.executeStatement(query, replacements);
 
-        query = """
-                    INSERT INTO player_like (player_id) VALUES (?);
-                """;
-
-        replacements.clear();
-
         try {
             if (generatedKeys.next()) {
-                replacements.put(1, String.valueOf(generatedKeys.getInt(1)));
+                playerId = generatedKeys.getInt(1);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
 
         database.executeStatement(query, replacements);
-
         database.disconnect();
+
+        return playerId;
     }
 
     public PlayerProfile getPlayerProfileByUuid(UUID playerUuid) {
