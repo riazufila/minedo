@@ -8,7 +8,6 @@ public class PlayerProfile {
     private UUID uuid;
     private String nameColor;
     private String nickname;
-    private int likeCount;
 
     public int getId() {
         return id;
@@ -40,14 +39,6 @@ public class PlayerProfile {
 
     public void setNickname(String nickname) {
         this.nickname = nickname;
-    }
-
-    public int getLikeCount() {
-        return likeCount;
-    }
-
-    public void setLikeCount(int likeCount) {
-        this.likeCount = likeCount;
     }
 
 }

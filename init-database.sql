@@ -16,9 +16,9 @@ CREATE TABLE player_profile (
 
 CREATE TABLE player_like (
     player_id int NOT NULL,
-    likeReceivedCount INT DEFAULT 0,
-    likeSentCount INT DEFAULT 0,
-    lastLikeSent DATETIME NOT NULL,
+    like_received_count INT DEFAULT 0,
+    like_sent_count INT DEFAULT 0,
+    last_like_sent DATETIME NOT NULL,
     UNIQUE KEY player_id_UNIQUE (player_id),
     FOREIGN KEY (player_id) REFERENCES player_profile (id)
 );

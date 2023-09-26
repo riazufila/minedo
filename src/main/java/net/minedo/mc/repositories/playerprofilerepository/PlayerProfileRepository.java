@@ -48,14 +48,12 @@ public class PlayerProfileRepository {
                 UUID uuid = UUID.fromString(resultSet.getString("uuid"));
                 String nameColor = resultSet.getString("name_color");
                 String nickname = resultSet.getString("nickname");
-                int likeCount = resultSet.getInt("likeCount");
 
                 playerProfile = new PlayerProfile();
                 playerProfile.setId(id);
                 playerProfile.setUuid(uuid);
                 playerProfile.setNameColor(nameColor);
                 playerProfile.setNickname(nickname);
-                playerProfile.setLikeCount(likeCount);
             }
         } catch (SQLException error) {
             this.logger.severe(String.format("Unable to get player profile by uuid: %s", error.getMessage()));
