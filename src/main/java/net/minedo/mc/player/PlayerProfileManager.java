@@ -1,6 +1,5 @@
 package net.minedo.mc.player;
 
-import net.minedo.mc.models.playerlike.PlayerLike;
 import net.minedo.mc.models.playerprofile.PlayerProfile;
 import net.minedo.mc.repositories.playerlikerepository.PlayerLikeRepository;
 import net.minedo.mc.repositories.playerprofilerepository.PlayerProfileRepository;

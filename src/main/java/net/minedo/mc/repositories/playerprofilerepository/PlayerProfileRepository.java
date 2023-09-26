@@ -34,7 +34,6 @@ public class PlayerProfileRepository {
             throw new RuntimeException(e);
         }
 
-        database.executeStatement(query, replacements);
         database.disconnect();
 
         return playerId;

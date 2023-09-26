@@ -10,13 +10,6 @@ public class PlayerLike {
     private int likeSentCount;
     private Instant lastLikeSent;
 
-    public PlayerLike(int playerId, int likeReceivedCount, int likeSentCount, Instant lastLikeSent) {
-        this.playerId = playerId;
-        this.likeReceivedCount = likeReceivedCount;
-        this.likeSentCount = likeSentCount;
-        this.lastLikeSent = lastLikeSent;
-    }
-
     public int getPlayerId() {
         return playerId;
     }
@@ -50,11 +43,15 @@ public class PlayerLike {
     }
 
     public boolean isLikeSentRecently() {
+        if (this.lastLikeSent == null) {
+            return false;
+        }
+
         Instant currentInstant = Instant.now();
-        Duration duration = Duration.between(this.getLastLikeSent(), currentInstant);
+        Duration duration = Duration.between(this.lastLikeSent, currentInstant);
         int ONE_DAY_IN_SECONDS = 86400;
 
-        return duration.getSeconds() >= ONE_DAY_IN_SECONDS;
+        return duration.getSeconds() <= ONE_DAY_IN_SECONDS;
     }
 
 }
