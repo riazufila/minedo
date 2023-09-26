@@ -72,7 +72,7 @@ CREATE TABLE better_item_probability (
 CREATE TABLE region (
     id int NOT NULL AUTO_INCREMENT,
     name varchar(20) NOT NULL,
-    worldType varchar(20) NOT NULL,
+    world_type varchar(20) NOT NULL,
     minX int NOT NULL,
     maxX int NOT NULL,
     minZ int NOT NULL,

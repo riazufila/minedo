@@ -37,7 +37,7 @@ public class RegionRepository {
                 // Retrieve Region.
                 int id = resultSet.getInt("id");
                 String name = resultSet.getString("name");
-                String world = resultSet.getString("worldType");
+                String world = resultSet.getString("world_type");
                 int minX = resultSet.getInt("minX");
                 int maxX = resultSet.getInt("maxX");
                 int minZ = resultSet.getInt("minZ");
@@ -81,7 +81,7 @@ public class RegionRepository {
             if (resultSet.next()) {
                 // Retrieve Region.
                 String name = resultSet.getString("name");
-                String world = resultSet.getString("worldType");
+                String world = resultSet.getString("world_type");
                 int minX = resultSet.getInt("minX");
                 int maxX = resultSet.getInt("maxX");
                 int minZ = resultSet.getInt("minZ");
@@ -122,7 +122,7 @@ public class RegionRepository {
                 // Retrieve Region.
                 int id = resultSet.getInt("id");
                 String name = resultSet.getString("name");
-                String world = resultSet.getString("worldType");
+                String world = resultSet.getString("world_type");
                 int minX = resultSet.getInt("minX");
                 int maxX = resultSet.getInt("maxX");
                 int minZ = resultSet.getInt("minZ");
