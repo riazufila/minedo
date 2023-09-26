@@ -73,20 +73,29 @@ public class Database {
         return resultSet;
     }
 
-    public void executeStatement(String sqlQuery, HashMap<Integer, String> replacements) {
+    public ResultSet executeStatement(String sqlQuery, HashMap<Integer, String> replacements) {
+        ResultSet generatedKeys = null;
+
         try {
-            PreparedStatement preparedStatement = this.connection.prepareStatement(sqlQuery);
+            PreparedStatement preparedStatement = this.connection.prepareStatement(
+                    sqlQuery,
+                    Statement.RETURN_GENERATED_KEYS
+            );
 
             for (var replacement : replacements.entrySet()) {
                 preparedStatement.setString(replacement.getKey(), replacement.getValue());
             }
 
             preparedStatement.execute();
+
+            generatedKeys = preparedStatement.getGeneratedKeys();
         } catch (SQLException e) {
             this.logger.severe(
                     String.format("Unable to execute statement in the database: %s", e.getMessage())
             );
         }
+
+        return generatedKeys;
     }
 
 }

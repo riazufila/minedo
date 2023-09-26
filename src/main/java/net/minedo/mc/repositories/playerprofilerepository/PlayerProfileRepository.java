@@ -23,6 +23,22 @@ public class PlayerProfileRepository {
 
         HashMap<Integer, String> replacements = new HashMap<>();
         replacements.put(1, playerUuid.toString());
+        ResultSet generatedKeys = database.executeStatement(query, replacements);
+
+        query = """
+                    INSERT INTO player_like (player_id) VALUES (?);
+                """;
+
+        replacements.clear();
+
+        try {
+            if (generatedKeys.next()) {
+                replacements.put(1, String.valueOf(generatedKeys.getInt(1)));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
         database.executeStatement(query, replacements);
 
         database.disconnect();

@@ -1,5 +1,6 @@
 package net.minedo.mc.models.playerlike;
 
+import java.time.Duration;
 import java.time.Instant;
 
 public class PlayerLike {
@@ -46,6 +47,14 @@ public class PlayerLike {
 
     public void setLastLikeSent(Instant lastLikeSent) {
         this.lastLikeSent = lastLikeSent;
+    }
+
+    public boolean isLikeSentRecently() {
+        Instant currentInstant = Instant.now();
+        Duration duration = Duration.between(this.getLastLikeSent(), currentInstant);
+        int ONE_DAY_IN_SECONDS = 86400;
+
+        return duration.getSeconds() >= ONE_DAY_IN_SECONDS;
     }
 
 }
