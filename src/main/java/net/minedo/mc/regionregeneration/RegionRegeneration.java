@@ -21,6 +21,7 @@ import net.minedo.mc.models.region.Region;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Flying;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Monster;
 import org.bukkit.event.EventHandler;
@@ -292,7 +293,8 @@ public class RegionRegeneration implements Listener {
         Location location = event.getTo();
         LivingEntity entity = event.getEntity();
 
-        if (isWithinRegion(location) && entity instanceof Monster) {
+        if (isWithinRegion(location)
+                && (entity instanceof Monster || entity instanceof Flying)) {
             Location regionCenter = this.region.getCenter();
             Vector awayFromCenter = location.toVector().subtract(regionCenter.toVector()).normalize();
             double MULTIPLIER = 1.0;
@@ -308,7 +310,8 @@ public class RegionRegeneration implements Listener {
         Location location = event.getTo();
         Entity entity = event.getEntity();
 
-        if (isWithinRegion(Objects.requireNonNull(location)) && entity instanceof Monster) {
+        if (isWithinRegion(Objects.requireNonNull(location))
+                && (entity instanceof Monster || entity instanceof Flying)) {
             event.setCancelled(true);
         }
     }
@@ -325,8 +328,10 @@ public class RegionRegeneration implements Listener {
     @EventHandler
     public void onEntitySpawn(EntitySpawnEvent event) {
         Location location = event.getLocation();
+        Entity entity = event.getEntity();
 
-        if (isWithinRegion(location) && event.getEntity() instanceof Monster) {
+        if (isWithinRegion(location)
+                && (entity instanceof Monster || entity instanceof Flying)) {
             event.setCancelled(true);
         }
     }
