@@ -2,8 +2,8 @@ package net.minedo.mc.models.betteritemprobability;
 
 public class BetterItemProbability {
 
-    public int betterItemId;
-    public double probability;
+    private int betterItemId;
+    private double probability;
 
     public int getBetterItemId() {
         return betterItemId;

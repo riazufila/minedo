@@ -2,6 +2,7 @@ package net.minedo.mc.customcommand;
 
 import net.minedo.mc.Minedo;
 import net.minedo.mc.constants.customcommandtype.CustomCommandType;
+import net.minedo.mc.customcommand.like.Like;
 import net.minedo.mc.customcommand.narrate.Narrate;
 import net.minedo.mc.customcommand.teleport.player.PlayerTeleport;
 import net.minedo.mc.customcommand.teleport.region.RegionTeleport;
@@ -53,6 +54,11 @@ public class CustomCommand {
         Objects.requireNonNull(this.pluginInstance.getCommand(
                 CustomCommandType.NARRATE.getMessage()
         )).setExecutor(new Narrate(this.pluginInstance));
+
+        // Like.
+        Objects.requireNonNull(this.pluginInstance.getCommand(
+                CustomCommandType.LIKE.getMessage()
+        )).setExecutor(new Like(this.pluginInstance));
     }
 
 }

@@ -6,60 +6,85 @@ CREATE DATABASE minedo;
 USE minedo;
 
 -- Create tables.
+CREATE TABLE player_profile (
+    id INT NOT NULL AUTO_INCREMENT,
+    uuid VARCHAR(36) NOT NULL,
+    name_color VARCHAR(7) DEFAULT NULL,
+    nickname VARCHAR(20) DEFAULT NULL,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE player_like (
+    player_id int NOT NULL,
+    like_received_count INT DEFAULT 0,
+    like_sent_count INT DEFAULT 0,
+    last_like_sent TIMESTAMP DEFAULT NULL,
+    UNIQUE KEY player_id_UNIQUE (player_id),
+    FOREIGN KEY (player_id) REFERENCES player_profile (id)
+);
+
+CREATE TABLE player_blocked_list (
+    player_id INT NOT NULL,
+    blocked_player_id INT NOT NULL,
+    CONSTRAINT player_id_blocked_player_id_UNIQUE UNIQUE (player_id, blocked_player_id),
+    FOREIGN KEY (player_id) REFERENCES player_profile (id),
+    FOREIGN KEY (blocked_player_id) REFERENCES player_profile (id)
+);
+
 CREATE TABLE better_item (
-    id int NOT NULL AUTO_INCREMENT,
-    material varchar(50) NOT NULL,
-    display_name varchar(50) NOT NULL,
-    color varchar(50) DEFAULT NULL,
-    decoration varchar(50) DEFAULT NULL,
+    id INT NOT NULL AUTO_INCREMENT,
+    material VARCHAR(50) NOT NULL,
+    display_name VARCHAR(50) NOT NULL,
+    color VARCHAR(7) DEFAULT NULL,
+    decoration varchar(10) DEFAULT NULL,
     PRIMARY KEY (id)
 );
 
 CREATE TABLE better_item_lore (
-    id int NOT NULL AUTO_INCREMENT,
-    text varchar(250) NOT NULL,
-    color varchar(50) DEFAULT NULL,
-    decoration varchar(50) DEFAULT NULL,
-    better_item_id int NOT NULL,
+    id INT NOT NULL AUTO_INCREMENT,
+    text VARCHAR(250) NOT NULL,
+    color VARCHAR(7) DEFAULT NULL,
+    decoration VARCHAR(10) DEFAULT NULL,
+    better_item_id INT NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (better_item_id) REFERENCES better_item (id)
 );
 
 CREATE TABLE better_item_enchantment (
-    id int NOT NULL AUTO_INCREMENT,
+    id INT NOT NULL AUTO_INCREMENT,
     enchantment varchar(50) NOT NULL,
-    level int NOT NULL,
-    better_item_id int NOT NULL,
+    level INT NOT NULL,
+    better_item_id INT NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (better_item_id) REFERENCES better_item (id)
 );
 
 CREATE TABLE better_item_attribute (
-    id int NOT NULL AUTO_INCREMENT,
-    attribute varchar(50) NOT NULL,
-    modifier double NOT NULL,
-    operation varchar(50) NOT NULL,
-    slot varchar(20) NOT NULL,
-    better_item_id int NOT NULL,
+    id INT NOT NULL AUTO_INCREMENT,
+    attribute VARCHAR(50) NOT NULL,
+    modifier DOUBLE NOT NULL,
+    operation VARCHAR(50) NOT NULL,
+    slot VARCHAR(20) NOT NULL,
+    better_item_id INT NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (better_item_id) REFERENCES better_item (id)
 );
 
 CREATE TABLE better_item_probability (
-    better_item_id int NOT NULL,
-    probability double NOT NULL,
+    better_item_id INT NOT NULL,
+    probability DOUBLE NOT NULL,
     UNIQUE KEY better_item_id_UNIQUE (better_item_id),
     FOREIGN KEY (better_item_id) REFERENCES better_item (id)
 );
 
 CREATE TABLE region (
-    id int NOT NULL,
-    name varchar(20) NOT NULL,
-    worldType varchar(20) NOT NULL,
-    minX int NOT NULL,
-    maxX int NOT NULL,
-    minZ int NOT NULL,
-    maxZ int NOT NULL,
+    id INT NOT NULL AUTO_INCREMENT,
+    name VARCHAR(20) NOT NULL,
+    world_type VARCHAR(20) NOT NULL,
+    minX INT NOT NULL,
+    maxX INT NOT NULL,
+    minZ INT NOT NULL,
+    maxZ INT NOT NULL,
     PRIMARY KEY (id)
 );
 

@@ -24,6 +24,7 @@ permissions:
     children:
       - "minedo.command.warp"
       - "minedo.command.teleport"
+      - "minedo.command.like"
 
   minedo.group.copper:
     description: "Allow access to Copper features, along with the defaults."
@@ -76,3 +77,8 @@ commands:
     description: "Broadcast a message as a narration."
     usage: "/narrate <message>"
     permission: "minedo.command.narrate"
+
+  like:
+    description: "Send player a like."
+    usage: "/like <player>"
+    permission: "minedo.command.like"

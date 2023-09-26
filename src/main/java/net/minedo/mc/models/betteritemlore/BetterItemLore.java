@@ -4,11 +4,11 @@ import net.kyori.adventure.text.format.TextDecoration;
 
 public class BetterItemLore {
 
-    public int id;
-    public String text;
-    public String color;
-    public TextDecoration decoration;
-    public int betterItemId;
+    private int id;
+    private String text;
+    private String color;
+    private TextDecoration decoration;
+    private int betterItemId;
 
     public int getId() {
         return id;

@@ -23,6 +23,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
+import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -92,7 +93,11 @@ public class ItemBuilder implements Listener {
         meta.getPersistentDataContainer().set(typeKey, PersistentDataType.STRING, "ASTRAL_GEAR");
         meta.getPersistentDataContainer().set(subTypeKey, PersistentDataType.STRING, betterItem.getDisplayName());
         meta.getPersistentDataContainer().set(uuidKey, PersistentDataType.STRING, UUID.randomUUID().toString());
-        meta.getPersistentDataContainer().set(timestampKey, PersistentDataType.STRING, Instant.now().toString());
+        meta.getPersistentDataContainer().set(
+                timestampKey,
+                PersistentDataType.STRING,
+                Timestamp.from(Instant.now()).toString()
+        );
 
         // Set display name.
         Component displayNameComponent = Component
@@ -132,16 +137,16 @@ public class ItemBuilder implements Listener {
         // Add enchantments.
         if (betterItem.getEnchantments() != null) {
             for (BetterItemEnchantment enchantment : betterItem.getEnchantments()) {
-                meta.addEnchant(enchantment.enchantment, enchantment.level, true);
+                meta.addEnchant(enchantment.getEnchantment(), enchantment.getLevel(), true);
             }
         }
 
         // Add attributes.
         if (betterItem.getAttributes() != null) {
             for (BetterItemAttribute attribute : betterItem.getAttributes()) {
-                meta.addAttributeModifier(attribute.attribute, new AttributeModifier(
-                        UUID.randomUUID(), attribute.attribute.toString(), attribute.modifier,
-                        attribute.operation, attribute.slot
+                meta.addAttributeModifier(attribute.getAttribute(), new AttributeModifier(
+                        UUID.randomUUID(), attribute.getAttribute().toString(), attribute.getModifier(),
+                        attribute.getOperation(), attribute.getSlot()
                 ));
             }
         }

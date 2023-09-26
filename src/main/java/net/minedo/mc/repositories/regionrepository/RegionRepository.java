@@ -7,9 +7,8 @@ import net.minedo.mc.repositories.Database;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Logger;
 
 public class RegionRepository {
@@ -37,7 +36,7 @@ public class RegionRepository {
                 // Retrieve Region.
                 int id = resultSet.getInt("id");
                 String name = resultSet.getString("name");
-                String world = resultSet.getString("worldType");
+                String world = resultSet.getString("world_type");
                 int minX = resultSet.getInt("minX");
                 int maxX = resultSet.getInt("maxX");
                 int minZ = resultSet.getInt("minZ");
@@ -69,25 +68,28 @@ public class RegionRepository {
         Database database = new Database();
         database.connect();
 
-        Region region = new Region();
+        Region region = null;
 
         try {
             String query = """
                         SELECT * FROM region WHERE id = ?;
                     """;
-            Map<Integer, String> replacements = Collections.singletonMap(1, Integer.toString(id));
+
+            HashMap<Integer, String> replacements = new HashMap<>();
+            replacements.put(1, Integer.toString(id));
             ResultSet resultSet = database.queryWithWhereClause(query, replacements);
 
             if (resultSet.next()) {
                 // Retrieve Region.
                 String name = resultSet.getString("name");
-                String world = resultSet.getString("worldType");
+                String world = resultSet.getString("world_type");
                 int minX = resultSet.getInt("minX");
                 int maxX = resultSet.getInt("maxX");
                 int minZ = resultSet.getInt("minZ");
                 int maxZ = resultSet.getInt("maxZ");
 
                 // Set Region object return.
+                region = new Region();
                 region.setId(id);
                 region.setName(name);
                 region.setWorldType(this.pluginInstance.getWorldBasedOnName(world));
@@ -109,26 +111,29 @@ public class RegionRepository {
         Database database = new Database();
         database.connect();
 
-        Region region = new Region();
+        Region region = null;
 
         try {
             String query = """
                         SELECT * FROM region WHERE name = ?;
                     """;
-            Map<Integer, String> replacements = Collections.singletonMap(1, value);
+
+            HashMap<Integer, String> replacements = new HashMap<>();
+            replacements.put(1, value);
             ResultSet resultSet = database.queryWithWhereClause(query, replacements);
 
             if (resultSet.next()) {
                 // Retrieve Region.
                 int id = resultSet.getInt("id");
                 String name = resultSet.getString("name");
-                String world = resultSet.getString("worldType");
+                String world = resultSet.getString("world_type");
                 int minX = resultSet.getInt("minX");
                 int maxX = resultSet.getInt("maxX");
                 int minZ = resultSet.getInt("minZ");
                 int maxZ = resultSet.getInt("maxZ");
 
                 // Set Region object and push to Array.
+                region = new Region();
                 region.setId(id);
                 region.setName(name);
                 region.setWorldType(this.pluginInstance.getWorldBasedOnName(world));

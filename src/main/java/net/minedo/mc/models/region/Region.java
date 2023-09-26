@@ -7,13 +7,13 @@ import java.util.Random;
 
 public class Region {
 
-    public int id;
-    public String name;
-    public World worldType;
-    public int minX;
-    public int maxX;
-    public int minZ;
-    public int maxZ;
+    private int id;
+    private String name;
+    private World worldType;
+    private int minX;
+    private int maxX;
+    private int minZ;
+    private int maxZ;
 
     public int getId() {
         return id;
