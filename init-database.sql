@@ -6,20 +6,37 @@ CREATE DATABASE minedo;
 USE minedo;
 
 -- Create tables.
+CREATE TABLE player_profile (
+    id int NOT NULL AUTO_INCREMENT,
+    uuid varchar(36) NOT NULL,
+    name_color varchar(7) DEFAULT NULL,
+    nickname varchar(20) DEFAULT NULL,
+    likeCount int DEFAULT 0,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE player_blocked_list (
+    player_id int NOT NULL,
+    blocked_player_id INT NOT NULL,
+    CONSTRAINT player_id_blocked_player_id_UNIQUE UNIQUE (player_id, blocked_player_id),
+    FOREIGN KEY (player_id) REFERENCES player_profile (id),
+    FOREIGN KEY (blocked_player_id) REFERENCES player_profile (id)
+);
+
 CREATE TABLE better_item (
     id int NOT NULL AUTO_INCREMENT,
     material varchar(50) NOT NULL,
-    display_name varchar(50) NOT NULL,
-    color varchar(50) DEFAULT NULL,
-    decoration varchar(50) DEFAULT NULL,
+    display_name varchar(20) NOT NULL,
+    color varchar(7) DEFAULT NULL,
+    decoration varchar(10) DEFAULT NULL,
     PRIMARY KEY (id)
 );
 
 CREATE TABLE better_item_lore (
     id int NOT NULL AUTO_INCREMENT,
     text varchar(250) NOT NULL,
-    color varchar(50) DEFAULT NULL,
-    decoration varchar(50) DEFAULT NULL,
+    color varchar(7) DEFAULT NULL,
+    decoration varchar(10) DEFAULT NULL,
     better_item_id int NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (better_item_id) REFERENCES better_item (id)
@@ -53,7 +70,7 @@ CREATE TABLE better_item_probability (
 );
 
 CREATE TABLE region (
-    id int NOT NULL,
+    id int NOT NULL AUTO_INCREMENT,
     name varchar(20) NOT NULL,
     worldType varchar(20) NOT NULL,
     minX int NOT NULL,
