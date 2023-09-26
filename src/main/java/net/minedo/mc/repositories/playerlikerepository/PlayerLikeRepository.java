@@ -6,7 +6,6 @@ import net.minedo.mc.repositories.Database;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.time.Instant;
 import java.util.HashMap;
 import java.util.logging.Logger;
 
@@ -29,17 +28,29 @@ public class PlayerLikeRepository {
         database.disconnect();
     }
 
-    public void updateLastLikeSentByPlayerId(int playerId, Instant instant) {
+    public void updatePlayerLike(int playerId, PlayerLike playerLike) {
         Database database = new Database();
         database.connect();
 
         String query = """
-                    UPDATE player_like SET last_like_sent = ? WHERE (player_id = ?);
+                    UPDATE player_like
+                    SET
+                        like_received_count = ?,
+                        like_sent_count = ?,
+                        last_like_sent = ?
+                    WHERE
+                        (player_id = ?);
                 """;
 
         HashMap<Integer, Object> replacements = new HashMap<>();
-        replacements.put(1, Timestamp.from(instant));
-        replacements.put(2, String.valueOf(playerId));
+        replacements.put(1, String.valueOf(playerLike.getLikeReceivedCount()));
+        replacements.put(2, String.valueOf(playerLike.getLikeSentCount()));
+
+        replacements.put(
+                3, playerLike.getLastLikeSent() != null ? Timestamp.from(playerLike.getLastLikeSent()) : null
+        );
+
+        replacements.put(4, String.valueOf(playerId));
         database.executeStatement(query, replacements);
 
         database.disconnect();
