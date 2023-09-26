@@ -9,6 +9,7 @@ import net.minedo.mc.customcommand.CustomCommand;
 import net.minedo.mc.itembuilder.ItemBuilder;
 import net.minedo.mc.joinleavebroadcast.JoinLeaveBroadcast;
 import net.minedo.mc.models.region.Region;
+import net.minedo.mc.player.PlayerProfileManager;
 import net.minedo.mc.regionregeneration.RegionRegeneration;
 import net.minedo.mc.repositories.regionrepository.RegionRepository;
 import net.minedo.mc.spawnlocationinitializer.SpawnLocationInitializer;
@@ -27,6 +28,9 @@ public class Minedo extends JavaPlugin {
         if (!spawnLocationInitializer.hasSpawnLocationSet()) {
             spawnLocationInitializer.setSpawnLocation();
         }
+
+        // Player profile.
+        this.getServer().getPluginManager().registerEvents(new PlayerProfileManager(), this);
 
         // Join and leave broadcast message.
         this.getServer().getPluginManager().registerEvents(new JoinLeaveBroadcast(), this);

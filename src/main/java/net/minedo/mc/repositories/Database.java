@@ -3,7 +3,7 @@ package net.minedo.mc.repositories;
 import io.github.cdimascio.dotenv.Dotenv;
 
 import java.sql.*;
-import java.util.Map;
+import java.util.HashMap;
 import java.util.logging.Logger;
 
 public class Database {
@@ -53,7 +53,7 @@ public class Database {
         return resultSet;
     }
 
-    public ResultSet queryWithWhereClause(String sqlQuery, Map<Integer, String> replacements) {
+    public ResultSet queryWithWhereClause(String sqlQuery, HashMap<Integer, String> replacements) {
         ResultSet resultSet = null;
 
         try {
@@ -71,6 +71,22 @@ public class Database {
         }
 
         return resultSet;
+    }
+
+    public void executeStatement(String sqlQuery, HashMap<Integer, String> replacements) {
+        try {
+            PreparedStatement preparedStatement = this.connection.prepareStatement(sqlQuery);
+
+            for (var replacement : replacements.entrySet()) {
+                preparedStatement.setString(replacement.getKey(), replacement.getValue());
+            }
+
+            preparedStatement.execute();
+        } catch (SQLException e) {
+            this.logger.severe(
+                    String.format("Unable to execute statement in the database: %s", e.getMessage())
+            );
+        }
     }
 
 }
