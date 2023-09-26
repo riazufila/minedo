@@ -26,7 +26,7 @@ CREATE TABLE player_blocked_list (
 CREATE TABLE better_item (
     id int NOT NULL AUTO_INCREMENT,
     material varchar(50) NOT NULL,
-    display_name varchar(20) NOT NULL,
+    display_name varchar(50) NOT NULL,
     color varchar(7) DEFAULT NULL,
     decoration varchar(10) DEFAULT NULL,
     PRIMARY KEY (id)
