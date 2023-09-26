@@ -37,9 +37,8 @@ public class PlayerLikeRepository {
                     UPDATE player_like SET last_like_sent = ? WHERE (player_id = ?);
                 """;
 
-        HashMap<Integer, String> replacements = new HashMap<>();
-        Timestamp timestamp = Timestamp.from(instant);
-        replacements.put(1, String.valueOf(timestamp));
+        HashMap<Integer, Object> replacements = new HashMap<>();
+        replacements.put(1, Timestamp.from(instant));
         replacements.put(2, String.valueOf(playerId));
         database.executeStatement(query, replacements);
 

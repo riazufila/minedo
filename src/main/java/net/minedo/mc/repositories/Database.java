@@ -73,7 +73,7 @@ public class Database {
         return resultSet;
     }
 
-    public ResultSet executeStatement(String sqlQuery, HashMap<Integer, String> replacements) {
+    public ResultSet executeStatement(String sqlQuery, HashMap<Integer, ?> replacements) {
         ResultSet generatedKeys = null;
 
         try {
@@ -83,7 +83,14 @@ public class Database {
             );
 
             for (var replacement : replacements.entrySet()) {
-                preparedStatement.setString(replacement.getKey(), replacement.getValue());
+                int key = replacement.getKey();
+                Object value = replacement.getValue();
+
+                if (value instanceof Timestamp) {
+                    preparedStatement.setTimestamp(key, (Timestamp) value);
+                } else {
+                    preparedStatement.setString(key, (String) value);
+                }
             }
 
             preparedStatement.execute();
