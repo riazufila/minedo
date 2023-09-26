@@ -141,7 +141,7 @@ public class PlayerTeleport implements CommandExecutor, Listener, TabCompleter {
                 player.sendMessage(Component
                         .text(String.format(
                                 PlayerTeleportMessage.SUCCESS_REQUEST_REQUESTEE.getMessage(),
-                                teleportTarget
+                                otherPlayer.getName()
                         ))
                         .color(NamedTextColor.YELLOW)
                 );
@@ -154,10 +154,7 @@ public class PlayerTeleport implements CommandExecutor, Listener, TabCompleter {
                 );
             } else {
                 player.sendMessage(Component
-                        .text(String.format(
-                                PlayerTeleportMessage.ERROR_REQUEST_PLAYER_IS_NOT_IN_SERVER.getMessage(),
-                                teleportTarget
-                        ))
+                        .text(PlayerTeleportMessage.ERROR_REQUEST_PLAYER_IS_NOT_IN_SERVER.getMessage())
                         .color(NamedTextColor.RED)
                 );
             }

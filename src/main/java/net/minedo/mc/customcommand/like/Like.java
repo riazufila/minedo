@@ -49,7 +49,7 @@ public class Like implements CommandExecutor, TabCompleter {
             player.sendMessage(Component
                     .text(String.format(
                             LikeMessage.SUCCESS_LIKE_SENT.getMessage(),
-                            likeTarget
+                            otherPlayer.getName()
                     ))
                     .color(NamedTextColor.GREEN)
             );
@@ -62,10 +62,7 @@ public class Like implements CommandExecutor, TabCompleter {
             );
         } else {
             player.sendMessage(Component
-                    .text(String.format(
-                            LikeMessage.ERROR_REQUEST_PLAYER_IS_NOT_IN_SERVER.getMessage(),
-                            likeTarget
-                    ))
+                    .text(LikeMessage.ERROR_REQUEST_PLAYER_IS_NOT_IN_SERVER.getMessage())
                     .color(NamedTextColor.RED)
             );
         }
