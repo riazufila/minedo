@@ -139,7 +139,7 @@ public class PlayerTeleport implements CommandExecutor, Listener, TabCompleter {
                 if (otherPlayerBlockedList.contains(playerProfile.getId())) {
                     player.sendMessage(Component
                             .text(String.format(
-                                    IgnoreMessage.ERROR_TELEPORT_REQUEST_BLOCKED.getMessage(),
+                                    IgnoreMessage.ERROR_INTERACT.getMessage(),
                                     otherPlayer.getName()
                             ))
                             .color(NamedTextColor.RED)

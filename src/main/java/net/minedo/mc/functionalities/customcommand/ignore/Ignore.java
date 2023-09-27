@@ -60,6 +60,17 @@ public class Ignore implements CommandExecutor, TabCompleter {
         String ignoreTarget = args[1];
         Player otherPlayer = this.pluginInstance.getServer().getPlayer(ignoreTarget);
 
+        if (otherPlayer != null) {
+            if (otherPlayer.equals(player)) {
+                player.sendMessage(Component
+                        .text(IgnoreMessage.ERROR_TARGET.getMessage())
+                        .color(NamedTextColor.RED)
+                );
+
+                return true;
+            }
+        }
+
         if (Objects.equals(ignoreType, IgnoreType.ADD.getType())) {
             if (otherPlayer != null && otherPlayer.isOnline()) {
                 PlayerBlockedRepository playerBlockedRepository = new PlayerBlockedRepository();
