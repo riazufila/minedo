@@ -1,18 +1,16 @@
 package net.minedo.mc;
 
 import com.sk89q.worldedit.WorldEdit;
-import net.minedo.mc.chat.color.ChatColor;
-import net.minedo.mc.chat.prefix.ChatPrefix;
-import net.minedo.mc.chat.timeout.ChatTimeout;
 import net.minedo.mc.constants.worldtype.WorldType;
-import net.minedo.mc.customcommand.CustomCommand;
-import net.minedo.mc.itembuilder.ItemBuilder;
-import net.minedo.mc.joinleavebroadcast.JoinLeaveBroadcast;
+import net.minedo.mc.functionalities.chat.Chat;
+import net.minedo.mc.functionalities.customcommand.CustomCommand;
+import net.minedo.mc.functionalities.itembuilder.ItemBuilder;
+import net.minedo.mc.functionalities.joinleavebroadcast.JoinLeaveBroadcast;
+import net.minedo.mc.functionalities.player.PlayerProfileManager;
+import net.minedo.mc.functionalities.regionregeneration.RegionRegeneration;
+import net.minedo.mc.functionalities.spawnlocationinitializer.SpawnLocationInitializer;
 import net.minedo.mc.models.region.Region;
-import net.minedo.mc.player.PlayerProfileManager;
-import net.minedo.mc.regionregeneration.RegionRegeneration;
 import net.minedo.mc.repositories.regionrepository.RegionRepository;
-import net.minedo.mc.spawnlocationinitializer.SpawnLocationInitializer;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -56,14 +54,9 @@ public class Minedo extends JavaPlugin {
             this.getServer().getPluginManager().registerEvents(regionRegeneration, this);
         }
 
-        // Chat timeout.
-        this.getServer().getPluginManager().registerEvents(new ChatTimeout(this), this);
-
-        // Chat color.
-        this.getServer().getPluginManager().registerEvents(new ChatColor(), this);
-
-        // Chat prefix.
-        this.getServer().getPluginManager().registerEvents(new ChatPrefix(), this);
+        // Chat.
+        Chat chat = new Chat(this);
+        chat.setupChat();
     }
 
     public World getWorldBasedOnName(String name) {
