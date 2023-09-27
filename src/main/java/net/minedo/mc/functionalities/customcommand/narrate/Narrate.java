@@ -6,9 +6,9 @@ import net.kyori.adventure.text.format.TextDecoration;
 import net.minedo.mc.Minedo;
 import net.minedo.mc.constants.narratemessage.NarrateMessage;
 import net.minedo.mc.functionalities.chat.ChatUtils;
-import net.minedo.mc.models.playerblockedlist.PlayerBlockedList;
+import net.minedo.mc.models.playerblockedlist.PlayerBlocked;
 import net.minedo.mc.models.playerprofile.PlayerProfile;
-import net.minedo.mc.repositories.playerblockedlistrepository.PlayerBlockedListRepository;
+import net.minedo.mc.repositories.playerblockedlistrepository.PlayerBlockedRepository;
 import net.minedo.mc.repositories.playerprofilerepository.PlayerProfileRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.command.Command;
@@ -58,11 +58,11 @@ public class Narrate implements CommandExecutor, TabCompleter {
         PlayerProfile playerProfile = playerProfileRepository.getPlayerProfileByUuid(player.getUniqueId());
 
         for (Player onlinePlayer : onlinePlayers) {
-            PlayerBlockedListRepository playerBlockedListRepository = new PlayerBlockedListRepository();
-            List<Integer> playerBlockedList = playerBlockedListRepository
+            PlayerBlockedRepository playerBlockedRepository = new PlayerBlockedRepository();
+            List<Integer> playerBlockedList = playerBlockedRepository
                     .getPlayerBlockedList(onlinePlayer.getUniqueId())
                     .stream()
-                    .map(PlayerBlockedList::getBlockedPlayerId)
+                    .map(PlayerBlocked::getBlockedPlayerId)
                     .toList();
 
             if (!(playerBlockedList.contains(playerProfile.getId()))) {

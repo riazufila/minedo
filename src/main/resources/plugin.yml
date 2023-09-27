@@ -25,6 +25,7 @@ permissions:
       - "minedo.command.warp"
       - "minedo.command.teleport"
       - "minedo.command.like"
+      - "minedo.command.ignore"
 
   minedo.group.copper:
     description: "Allow access to Copper features, along with the defaults."
@@ -82,3 +83,8 @@ commands:
     description: "Send player a like."
     usage: "/like <player>"
     permission: "minedo.command.like"
+
+  ignore:
+    description: "Ignore a player's chat, whisper, and teleport."
+    usage: "/ignore <add | remove> <player>"
+    permission: "minedo.command.ignore"

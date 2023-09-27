@@ -7,7 +7,6 @@ import net.minedo.mc.constants.globalteleportmessage.GlobalTeleportMessage;
 import net.minedo.mc.constants.playerteleportmessage.PlayerTeleportMessage;
 import net.minedo.mc.constants.playerteleporttype.PlayerTeleportType;
 import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -264,13 +263,8 @@ public class PlayerTeleport implements CommandExecutor, Listener, TabCompleter {
                         .color(NamedTextColor.RED)
                 );
             } else {
-                OfflinePlayer otherOfflinePlayer = this.pluginInstance.getServer().getOfflinePlayer(otherPlayerUuid);
-
                 player.sendMessage(Component
-                        .text(String.format(
-                                PlayerTeleportMessage.ERROR_DECLINED_REQUESTEE.getMessage(),
-                                otherOfflinePlayer.getName()
-                        ))
+                        .text(PlayerTeleportMessage.ERROR_OFFLINE_DECLINED_REQUESTEE.getMessage())
                         .color(NamedTextColor.RED)
                 );
             }

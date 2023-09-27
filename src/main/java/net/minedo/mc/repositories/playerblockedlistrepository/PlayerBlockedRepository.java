@@ -1,6 +1,6 @@
 package net.minedo.mc.repositories.playerblockedlistrepository;
 
-import net.minedo.mc.models.playerblockedlist.PlayerBlockedList;
+import net.minedo.mc.models.playerblockedlist.PlayerBlocked;
 import net.minedo.mc.models.playerprofile.PlayerProfile;
 import net.minedo.mc.repositories.Database;
 import net.minedo.mc.repositories.playerprofilerepository.PlayerProfileRepository;
@@ -13,22 +13,22 @@ import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
 
-public class PlayerBlockedListRepository {
+public class PlayerBlockedRepository {
 
     private final Logger logger = Logger.getLogger(this.getClass().getName());
 
-    public List<PlayerBlockedList> getPlayerBlockedList(UUID playerUuid) {
+    public List<PlayerBlocked> getPlayerBlockedList(UUID playerUuid) {
         Database database = new Database();
         database.connect();
 
         PlayerProfileRepository playerProfileRepository = new PlayerProfileRepository();
         PlayerProfile playerProfile = playerProfileRepository.getPlayerProfileByUuid(playerUuid);
 
-        List<PlayerBlockedList> playerBlockedList = new ArrayList<>();
+        List<PlayerBlocked> playerBlockedList = new ArrayList<>();
 
         try {
             String query = """
-                        SELECT * FROM player_blocked_list WHERE player_id = ?;
+                        SELECT * FROM player_blocked WHERE player_id = ?;
                     """;
 
             HashMap<Integer, String> replacements = new HashMap<>();
@@ -39,14 +39,14 @@ public class PlayerBlockedListRepository {
                 int playerId = resultSet.getInt("player_id");
                 int blockedPlayerId = resultSet.getInt("blocked_player_id");
 
-                PlayerBlockedList playerBlocked = new PlayerBlockedList();
+                PlayerBlocked playerBlocked = new PlayerBlocked();
                 playerBlocked.setPlayerId(playerId);
                 playerBlocked.setBlockedPlayerId(blockedPlayerId);
 
                 playerBlockedList.add(playerBlocked);
             }
         } catch (SQLException error) {
-            this.logger.severe(String.format("Unable to get player blocked list: %s", error.getMessage()));
+            this.logger.severe(String.format("Unable to get player blocked: %s", error.getMessage()));
         } finally {
             database.disconnect();
         }
@@ -66,7 +66,7 @@ public class PlayerBlockedListRepository {
                 .getPlayerProfileByUuid(playerUuidToBeBlocked);
 
         String query = """
-                    INSERT INTO player_blocked_list (player_id, blocked_player_id) VALUES (?, ?);
+                    INSERT INTO player_blocked (player_id, blocked_player_id) VALUES (?, ?);
                 """;
 
         HashMap<Integer, String> replacements = new HashMap<>();
@@ -89,7 +89,7 @@ public class PlayerBlockedListRepository {
                 .getPlayerProfileByUuid(playerUuidToBeBlocked);
 
         String query = """
-                    DELETE FROM player_blocked_list WHERE (player_id = ?) AND (blocked_player_id = ?);
+                    DELETE FROM player_blocked WHERE (player_id = ?) AND (blocked_player_id = ?);
                 """;
 
         HashMap<Integer, String> replacements = new HashMap<>();

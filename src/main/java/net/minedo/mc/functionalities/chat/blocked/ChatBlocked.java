@@ -2,9 +2,9 @@ package net.minedo.mc.functionalities.chat.blocked;
 
 import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.audience.Audience;
-import net.minedo.mc.models.playerblockedlist.PlayerBlockedList;
+import net.minedo.mc.models.playerblockedlist.PlayerBlocked;
 import net.minedo.mc.models.playerprofile.PlayerProfile;
-import net.minedo.mc.repositories.playerblockedlistrepository.PlayerBlockedListRepository;
+import net.minedo.mc.repositories.playerblockedlistrepository.PlayerBlockedRepository;
 import net.minedo.mc.repositories.playerprofilerepository.PlayerProfileRepository;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -28,11 +28,11 @@ public class ChatBlocked implements Listener {
             if (audience instanceof Player player) {
                 UUID playerUuid = player.getUniqueId();
 
-                PlayerBlockedListRepository playerBlockedListRepository = new PlayerBlockedListRepository();
-                List<Integer> playerBlockedList = playerBlockedListRepository
+                PlayerBlockedRepository playerBlockedRepository = new PlayerBlockedRepository();
+                List<Integer> playerBlockedList = playerBlockedRepository
                         .getPlayerBlockedList(playerUuid)
                         .stream()
-                        .map(PlayerBlockedList::getBlockedPlayerId)
+                        .map(PlayerBlocked::getBlockedPlayerId)
                         .toList();
 
                 if (playerBlockedList.contains(playerProfile.getId())) {

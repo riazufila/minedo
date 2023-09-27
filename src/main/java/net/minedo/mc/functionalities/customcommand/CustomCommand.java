@@ -2,6 +2,7 @@ package net.minedo.mc.functionalities.customcommand;
 
 import net.minedo.mc.Minedo;
 import net.minedo.mc.constants.customcommandtype.CustomCommandType;
+import net.minedo.mc.functionalities.customcommand.ignore.Ignore;
 import net.minedo.mc.functionalities.customcommand.like.Like;
 import net.minedo.mc.functionalities.customcommand.narrate.Narrate;
 import net.minedo.mc.functionalities.customcommand.teleport.player.PlayerTeleport;
@@ -59,6 +60,11 @@ public class CustomCommand {
         Objects.requireNonNull(this.pluginInstance.getCommand(
                 CustomCommandType.LIKE.getMessage()
         )).setExecutor(new Like(this.pluginInstance));
+
+        // Ignore.
+        Objects.requireNonNull(this.pluginInstance.getCommand(
+                CustomCommandType.IGNORE.getMessage()
+        )).setExecutor(new Ignore(this.pluginInstance));
     }
 
 }

@@ -1,6 +1,6 @@
 package net.minedo.mc.models.playerblockedlist;
 
-public class PlayerBlockedList {
+public class PlayerBlocked {
 
     private int playerId;
     private int blockedPlayerId;
