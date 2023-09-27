@@ -2,7 +2,7 @@ package net.minedo.mc.constants.globalteleportmessage;
 
 public enum GlobalTeleportMessage {
 
-    ERROR_USE_MORE_THAN_ONCE_AT_A_TIME("Not allowed to perform more than one teleportation at a time.");
+    ERROR_USE_MORE_THAN_ONCE_AT_A_TIME("Not allowed to perform multiple teleportation at a time.");
 
     private final String message;
 
