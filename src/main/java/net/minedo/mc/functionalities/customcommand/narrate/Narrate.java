@@ -6,6 +6,10 @@ import net.kyori.adventure.text.format.TextDecoration;
 import net.minedo.mc.Minedo;
 import net.minedo.mc.constants.narratemessage.NarrateMessage;
 import net.minedo.mc.functionalities.chat.ChatUtils;
+import net.minedo.mc.models.playerblockedlist.PlayerBlockedList;
+import net.minedo.mc.models.playerprofile.PlayerProfile;
+import net.minedo.mc.repositories.playerblockedlistrepository.PlayerBlockedListRepository;
+import net.minedo.mc.repositories.playerprofilerepository.PlayerProfileRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -14,6 +18,7 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -48,7 +53,22 @@ public class Narrate implements CommandExecutor, TabCompleter {
 
         String message = String.join(StringUtils.SPACE, args);
         Component component = Component.text(message).decoration(TextDecoration.ITALIC, true);
-        this.pluginInstance.getServer().broadcast(ChatUtils.updateChatColor(player, component));
+        Collection<? extends Player> onlinePlayers = this.pluginInstance.getServer().getOnlinePlayers();
+        PlayerProfileRepository playerProfileRepository = new PlayerProfileRepository();
+        PlayerProfile playerProfile = playerProfileRepository.getPlayerProfileByUuid(player.getUniqueId());
+
+        for (Player onlinePlayer : onlinePlayers) {
+            PlayerBlockedListRepository playerBlockedListRepository = new PlayerBlockedListRepository();
+            List<Integer> playerBlockedList = playerBlockedListRepository
+                    .getPlayerBlockedList(onlinePlayer.getUniqueId())
+                    .stream()
+                    .map(PlayerBlockedList::getBlockedPlayerId)
+                    .toList();
+
+            if (!(playerBlockedList.contains(playerProfile.getId()))) {
+                onlinePlayer.sendMessage(ChatUtils.updateChatColor(player, component));
+            }
+        }
 
         return true;
     }
