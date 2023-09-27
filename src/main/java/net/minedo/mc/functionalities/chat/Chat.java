@@ -1,6 +1,7 @@
 package net.minedo.mc.functionalities.chat;
 
 import net.minedo.mc.Minedo;
+import net.minedo.mc.functionalities.chat.blocked.ChatBlocked;
 import net.minedo.mc.functionalities.chat.color.ChatColor;
 import net.minedo.mc.functionalities.chat.prefix.ChatPrefix;
 import net.minedo.mc.functionalities.chat.timeout.ChatTimeout;
@@ -28,6 +29,12 @@ public class Chat {
         // Chat prefix.
         this.pluginInstance.getServer().getPluginManager().registerEvents(
                 new ChatPrefix(),
+                this.pluginInstance
+        );
+
+        // Chat blocked.
+        this.pluginInstance.getServer().getPluginManager().registerEvents(
+                new ChatBlocked(),
                 this.pluginInstance
         );
     }
