@@ -23,7 +23,7 @@ CREATE TABLE player_like (
     FOREIGN KEY (player_id) REFERENCES player_profile (id)
 );
 
-CREATE TABLE player_blocked_list (
+CREATE TABLE player_blocked (
     player_id INT NOT NULL,
     blocked_player_id INT NOT NULL,
     CONSTRAINT player_id_blocked_player_id_UNIQUE UNIQUE (player_id, blocked_player_id),
