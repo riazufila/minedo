@@ -67,7 +67,6 @@ public class Ignore implements CommandExecutor, TabCompleter {
                     .map(PlayerBlocked::getBlockedPlayerId)
                     .toList();
 
-
             PlayerProfileRepository playerProfileRepository = new PlayerProfileRepository();
             PlayerProfile otherPlayerProfile = playerProfileRepository
                     .getPlayerProfileByUuid(otherPlayer.getUniqueId());

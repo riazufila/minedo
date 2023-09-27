@@ -4,8 +4,13 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.minedo.mc.Minedo;
 import net.minedo.mc.constants.globalteleportmessage.GlobalTeleportMessage;
+import net.minedo.mc.constants.ignoremessage.IgnoreMessage;
 import net.minedo.mc.constants.playerteleportmessage.PlayerTeleportMessage;
 import net.minedo.mc.constants.playerteleporttype.PlayerTeleportType;
+import net.minedo.mc.models.playerblockedlist.PlayerBlocked;
+import net.minedo.mc.models.playerprofile.PlayerProfile;
+import net.minedo.mc.repositories.playerblockedlistrepository.PlayerBlockedRepository;
+import net.minedo.mc.repositories.playerprofilerepository.PlayerProfileRepository;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -120,11 +125,35 @@ public class PlayerTeleport implements CommandExecutor, Listener, TabCompleter {
             }
 
             if (otherPlayer != null && otherPlayer.isOnline()) {
+                PlayerBlockedRepository playerBlockedRepository = new PlayerBlockedRepository();
+                List<Integer> otherPlayerBlockedList = playerBlockedRepository
+                        .getPlayerBlockedList(otherPlayer.getUniqueId())
+                        .stream()
+                        .map(PlayerBlocked::getBlockedPlayerId)
+                        .toList();
+
+                PlayerProfileRepository playerProfileRepository = new PlayerProfileRepository();
+                PlayerProfile playerProfile = playerProfileRepository
+                        .getPlayerProfileByUuid(player.getUniqueId());
+
+                if (otherPlayerBlockedList.contains(playerProfile.getId())) {
+                    player.sendMessage(Component
+                            .text(String.format(
+                                    IgnoreMessage.ERROR_TELEPORT_REQUEST_BLOCKED.getMessage(),
+                                    otherPlayer.getName()
+                            ))
+                            .color(NamedTextColor.RED)
+                    );
+
+                    return true;
+                }
+
                 if (player.equals(otherPlayer)) {
                     player.sendMessage(Component
                             .text(PlayerTeleportMessage.ERROR_REQUEST_TO_SELF.getMessage())
                             .color(NamedTextColor.RED)
                     );
+
                     return true;
                 }
 
