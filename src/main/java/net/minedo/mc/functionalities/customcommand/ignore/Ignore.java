@@ -56,24 +56,23 @@ public class Ignore implements CommandExecutor, TabCompleter {
             return true;
         }
 
+        String ignoreType = args[0];
         String ignoreTarget = args[1];
         Player otherPlayer = this.pluginInstance.getServer().getPlayer(ignoreTarget);
 
-        if (otherPlayer != null && otherPlayer.isOnline()) {
-            PlayerBlockedRepository playerBlockedRepository = new PlayerBlockedRepository();
-            List<Integer> playerBlockedList = playerBlockedRepository
-                    .getPlayerBlockedList(player.getUniqueId())
-                    .stream()
-                    .map(PlayerBlocked::getBlockedPlayerId)
-                    .toList();
+        if (Objects.equals(ignoreType, IgnoreType.ADD.getType())) {
+            if (otherPlayer != null && otherPlayer.isOnline()) {
+                PlayerBlockedRepository playerBlockedRepository = new PlayerBlockedRepository();
+                List<Integer> playerBlockedList = playerBlockedRepository
+                        .getPlayerBlockedList(player.getUniqueId())
+                        .stream()
+                        .map(PlayerBlocked::getBlockedPlayerId)
+                        .toList();
 
-            PlayerProfileRepository playerProfileRepository = new PlayerProfileRepository();
-            PlayerProfile otherPlayerProfile = playerProfileRepository
-                    .getPlayerProfileByUuid(otherPlayer.getUniqueId());
+                PlayerProfileRepository playerProfileRepository = new PlayerProfileRepository();
+                PlayerProfile otherPlayerProfile = playerProfileRepository
+                        .getPlayerProfileByUuid(otherPlayer.getUniqueId());
 
-            String ignoreType = args[0];
-
-            if (Objects.equals(ignoreType, IgnoreType.ADD.getType())) {
                 if (playerBlockedList.contains(otherPlayerProfile.getId())) {
                     player.sendMessage(Component
                             .text(String.format(
@@ -95,7 +94,25 @@ public class Ignore implements CommandExecutor, TabCompleter {
                         ))
                         .color(NamedTextColor.GREEN)
                 );
-            } else if (Objects.equals(ignoreType, IgnoreType.REMOVE.getType())) {
+            } else {
+                player.sendMessage(Component
+                        .text(IgnoreMessage.ERROR_PLAYER_IS_NOT_IN_SERVER.getMessage())
+                        .color(NamedTextColor.RED)
+                );
+            }
+        } else if (Objects.equals(ignoreType, IgnoreType.REMOVE.getType())) {
+            if (otherPlayer != null && otherPlayer.isOnline()) {
+                PlayerBlockedRepository playerBlockedRepository = new PlayerBlockedRepository();
+                List<Integer> playerBlockedList = playerBlockedRepository
+                        .getPlayerBlockedList(player.getUniqueId())
+                        .stream()
+                        .map(PlayerBlocked::getBlockedPlayerId)
+                        .toList();
+
+                PlayerProfileRepository playerProfileRepository = new PlayerProfileRepository();
+                PlayerProfile otherPlayerProfile = playerProfileRepository
+                        .getPlayerProfileByUuid(otherPlayer.getUniqueId());
+
                 if (!(playerBlockedList.contains(otherPlayerProfile.getId()))) {
                     player.sendMessage(Component
                             .text(String.format(
@@ -119,14 +136,14 @@ public class Ignore implements CommandExecutor, TabCompleter {
                 );
             } else {
                 player.sendMessage(Component
-                        .text(IgnoreMessage.ERROR_USAGE.getMessage())
-                        .color(NamedTextColor.GRAY)
+                        .text(IgnoreMessage.ERROR_PLAYER_IS_NOT_IN_SERVER.getMessage())
+                        .color(NamedTextColor.RED)
                 );
             }
         } else {
             player.sendMessage(Component
-                    .text(IgnoreMessage.ERROR_PLAYER_IS_NOT_IN_SERVER.getMessage())
-                    .color(NamedTextColor.RED)
+                    .text(IgnoreMessage.ERROR_USAGE.getMessage())
+                    .color(NamedTextColor.GRAY)
             );
         }
 
