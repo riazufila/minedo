@@ -21,9 +21,9 @@ public class PlayerProfileManager implements Listener {
         PlayerProfile playerProfile = playerProfileRepository.getPlayerProfileByUuid(uuid);
 
         if (playerProfile == null) {
-            Integer playerId = playerProfileRepository.insertNewPlayerProfile(uuid);
+            playerProfileRepository.insertNewPlayerProfile(uuid);
             PlayerLikeRepository playerLikeRepository = new PlayerLikeRepository();
-            playerLikeRepository.insertNewPlayerLike(playerId);
+            playerLikeRepository.insertNewPlayerLike(uuid);
         }
     }
 

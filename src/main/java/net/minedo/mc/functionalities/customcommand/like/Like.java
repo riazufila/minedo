@@ -5,9 +5,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.minedo.mc.Minedo;
 import net.minedo.mc.constants.likemessage.LikeMessage;
 import net.minedo.mc.models.playerlike.PlayerLike;
-import net.minedo.mc.models.playerprofile.PlayerProfile;
 import net.minedo.mc.repositories.playerlikerepository.PlayerLikeRepository;
-import net.minedo.mc.repositories.playerprofilerepository.PlayerProfileRepository;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -49,10 +47,8 @@ public class Like implements CommandExecutor, TabCompleter {
             return true;
         }
 
-        PlayerProfileRepository playerProfileRepository = new PlayerProfileRepository();
-        PlayerProfile playerProfile = playerProfileRepository.getPlayerProfileByUuid(player.getUniqueId());
         PlayerLikeRepository playerLikeRepository = new PlayerLikeRepository();
-        PlayerLike playerLike = playerLikeRepository.getPlayerLikeByPlayerId(playerProfile.getId());
+        PlayerLike playerLike = playerLikeRepository.getPlayerLikeByPlayerUuid(player.getUniqueId());
 
         if (playerLike.isLikeSentRecently()) {
             player.sendMessage(Component
@@ -69,21 +65,16 @@ public class Like implements CommandExecutor, TabCompleter {
         if (otherPlayer != null && otherPlayer.isOnline()) {
             Instant instant = Instant.now();
 
-            PlayerLike updatedPlayerLike = new PlayerLike();
             playerLike.setLikeSentCount(playerLike.getLikeSentCount() + 1);
             playerLike.setLastLikeSent(instant);
-            playerLikeRepository.updatePlayerLike(playerLike.getPlayerId(), playerLike);
-
-            PlayerProfileRepository otherPlayerProfileRepository = new PlayerProfileRepository();
-            PlayerProfile otherPlayerProfile = otherPlayerProfileRepository
-                    .getPlayerProfileByUuid(otherPlayer.getUniqueId());
+            playerLikeRepository.updatePlayerLike(player.getUniqueId(), playerLike);
 
             PlayerLikeRepository otherPlayerLikeRepository = new PlayerLikeRepository();
             PlayerLike otherPlayerLike = otherPlayerLikeRepository
-                    .getPlayerLikeByPlayerId(otherPlayerProfile.getId());
+                    .getPlayerLikeByPlayerUuid(otherPlayer.getUniqueId());
 
             otherPlayerLike.setLikeReceivedCount(otherPlayerLike.getLikeReceivedCount() + 1);
-            otherPlayerLikeRepository.updatePlayerLike(otherPlayerLike.getPlayerId(), otherPlayerLike);
+            otherPlayerLikeRepository.updatePlayerLike(otherPlayer.getUniqueId(), otherPlayerLike);
 
             player.sendMessage(Component
                     .text(String.format(

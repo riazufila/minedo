@@ -73,14 +73,9 @@ public class Database {
         return resultSet;
     }
 
-    public ResultSet executeStatement(String sqlQuery, HashMap<Integer, ?> replacements) {
-        ResultSet generatedKeys = null;
-
+    public void executeStatement(String sqlQuery, HashMap<Integer, ?> replacements) {
         try {
-            PreparedStatement preparedStatement = this.connection.prepareStatement(
-                    sqlQuery,
-                    Statement.RETURN_GENERATED_KEYS
-            );
+            PreparedStatement preparedStatement = this.connection.prepareStatement(sqlQuery);
 
             for (var replacement : replacements.entrySet()) {
                 int key = replacement.getKey();
@@ -94,15 +89,11 @@ public class Database {
             }
 
             preparedStatement.execute();
-
-            generatedKeys = preparedStatement.getGeneratedKeys();
         } catch (SQLException e) {
             this.logger.severe(
                     String.format("Unable to execute statement in the database: %s", e.getMessage())
             );
         }
-
-        return generatedKeys;
     }
 
 }
