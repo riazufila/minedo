@@ -5,10 +5,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.minedo.mc.Minedo;
 import net.minedo.mc.constants.ignoremessage.IgnoreMessage;
 import net.minedo.mc.constants.ignoretype.IgnoreType;
-import net.minedo.mc.models.playerblockedlist.PlayerBlocked;
-import net.minedo.mc.models.playerprofile.PlayerProfile;
 import net.minedo.mc.repositories.playerblockedlistrepository.PlayerBlockedRepository;
-import net.minedo.mc.repositories.playerprofilerepository.PlayerProfileRepository;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -74,17 +71,9 @@ public class Ignore implements CommandExecutor, TabCompleter {
         if (Objects.equals(ignoreType, IgnoreType.ADD.getType())) {
             if (otherPlayer != null && otherPlayer.isOnline()) {
                 PlayerBlockedRepository playerBlockedRepository = new PlayerBlockedRepository();
-                List<Integer> playerBlockedList = playerBlockedRepository
-                        .getPlayerBlockedList(player.getUniqueId())
-                        .stream()
-                        .map(PlayerBlocked::getBlockedPlayerId)
-                        .toList();
 
-                PlayerProfileRepository playerProfileRepository = new PlayerProfileRepository();
-                PlayerProfile otherPlayerProfile = playerProfileRepository
-                        .getPlayerProfileByUuid(otherPlayer.getUniqueId());
-
-                if (playerBlockedList.contains(otherPlayerProfile.getId())) {
+                if (playerBlockedRepository.isPlayerBlockedByPlayer(
+                        otherPlayer.getUniqueId(), player.getUniqueId())) {
                     player.sendMessage(Component
                             .text(String.format(
                                     IgnoreMessage.ERROR_ALREADY_BLOCKED.getMessage(),
@@ -114,17 +103,9 @@ public class Ignore implements CommandExecutor, TabCompleter {
         } else if (Objects.equals(ignoreType, IgnoreType.REMOVE.getType())) {
             if (otherPlayer != null && otherPlayer.isOnline()) {
                 PlayerBlockedRepository playerBlockedRepository = new PlayerBlockedRepository();
-                List<Integer> playerBlockedList = playerBlockedRepository
-                        .getPlayerBlockedList(player.getUniqueId())
-                        .stream()
-                        .map(PlayerBlocked::getBlockedPlayerId)
-                        .toList();
 
-                PlayerProfileRepository playerProfileRepository = new PlayerProfileRepository();
-                PlayerProfile otherPlayerProfile = playerProfileRepository
-                        .getPlayerProfileByUuid(otherPlayer.getUniqueId());
-
-                if (!(playerBlockedList.contains(otherPlayerProfile.getId()))) {
+                if (!(playerBlockedRepository.isPlayerBlockedByPlayer(
+                        otherPlayer.getUniqueId(), player.getUniqueId()))) {
                     player.sendMessage(Component
                             .text(String.format(
                                     IgnoreMessage.ERROR_NOT_BLOCKED.getMessage(),

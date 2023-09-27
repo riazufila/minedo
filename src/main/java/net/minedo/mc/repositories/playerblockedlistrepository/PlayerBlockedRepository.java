@@ -100,4 +100,19 @@ public class PlayerBlockedRepository {
         database.disconnect();
     }
 
+    public boolean isPlayerBlockedByPlayer(UUID requesterUuid, UUID potentialBlockerUuid) {
+        PlayerBlockedRepository playerBlockedRepository = new PlayerBlockedRepository();
+        List<Integer> potentialBlockerPlayerBlockedList = playerBlockedRepository
+                .getPlayerBlockedList(potentialBlockerUuid)
+                .stream()
+                .map(PlayerBlocked::getBlockedPlayerId)
+                .toList();
+
+        PlayerProfileRepository playerProfileRepository = new PlayerProfileRepository();
+        PlayerProfile requesterPlayerProfile = playerProfileRepository
+                .getPlayerProfileByUuid(requesterUuid);
+
+        return potentialBlockerPlayerBlockedList.contains(requesterPlayerProfile.getId());
+    }
+
 }
