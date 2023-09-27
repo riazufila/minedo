@@ -6,10 +6,7 @@ import net.kyori.adventure.text.format.TextDecoration;
 import net.minedo.mc.Minedo;
 import net.minedo.mc.constants.ignoremessage.IgnoreMessage;
 import net.minedo.mc.constants.whispermessage.WhisperMessage;
-import net.minedo.mc.models.playerblockedlist.PlayerBlocked;
-import net.minedo.mc.models.playerprofile.PlayerProfile;
 import net.minedo.mc.repositories.playerblockedlistrepository.PlayerBlockedRepository;
-import net.minedo.mc.repositories.playerprofilerepository.PlayerProfileRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Sound;
 import org.bukkit.command.Command;
@@ -67,17 +64,9 @@ public class Message implements CommandExecutor, TabCompleter {
             }
 
             PlayerBlockedRepository playerBlockedRepository = new PlayerBlockedRepository();
-            List<Integer> otherPlayerBlockedList = playerBlockedRepository
-                    .getPlayerBlockedList(otherPlayer.getUniqueId())
-                    .stream()
-                    .map(PlayerBlocked::getBlockedPlayerId)
-                    .toList();
 
-            PlayerProfileRepository playerProfileRepository = new PlayerProfileRepository();
-            PlayerProfile playerProfile = playerProfileRepository
-                    .getPlayerProfileByUuid(player.getUniqueId());
-
-            if (otherPlayerBlockedList.contains(playerProfile.getId())) {
+            if (playerBlockedRepository.isPlayerBlockedByPlayer(
+                    player.getUniqueId(), otherPlayer.getUniqueId())) {
                 player.sendMessage(Component
                         .text(String.format(
                                 IgnoreMessage.ERROR_INTERACT.getMessage(),

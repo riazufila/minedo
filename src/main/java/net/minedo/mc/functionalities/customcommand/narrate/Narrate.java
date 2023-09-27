@@ -6,10 +6,7 @@ import net.kyori.adventure.text.format.TextDecoration;
 import net.minedo.mc.Minedo;
 import net.minedo.mc.constants.narratemessage.NarrateMessage;
 import net.minedo.mc.functionalities.chat.ChatUtils;
-import net.minedo.mc.models.playerblockedlist.PlayerBlocked;
-import net.minedo.mc.models.playerprofile.PlayerProfile;
 import net.minedo.mc.repositories.playerblockedlistrepository.PlayerBlockedRepository;
-import net.minedo.mc.repositories.playerprofilerepository.PlayerProfileRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -54,18 +51,12 @@ public class Narrate implements CommandExecutor, TabCompleter {
         String message = String.join(StringUtils.SPACE, args);
         Component component = Component.text(message).decoration(TextDecoration.ITALIC, true);
         Collection<? extends Player> onlinePlayers = this.pluginInstance.getServer().getOnlinePlayers();
-        PlayerProfileRepository playerProfileRepository = new PlayerProfileRepository();
-        PlayerProfile playerProfile = playerProfileRepository.getPlayerProfileByUuid(player.getUniqueId());
 
         for (Player onlinePlayer : onlinePlayers) {
             PlayerBlockedRepository playerBlockedRepository = new PlayerBlockedRepository();
-            List<Integer> playerBlockedList = playerBlockedRepository
-                    .getPlayerBlockedList(onlinePlayer.getUniqueId())
-                    .stream()
-                    .map(PlayerBlocked::getBlockedPlayerId)
-                    .toList();
 
-            if (!(playerBlockedList.contains(playerProfile.getId()))) {
+            if (!(playerBlockedRepository.isPlayerBlockedByPlayer(
+                    player.getUniqueId(), onlinePlayer.getUniqueId()))) {
                 onlinePlayer.sendMessage(ChatUtils.updateChatColor(player, component));
             }
         }

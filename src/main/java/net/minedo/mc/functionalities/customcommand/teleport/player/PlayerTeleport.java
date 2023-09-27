@@ -7,10 +7,7 @@ import net.minedo.mc.constants.globalteleportmessage.GlobalTeleportMessage;
 import net.minedo.mc.constants.ignoremessage.IgnoreMessage;
 import net.minedo.mc.constants.playerteleportmessage.PlayerTeleportMessage;
 import net.minedo.mc.constants.playerteleporttype.PlayerTeleportType;
-import net.minedo.mc.models.playerblockedlist.PlayerBlocked;
-import net.minedo.mc.models.playerprofile.PlayerProfile;
 import net.minedo.mc.repositories.playerblockedlistrepository.PlayerBlockedRepository;
-import net.minedo.mc.repositories.playerprofilerepository.PlayerProfileRepository;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -126,17 +123,9 @@ public class PlayerTeleport implements CommandExecutor, Listener, TabCompleter {
 
             if (otherPlayer != null && otherPlayer.isOnline()) {
                 PlayerBlockedRepository playerBlockedRepository = new PlayerBlockedRepository();
-                List<Integer> otherPlayerBlockedList = playerBlockedRepository
-                        .getPlayerBlockedList(otherPlayer.getUniqueId())
-                        .stream()
-                        .map(PlayerBlocked::getBlockedPlayerId)
-                        .toList();
 
-                PlayerProfileRepository playerProfileRepository = new PlayerProfileRepository();
-                PlayerProfile playerProfile = playerProfileRepository
-                        .getPlayerProfileByUuid(player.getUniqueId());
-
-                if (otherPlayerBlockedList.contains(playerProfile.getId())) {
+                if (playerBlockedRepository.isPlayerBlockedByPlayer(
+                        player.getUniqueId(), otherPlayer.getUniqueId())) {
                     player.sendMessage(Component
                             .text(String.format(
                                     IgnoreMessage.ERROR_INTERACT.getMessage(),
