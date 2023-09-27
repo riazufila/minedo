@@ -6,7 +6,8 @@ public enum CustomCommandType {
     PLAYER_TELEPORT("teleport"),
     NARRATE("narrate"),
     LIKE("like"),
-    IGNORE("ignore");
+    IGNORE("ignore"),
+    MESSAGE("message");
 
     private final String type;
 
