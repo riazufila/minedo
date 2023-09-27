@@ -48,8 +48,6 @@ public class Narrate implements CommandExecutor, TabCompleter {
             return true;
         }
 
-        String message = String.join(StringUtils.SPACE, args);
-        Component component = Component.text(message).decoration(TextDecoration.ITALIC, true);
         Collection<? extends Player> onlinePlayers = this.pluginInstance.getServer().getOnlinePlayers();
 
         for (Player onlinePlayer : onlinePlayers) {
@@ -57,7 +55,13 @@ public class Narrate implements CommandExecutor, TabCompleter {
 
             if (!(playerBlockedRepository.isPlayerBlockedByPlayer(
                     player.getUniqueId(), onlinePlayer.getUniqueId()))) {
-                onlinePlayer.sendMessage(ChatUtils.updateChatColor(player, component));
+                String STRING_FORMAT = "\"%s\" says %s.";
+
+                Component component = ChatUtils.setChatColorAndCombineText(
+                        player, String.join(StringUtils.SPACE, args), player.getName(), STRING_FORMAT
+                ).decoration(TextDecoration.ITALIC, true);
+
+                onlinePlayer.sendMessage(component);
             }
         }
 

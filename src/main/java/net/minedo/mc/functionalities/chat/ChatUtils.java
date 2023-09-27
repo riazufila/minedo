@@ -11,6 +11,16 @@ import org.intellij.lang.annotations.RegExp;
 
 public final class ChatUtils {
 
+    /**
+     * Updated given component according to permission's color and symbol trigger used.
+     * Do not use this to update component that have texts prepended to the actual message,
+     * if your intention is to color and sanitize the text based on permission and symbol
+     * trigger.
+     *
+     * @param player    Player
+     * @param component Component
+     * @return Component
+     */
     public static Component updateChatColor(Player player, Component component) {
         String plainText = PlainTextComponentSerializer.plainText().serialize(component);
         char firstCharacter = plainText.charAt(0);
@@ -56,6 +66,70 @@ public final class ChatUtils {
                     .build();
 
             component = component.replaceText(replacement);
+        }
+
+        return component;
+    }
+
+    public static Component setChatColorAndCombineText(
+            Player player, String actualText, String appendedText, String format
+    ) {
+        char firstCharacter = actualText.charAt(0);
+        NamedTextColor namedTextColor = null;
+        boolean isUpdated = false;
+        Component component;
+        String updatedText;
+
+        if (firstCharacter == ChatColorSymbol.PURPLE_CHAT_SYMBOL.getSymbol()
+                && player.hasPermission("minedo.group.obsidian")) {
+            namedTextColor = NamedTextColor.DARK_PURPLE;
+            isUpdated = true;
+        } else if (firstCharacter == ChatColorSymbol.RED_CHAT_SYMBOL.getSymbol()
+                && player.hasPermission("minedo.group.redstone")) {
+            namedTextColor = NamedTextColor.DARK_RED;
+            isUpdated = true;
+        } else if (firstCharacter == ChatColorSymbol.TURQUOISE_CHAT_SYMBOL.getSymbol()
+                && player.hasPermission("minedo.group.diamond")) {
+            namedTextColor = NamedTextColor.DARK_AQUA;
+            isUpdated = true;
+        } else if (firstCharacter == ChatColorSymbol.GREEN_CHAT_SYMBOL.getSymbol()
+                && player.hasPermission("minedo.group.emerald")) {
+            namedTextColor = NamedTextColor.GREEN;
+            isUpdated = true;
+        } else if (firstCharacter == ChatColorSymbol.GOLD_CHAT_SYMBOL.getSymbol()
+                && player.hasPermission("minedo.group.gold")) {
+            namedTextColor = NamedTextColor.GOLD;
+            isUpdated = true;
+        }
+
+        if (isUpdated) {
+            StringBuilder chatColorSymbolJoined = new StringBuilder(StringUtils.EMPTY);
+
+            for (ChatColorSymbol symbol : ChatColorSymbol.values()) {
+                chatColorSymbolJoined.append(symbol.getSymbol());
+            }
+
+            @RegExp String REGEX_COLOURED_CHAT_SYMBOL = String.format(
+                    "^[ ]*([%s])[ ]*", chatColorSymbolJoined
+            );
+
+            updatedText = String.format(
+                    format,
+                    actualText.replaceFirst(REGEX_COLOURED_CHAT_SYMBOL, StringUtils.EMPTY),
+                    appendedText
+            );
+        } else {
+            updatedText = String.format(
+                    format,
+                    actualText,
+                    appendedText
+            );
+        }
+
+        if (namedTextColor != null) {
+            component = Component.text(updatedText).color(namedTextColor);
+        } else {
+            component = Component.text(updatedText);
         }
 
         return component;
