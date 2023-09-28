@@ -18,6 +18,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Color implements CommandExecutor, TabCompleter {
 
@@ -28,11 +30,23 @@ public class Color implements CommandExecutor, TabCompleter {
 
         String chatOrName = args[0];
         String colorType = args[1];
+        String color = args[2];
+        boolean isRemovetype = false;
+        boolean isValidRegex = false;
 
-        // TODO: Validate HEX value if color type is custom and last argument is not 'remove'.
+        if (color.equals(ColorType.REMOVE.getType())) {
+            isRemovetype = true;
+        } else {
+            String HEX_REGEX = "^#([A-Fa-f0-9]{6})$";
+            Pattern pattern = Pattern.compile(HEX_REGEX);
+            Matcher matcher = pattern.matcher(color);
+
+            isValidRegex = matcher.matches();
+        }
 
         return (chatOrName.equals(ColorType.NAME.getType()) || chatOrName.equals(ColorType.CHAT.getType()))
-                && (colorType.equals(ColorType.PRESET.getType()) || colorType.equals(ColorType.CUSTOM.getType()));
+                && (colorType.equals(ColorType.PRESET.getType()) || colorType.equals(ColorType.CUSTOM.getType()))
+                && (isRemovetype || isValidRegex);
     }
 
     @Override
