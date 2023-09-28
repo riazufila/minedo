@@ -4,7 +4,9 @@ public class PlayerColor {
 
     private int playerId;
     private String prefixPreset;
+    private String prefixCustom;
     private String contentPreset;
+    private String contentCustom;
 
     public int getPlayerId() {
         return playerId;
@@ -22,12 +24,28 @@ public class PlayerColor {
         this.prefixPreset = prefixPreset;
     }
 
+    public String getPrefixCustom() {
+        return prefixCustom;
+    }
+
+    public void setPrefixCustom(String prefixCustom) {
+        this.prefixCustom = prefixCustom;
+    }
+
     public String getContentPreset() {
         return contentPreset;
     }
 
     public void setContentPreset(String contentPreset) {
         this.contentPreset = contentPreset;
+    }
+
+    public String getContentCustom() {
+        return contentCustom;
+    }
+
+    public void setContentCustom(String contentCustom) {
+        this.contentCustom = contentCustom;
     }
 
 }

@@ -16,7 +16,9 @@ CREATE TABLE player_profile (
 CREATE TABLE player_color (
     player_id int NOT NULL,
     prefix_preset VARCHAR(20) DEFAULT NULL,
+    prefix_custom VARCHAR(7) DEFAULT NULL,
     content_preset VARCHAR(20) DEFAULT NULL,
+    content_custom VARCHAR(7) DEFAULT NULL,
     UNIQUE KEY player_id_UNIQUE (player_id),
     FOREIGN KEY (player_id) REFERENCES player_profile (id)
 );
