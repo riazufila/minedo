@@ -2,7 +2,7 @@ package net.minedo.mc.functionalities.customcommand.teleport.region;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.minedo.mc.constants.regionteleportmessage.RegionTeleportMessage;
+import net.minedo.mc.constants.command.message.regionteleportmessage.RegionTeleportMessage;
 import net.minedo.mc.models.region.Region;
 import org.bukkit.Location;
 import org.bukkit.Sound;

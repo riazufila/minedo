@@ -4,7 +4,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.minedo.mc.Minedo;
-import net.minedo.mc.constants.narratemessage.NarrateMessage;
+import net.minedo.mc.constants.command.message.narratemessage.NarrateMessage;
 import net.minedo.mc.functionalities.chat.ChatUtils;
 import net.minedo.mc.repositories.playerblockedlistrepository.PlayerBlockedRepository;
 import org.apache.commons.lang3.StringUtils;
@@ -55,13 +55,20 @@ public class Narrate implements CommandExecutor, TabCompleter {
 
             if (!(playerBlockedRepository.isPlayerBlockedByPlayer(
                     player.getUniqueId(), onlinePlayer.getUniqueId()))) {
-                String STRING_FORMAT = "\"%s\" says %s.";
+                Component playerNameComponent = Component.text(player.getName());
+                Component contentComponent = Component.text(String.join(StringUtils.SPACE, args));
 
-                Component component = ChatUtils.setChatColorAndCombineText(
-                        player, String.join(StringUtils.SPACE, args), player.getName(), STRING_FORMAT
-                ).decoration(TextDecoration.ITALIC, true);
+                Component combinedComponents = Component
+                        .textOfChildren(
+                                Component.text("\""),
+                                ChatUtils.updateComponentColor(player, contentComponent, true),
+                                Component.text("\" says "),
+                                ChatUtils.updateComponentColor(player, playerNameComponent, false),
+                                Component.text(".")
+                        )
+                        .decoration(TextDecoration.ITALIC, true);
 
-                onlinePlayer.sendMessage(component);
+                onlinePlayer.sendMessage(combinedComponents);
             }
         }
 

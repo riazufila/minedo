@@ -96,7 +96,7 @@ public class PlayerLikeRepository {
                 playerLike.setLastLikeSent(lastLikeSent != null ? lastLikeSent.toInstant() : null);
             }
         } catch (SQLException error) {
-            this.logger.severe(String.format("Unable to get player profile by uuid: %s", error.getMessage()));
+            this.logger.severe(String.format("Unable to get player color by uuid: %s", error.getMessage()));
         } finally {
             database.disconnect();
         }

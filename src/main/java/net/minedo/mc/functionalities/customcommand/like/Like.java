@@ -3,7 +3,7 @@ package net.minedo.mc.functionalities.customcommand.like;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.minedo.mc.Minedo;
-import net.minedo.mc.constants.likemessage.LikeMessage;
+import net.minedo.mc.constants.command.message.likemessage.LikeMessage;
 import net.minedo.mc.models.playerlike.PlayerLike;
 import net.minedo.mc.repositories.playerlikerepository.PlayerLikeRepository;
 import org.bukkit.command.Command;
@@ -61,6 +61,15 @@ public class Like implements CommandExecutor, TabCompleter {
 
         String likeTarget = args[0];
         Player otherPlayer = this.pluginInstance.getServer().getPlayer(likeTarget);
+
+        if (player.equals(otherPlayer)) {
+            player.sendMessage(Component
+                    .text(LikeMessage.ERROR_INVALID_TARGET.getMessage())
+                    .color(NamedTextColor.RED)
+            );
+
+            return true;
+        }
 
         if (otherPlayer != null && otherPlayer.isOnline()) {
             Instant instant = Instant.now();
