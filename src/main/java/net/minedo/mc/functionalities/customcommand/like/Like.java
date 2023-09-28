@@ -3,7 +3,7 @@ package net.minedo.mc.functionalities.customcommand.like;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.minedo.mc.Minedo;
-import net.minedo.mc.constants.likemessage.LikeMessage;
+import net.minedo.mc.constants.command.message.likemessage.LikeMessage;
 import net.minedo.mc.models.playerlike.PlayerLike;
 import net.minedo.mc.repositories.playerlikerepository.PlayerLikeRepository;
 import org.bukkit.command.Command;

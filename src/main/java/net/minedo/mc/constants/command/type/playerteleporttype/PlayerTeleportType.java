@@ -1,4 +1,4 @@
-package net.minedo.mc.constants.playerteleporttype;
+package net.minedo.mc.constants.command.type.playerteleporttype;
 
 public enum PlayerTeleportType {
 

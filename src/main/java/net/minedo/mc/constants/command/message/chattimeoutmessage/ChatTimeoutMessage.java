@@ -1,4 +1,4 @@
-package net.minedo.mc.constants.chattimeoutmessage;
+package net.minedo.mc.constants.command.message.chattimeoutmessage;
 
 public enum ChatTimeoutMessage {
 

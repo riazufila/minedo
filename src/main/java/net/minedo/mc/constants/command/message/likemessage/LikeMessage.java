@@ -1,4 +1,4 @@
-package net.minedo.mc.constants.likemessage;
+package net.minedo.mc.constants.command.message.likemessage;
 
 public enum LikeMessage {
 

@@ -1,4 +1,4 @@
-package net.minedo.mc.constants.regionteleportmessage;
+package net.minedo.mc.constants.command.message.regionteleportmessage;
 
 public enum RegionTeleportMessage {
 

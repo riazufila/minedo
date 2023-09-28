@@ -2,7 +2,7 @@ package net.minedo.mc.functionalities.chat.timeout;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.minedo.mc.constants.chattimeoutmessage.ChatTimeoutMessage;
+import net.minedo.mc.constants.command.message.chattimeoutmessage.ChatTimeoutMessage;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 

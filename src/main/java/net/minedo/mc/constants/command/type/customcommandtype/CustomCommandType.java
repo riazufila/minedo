@@ -1,4 +1,4 @@
-package net.minedo.mc.constants.customcommandtype;
+package net.minedo.mc.constants.command.type.customcommandtype;
 
 public enum CustomCommandType {
 

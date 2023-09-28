@@ -1,4 +1,4 @@
-package net.minedo.mc.constants.ignoremessage;
+package net.minedo.mc.constants.command.message.ignoremessage;
 
 public enum IgnoreMessage {
 

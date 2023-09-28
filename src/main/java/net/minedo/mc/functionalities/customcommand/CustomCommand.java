@@ -1,7 +1,7 @@
 package net.minedo.mc.functionalities.customcommand;
 
 import net.minedo.mc.Minedo;
-import net.minedo.mc.constants.customcommandtype.CustomCommandType;
+import net.minedo.mc.constants.command.type.customcommandtype.CustomCommandType;
 import net.minedo.mc.functionalities.customcommand.ignore.Ignore;
 import net.minedo.mc.functionalities.customcommand.like.Like;
 import net.minedo.mc.functionalities.customcommand.message.Message;

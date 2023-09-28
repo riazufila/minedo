@@ -2,7 +2,7 @@ package net.minedo.mc.functionalities.customcommand.teleport.player;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.minedo.mc.constants.playerteleportmessage.PlayerTeleportMessage;
+import net.minedo.mc.constants.command.message.playerteleportmessage.PlayerTeleportMessage;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 

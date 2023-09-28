@@ -1,4 +1,4 @@
-package net.minedo.mc.constants.globalteleportmessage;
+package net.minedo.mc.constants.command.message.globalteleportmessage;
 
 public enum GlobalTeleportMessage {
 

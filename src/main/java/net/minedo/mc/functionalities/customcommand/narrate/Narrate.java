@@ -4,7 +4,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.minedo.mc.Minedo;
-import net.minedo.mc.constants.narratemessage.NarrateMessage;
+import net.minedo.mc.constants.command.message.narratemessage.NarrateMessage;
 import net.minedo.mc.functionalities.chat.ChatUtils;
 import net.minedo.mc.repositories.playerblockedlistrepository.PlayerBlockedRepository;
 import org.apache.commons.lang3.StringUtils;

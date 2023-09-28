@@ -1,4 +1,4 @@
-package net.minedo.mc.constants.narratemessage;
+package net.minedo.mc.constants.command.message.narratemessage;
 
 public enum NarrateMessage {
 

@@ -1,4 +1,4 @@
-package net.minedo.mc.constants.whispermessage;
+package net.minedo.mc.constants.command.message.whispermessage;
 
 public enum WhisperMessage {
 

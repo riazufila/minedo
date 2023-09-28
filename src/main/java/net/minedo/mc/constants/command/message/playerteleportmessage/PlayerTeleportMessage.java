@@ -1,6 +1,6 @@
-package net.minedo.mc.constants.playerteleportmessage;
+package net.minedo.mc.constants.command.message.playerteleportmessage;
 
-import net.minedo.mc.constants.playerteleporttype.PlayerTeleportType;
+import net.minedo.mc.constants.command.type.playerteleporttype.PlayerTeleportType;
 
 public enum PlayerTeleportMessage {
 

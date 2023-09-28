@@ -1,4 +1,4 @@
-package net.minedo.mc.constants.ignoretype;
+package net.minedo.mc.constants.command.type.ignoretype;
 
 public enum IgnoreType {
 
