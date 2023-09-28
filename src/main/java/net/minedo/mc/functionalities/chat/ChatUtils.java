@@ -18,7 +18,7 @@ public final class ChatUtils {
         String selectedColor = chatInfo.getSelectedColor();
         boolean isCustom = chatInfo.isCustom();
 
-        if (!verifyPlayerPermissionForColorSetting(player, isCustom
+        if (!validatePlayerPermissionForColorSetting(player, isCustom
                 ? ColorType.CUSTOM.getType() : ColorType.PRESET.getType(), selectedColor)) {
             return component;
         }
@@ -76,22 +76,21 @@ public final class ChatUtils {
         return GroupColor.valueOf(color.toUpperCase()).equals(groupColor);
     }
 
-    public static boolean verifyPlayerPermissionForColorSetting(Player player, String colorType, String color) {
-        if (colorType.equals(ColorType.CUSTOM.getType())
-                && !(player.hasPermission(GroupPermission.OBSIDIAN.getPermission()))
-        ) {
-            return false;
+    public static boolean validatePlayerPermissionForColorSetting(Player player, String colorType, String color) {
+        if (colorType.equals(ColorType.CUSTOM.getType())) {
+            return player.hasPermission(GroupPermission.OBSIDIAN.getPermission());
         } else if (colorType.equals(ColorType.PRESET.getType())) {
-            return (!isGroupColorTheSame(color, GroupColor.OBSIDIAN)
-                    || player.hasPermission(GroupPermission.OBSIDIAN.getPermission()))
-                    && (!isGroupColorTheSame(color, GroupColor.REDSTONE)
-                    || player.hasPermission(GroupPermission.REDSTONE.getPermission()))
-                    && (!isGroupColorTheSame(color, GroupColor.DIAMOND)
-                    || player.hasPermission(GroupPermission.DIAMOND.getPermission()))
-                    && (!isGroupColorTheSame(color, GroupColor.EMERALD)
-                    || player.hasPermission(GroupPermission.EMERALD.getPermission()))
-                    && (!isGroupColorTheSame(color, GroupColor.GOLD)
-                    || player.hasPermission(GroupPermission.GOLD.getPermission()));
+            if (isGroupColorTheSame(color, GroupColor.OBSIDIAN)) {
+                return player.hasPermission(GroupPermission.OBSIDIAN.getPermission());
+            } else if (isGroupColorTheSame(color, GroupColor.REDSTONE)) {
+                return player.hasPermission(GroupPermission.REDSTONE.getPermission());
+            } else if (isGroupColorTheSame(color, GroupColor.DIAMOND)) {
+                return player.hasPermission(GroupPermission.DIAMOND.getPermission());
+            } else if (isGroupColorTheSame(color, GroupColor.EMERALD)) {
+                return player.hasPermission(GroupPermission.EMERALD.getPermission());
+            } else if (isGroupColorTheSame(color, GroupColor.GOLD)) {
+                return player.hasPermission(GroupPermission.GOLD.getPermission());
+            }
         }
 
         return true;

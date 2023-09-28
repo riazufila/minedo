@@ -54,7 +54,7 @@ public class Color implements CommandExecutor, TabCompleter {
         String colorType = args[1];
         String color = args[2].toUpperCase();
 
-        if (!ChatUtils.verifyPlayerPermissionForColorSetting(player, colorType, color)) {
+        if (!ChatUtils.validatePlayerPermissionForColorSetting(player, colorType, color)) {
             player.sendMessage(Component
                     .text(ColorMessage.ERROR_NO_PERMISSION.getMessage())
                     .color(NamedTextColor.RED)
