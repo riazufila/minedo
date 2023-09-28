@@ -5,6 +5,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.minedo.mc.Minedo;
 import net.minedo.mc.constants.command.message.colormessage.ColorMessage;
 import net.minedo.mc.constants.command.type.colortype.ColorType;
+import net.minedo.mc.constants.groupcolor.GroupColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -72,11 +73,9 @@ public class Color implements CommandExecutor, TabCompleter {
             completions.add(ColorType.PRESET.getType());
             completions.add(ColorType.CUSTOM.getType());
         } else if (args[1].equals(ColorType.PRESET.getType()) && args.length == 3) {
-            completions.add(NamedTextColor.GOLD.toString());
-            completions.add(NamedTextColor.GREEN.toString());
-            completions.add(NamedTextColor.DARK_AQUA.toString());
-            completions.add(NamedTextColor.DARK_RED.toString());
-            completions.add(NamedTextColor.DARK_PURPLE.toString());
+            for (GroupColor color : GroupColor.values()) {
+                completions.add(color.toString().toLowerCase());
+            }
         }
 
         return completions;
