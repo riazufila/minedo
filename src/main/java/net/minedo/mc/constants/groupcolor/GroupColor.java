@@ -4,6 +4,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 
 public enum GroupColor {
 
+    DEFAULT(null),
     GOLD(NamedTextColor.GOLD),
     EMERALD(NamedTextColor.GREEN),
     DIAMOND(NamedTextColor.DARK_AQUA),
