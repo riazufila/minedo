@@ -37,20 +37,10 @@ permissions:
       - "minedo.command.ignore"
       - "minedo.command.message"
 
-  minedo.group.copper:
-    description: "Allow access to Copper features, along with the defaults."
+  minedo.group.gold:
+    description: "Allow access to Gold features, along with the defaults."
     children:
       - "minedo.group.default"
-
-  minedo.group.iron:
-    description: "Allow access to Iron features, along with Copper."
-    children:
-      - "minedo.group.copper"
-
-  minedo.group.gold:
-    description: "Allow access to Gold features, along with Iron."
-    children:
-      - "minedo.group.iron"
 
   minedo.group.emerald:
     description: "Allow access to Emerald features, along with Gold."
