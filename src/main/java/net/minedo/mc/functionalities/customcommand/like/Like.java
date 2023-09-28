@@ -62,6 +62,15 @@ public class Like implements CommandExecutor, TabCompleter {
         String likeTarget = args[0];
         Player otherPlayer = this.pluginInstance.getServer().getPlayer(likeTarget);
 
+        if (player.equals(otherPlayer)) {
+            player.sendMessage(Component
+                    .text(LikeMessage.ERROR_INVALID_TARGET.getMessage())
+                    .color(NamedTextColor.RED)
+            );
+
+            return true;
+        }
+
         if (otherPlayer != null && otherPlayer.isOnline()) {
             Instant instant = Instant.now();
 
