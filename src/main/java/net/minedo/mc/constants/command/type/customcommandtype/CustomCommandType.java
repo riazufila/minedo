@@ -7,7 +7,8 @@ public enum CustomCommandType {
     NARRATE("narrate"),
     LIKE("like"),
     IGNORE("ignore"),
-    MESSAGE("message");
+    MESSAGE("message"),
+    COLOR("color");
 
     private final String type;
 

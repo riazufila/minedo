@@ -70,4 +70,29 @@ public class PlayerColorRepository {
         return playerColor;
     }
 
+    public void updatePlayerColor(UUID playerUuid, PlayerColor playerColor) {
+        Database database = new Database();
+        database.connect();
+
+        PlayerProfileRepository playerProfileRepository = new PlayerProfileRepository();
+        PlayerProfile playerProfile = playerProfileRepository.getPlayerProfileByUuid(playerUuid);
+
+        String query = """
+                    UPDATE player_color
+                    SET
+                        prefix_preset = ?,
+                        content_preset = ?,
+                    WHERE
+                        (player_id = ?);
+                """;
+
+        HashMap<Integer, Object> replacements = new HashMap<>();
+        replacements.put(1, String.valueOf(playerColor.getPrefixPreset()));
+        replacements.put(2, String.valueOf(playerColor.getContentPreset()));
+        replacements.put(3, String.valueOf(playerProfile.getId()));
+        database.executeStatement(query, replacements);
+
+        database.disconnect();
+    }
+
 }

@@ -2,6 +2,7 @@ package net.minedo.mc.functionalities.customcommand;
 
 import net.minedo.mc.Minedo;
 import net.minedo.mc.constants.command.type.customcommandtype.CustomCommandType;
+import net.minedo.mc.functionalities.customcommand.color.Color;
 import net.minedo.mc.functionalities.customcommand.ignore.Ignore;
 import net.minedo.mc.functionalities.customcommand.like.Like;
 import net.minedo.mc.functionalities.customcommand.message.Message;
@@ -71,6 +72,11 @@ public class CustomCommand {
         Objects.requireNonNull(this.pluginInstance.getCommand(
                 CustomCommandType.MESSAGE.getMessage()
         )).setExecutor(new Message(this.pluginInstance));
+
+        // Color.
+        Objects.requireNonNull(this.pluginInstance.getCommand(
+                CustomCommandType.COLOR.getMessage()
+        )).setExecutor(new Color(this.pluginInstance));
     }
 
 }

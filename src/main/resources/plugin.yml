@@ -27,6 +27,9 @@ permissions:
   minedo.command.message:
     description: "Access to /message command."
 
+  minedo.command.color:
+    description: "Access to /color command."
+
   minedo.group.default:
     description: "Default features."
     default: true
@@ -41,6 +44,7 @@ permissions:
     description: "Allow access to Gold features, along with the defaults."
     children:
       - "minedo.group.default"
+      - "minedo.command.color"
 
   minedo.group.emerald:
     description: "Allow access to Emerald features, along with Gold."
@@ -93,3 +97,8 @@ commands:
     description: "Message a player."
     usage: "/message <player>"
     permission: "minedo.command.message"
+
+  color:
+    description: "Set color for name and chat."
+    usage: "/color <name | chat> <preset | custom> <color (preset or HEX)>"
+    permission: "minedo.command.color"
