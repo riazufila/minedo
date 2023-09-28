@@ -87,16 +87,22 @@ public class PlayerColorRepository {
                         prefix_preset = ?,
                         prefix_custom = ?,
                         content_preset = ?,
-                        content_custom = ?,
+                        content_custom = ?
                     WHERE
                         (player_id = ?);
                 """;
 
         HashMap<Integer, Object> replacements = new HashMap<>();
-        replacements.put(1, String.valueOf(playerColor.getPrefixPreset()));
-        replacements.put(2, String.valueOf(playerColor.getPrefixCustom()));
-        replacements.put(3, String.valueOf(playerColor.getContentPreset()));
-        replacements.put(4, String.valueOf(playerColor.getContentCustom()));
+
+        replacements.put(1, playerColor.getPrefixPreset() != null
+                ? String.valueOf(playerColor.getPrefixPreset()) : null);
+        replacements.put(2, playerColor.getPrefixCustom() != null
+                ? String.valueOf(playerColor.getPrefixCustom()) : null);
+        replacements.put(3, playerColor.getContentPreset() != null
+                ? String.valueOf(playerColor.getContentPreset()) : null);
+        replacements.put(4, playerColor.getContentCustom() != null
+                ? String.valueOf(playerColor.getContentCustom()) : null);
+
         replacements.put(5, String.valueOf(playerProfile.getId()));
         database.executeStatement(query, replacements);
 

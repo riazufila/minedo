@@ -1,7 +1,6 @@
 package net.minedo.mc.functionalities.chat;
 
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import net.minedo.mc.constants.groupcolor.GroupColor;
 import net.minedo.mc.constants.grouppermission.GroupPermission;
@@ -24,7 +23,7 @@ public final class ChatUtils {
             if (isCustom) {
                 component = component.color(TextColor.fromHexString(selectedColor));
             } else {
-                component = component.color(GroupColor.valueOf(selectedColor.toUpperCase()).getColor());
+                component = component.color(GroupColor.valueOf(selectedColor).getColor());
             }
         } else {
             if (player.hasPermission(GroupPermission.OBSIDIAN.getPermission())) {

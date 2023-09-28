@@ -76,7 +76,7 @@ public class CustomCommand {
         // Color.
         Objects.requireNonNull(this.pluginInstance.getCommand(
                 CustomCommandType.COLOR.getMessage()
-        )).setExecutor(new Color(this.pluginInstance));
+        )).setExecutor(new Color());
     }
 
 }
