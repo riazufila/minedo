@@ -21,7 +21,7 @@ public final class ChatUtils {
      * @param component Component
      * @return Component
      */
-    public static Component updateChatColor(Player player, Component component) {
+    public static Component updateChatContentColor(Player player, Component component) {
         String plainText = PlainTextComponentSerializer.plainText().serialize(component);
         char firstCharacter = plainText.charAt(0);
         boolean isUpdated = false;
@@ -130,6 +130,22 @@ public final class ChatUtils {
             component = Component.text(updatedText).color(namedTextColor);
         } else {
             component = Component.text(updatedText);
+        }
+
+        return component;
+    }
+
+    public static Component updateChatPrefixColor(Player player, Component component) {
+        if (player.hasPermission("minedo.group.obsidian")) {
+            component = component.color(NamedTextColor.DARK_PURPLE);
+        } else if (player.hasPermission("minedo.group.redstone")) {
+            component = component.color(NamedTextColor.DARK_RED);
+        } else if (player.hasPermission("minedo.group.diamond")) {
+            component = component.color(NamedTextColor.DARK_AQUA);
+        } else if (player.hasPermission("minedo.group.emerald")) {
+            component = component.color(NamedTextColor.GREEN);
+        } else if (player.hasPermission("minedo.group.gold")) {
+            component = component.color(NamedTextColor.GOLD);
         }
 
         return component;

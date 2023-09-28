@@ -12,7 +12,7 @@ public class ChatColor implements Listener {
     @EventHandler
     public void onAsyncChat(AsyncChatEvent event) {
         Player player = event.getPlayer();
-        Component component = ChatUtils.updateChatColor(player, event.message());
+        Component component = ChatUtils.updateChatContentColor(player, event.message());
         event.message(component);
     }
 
