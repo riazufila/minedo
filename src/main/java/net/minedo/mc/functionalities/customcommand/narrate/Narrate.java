@@ -55,15 +55,20 @@ public class Narrate implements CommandExecutor, TabCompleter {
 
             if (!(playerBlockedRepository.isPlayerBlockedByPlayer(
                     player.getUniqueId(), onlinePlayer.getUniqueId()))) {
-                String content = String.join(StringUtils.SPACE, args);
-                String STRING_FORMAT = "\"%s\" says %s.";
-                Component component = Component.text(String.format(STRING_FORMAT, content, player.getName()));
+                Component playerNameComponent = Component.text(player.getName());
+                Component contentComponent = Component.text(String.join(StringUtils.SPACE, args));
 
-                component = ChatUtils
-                        .updateComponentColor(player, component, true)
+                Component combinedComponents = Component
+                        .textOfChildren(
+                                Component.text("\""),
+                                ChatUtils.updateComponentColor(player, contentComponent, true),
+                                Component.text("\" says "),
+                                ChatUtils.updateComponentColor(player, playerNameComponent, false),
+                                Component.text(".")
+                        )
                         .decoration(TextDecoration.ITALIC, true);
 
-                onlinePlayer.sendMessage(component);
+                onlinePlayer.sendMessage(combinedComponents);
             }
         }
 
