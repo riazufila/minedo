@@ -18,12 +18,12 @@ public final class ChatUtils {
         String selectedColor = chatInfo.getSelectedColor();
         boolean isCustom = chatInfo.isCustom();
 
-        if (!validatePlayerPermissionForColorSetting(player, isCustom
-                ? ColorType.CUSTOM.getType() : ColorType.PRESET.getType(), selectedColor)) {
-            return component;
-        }
-
         if (selectedColor != null) {
+            if (!validatePlayerPermissionForColorSetting(player, isCustom
+                    ? ColorType.CUSTOM.getType() : ColorType.PRESET.getType(), selectedColor)) {
+                return component;
+            }
+
             if (isCustom) {
                 component = component.color(TextColor.fromHexString(selectedColor));
             } else {
@@ -77,6 +77,12 @@ public final class ChatUtils {
     }
 
     public static boolean validatePlayerPermissionForColorSetting(Player player, String colorType, String color) {
+        if (color.equals(ColorType.REMOVE.getType())) {
+            if (player.hasPermission(GroupPermission.GOLD.getPermission())) {
+                return true;
+            }
+        }
+
         if (colorType.equals(ColorType.CUSTOM.getType())) {
             return player.hasPermission(GroupPermission.OBSIDIAN.getPermission());
         } else if (colorType.equals(ColorType.PRESET.getType())) {

@@ -5,7 +5,8 @@ public enum ColorType {
     NAME("name"),
     CHAT("chat"),
     PRESET("preset"),
-    CUSTOM("custom");
+    CUSTOM("custom"),
+    REMOVE("remove");
 
     private final String type;
 

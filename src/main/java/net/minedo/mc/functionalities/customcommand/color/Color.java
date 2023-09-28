@@ -29,6 +29,8 @@ public class Color implements CommandExecutor, TabCompleter {
         String chatOrName = args[0];
         String colorType = args[1];
 
+        // TODO: Validate HEX value if color type is custom and last argument is not 'remove'.
+
         return (chatOrName.equals(ColorType.NAME.getType()) || chatOrName.equals(ColorType.CHAT.getType()))
                 && (colorType.equals(ColorType.PRESET.getType()) || colorType.equals(ColorType.CUSTOM.getType()));
     }
@@ -52,7 +54,7 @@ public class Color implements CommandExecutor, TabCompleter {
 
         String chatOrName = args[0];
         String colorType = args[1];
-        String color = args[2].toUpperCase();
+        String color = args[2];
 
         if (!ChatUtils.validatePlayerPermissionForColorSetting(player, colorType, color)) {
             player.sendMessage(Component
@@ -66,18 +68,19 @@ public class Color implements CommandExecutor, TabCompleter {
         UUID playerUuid = player.getUniqueId();
         PlayerColorRepository playerColorRepository = new PlayerColorRepository();
         PlayerColor playerColor = playerColorRepository.getPlayerColorByPlayerUuid(playerUuid);
+        String updatedColor = color.equals(ColorType.REMOVE.getType()) ? null : color.toUpperCase();
 
         if (chatOrName.equals(ColorType.NAME.getType())) {
             if (colorType.equals(ColorType.PRESET.getType())) {
-                playerColor.setPrefixPreset(color);
+                playerColor.setPrefixPreset(updatedColor);
             } else if (colorType.equals(ColorType.CUSTOM.getType())) {
-                playerColor.setPrefixCustom(color);
+                playerColor.setPrefixCustom(updatedColor);
             }
         } else if (chatOrName.equals(ColorType.CHAT.getType())) {
             if (colorType.equals(ColorType.PRESET.getType())) {
-                playerColor.setContentPreset(color);
+                playerColor.setContentPreset(updatedColor);
             } else if (colorType.equals(ColorType.CUSTOM.getType())) {
-                playerColor.setContentCustom(color);
+                playerColor.setContentCustom(updatedColor);
             }
         }
 
@@ -107,10 +110,14 @@ public class Color implements CommandExecutor, TabCompleter {
         } else if (args.length == 2) {
             completions.add(ColorType.PRESET.getType());
             completions.add(ColorType.CUSTOM.getType());
-        } else if (args[1].equals(ColorType.PRESET.getType()) && args.length == 3) {
-            for (GroupColor color : GroupColor.values()) {
-                completions.add(color.toString().toLowerCase());
+        } else if (args.length == 3) {
+            if (args[1].equals(ColorType.PRESET.getType())) {
+                for (GroupColor color : GroupColor.values()) {
+                    completions.add(color.toString().toLowerCase());
+                }
             }
+
+            completions.add(ColorType.REMOVE.getType());
         }
 
         return completions;

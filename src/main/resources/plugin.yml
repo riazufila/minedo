@@ -100,5 +100,5 @@ commands:
 
   color:
     description: "Set color for name and chat."
-    usage: "/color <name | chat> <preset | custom> <color (preset or HEX)>"
+    usage: "/color <name | chat> <preset | custom> <color (preset or HEX) | remove>"
     permission: "minedo.command.color"
