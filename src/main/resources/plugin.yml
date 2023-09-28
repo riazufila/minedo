@@ -95,7 +95,7 @@ commands:
 
   message:
     description: "Message a player."
-    usage: "/message <player>"
+    usage: "/message <player> <content>"
     permission: "minedo.command.message"
 
   color:
