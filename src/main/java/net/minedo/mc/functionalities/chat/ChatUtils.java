@@ -17,6 +17,8 @@ public final class ChatUtils {
         String selectedColor = chatInfo.getSelectedColor();
         boolean isCustom = chatInfo.isCustom();
 
+        // No verification is needed for selected color, as they're all done in addition/update process.
+        // Players wouldn't be able to select colors that are out of their permission in the first place.
         if (selectedColor != null) {
             if (isCustom) {
                 component = component.color(TextColor.fromHexString(selectedColor));
