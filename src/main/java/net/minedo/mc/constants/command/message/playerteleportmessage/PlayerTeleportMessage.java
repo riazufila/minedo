@@ -1,5 +1,6 @@
 package net.minedo.mc.constants.command.message.playerteleportmessage;
 
+import net.minedo.mc.constants.command.type.customcommandtype.CustomCommandType;
 import net.minedo.mc.constants.command.type.playerteleporttype.PlayerTeleportType;
 
 public enum PlayerTeleportMessage {
@@ -13,7 +14,8 @@ public enum PlayerTeleportMessage {
     INFO_DISCARD_REQUESTEE("%s discarded the teleport request."),
     INFO_DISCARD_REQUESTER("You discarded the teleport request."),
     INFO_COUNTDOWN("%s.."),
-    ERROR_USAGE(String.format("Usage: /teleport <%s <player> | %s | %s | %s>",
+    ERROR_USAGE(String.format("Usage: /%s <%s <player> | %s | %s | %s>",
+            CustomCommandType.PLAYER_TELEPORT.getMessage(),
             PlayerTeleportType.REQUEST.getType(),
             PlayerTeleportType.ACCEPT.getType(),
             PlayerTeleportType.DECLINE.getType(),
