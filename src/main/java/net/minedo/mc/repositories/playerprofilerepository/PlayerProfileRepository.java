@@ -46,13 +46,11 @@ public class PlayerProfileRepository {
             if (resultSet.next()) {
                 int id = resultSet.getInt("id");
                 UUID uuid = UUID.fromString(resultSet.getString("uuid"));
-                String nameColor = resultSet.getString("name_color");
                 String nickname = resultSet.getString("nickname");
 
                 playerProfile = new PlayerProfile();
                 playerProfile.setId(id);
                 playerProfile.setUuid(uuid);
-                playerProfile.setNameColor(nameColor);
                 playerProfile.setNickname(nickname);
             }
         } catch (SQLException error) {
@@ -82,13 +80,11 @@ public class PlayerProfileRepository {
             if (resultSet.next()) {
                 int id = resultSet.getInt("id");
                 UUID uuid = UUID.fromString(resultSet.getString("uuid"));
-                String nameColor = resultSet.getString("name_color");
                 String nickname = resultSet.getString("nickname");
 
                 playerProfile = new PlayerProfile();
                 playerProfile.setId(id);
                 playerProfile.setUuid(uuid);
-                playerProfile.setNameColor(nameColor);
                 playerProfile.setNickname(nickname);
             }
         } catch (SQLException error) {

@@ -9,9 +9,16 @@ USE minedo;
 CREATE TABLE player_profile (
     id INT NOT NULL AUTO_INCREMENT,
     uuid VARCHAR(36) NOT NULL,
-    name_color VARCHAR(7) DEFAULT NULL,
     nickname VARCHAR(20) DEFAULT NULL,
     PRIMARY KEY (id)
+);
+
+CREATE TABLE player_color (
+    player_id int NOT NULL,
+    prefix_preset VARCHAR(20) DEFAULT NULL,
+    content_preset VARCHAR(20) DEFAULT NULL,
+    UNIQUE KEY player_id_UNIQUE (player_id),
+    FOREIGN KEY (player_id) REFERENCES player_profile (id)
 );
 
 CREATE TABLE player_like (
