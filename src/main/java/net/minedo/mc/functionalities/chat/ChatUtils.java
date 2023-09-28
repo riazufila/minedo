@@ -2,6 +2,7 @@ package net.minedo.mc.functionalities.chat;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
+import net.minedo.mc.constants.command.type.colortype.ColorType;
 import net.minedo.mc.constants.groupcolor.GroupColor;
 import net.minedo.mc.constants.grouppermission.GroupPermission;
 import net.minedo.mc.models.playercolor.PlayerColor;
@@ -17,8 +18,11 @@ public final class ChatUtils {
         String selectedColor = chatInfo.getSelectedColor();
         boolean isCustom = chatInfo.isCustom();
 
-        // No verification is needed for selected color, as they're all done in addition/update process.
-        // Players wouldn't be able to select colors that are out of their permission in the first place.
+        if (!verifyPlayerPermissionForColorSetting(player, isCustom
+                ? ColorType.CUSTOM.getType() : ColorType.PRESET.getType(), selectedColor)) {
+            return component;
+        }
+
         if (selectedColor != null) {
             if (isCustom) {
                 component = component.color(TextColor.fromHexString(selectedColor));
@@ -66,6 +70,31 @@ public final class ChatUtils {
         }
 
         return new ChatInfo(isCustom, selectedColor);
+    }
+
+    private static boolean isGroupColorTheSame(String color, GroupColor groupColor) {
+        return GroupColor.valueOf(color.toUpperCase()).equals(groupColor);
+    }
+
+    public static boolean verifyPlayerPermissionForColorSetting(Player player, String colorType, String color) {
+        if (colorType.equals(ColorType.CUSTOM.getType())
+                && !(player.hasPermission(GroupPermission.OBSIDIAN.getPermission()))
+        ) {
+            return false;
+        } else if (colorType.equals(ColorType.PRESET.getType())) {
+            return (!isGroupColorTheSame(color, GroupColor.OBSIDIAN)
+                    || player.hasPermission(GroupPermission.OBSIDIAN.getPermission()))
+                    && (!isGroupColorTheSame(color, GroupColor.REDSTONE)
+                    || player.hasPermission(GroupPermission.REDSTONE.getPermission()))
+                    && (!isGroupColorTheSame(color, GroupColor.DIAMOND)
+                    || player.hasPermission(GroupPermission.DIAMOND.getPermission()))
+                    && (!isGroupColorTheSame(color, GroupColor.EMERALD)
+                    || player.hasPermission(GroupPermission.EMERALD.getPermission()))
+                    && (!isGroupColorTheSame(color, GroupColor.GOLD)
+                    || player.hasPermission(GroupPermission.GOLD.getPermission()));
+        }
+
+        return true;
     }
 
 }
