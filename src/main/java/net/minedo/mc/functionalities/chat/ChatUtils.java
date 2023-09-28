@@ -4,6 +4,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import net.minedo.mc.constants.groupcolor.GroupColor;
+import net.minedo.mc.constants.grouppermission.GroupPermission;
 import net.minedo.mc.models.playercolor.PlayerColor;
 import net.minedo.mc.repositories.playercolorrepository.PlayerColorRepository;
 import org.bukkit.entity.Player;
@@ -26,15 +27,15 @@ public final class ChatUtils {
                 component = component.color(GroupColor.valueOf(selectedColor.toUpperCase()).getColor());
             }
         } else {
-            if (player.hasPermission("minedo.group.obsidian")) {
+            if (player.hasPermission(GroupPermission.OBSIDIAN.getPermission())) {
                 component = component.color(GroupColor.OBSIDIAN.getColor());
-            } else if (player.hasPermission("minedo.group.redstone")) {
+            } else if (player.hasPermission(GroupPermission.REDSTONE.getPermission())) {
                 component = component.color(GroupColor.REDSTONE.getColor());
-            } else if (player.hasPermission("minedo.group.diamond")) {
+            } else if (player.hasPermission(GroupPermission.DIAMOND.getPermission())) {
                 component = component.color(GroupColor.DIAMOND.getColor());
-            } else if (player.hasPermission("minedo.group.emerald")) {
+            } else if (player.hasPermission(GroupPermission.EMERALD.getPermission())) {
                 component = component.color(GroupColor.EMERALD.getColor());
-            } else if (player.hasPermission("minedo.group.gold")) {
+            } else if (player.hasPermission(GroupPermission.GOLD.getPermission())) {
                 component = component.color(GroupColor.GOLD.getColor());
             }
         }

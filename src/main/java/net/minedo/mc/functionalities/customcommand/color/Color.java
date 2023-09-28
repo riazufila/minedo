@@ -6,6 +6,7 @@ import net.minedo.mc.Minedo;
 import net.minedo.mc.constants.command.message.colormessage.ColorMessage;
 import net.minedo.mc.constants.command.type.colortype.ColorType;
 import net.minedo.mc.constants.groupcolor.GroupColor;
+import net.minedo.mc.constants.grouppermission.GroupPermission;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -22,6 +23,31 @@ public class Color implements CommandExecutor, TabCompleter {
 
     public Color(Minedo pluginInstance) {
         this.pluginInstance = pluginInstance;
+    }
+
+    private boolean isGroupColorTheSame(String color, GroupColor groupColor) {
+        return GroupColor.valueOf(color.toUpperCase()).equals(groupColor);
+    }
+
+    private boolean verifyPlayerPermission(Player player, String colorType, String color) {
+        if (colorType.equals(ColorType.CUSTOM.getType())
+                && !(player.hasPermission(GroupPermission.OBSIDIAN.getPermission()))
+        ) {
+            return false;
+        } else if (colorType.equals(ColorType.PRESET.getType())) {
+            return (!this.isGroupColorTheSame(color, GroupColor.OBSIDIAN)
+                    || player.hasPermission(GroupPermission.OBSIDIAN.getPermission()))
+                    && (!this.isGroupColorTheSame(color, GroupColor.REDSTONE)
+                    || player.hasPermission(GroupPermission.REDSTONE.getPermission()))
+                    && (!this.isGroupColorTheSame(color, GroupColor.DIAMOND)
+                    || player.hasPermission(GroupPermission.DIAMOND.getPermission()))
+                    && (!this.isGroupColorTheSame(color, GroupColor.EMERALD)
+                    || player.hasPermission(GroupPermission.EMERALD.getPermission()))
+                    && (!this.isGroupColorTheSame(color, GroupColor.GOLD)
+                    || player.hasPermission(GroupPermission.GOLD.getPermission()));
+        }
+
+        return true;
     }
 
     private boolean isCommandValid(String[] args) {
@@ -48,6 +74,19 @@ public class Color implements CommandExecutor, TabCompleter {
             player.sendMessage(Component
                     .text(ColorMessage.ERROR_USAGE.getMessage())
                     .color(NamedTextColor.GRAY)
+            );
+
+            return true;
+        }
+
+        String chatOrName = args[0];
+        String colorType = args[1];
+        String color = args[2];
+
+        if (!this.verifyPlayerPermission(player, colorType, color)) {
+            player.sendMessage(Component
+                    .text(ColorMessage.ERROR_NO_PERMISSION.getMessage())
+                    .color(NamedTextColor.RED)
             );
 
             return true;
