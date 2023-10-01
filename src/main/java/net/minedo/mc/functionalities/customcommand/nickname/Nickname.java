@@ -5,6 +5,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.minedo.mc.Minedo;
 import net.minedo.mc.constants.command.message.nicknamemessage.NicknameMessage;
 import net.minedo.mc.constants.command.type.nicknametype.NicknameType;
+import net.minedo.mc.models.playerprofile.PlayerProfile;
 import net.minedo.mc.repositories.playerprofilerepository.PlayerProfileRepository;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -85,7 +86,13 @@ public class Nickname implements CommandExecutor, TabCompleter, Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
-        // TODO: Remove existing nickname for when a new player with the same real name joins.
+        Player newPlayer = event.getPlayer();
+        PlayerProfileRepository playerProfileRepository = new PlayerProfileRepository();
+        PlayerProfile existingPlayerProfile = playerProfileRepository.getPlayerProfileByNickname(newPlayer.getName());
+
+        if (existingPlayerProfile != null) {
+            playerProfileRepository.updatePlayerNickname(existingPlayerProfile.getUuid(), null);
+        }
     }
 
 }

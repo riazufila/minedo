@@ -64,6 +64,40 @@ public class PlayerProfileRepository {
         return playerProfile;
     }
 
+    public PlayerProfile getPlayerProfileByNickname(String playerName) {
+        Database database = new Database();
+        database.connect();
+
+        PlayerProfile playerProfile = null;
+
+        try {
+            String query = """
+                        SELECT * FROM player_profile WHERE UPPER(nickname) = ?;
+                    """;
+
+            HashMap<Integer, String> replacements = new HashMap<>();
+            replacements.put(1, playerName.toUpperCase());
+            ResultSet resultSet = database.queryWithWhereClause(query, replacements);
+
+            if (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                UUID uuid = UUID.fromString(resultSet.getString("uuid"));
+                String nickname = resultSet.getString("nickname");
+
+                playerProfile = new PlayerProfile();
+                playerProfile.setId(id);
+                playerProfile.setUuid(uuid);
+                playerProfile.setNickname(nickname);
+            }
+        } catch (SQLException error) {
+            this.logger.severe(String.format("Unable to get player profile by nickname: %s", error.getMessage()));
+        } finally {
+            database.disconnect();
+        }
+
+        return playerProfile;
+    }
+
     public void updatePlayerNickname(UUID playerUuid, String nickname) {
         Database database = new Database();
         database.connect();
