@@ -10,6 +10,7 @@ CREATE TABLE player_profile (
     id INT NOT NULL AUTO_INCREMENT,
     uuid VARCHAR(36) NOT NULL,
     nickname VARCHAR(20) DEFAULT NULL,
+    UNIQUE KEY nickname_UNIQUE (nickname),
     PRIMARY KEY (id)
 );
 

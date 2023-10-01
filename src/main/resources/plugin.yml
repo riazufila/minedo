@@ -30,6 +30,9 @@ permissions:
   minedo.command.color:
     description: "Access to /color command."
 
+  minedo.command.nickname:
+    description: "Access to /nickname command."
+
   minedo.group.default:
     description: "Default features."
     default: true
@@ -60,6 +63,7 @@ permissions:
     description: "Allow access to Redstone features, along with Diamond."
     children:
       - "minedo.group.diamond"
+      - "minedo.command.nickname"
 
   minedo.group.obsidian:
     description: "Allow access to Obsidian features, along with Redstone."
@@ -102,3 +106,8 @@ commands:
     description: "Set color for name and chat."
     usage: "/color <name | chat> <preset | custom> <color (preset or HEX) | remove>"
     permission: "minedo.command.color"
+
+  nickname:
+    description: "Set and reveal nicknames."
+    usage: "/nickname <set <nickname> | reveal <nickname> | remove>"
+    permission: "minedo.command.nickname"

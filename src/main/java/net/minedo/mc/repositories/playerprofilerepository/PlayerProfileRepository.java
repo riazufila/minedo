@@ -5,7 +5,9 @@ import net.minedo.mc.repositories.Database;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
 
@@ -62,38 +64,58 @@ public class PlayerProfileRepository {
         return playerProfile;
     }
 
-    public PlayerProfile getPlayerProfileById(int playerId) {
+    public void updatePlayerNickname(UUID playerUuid, String nickname) {
         Database database = new Database();
         database.connect();
 
-        PlayerProfile playerProfile = null;
+        String query = """
+                    UPDATE player_profile
+                    SET
+                        nickname = ?
+                    WHERE
+                        (uuid = ?);
+                """;
+
+        HashMap<Integer, Object> replacements = new HashMap<>();
+        replacements.put(1, nickname);
+        replacements.put(2, String.valueOf(playerUuid));
+        database.executeStatement(query, replacements);
+
+        database.disconnect();
+    }
+
+    public List<String> getOtherPlayersNickname(UUID playerUuid) {
+        Database database = new Database();
+        database.connect();
+
+        List<String> otherPlayersNickname = new ArrayList<>();
 
         try {
             String query = """
-                        SELECT * FROM player_profile WHERE uuid = ?;
+                        SELECT
+                            nickname
+                        FROM
+                            player_profile
+                        WHERE
+                            nickname IS NOT NULL
+                                AND uuid != ?;
                     """;
 
             HashMap<Integer, String> replacements = new HashMap<>();
-            replacements.put(1, String.valueOf(playerId));
+            replacements.put(1, String.valueOf(playerUuid));
             ResultSet resultSet = database.queryWithWhereClause(query, replacements);
 
             if (resultSet.next()) {
-                int id = resultSet.getInt("id");
-                UUID uuid = UUID.fromString(resultSet.getString("uuid"));
                 String nickname = resultSet.getString("nickname");
-
-                playerProfile = new PlayerProfile();
-                playerProfile.setId(id);
-                playerProfile.setUuid(uuid);
-                playerProfile.setNickname(nickname);
+                otherPlayersNickname.add(nickname);
             }
         } catch (SQLException error) {
-            this.logger.severe(String.format("Unable to get player profile by id: %s", error.getMessage()));
+            this.logger.severe(String.format("Unable to get other player nicknames: %s", error.getMessage()));
         } finally {
             database.disconnect();
         }
 
-        return playerProfile;
+        return otherPlayersNickname;
     }
 
 }

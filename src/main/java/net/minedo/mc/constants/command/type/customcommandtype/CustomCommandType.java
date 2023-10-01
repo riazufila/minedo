@@ -8,7 +8,8 @@ public enum CustomCommandType {
     LIKE("like"),
     IGNORE("ignore"),
     MESSAGE("message"),
-    COLOR("color");
+    COLOR("color"),
+    NICKNAME("nickname");
 
     private final String type;
 
