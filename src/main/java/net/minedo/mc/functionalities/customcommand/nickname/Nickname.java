@@ -200,9 +200,14 @@ public class Nickname implements CommandExecutor, TabCompleter, Listener {
 
         if (args.length == 1) {
             completions.add(NicknameType.SET.getType());
-            completions.add(NicknameType.REVEAL.getType());
             completions.add(NicknameType.REMOVE.getType());
-        } else if (args.length == 2 && args[0].equals(NicknameType.REVEAL.getType())) {
+
+            if (ChatUtils.validatePlayerPermissionForNicknameReveal(player)) {
+                completions.add(NicknameType.REVEAL.getType());
+            }
+        } else if (args.length == 2
+                && args[0].equals(NicknameType.REVEAL.getType())
+                && ChatUtils.validatePlayerPermissionForNicknameReveal(player)) {
             PlayerProfileRepository playerProfileRepository = new PlayerProfileRepository();
             Collection<? extends Player> onlinePlayers = this.pluginInstance.getServer().getOnlinePlayers();
 
