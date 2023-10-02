@@ -352,11 +352,15 @@ public class PlayerTeleport implements CommandExecutor, Listener, TabCompleter {
             return completions;
         }
 
+        List<String> teleportTypes = new ArrayList<>() {{
+            add(PlayerTeleportType.REQUEST.getType());
+            add(PlayerTeleportType.ACCEPT.getType());
+            add(PlayerTeleportType.DECLINE.getType());
+            add(PlayerTeleportType.DISCARD.getType());
+        }};
+
         if (args.length == 1) {
-            completions.add(PlayerTeleportType.REQUEST.getType());
-            completions.add(PlayerTeleportType.ACCEPT.getType());
-            completions.add(PlayerTeleportType.DECLINE.getType());
-            completions.add(PlayerTeleportType.DISCARD.getType());
+            completions.addAll(teleportTypes);
         } else if (args.length == 2 && Objects.equals(args[0], PlayerTeleportType.REQUEST.getType())) {
             Collection<? extends Player> onlinePlayers = this.pluginInstance.getServer().getOnlinePlayers();
 
