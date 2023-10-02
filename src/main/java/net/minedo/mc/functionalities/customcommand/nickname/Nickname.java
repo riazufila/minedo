@@ -19,6 +19,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Nickname implements CommandExecutor, TabCompleter, Listener {
 
@@ -28,12 +30,35 @@ public class Nickname implements CommandExecutor, TabCompleter, Listener {
         this.pluginInstance = pluginInstance;
     }
 
+    private boolean isValidNickname(String nickname) {
+        if (nickname == null) {
+            return false;
+        }
+
+        String NAME_REGEX = "^[a-zA-Z][a-zA-Z0-9]{0,19}$";
+        Pattern pattern = Pattern.compile(NAME_REGEX);
+        Matcher matcher = pattern.matcher(nickname);
+
+        return matcher.matches();
+    }
+
     private boolean isCommandValid(String[] args) {
-        // TODO: Validate command usage.
+        if (args.length == 0) {
+            return false;
+        }
 
-        // TODO: Validate nickname format.
+        String nicknameType = args[0];
 
-        return true;
+        if (nicknameType.equals(NicknameType.SET.getType())
+                || nicknameType.equals(NicknameType.REVEAL.getType())) {
+            return args.length == 2;
+        }
+
+        if (nicknameType.equals(NicknameType.REMOVE.getType())) {
+            return args.length == 1;
+        }
+
+        return false;
     }
 
     @Override
@@ -51,6 +76,22 @@ public class Nickname implements CommandExecutor, TabCompleter, Listener {
             );
 
             return true;
+        }
+
+        String nicknameType = args[0];
+
+        if (nicknameType.equals(NicknameType.SET.getType())
+                || nicknameType.equals(NicknameType.REVEAL.getType())) {
+            String nickname = args[1];
+
+            if (!this.isValidNickname(nickname)) {
+                player.sendMessage(Component
+                        .text(NicknameMessage.ERROR_INVALID_NICKNAME.getMessage())
+                        .color(NamedTextColor.RED)
+                );
+
+                return true;
+            }
         }
 
         // TODO: Check if nickname is already inside a list of mixed real names and nicknames.
