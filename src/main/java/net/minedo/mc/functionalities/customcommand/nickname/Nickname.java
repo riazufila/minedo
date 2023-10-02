@@ -113,6 +113,8 @@ public class Nickname implements CommandExecutor, TabCompleter, Listener {
                             otherPlayersRealName.stream().map(String::toUpperCase))
                     .toList();
 
+            // Nickname is unique among a collection of online players' real name
+            // and offline and online players' nickname.
             if (realNamesAndNicknames.contains(nickname.toUpperCase())) {
                 player.sendMessage(Component
                         .text(NicknameMessage.INFO_NICKNAME_TAKEN.getMessage())
@@ -122,7 +124,12 @@ public class Nickname implements CommandExecutor, TabCompleter, Listener {
                 return true;
             }
 
-            // TODO: Trim nickname of w
+            playerProfileRepository.updatePlayerNickname(player.getUniqueId(), nickname);
+
+            player.sendMessage(Component
+                    .text(NicknameMessage.SUCCESS_SET_NICKNAME.getMessage())
+                    .color(NamedTextColor.GREEN)
+            );
         } else if (nicknameType.equals(NicknameType.REVEAL.getType())) {
             // TODO: Reveal nickname of an online player.
         } else if (nicknameType.equals(NicknameType.REMOVE.getType())) {
