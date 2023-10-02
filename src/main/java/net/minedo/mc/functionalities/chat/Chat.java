@@ -2,7 +2,7 @@ package net.minedo.mc.functionalities.chat;
 
 import net.minedo.mc.Minedo;
 import net.minedo.mc.functionalities.chat.blocked.ChatBlocked;
-import net.minedo.mc.functionalities.chat.color.ChatColor;
+import net.minedo.mc.functionalities.chat.box.ChatBox;
 import net.minedo.mc.functionalities.chat.timeout.ChatTimeout;
 
 public class Chat {
@@ -19,9 +19,9 @@ public class Chat {
                 new ChatTimeout(this.pluginInstance), this.pluginInstance
         );
 
-        // Chat color.
+        // Chat box.
         this.pluginInstance.getServer().getPluginManager().registerEvents(
-                new ChatColor(),
+                new ChatBox(),
                 this.pluginInstance
         );
 
