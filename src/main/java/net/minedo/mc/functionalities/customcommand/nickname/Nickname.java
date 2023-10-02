@@ -133,7 +133,13 @@ public class Nickname implements CommandExecutor, TabCompleter, Listener {
         } else if (nicknameType.equals(NicknameType.REVEAL.getType())) {
             // TODO: Reveal nickname of an online player.
         } else if (nicknameType.equals(NicknameType.REMOVE.getType())) {
-            // TODO: Remove nickname.
+            PlayerProfileRepository playerProfileRepository = new PlayerProfileRepository();
+            playerProfileRepository.updatePlayerNickname(player.getUniqueId(), null);
+
+            player.sendMessage(Component
+                    .text(NicknameMessage.SUCCESS_REMOVE_NICKNAME.getMessage())
+                    .color(NamedTextColor.GREEN)
+            );
         } else {
             player.sendMessage(Component
                     .text(NicknameMessage.ERROR_USAGE.getMessage())
