@@ -119,6 +119,53 @@ public class PlayerProfileRepository {
         database.disconnect();
     }
 
+    /**
+     * Get all players' nicknames aside from oneself.
+     *
+     * @param playerUuid UUID of player to exclude from results.
+     * @return List of nicknames.
+     */
+    public List<String> getOtherPlayersNickname(UUID playerUuid) {
+        Database database = new Database();
+        database.connect();
+
+        List<String> otherPlayersNickname = new ArrayList<>();
+
+        try {
+            String query = """
+                        SELECT
+                            nickname
+                        FROM
+                            player_profile
+                        WHERE
+                            nickname IS NOT NULL
+                                AND uuid != ?;
+                    """;
+
+            HashMap<Integer, String> replacements = new HashMap<>();
+            replacements.put(1, String.valueOf(playerUuid));
+            ResultSet resultSet = database.queryWithWhereClause(query, replacements);
+
+            if (resultSet.next()) {
+                String nickname = resultSet.getString("nickname");
+                otherPlayersNickname.add(nickname);
+            }
+        } catch (SQLException error) {
+            this.logger.severe(String.format("Unable to get other player nicknames: %s", error.getMessage()));
+        } finally {
+            database.disconnect();
+        }
+
+        return otherPlayersNickname;
+    }
+
+    /**
+     * Get all players' nicknames aside from oneself within a pool of players.
+     *
+     * @param playerUuid UUID of player to exclude from results.
+     * @param otherOnlinePlayers List of UUID of players to search within.
+     * @return List of nicknames.
+     */
     public List<String> getOtherPlayersNickname(UUID playerUuid, List<UUID> otherOnlinePlayers) {
         Database database = new Database();
         database.connect();

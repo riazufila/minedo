@@ -19,6 +19,7 @@ public enum NicknameMessage {
                     + "consists of only letters and digits, "
                     + "and does not start with a digit."
     ),
+    INFO_NICKNAME_TAKEN("Nickname taken."),
     SUCCESS_SET_NICKNAME("Nickname updated."),
     SUCCESS_REVEAL_NICKNAME("%s's real name is %s."),
     SUCCESS_REMOVE_NICKNAME("Nickname removed.");

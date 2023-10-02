@@ -22,6 +22,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 public class Nickname implements CommandExecutor, TabCompleter, Listener {
 
@@ -95,9 +96,45 @@ public class Nickname implements CommandExecutor, TabCompleter, Listener {
             }
         }
 
-        // TODO: Check if nickname is already inside a list of mixed real names and nicknames.
+        if (nicknameType.equals(NicknameType.SET.getType())) {
+            String nickname = args[1];
 
-        // TODO: Update, reveal, remove nickname.
+            PlayerProfileRepository playerProfileRepository = new PlayerProfileRepository();
+            List<String> otherPlayersNickname = playerProfileRepository.getOtherPlayersNickname(player.getUniqueId());
+            List<String> otherPlayersRealName = this.pluginInstance.getServer()
+                    .getOnlinePlayers()
+                    .stream()
+                    .filter(otherPlayer -> otherPlayer != player )
+                    .map(Player::getName)
+                    .toList();
+
+            List<String> realNamesAndNicknames = Stream
+                    .concat(otherPlayersNickname.stream().map(String::toUpperCase),
+                            otherPlayersRealName.stream().map(String::toUpperCase))
+                    .toList();
+
+            if (realNamesAndNicknames.contains(nickname.toUpperCase())) {
+                player.sendMessage(Component
+                        .text(NicknameMessage.INFO_NICKNAME_TAKEN.getMessage())
+                        .color(NamedTextColor.YELLOW)
+                );
+
+                return true;
+            }
+
+            // TODO: Trim nickname of w
+        } else if (nicknameType.equals(NicknameType.REVEAL.getType())) {
+            // TODO: Reveal nickname of an online player.
+        } else if (nicknameType.equals(NicknameType.REMOVE.getType())) {
+            // TODO: Remove nickname.
+        } else {
+            player.sendMessage(Component
+                    .text(NicknameMessage.ERROR_USAGE.getMessage())
+                    .color(NamedTextColor.GRAY)
+            );
+
+            return true;
+        }
 
         return true;
     }
