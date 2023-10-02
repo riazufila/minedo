@@ -102,8 +102,12 @@ public final class ChatUtils {
         return true;
     }
 
-    public static boolean validatePlayerPermissionForNickname(Player player) {
+    public static boolean validatePlayerPermissionForNicknameDisplay(Player player) {
         return player.hasPermission(GroupPermission.REDSTONE.getPermission());
+    }
+
+    public static boolean validatePlayerPermissionForNicknameReveal(Player player) {
+        return player.hasPermission(GroupPermission.OBSIDIAN.getPermission());
     }
 
 }

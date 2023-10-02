@@ -22,7 +22,7 @@ public class ChatBox implements Listener {
             String nickname = playerProfile.getNickname();
             Component nameComponent = sourceDisplayName;
 
-            if (ChatUtils.validatePlayerPermissionForNickname(player) && nickname != null) {
+            if (ChatUtils.validatePlayerPermissionForNicknameDisplay(player) && nickname != null) {
                 nameComponent = Component.text(nickname);
             }
 

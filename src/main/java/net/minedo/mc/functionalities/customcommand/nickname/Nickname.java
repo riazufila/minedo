@@ -5,6 +5,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.minedo.mc.Minedo;
 import net.minedo.mc.constants.command.message.nicknamemessage.NicknameMessage;
 import net.minedo.mc.constants.command.type.nicknametype.NicknameType;
+import net.minedo.mc.functionalities.chat.ChatUtils;
 import net.minedo.mc.models.playerprofile.PlayerProfile;
 import net.minedo.mc.repositories.playerprofilerepository.PlayerProfileRepository;
 import org.bukkit.command.Command;
@@ -104,7 +105,7 @@ public class Nickname implements CommandExecutor, TabCompleter, Listener {
             List<String> otherPlayersRealName = this.pluginInstance.getServer()
                     .getOnlinePlayers()
                     .stream()
-                    .filter(otherPlayer -> otherPlayer != player )
+                    .filter(otherPlayer -> otherPlayer != player)
                     .map(Player::getName)
                     .toList();
 
@@ -131,7 +132,42 @@ public class Nickname implements CommandExecutor, TabCompleter, Listener {
                     .color(NamedTextColor.GREEN)
             );
         } else if (nicknameType.equals(NicknameType.REVEAL.getType())) {
-            // TODO: Reveal nickname of an online player.
+            if (!ChatUtils.validatePlayerPermissionForNicknameReveal(player)) {
+                player.sendMessage(Component
+                        .text(NicknameMessage.ERROR_NO_PERMISSION.getMessage())
+                        .color(NamedTextColor.RED)
+                );
+
+                return true;
+            }
+
+            String nickname = args[1];
+            PlayerProfileRepository playerProfileRepository = new PlayerProfileRepository();
+            PlayerProfile playerProfile = playerProfileRepository.getPlayerProfileByNickname(nickname);
+
+            // Verify player's real name and make sure player is online.
+            if (playerProfile != null) {
+                Player realPlayer = this.pluginInstance.getServer().getPlayer(playerProfile.getUuid());
+
+                if (realPlayer != null) {
+                    player.sendMessage(Component
+                            .text(String.format(
+                                    NicknameMessage.SUCCESS_REVEAL_NICKNAME.getMessage(),
+                                    nickname,
+                                    realPlayer.getName()))
+                            .color(NamedTextColor.GREEN)
+                    );
+
+                    return true;
+                }
+            }
+
+            // If somehow, the all the verifications above fails, then player will be notified of failure
+            // to reveal nickname.
+            player.sendMessage(Component
+                    .text(NicknameMessage.ERROR_UNABLE_TO_PINPOINT.getMessage())
+                    .color(NamedTextColor.RED)
+            );
         } else if (nicknameType.equals(NicknameType.REMOVE.getType())) {
             PlayerProfileRepository playerProfileRepository = new PlayerProfileRepository();
             playerProfileRepository.updatePlayerNickname(player.getUniqueId(), null);

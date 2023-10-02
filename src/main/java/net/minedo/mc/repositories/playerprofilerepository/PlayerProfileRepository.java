@@ -162,7 +162,7 @@ public class PlayerProfileRepository {
     /**
      * Get all players' nicknames aside from oneself within a pool of players.
      *
-     * @param playerUuid UUID of player to exclude from results.
+     * @param playerUuid         UUID of player to exclude from results.
      * @param otherOnlinePlayers List of UUID of players to search within.
      * @return List of nicknames.
      */
