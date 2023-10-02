@@ -152,10 +152,14 @@ public class Ignore implements CommandExecutor, TabCompleter {
             return completions;
         }
 
+        List<String> ignoreTypes = new ArrayList<>() {{
+            add(IgnoreType.ADD.getType());
+            add(IgnoreType.REMOVE.getType());
+        }};
+
         if (args.length == 1) {
-            completions.add(IgnoreType.ADD.getType());
-            completions.add(IgnoreType.REMOVE.getType());
-        } else if (args.length == 2) {
+            completions.addAll(ignoreTypes);
+        } else if (args.length == 2 && ignoreTypes.contains(args[0])) {
             Collection<? extends Player> onlinePlayers = this.pluginInstance.getServer().getOnlinePlayers();
 
             completions.addAll(onlinePlayers.stream()
