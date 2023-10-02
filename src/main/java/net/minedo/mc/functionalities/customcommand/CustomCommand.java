@@ -7,6 +7,7 @@ import net.minedo.mc.functionalities.customcommand.ignore.Ignore;
 import net.minedo.mc.functionalities.customcommand.like.Like;
 import net.minedo.mc.functionalities.customcommand.message.Message;
 import net.minedo.mc.functionalities.customcommand.narrate.Narrate;
+import net.minedo.mc.functionalities.customcommand.nickname.Nickname;
 import net.minedo.mc.functionalities.customcommand.teleport.player.PlayerTeleport;
 import net.minedo.mc.functionalities.customcommand.teleport.region.RegionTeleport;
 import net.minedo.mc.models.region.Region;
@@ -77,6 +78,13 @@ public class CustomCommand {
         Objects.requireNonNull(this.pluginInstance.getCommand(
                 CustomCommandType.COLOR.getMessage()
         )).setExecutor(new Color());
+
+        // Nickname.
+        Nickname nickname = new Nickname(this.pluginInstance);
+        Objects.requireNonNull(this.pluginInstance.getCommand(
+                CustomCommandType.NICKNAME.getMessage()
+        )).setExecutor(nickname);
+        this.pluginInstance.getServer().getPluginManager().registerEvents(nickname, this.pluginInstance);
     }
 
 }

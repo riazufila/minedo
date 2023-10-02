@@ -16,12 +16,21 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Color implements CommandExecutor, TabCompleter {
+
+    private boolean isHexValid(String color) {
+        String HEX_REGEX = "^#([A-Fa-f0-9]{6})$";
+        Pattern pattern = Pattern.compile(HEX_REGEX);
+        Matcher matcher = pattern.matcher(color);
+
+        return matcher.matches();
+    }
 
     private boolean isCommandValid(String[] args) {
         if (args.length != 3) {
@@ -31,22 +40,22 @@ public class Color implements CommandExecutor, TabCompleter {
         String chatOrName = args[0];
         String colorType = args[1];
         String color = args[2];
-        boolean isRemovetype = false;
-        boolean isValidRegex = false;
+        boolean isValidColor = true;
 
-        if (color.equals(ColorType.REMOVE.getType())) {
-            isRemovetype = true;
-        } else {
-            String HEX_REGEX = "^#([A-Fa-f0-9]{6})$";
-            Pattern pattern = Pattern.compile(HEX_REGEX);
-            Matcher matcher = pattern.matcher(color);
-
-            isValidRegex = matcher.matches();
+        if (!color.equals(ColorType.REMOVE.getType())) {
+            if (colorType.equals(ColorType.CUSTOM.getType())) {
+                isValidColor = this.isHexValid(color);
+            } else if (colorType.equals(ColorType.PRESET.getType())) {
+                isValidColor = Arrays
+                        .stream(GroupColor.values())
+                        .map(Enum::name)
+                        .anyMatch(name -> name.equalsIgnoreCase(color));
+            }
         }
 
         return (chatOrName.equals(ColorType.NAME.getType()) || chatOrName.equals(ColorType.CHAT.getType()))
                 && (colorType.equals(ColorType.PRESET.getType()) || colorType.equals(ColorType.CUSTOM.getType()))
-                && (isRemovetype || isValidRegex);
+                && (isValidColor);
     }
 
     @Override
@@ -70,7 +79,7 @@ public class Color implements CommandExecutor, TabCompleter {
         String colorType = args[1];
         String color = args[2];
 
-        if (!ChatUtils.validatePlayerPermissionForColorSetting(player, colorType, color)) {
+        if (!ChatUtils.validatePlayerPermissionForColorSettingByColorTypeAndColor(player, colorType, color)) {
             player.sendMessage(Component
                     .text(ColorMessage.ERROR_NO_PERMISSION.getMessage())
                     .color(NamedTextColor.RED)
@@ -114,20 +123,40 @@ public class Color implements CommandExecutor, TabCompleter {
     ) {
         List<String> completions = new ArrayList<>();
 
-        if (!(sender instanceof Player)) {
+        if (!(sender instanceof Player player)) {
             return completions;
         }
 
+        List<String> prefixOrContent = new ArrayList<>() {{
+            add(ColorType.NAME.getType());
+            add(ColorType.CHAT.getType());
+        }};
+        List<String> colorTypes = new ArrayList<>() {{
+            add(ColorType.PRESET.getType());
+            add(ColorType.CUSTOM.getType());
+        }};
+        List<String> presets = Arrays
+                .stream(GroupColor.values())
+                .map(groupColor -> groupColor.toString().toLowerCase())
+                .toList();
+
         if (args.length == 1) {
-            completions.add(ColorType.NAME.getType());
-            completions.add(ColorType.CHAT.getType());
-        } else if (args.length == 2) {
-            completions.add(ColorType.PRESET.getType());
-            completions.add(ColorType.CUSTOM.getType());
-        } else if (args.length == 3) {
-            if (args[1].equals(ColorType.PRESET.getType())) {
-                for (GroupColor color : GroupColor.values()) {
-                    completions.add(color.toString().toLowerCase());
+            completions.addAll(prefixOrContent);
+        } else if (args.length == 2 && prefixOrContent.contains(args[0])) {
+            for (String colorType : colorTypes) {
+                if (colorType.equals(ColorType.CUSTOM.getType())) {
+                    if (ChatUtils.validatePlayerPermissionForCustomColor(player)) {
+                        completions.add(colorType);
+                    }
+                } else {
+                    completions.add(colorType);
+                }
+            }
+        } else if (args.length == 3 && colorTypes.contains(args[1])) {
+            for (String preset : presets) {
+                if (args[1].equals(ColorType.PRESET.getType())
+                        && ChatUtils.validatePlayerPermissionForPresetColor(player, preset)) {
+                    completions.add(preset);
                 }
             }
 
