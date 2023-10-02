@@ -79,7 +79,7 @@ public class Color implements CommandExecutor, TabCompleter {
         String colorType = args[1];
         String color = args[2];
 
-        if (!ChatUtils.validatePlayerPermissionForColorSetting(player, colorType, color)) {
+        if (!ChatUtils.validatePlayerPermissionForColorSettingByColorTypeAndColor(player, colorType, color)) {
             player.sendMessage(Component
                     .text(ColorMessage.ERROR_NO_PERMISSION.getMessage())
                     .color(NamedTextColor.RED)
@@ -123,20 +123,40 @@ public class Color implements CommandExecutor, TabCompleter {
     ) {
         List<String> completions = new ArrayList<>();
 
-        if (!(sender instanceof Player)) {
+        if (!(sender instanceof Player player)) {
             return completions;
         }
 
+        List<String> prefixOrContent = new ArrayList<>() {{
+            add(ColorType.NAME.getType());
+            add(ColorType.CHAT.getType());
+        }};
+        List<String> colorTypes = new ArrayList<>() {{
+            add(ColorType.PRESET.getType());
+            add(ColorType.CUSTOM.getType());
+        }};
+        List<String> presets = Arrays
+                .stream(GroupColor.values())
+                .map(groupColor -> groupColor.toString().toLowerCase())
+                .toList();
+
         if (args.length == 1) {
-            completions.add(ColorType.NAME.getType());
-            completions.add(ColorType.CHAT.getType());
-        } else if (args.length == 2) {
-            completions.add(ColorType.PRESET.getType());
-            completions.add(ColorType.CUSTOM.getType());
-        } else if (args.length == 3) {
-            if (args[1].equals(ColorType.PRESET.getType())) {
-                for (GroupColor color : GroupColor.values()) {
-                    completions.add(color.toString().toLowerCase());
+            completions.addAll(prefixOrContent);
+        } else if (args.length == 2 && prefixOrContent.contains(args[0])) {
+            for (String colorType : colorTypes) {
+                if (colorType.equals(ColorType.CUSTOM.getType())) {
+                    if (ChatUtils.validatePlayerPermissionForCustomColor(player)) {
+                        completions.add(colorType);
+                    }
+                } else {
+                    completions.add(colorType);
+                }
+            }
+        } else if (args.length == 3 && colorTypes.contains(args[1])) {
+            for (String preset : presets) {
+                if (args[1].equals(ColorType.PRESET.getType())
+                        && ChatUtils.validatePlayerPermissionForPresetColor(player, preset)) {
+                    completions.add(preset);
                 }
             }
 
