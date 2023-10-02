@@ -198,12 +198,21 @@ public class Nickname implements CommandExecutor, TabCompleter, Listener {
             return completions;
         }
 
-        if (args.length == 1) {
-            completions.add(NicknameType.SET.getType());
-            completions.add(NicknameType.REMOVE.getType());
+        List<String> nicknameTypes = new ArrayList<>() {{
+            add(NicknameType.SET.getType());
+            add(NicknameType.REVEAL.getType());
+            add(NicknameType.REMOVE.getType());
+        }};
 
-            if (ChatUtils.validatePlayerPermissionForNicknameReveal(player)) {
-                completions.add(NicknameType.REVEAL.getType());
+        if (args.length == 1) {
+            for (String nicknameType : nicknameTypes) {
+                if (nicknameType.equals(NicknameType.REVEAL.getType())) {
+                    if (ChatUtils.validatePlayerPermissionForNicknameReveal(player)) {
+                        completions.add(nicknameType);
+                    }
+                } else {
+                    completions.add(nicknameType);
+                }
             }
         } else if (args.length == 2
                 && args[0].equals(NicknameType.REVEAL.getType())
