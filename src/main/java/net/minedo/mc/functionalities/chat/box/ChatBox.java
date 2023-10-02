@@ -20,7 +20,11 @@ public class ChatBox implements Listener {
 
         event.renderer(((source, sourceDisplayName, message, viewer) -> {
             String nickname = playerProfile.getNickname();
-            Component nameComponent = nickname != null ? Component.text(nickname) : sourceDisplayName;
+            Component nameComponent = sourceDisplayName;
+
+            if (ChatUtils.validatePlayerPermissionForNickname(player) && nickname != null) {
+                nameComponent = Component.text(nickname);
+            }
 
             return Component.textOfChildren(
                     ChatUtils.updateComponentColor(player, nameComponent, false),

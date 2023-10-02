@@ -102,4 +102,8 @@ public final class ChatUtils {
         return true;
     }
 
+    public static boolean validatePlayerPermissionForNickname(Player player) {
+        return player.hasPermission(GroupPermission.REDSTONE.getPermission());
+    }
+
 }
