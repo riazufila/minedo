@@ -16,12 +16,21 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Color implements CommandExecutor, TabCompleter {
+
+    private boolean isHexValid(String color) {
+        String HEX_REGEX = "^#([A-Fa-f0-9]{6})$";
+        Pattern pattern = Pattern.compile(HEX_REGEX);
+        Matcher matcher = pattern.matcher(color);
+
+        return matcher.matches();
+    }
 
     private boolean isCommandValid(String[] args) {
         if (args.length != 3) {
@@ -31,22 +40,22 @@ public class Color implements CommandExecutor, TabCompleter {
         String chatOrName = args[0];
         String colorType = args[1];
         String color = args[2];
-        boolean isRemovetype = false;
-        boolean isValidRegex = false;
+        boolean isValidColor = true;
 
-        if (color.equals(ColorType.REMOVE.getType())) {
-            isRemovetype = true;
-        } else {
-            String HEX_REGEX = "^#([A-Fa-f0-9]{6})$";
-            Pattern pattern = Pattern.compile(HEX_REGEX);
-            Matcher matcher = pattern.matcher(color);
-
-            isValidRegex = matcher.matches();
+        if (!color.equals(ColorType.REMOVE.getType())) {
+            if (colorType.equals(ColorType.CUSTOM.getType())) {
+                isValidColor = this.isHexValid(color);
+            } else if (colorType.equals(ColorType.PRESET.getType())) {
+                isValidColor = Arrays
+                        .stream(GroupColor.values())
+                        .map(Enum::name)
+                        .anyMatch(name -> name.equalsIgnoreCase(color));
+            }
         }
 
         return (chatOrName.equals(ColorType.NAME.getType()) || chatOrName.equals(ColorType.CHAT.getType()))
                 && (colorType.equals(ColorType.PRESET.getType()) || colorType.equals(ColorType.CUSTOM.getType()))
-                && (isRemovetype || isValidRegex);
+                && (isValidColor);
     }
 
     @Override
