@@ -2,6 +2,7 @@ package net.minedo.mc.repositories.playerprofilerepository;
 
 import net.minedo.mc.models.playerprofile.PlayerProfile;
 import net.minedo.mc.repositories.Database;
+import net.minedo.mc.repositories.DatabaseUtils;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -118,25 +119,34 @@ public class PlayerProfileRepository {
         database.disconnect();
     }
 
-    public List<String> getOtherPlayersNickname(UUID playerUuid) {
+    public List<String> getOtherPlayersNickname(UUID playerUuid, List<UUID> otherOnlinePlayers) {
         Database database = new Database();
         database.connect();
 
         List<String> otherPlayersNickname = new ArrayList<>();
 
         try {
-            String query = """
+            String query = String.format("""
                         SELECT
                             nickname
                         FROM
                             player_profile
                         WHERE
                             nickname IS NOT NULL
-                                AND uuid != ?;
-                    """;
+                                AND uuid != ?
+                                AND uuid IN (%s);
+                    """, DatabaseUtils.buildWhereInClause(otherOnlinePlayers.size()));
+
+            int queryIndex = 1;
 
             HashMap<Integer, String> replacements = new HashMap<>();
-            replacements.put(1, String.valueOf(playerUuid));
+            replacements.put(queryIndex, String.valueOf(playerUuid));
+            queryIndex++;
+
+            for (int i = 0; i < otherOnlinePlayers.size(); i++) {
+                replacements.put(queryIndex + i, String.valueOf(otherOnlinePlayers.get(i)));
+            }
+
             ResultSet resultSet = database.queryWithWhereClause(query, replacements);
 
             if (resultSet.next()) {

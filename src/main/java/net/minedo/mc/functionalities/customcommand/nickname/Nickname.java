@@ -18,6 +18,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -117,9 +118,16 @@ public class Nickname implements CommandExecutor, TabCompleter, Listener {
             completions.add(NicknameType.REMOVE.getType());
         } else if (args.length == 2 && args[0].equals(NicknameType.REVEAL.getType())) {
             PlayerProfileRepository playerProfileRepository = new PlayerProfileRepository();
-            List<String> otherPlayersNickname = playerProfileRepository.getOtherPlayersNickname(player.getUniqueId());
+            Collection<? extends Player> onlinePlayers = this.pluginInstance.getServer().getOnlinePlayers();
 
-            completions.addAll(otherPlayersNickname);
+            if (!onlinePlayers.isEmpty()) {
+                List<String> otherPlayersNickname = playerProfileRepository.getOtherPlayersNickname(
+                        player.getUniqueId(),
+                        onlinePlayers.stream().map(Player::getUniqueId).toList()
+                );
+
+                completions.addAll(otherPlayersNickname);
+            }
         }
 
         return completions;
