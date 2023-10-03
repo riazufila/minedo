@@ -4,7 +4,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import net.minedo.mc.constants.command.type.colortype.ColorType;
 import net.minedo.mc.constants.groupcolor.GroupColor;
-import net.minedo.mc.constants.grouppermission.GroupPermission;
+import net.minedo.mc.functionalities.permissions.PermissionUtils;
 import net.minedo.mc.models.playercolor.PlayerColor;
 import net.minedo.mc.repositories.playercolorrepository.PlayerColorRepository;
 import org.bukkit.entity.Player;
@@ -19,7 +19,7 @@ public final class ChatUtils {
         boolean isCustom = chatInfo.isCustom();
 
         if (selectedColor != null) {
-            if (!validatePlayerPermissionForColorSettingByColorTypeAndColor(player, isCustom
+            if (!PermissionUtils.validatePlayerPermissionForColorSettingByColorTypeAndColor(player, isCustom
                     ? ColorType.CUSTOM.getType() : ColorType.PRESET.getType(), selectedColor)) {
                 return component;
             }
@@ -30,17 +30,7 @@ public final class ChatUtils {
                 component = component.color(GroupColor.valueOf(selectedColor).getColor());
             }
         } else {
-            if (player.hasPermission(GroupPermission.OBSIDIAN.getPermission())) {
-                component = component.color(GroupColor.OBSIDIAN.getColor());
-            } else if (player.hasPermission(GroupPermission.REDSTONE.getPermission())) {
-                component = component.color(GroupColor.REDSTONE.getColor());
-            } else if (player.hasPermission(GroupPermission.DIAMOND.getPermission())) {
-                component = component.color(GroupColor.DIAMOND.getColor());
-            } else if (player.hasPermission(GroupPermission.EMERALD.getPermission())) {
-                component = component.color(GroupColor.EMERALD.getColor());
-            } else if (player.hasPermission(GroupPermission.GOLD.getPermission())) {
-                component = component.color(GroupColor.GOLD.getColor());
-            }
+            component = component.color(PermissionUtils.getColorByPermission(player));
         }
 
         return component;
@@ -72,54 +62,8 @@ public final class ChatUtils {
         return new ChatInfo(isCustom, selectedColor);
     }
 
-    private static boolean isGroupColorTheSame(String color, GroupColor groupColor) {
+    public static boolean isGroupColorTheSame(String color, GroupColor groupColor) {
         return GroupColor.valueOf(color.toUpperCase()).equals(groupColor);
-    }
-
-    public static boolean validatePlayerPermissionForCustomColor(Player player) {
-        return player.hasPermission(GroupPermission.OBSIDIAN.getPermission());
-    }
-
-    public static boolean validatePlayerPermissionForPresetColor(Player player, String color) {
-        if (isGroupColorTheSame(color, GroupColor.OBSIDIAN)) {
-            return player.hasPermission(GroupPermission.OBSIDIAN.getPermission());
-        } else if (isGroupColorTheSame(color, GroupColor.REDSTONE)) {
-            return player.hasPermission(GroupPermission.REDSTONE.getPermission());
-        } else if (isGroupColorTheSame(color, GroupColor.DIAMOND)) {
-            return player.hasPermission(GroupPermission.DIAMOND.getPermission());
-        } else if (isGroupColorTheSame(color, GroupColor.EMERALD)) {
-            return player.hasPermission(GroupPermission.EMERALD.getPermission());
-        } else if (isGroupColorTheSame(color, GroupColor.GOLD)) {
-            return player.hasPermission(GroupPermission.GOLD.getPermission());
-        }
-
-        return false;
-    }
-
-    public static boolean validatePlayerPermissionForColorSettingByColorTypeAndColor(
-            Player player, String colorType, String color
-    ) {
-        if (color.equals(ColorType.REMOVE.getType())) {
-            if (player.hasPermission(GroupPermission.GOLD.getPermission())) {
-                return true;
-            }
-        }
-
-        if (colorType.equals(ColorType.CUSTOM.getType())) {
-            return player.hasPermission(GroupPermission.OBSIDIAN.getPermission());
-        } else if (colorType.equals(ColorType.PRESET.getType())) {
-            return validatePlayerPermissionForPresetColor(player, color);
-        }
-
-        return true;
-    }
-
-    public static boolean validatePlayerPermissionForNicknameDisplay(Player player) {
-        return player.hasPermission(GroupPermission.REDSTONE.getPermission());
-    }
-
-    public static boolean validatePlayerPermissionForNicknameReveal(Player player) {
-        return player.hasPermission(GroupPermission.OBSIDIAN.getPermission());
     }
 
 }

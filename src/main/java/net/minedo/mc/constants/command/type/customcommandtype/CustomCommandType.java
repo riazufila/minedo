@@ -9,7 +9,8 @@ public enum CustomCommandType {
     IGNORE("ignore"),
     MESSAGE("message"),
     COLOR("color"),
-    NICKNAME("nickname");
+    NICKNAME("nickname"),
+    HOME("home");
 
     private final String type;
 
