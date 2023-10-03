@@ -23,8 +23,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
-import java.sql.Timestamp;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -87,17 +85,7 @@ public class ItemBuilder implements Listener {
 
         // Set NBT tag.
         NamespacedKey typeKey = new NamespacedKey(this.pluginInstance, "type");
-        NamespacedKey subTypeKey = new NamespacedKey(this.pluginInstance, "subType");
-        NamespacedKey uuidKey = new NamespacedKey(this.pluginInstance, "uuid");
-        NamespacedKey timestampKey = new NamespacedKey(this.pluginInstance, "timestamp");
         meta.getPersistentDataContainer().set(typeKey, PersistentDataType.STRING, "ASTRAL_GEAR");
-        meta.getPersistentDataContainer().set(subTypeKey, PersistentDataType.STRING, betterItem.getDisplayName());
-        meta.getPersistentDataContainer().set(uuidKey, PersistentDataType.STRING, UUID.randomUUID().toString());
-        meta.getPersistentDataContainer().set(
-                timestampKey,
-                PersistentDataType.STRING,
-                Timestamp.from(Instant.now()).toString()
-        );
 
         // Set display name.
         Component displayNameComponent = Component
