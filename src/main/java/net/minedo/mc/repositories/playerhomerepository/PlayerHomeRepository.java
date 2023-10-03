@@ -104,7 +104,7 @@ public class PlayerHomeRepository {
         return playerHomeList;
     }
 
-    public void addHome(UUID playerUuid, Location location, String homeName) {
+    public void upsertHome(UUID playerUuid, Location location, String homeName) {
         Database database = new Database();
         database.connect();
 
@@ -112,7 +112,7 @@ public class PlayerHomeRepository {
         PlayerProfile playerProfile = playerProfileRepository.getPlayerProfileByUuid(playerUuid);
 
         String query = """
-                    INSERT INTO player_home
+                    REPLACE INTO player_home
                         (player_id, name, coordinate_x, coordinate_y, coordinate_z)
                     VALUES
                         (?, ?, ?, ?, ?);

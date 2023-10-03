@@ -47,7 +47,7 @@ public class HomeTeleport implements CommandExecutor, Listener, TabCompleter {
         return matcher.matches();
     }
 
-    private boolean isCommandValid(String[] args, UUID playerUuid) {
+    private boolean isCommandValid(String[] args) {
         if (args.length != 2) {
             return false;
         }
@@ -68,7 +68,7 @@ public class HomeTeleport implements CommandExecutor, Listener, TabCompleter {
             return true;
         }
 
-        if (!this.isCommandValid(args, player.getUniqueId())) {
+        if (!this.isCommandValid(args)) {
             player.sendMessage(Component
                     .text(HomeTeleportMessage.ERROR_USAGE.getMessage())
                     .color(NamedTextColor.GRAY)
@@ -128,7 +128,7 @@ public class HomeTeleport implements CommandExecutor, Listener, TabCompleter {
             boolean isHomeNameUnique = homeList.stream().noneMatch(home -> Objects.equals(home.getName(), homeName));
 
             if (isAllowed && isHomeNameUnique) {
-                playerHomeRepository.addHome(player.getUniqueId(), player.getLocation(), homeName);
+                playerHomeRepository.upsertHome(player.getUniqueId(), player.getLocation(), homeName);
 
                 player.sendMessage(Component
                         .text(HomeTeleportMessage.SUCCESS_ADD_HOME.getMessage())
@@ -146,7 +146,13 @@ public class HomeTeleport implements CommandExecutor, Listener, TabCompleter {
                 );
             }
         } else if (homeType.equals(HomeType.UPDATE.getType())) {
-            // TODO: Update home.
+            PlayerHomeRepository playerHomeRepository = new PlayerHomeRepository();
+            playerHomeRepository.upsertHome(player.getUniqueId(), player.getLocation(), homeName);
+
+            player.sendMessage(Component
+                    .text(HomeTeleportMessage.SUCCESS_UPDATE_HOME.getMessage())
+                    .color(NamedTextColor.GREEN)
+            );
         } else if (homeType.equals(HomeType.REMOVE.getType())) {
             PlayerHomeRepository playerHomeRepository = new PlayerHomeRepository();
             playerHomeRepository.removeHome(player.getUniqueId(), homeName);
