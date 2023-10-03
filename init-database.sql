@@ -52,7 +52,7 @@ CREATE TABLE player_blocked (
     FOREIGN KEY (blocked_player_id) REFERENCES player_profile (id)
 );
 
-CREATE TABLE better_item (
+CREATE TABLE custom_item (
     id INT NOT NULL AUTO_INCREMENT,
     material VARCHAR(50) NOT NULL,
     display_name VARCHAR(50) NOT NULL,
@@ -61,41 +61,41 @@ CREATE TABLE better_item (
     PRIMARY KEY (id)
 );
 
-CREATE TABLE better_item_lore (
+CREATE TABLE custom_item_lore (
     id INT NOT NULL AUTO_INCREMENT,
     text VARCHAR(250) NOT NULL,
     color VARCHAR(7) DEFAULT NULL,
     decoration VARCHAR(10) DEFAULT NULL,
-    better_item_id INT NOT NULL,
+    custom_item_id INT NOT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY (better_item_id) REFERENCES better_item (id)
+    FOREIGN KEY (custom_item_id) REFERENCES custom_item (id)
 );
 
-CREATE TABLE better_item_enchantment (
+CREATE TABLE custom_item_enchantment (
     id INT NOT NULL AUTO_INCREMENT,
     enchantment varchar(50) NOT NULL,
     level INT NOT NULL,
-    better_item_id INT NOT NULL,
+    custom_item_id INT NOT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY (better_item_id) REFERENCES better_item (id)
+    FOREIGN KEY (custom_item_id) REFERENCES custom_item (id)
 );
 
-CREATE TABLE better_item_attribute (
+CREATE TABLE custom_item_attribute (
     id INT NOT NULL AUTO_INCREMENT,
     attribute VARCHAR(50) NOT NULL,
     modifier DOUBLE NOT NULL,
     operation VARCHAR(50) NOT NULL,
     slot VARCHAR(20) NOT NULL,
-    better_item_id INT NOT NULL,
+    custom_item_id INT NOT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY (better_item_id) REFERENCES better_item (id)
+    FOREIGN KEY (custom_item_id) REFERENCES custom_item (id)
 );
 
-CREATE TABLE better_item_probability (
-    better_item_id INT NOT NULL,
+CREATE TABLE custom_item_probability (
+    custom_item_id INT NOT NULL,
     probability DOUBLE NOT NULL,
-    UNIQUE KEY better_item_id_UNIQUE (better_item_id),
-    FOREIGN KEY (better_item_id) REFERENCES better_item (id)
+    UNIQUE KEY custom_item_id_UNIQUE (custom_item_id),
+    FOREIGN KEY (custom_item_id) REFERENCES custom_item (id)
 );
 
 CREATE TABLE region (
@@ -110,21 +110,21 @@ CREATE TABLE region (
 );
 
 -- Insert values.
-INSERT INTO better_item VALUES
+INSERT INTO custom_item VALUES
 (1, 'DIAMOND_HELMET', 'Moon Knight\'s Helmet', '#008B8B', 'BOLD'),
 (2, 'DIAMOND_CHESTPLATE', 'Moon Knight\'s Chestplate', '#008B8B', 'BOLD'),
 (3, 'DIAMOND_LEGGINGS', 'Moon Knight\'s Leggings', '#008B8B', 'BOLD'),
 (4, 'DIAMOND_BOOTS', 'Moon Knight\'s Boots', '#008B8B', 'BOLD'),
 (5, 'DIAMOND_SWORD', 'Moon Knight\'s Sword', '#008B8B', 'BOLD');
 
-INSERT INTO better_item_lore VALUES
+INSERT INTO custom_item_lore VALUES
 (1, 'A helmet adorned with lunar symbols providing protection under the moonlight.', '#008B8B', NULL, 1),
 (2, 'A sturdy chestplate infused with the essence of the moon, granting fearlessness in the darkest of nights.', '#008B8B', NULL, 2),
 (3, 'Leggings imbued with the power of the moon, granting agility and enhanced movement.', '#008B8B', NULL, 3),
 (4, 'Boots crafted with lunar energy, allowing the wearer to move silently like the moon\'s shadow while under water.', '#008B8B', NULL, 4),
 (5, 'A mighty blade forged under the moon\'s glow. Cuts through darkness and empowers its wielder. Unleashes swift strikes. Harnesses the lunar energy to dispel evil.', '#008B8B', NULL, 5);
 
-INSERT INTO better_item_enchantment VALUES
+INSERT INTO custom_item_enchantment VALUES
 (1, 'protection', 5, 1),
 (2, 'respiration', 1, 1),
 (3, 'protection', 7, 2),
@@ -138,13 +138,13 @@ INSERT INTO better_item_enchantment VALUES
 (11, 'sharpness', 6, 5),
 (12, 'mending', 1, 5);
 
-INSERT INTO better_item_attribute VALUES
+INSERT INTO custom_item_attribute VALUES
 (1, 'GENERIC_KNOCKBACK_RESISTANCE', 0.1, 'MULTIPLY_SCALAR_1', 'CHEST', 2),
 (2, 'GENERIC_MAX_HEALTH', 0.1, 'MULTIPLY_SCALAR_1', 'CHEST', 2),
 (3, 'GENERIC_ARMOR', 3, 'ADD_NUMBER', 'CHEST', 2),
 (4, 'GENERIC_ARMOR_TOUGHNESS', 2, 'ADD_NUMBER', 'CHEST', 2);
 
-INSERT INTO better_item_probability VALUES
+INSERT INTO custom_item_probability VALUES
 (1, 100),
 (2, 15),
 (3, 30),

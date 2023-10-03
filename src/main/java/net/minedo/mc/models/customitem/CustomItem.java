@@ -1,25 +1,25 @@
-package net.minedo.mc.models.betteritem;
+package net.minedo.mc.models.customitem;
 
 import net.kyori.adventure.text.format.TextDecoration;
-import net.minedo.mc.models.betteritemattribute.BetterItemAttribute;
-import net.minedo.mc.models.betteritemenchantment.BetterItemEnchantment;
-import net.minedo.mc.models.betteritemlore.BetterItemLore;
-import net.minedo.mc.models.betteritemprobability.BetterItemProbability;
+import net.minedo.mc.models.customitemattribute.CustomItemAttribute;
+import net.minedo.mc.models.customitemenchantment.CustomItemEnchantment;
+import net.minedo.mc.models.customitemlore.CustomItemLore;
+import net.minedo.mc.models.customitemprobability.CustomItemProbability;
 import org.bukkit.Material;
 
 import java.util.List;
 
-public class BetterItem {
+public class CustomItem {
 
     private int id;
     private Material material;
     private String displayName;
     private String color;
     private TextDecoration decoration;
-    private BetterItemLore lore;
-    private List<BetterItemEnchantment> enchantments;
-    private List<BetterItemAttribute> attributes;
-    private BetterItemProbability probability;
+    private CustomItemLore lore;
+    private List<CustomItemEnchantment> enchantments;
+    private List<CustomItemAttribute> attributes;
+    private CustomItemProbability probability;
 
     public int getId() {
         return id;
@@ -61,43 +61,43 @@ public class BetterItem {
         this.decoration = decoration;
     }
 
-    public BetterItemLore getLore() {
+    public CustomItemLore getLore() {
         return lore;
     }
 
-    public void setLore(BetterItemLore lore) {
+    public void setLore(CustomItemLore lore) {
         this.lore = lore;
     }
 
-    public List<BetterItemEnchantment> getEnchantments() {
+    public List<CustomItemEnchantment> getEnchantments() {
         return enchantments;
     }
 
-    public void setEnchantments(List<BetterItemEnchantment> enchantments) {
+    public void setEnchantments(List<CustomItemEnchantment> enchantments) {
         this.enchantments = enchantments;
     }
 
-    public void addEnchantment(BetterItemEnchantment enchantment) {
+    public void addEnchantment(CustomItemEnchantment enchantment) {
         this.enchantments.add(enchantment);
     }
 
-    public List<BetterItemAttribute> getAttributes() {
+    public List<CustomItemAttribute> getAttributes() {
         return attributes;
     }
 
-    public void setAttributes(List<BetterItemAttribute> attributes) {
+    public void setAttributes(List<CustomItemAttribute> attributes) {
         this.attributes = attributes;
     }
 
-    public void addAttribute(BetterItemAttribute attribute) {
+    public void addAttribute(CustomItemAttribute attribute) {
         this.attributes.add(attribute);
     }
 
-    public BetterItemProbability getProbability() {
+    public CustomItemProbability getProbability() {
         return probability;
     }
 
-    public void setProbability(BetterItemProbability probability) {
+    public void setProbability(CustomItemProbability probability) {
         this.probability = probability;
     }
 

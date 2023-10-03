@@ -1,17 +1,17 @@
-package net.minedo.mc.models.betteritemattribute;
+package net.minedo.mc.models.customitemattribute;
 
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.inventory.EquipmentSlot;
 
-public class BetterItemAttribute {
+public class CustomItemAttribute {
 
     private int id;
     private Attribute attribute;
     private double modifier;
     private AttributeModifier.Operation operation;
     private EquipmentSlot slot;
-    private int betterItemId;
+    private int customItemId;
 
     public int getId() {
         return id;
@@ -53,12 +53,12 @@ public class BetterItemAttribute {
         this.slot = slot;
     }
 
-    public int getBetterItemId() {
-        return betterItemId;
+    public int getCustomItemId() {
+        return customItemId;
     }
 
-    public void setBetterItemId(int betterItemId) {
-        this.betterItemId = betterItemId;
+    public void setCustomItemId(int customItemId) {
+        this.customItemId = customItemId;
     }
 
 }

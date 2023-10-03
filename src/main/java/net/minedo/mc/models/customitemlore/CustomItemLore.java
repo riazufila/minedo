@@ -1,14 +1,14 @@
-package net.minedo.mc.models.betteritemlore;
+package net.minedo.mc.models.customitemlore;
 
 import net.kyori.adventure.text.format.TextDecoration;
 
-public class BetterItemLore {
+public class CustomItemLore {
 
     private int id;
     private String text;
     private String color;
     private TextDecoration decoration;
-    private int betterItemId;
+    private int customItemId;
 
     public int getId() {
         return id;
@@ -42,12 +42,12 @@ public class BetterItemLore {
         this.decoration = decoration;
     }
 
-    public int getBetterItemId() {
-        return betterItemId;
+    public int getCustomItemId() {
+        return customItemId;
     }
 
-    public void setBetterItemId(int betterItemId) {
-        this.betterItemId = betterItemId;
+    public void setCustomItemId(int customItemId) {
+        this.customItemId = customItemId;
     }
 
 }

@@ -33,7 +33,7 @@ public class Minedo extends JavaPlugin {
         // Join and leave broadcast message.
         this.getServer().getPluginManager().registerEvents(new JoinLeaveBroadcast(), this);
 
-        // Populate newly generated chests with Better Items.
+        // Populate newly generated chests with custom items.
         this.getServer().getPluginManager().registerEvents(new ItemBuilder(this), this);
 
         // Custom commands.

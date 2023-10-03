@@ -4,12 +4,12 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.minedo.mc.Minedo;
-import net.minedo.mc.constants.betteritemtype.BetterItemType;
-import net.minedo.mc.models.betteritem.BetterItem;
-import net.minedo.mc.models.betteritemattribute.BetterItemAttribute;
-import net.minedo.mc.models.betteritemenchantment.BetterItemEnchantment;
-import net.minedo.mc.models.betteritemlore.BetterItemLore;
-import net.minedo.mc.repositories.betteritemrepository.BetterItemRepository;
+import net.minedo.mc.constants.customitemtype.CustomItemType;
+import net.minedo.mc.models.customitem.CustomItem;
+import net.minedo.mc.models.customitemattribute.CustomItemAttribute;
+import net.minedo.mc.models.customitemenchantment.CustomItemEnchantment;
+import net.minedo.mc.models.customitemlore.CustomItemLore;
+import net.minedo.mc.repositories.customitemrepository.CustomItemRepository;
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.sampling.DiscreteProbabilityCollectionSampler;
 import org.apache.commons.rng.simple.RandomSource;
@@ -45,7 +45,7 @@ public class ItemBuilder implements Listener {
 
         for (BlockState state : tileEntities) {
             if (state.getBlock().getState() instanceof Chest chest) {
-                ItemStack item = this.getBetterItem();
+                ItemStack item = this.getCustomItem();
 
                 if (item != null) {
                     chest.getInventory().addItem(item);
@@ -80,43 +80,43 @@ public class ItemBuilder implements Listener {
         return result;
     }
 
-    public ItemStack buildItem(BetterItem betterItem) {
-        ItemStack item = new ItemStack(betterItem.getMaterial());
+    public ItemStack buildItem(CustomItem customItem) {
+        ItemStack item = new ItemStack(customItem.getMaterial());
         ItemMeta meta = item.getItemMeta();
 
         // Set NBT tag.
         NamespacedKey typeKey = new NamespacedKey(this.pluginInstance, "type");
         meta.getPersistentDataContainer()
-                .set(typeKey, PersistentDataType.STRING, BetterItemType.CUSTOM.getType());
+                .set(typeKey, PersistentDataType.STRING, CustomItemType.CUSTOM_ITEM.getType());
 
         // Set display name.
         Component displayNameComponent = Component
-                .text(betterItem.getDisplayName())
+                .text(customItem.getDisplayName())
                 .decoration(TextDecoration.ITALIC, false);
 
-        if (betterItem.getColor() != null) {
-            displayNameComponent = displayNameComponent.color(TextColor.fromHexString(betterItem.getColor()));
+        if (customItem.getColor() != null) {
+            displayNameComponent = displayNameComponent.color(TextColor.fromHexString(customItem.getColor()));
         }
 
-        if (betterItem.getDecoration() != null) {
-            displayNameComponent = displayNameComponent.decorate(betterItem.getDecoration());
+        if (customItem.getDecoration() != null) {
+            displayNameComponent = displayNameComponent.decorate(customItem.getDecoration());
         }
 
         meta.displayName(displayNameComponent);
 
         // Set lore.
-        BetterItemLore betterItemLore = betterItem.getLore();
+        CustomItemLore customItemLore = customItem.getLore();
         List<Component> list = new ArrayList<>();
 
-        for (String slicedLoreText : this.sliceString(betterItemLore.getText())) {
+        for (String slicedLoreText : this.sliceString(customItemLore.getText())) {
             Component loreComponent = Component.text(slicedLoreText).decoration(TextDecoration.ITALIC, false);
 
-            if (betterItemLore.getColor() != null) {
-                loreComponent = loreComponent.color(TextColor.fromHexString(betterItemLore.getColor()));
+            if (customItemLore.getColor() != null) {
+                loreComponent = loreComponent.color(TextColor.fromHexString(customItemLore.getColor()));
             }
 
-            if (betterItemLore.getDecoration() != null) {
-                loreComponent = loreComponent.decorate(betterItemLore.getDecoration());
+            if (customItemLore.getDecoration() != null) {
+                loreComponent = loreComponent.decorate(customItemLore.getDecoration());
             }
 
             list.add(loreComponent);
@@ -125,15 +125,15 @@ public class ItemBuilder implements Listener {
         meta.lore(list);
 
         // Add enchantments.
-        if (betterItem.getEnchantments() != null) {
-            for (BetterItemEnchantment enchantment : betterItem.getEnchantments()) {
+        if (customItem.getEnchantments() != null) {
+            for (CustomItemEnchantment enchantment : customItem.getEnchantments()) {
                 meta.addEnchant(enchantment.getEnchantment(), enchantment.getLevel(), true);
             }
         }
 
         // Add attributes.
-        if (betterItem.getAttributes() != null) {
-            for (BetterItemAttribute attribute : betterItem.getAttributes()) {
+        if (customItem.getAttributes() != null) {
+            for (CustomItemAttribute attribute : customItem.getAttributes()) {
                 meta.addAttributeModifier(attribute.getAttribute(), new AttributeModifier(
                         UUID.randomUUID(), attribute.getAttribute().toString(), attribute.getModifier(),
                         attribute.getOperation(), attribute.getSlot()
@@ -147,33 +147,33 @@ public class ItemBuilder implements Listener {
         return item;
     }
 
-    public ItemStack getBetterItem() {
+    public ItemStack getCustomItem() {
         try {
             Random random = new Random();
 
             // 50% chance to retrieve an item.
             if (random.nextBoolean()) {
-                BetterItemRepository betterItemRepository = new BetterItemRepository();
-                List<BetterItem> betterItemList = betterItemRepository.getAllBetterItems();
+                CustomItemRepository customItemRepository = new CustomItemRepository();
+                List<CustomItem> customItemList = customItemRepository.getAllCustomItems();
 
-                double[] probabilities = new double[betterItemList.size()];
+                double[] probabilities = new double[customItemList.size()];
                 int index = 0;
 
-                for (BetterItem betterItem : betterItemList) {
-                    probabilities[index] = betterItem.getProbability().getProbability();
+                for (CustomItem customItem : customItemList) {
+                    probabilities[index] = customItem.getProbability().getProbability();
                     index++;
                 }
 
-                // Randomly select one Better Item.
+                // Randomly select one custom item.
                 UniformRandomProvider rng = RandomSource.XO_RO_SHI_RO_128_PP.create();
-                BetterItem selectedBetterItem = new DiscreteProbabilityCollectionSampler<>(
-                        rng, betterItemList, probabilities
+                CustomItem selectedCustomItem = new DiscreteProbabilityCollectionSampler<>(
+                        rng, customItemList, probabilities
                 ).sample();
 
-                return buildItem(selectedBetterItem);
+                return buildItem(selectedCustomItem);
             }
         } catch (Exception exception) {
-            this.logger.severe(String.format("Unable to prepare better items: %s", exception.getMessage()));
+            this.logger.severe(String.format("Unable to prepare custom items: %s", exception.getMessage()));
         }
 
         return null;

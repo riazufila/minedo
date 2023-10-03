@@ -1,13 +1,13 @@
-package net.minedo.mc.models.betteritemenchantment;
+package net.minedo.mc.models.customitemenchantment;
 
 import org.bukkit.enchantments.Enchantment;
 
-public class BetterItemEnchantment {
+public class CustomItemEnchantment {
 
     private int id;
     private Enchantment enchantment;
     private int level;
-    private int betterItemId;
+    private int customItemId;
 
     public int getId() {
         return id;
@@ -33,12 +33,12 @@ public class BetterItemEnchantment {
         this.level = level;
     }
 
-    public int getBetterItemId() {
-        return betterItemId;
+    public int getCustomItemId() {
+        return customItemId;
     }
 
-    public void setBetterItemId(int betterItemId) {
-        this.betterItemId = betterItemId;
+    public void setCustomItemId(int customItemId) {
+        this.customItemId = customItemId;
     }
 
 }
