@@ -14,7 +14,7 @@ import java.util.UUID;
 public final class ChatUtils {
 
     public static Component updateComponentColor(Player player, Component component, boolean isContent) {
-        ChatInfo chatInfo = getString(player, isContent);
+        ChatInfo chatInfo = getChatInfo(player, isContent);
         String selectedColor = chatInfo.getSelectedColor();
         boolean isCustom = chatInfo.isCustom();
 
@@ -36,38 +36,32 @@ public final class ChatUtils {
         return component;
     }
 
-    private static ChatInfo getString(Player player, boolean isContent) {
-        UUID playerUuid = player.getUniqueId();
-        PlayerColorRepository playerColorRepository = new PlayerColorRepository();
-        PlayerColor playerColor = playerColorRepository.getPlayerColorByPlayerUuid(playerUuid);
+    private static ChatInfo selectColor(PlayerColor playerColor, Player player, boolean isContent) {
+        String selectedColor = isContent ? playerColor.getContentCustom() : playerColor.getPrefixCustom();
         boolean isCustom = false;
-        String selectedColor;
 
-        if (isContent) {
-            String contentCustom = playerColor.getContentCustom();
-            if (contentCustom != null
-                    && PermissionUtils.validatePlayerPermissionForColorSettingByColorTypeAndColor(
-                            player, ColorType.CUSTOM.getType(), contentCustom
-            )) {
-                selectedColor = contentCustom;
-                isCustom = true;
-            } else {
-                selectedColor = playerColor.getContentPreset();
-            }
+        if (selectedColor != null
+                && PermissionUtils.validatePlayerPermissionForColorSettingByColorTypeAndColor(
+                player, ColorType.CUSTOM.getType(), selectedColor
+        )) {
+            isCustom = true;
         } else {
-            String prefixCustom = playerColor.getPrefixCustom();
-            if (prefixCustom != null
-                    && PermissionUtils.validatePlayerPermissionForColorSettingByColorTypeAndColor(
-                    player, ColorType.CUSTOM.getType(), prefixCustom
-            )) {
-                selectedColor = prefixCustom;
-                isCustom = true;
-            } else {
-                selectedColor = playerColor.getPrefixPreset();
-            }
+            selectedColor = isContent ? playerColor.getContentPreset() : playerColor.getPrefixPreset();
         }
 
         return new ChatInfo(isCustom, selectedColor);
+    }
+
+    private static ChatInfo getChatInfo(Player player, boolean isContent) {
+        UUID playerUuid = player.getUniqueId();
+        PlayerColorRepository playerColorRepository = new PlayerColorRepository();
+        PlayerColor playerColor = playerColorRepository.getPlayerColorByPlayerUuid(playerUuid);
+
+        if (isContent) {
+            return selectColor(playerColor, player, true);
+        } else {
+            return selectColor(playerColor, player, false);
+        }
     }
 
     public static boolean isGroupColorTheSame(String color, GroupColor groupColor) {
