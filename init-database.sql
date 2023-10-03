@@ -15,7 +15,7 @@ CREATE TABLE player_profile (
 );
 
 CREATE TABLE player_color (
-    player_id int NOT NULL,
+    player_id INT NOT NULL,
     prefix_preset VARCHAR(20) DEFAULT NULL,
     prefix_custom VARCHAR(7) DEFAULT NULL,
     content_preset VARCHAR(20) DEFAULT NULL,
@@ -25,7 +25,7 @@ CREATE TABLE player_color (
 );
 
 CREATE TABLE player_home (
-    player_id DOUBLE NOT NULL,
+    player_id INT NOT NULL,
     name VARCHAR(20) NOT NULL,
     coordinate_x DOUBLE DEFAULT NULL,
     coordinate_y DOUBLE DEFAULT NULL,

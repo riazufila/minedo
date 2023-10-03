@@ -10,7 +10,7 @@ public enum HomeTeleportMessage {
     INFO_COUNTDOWN("%s.."),
     ERROR_USAGE(String.format(
             "/%s <%s | %s | %s> <home>",
-            CustomCommandType.HOME.getMessage(),
+            CustomCommandType.HOME_TELEPORT.getMessage(),
             HomeType.TELEPORT.getType(),
             HomeType.SET.getType(),
             HomeType.REMOVE.getType()

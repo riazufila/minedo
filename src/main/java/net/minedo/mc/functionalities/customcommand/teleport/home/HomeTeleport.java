@@ -2,8 +2,12 @@ package net.minedo.mc.functionalities.customcommand.teleport.home;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.minedo.mc.Minedo;
 import net.minedo.mc.constants.command.message.globalteleportmessage.GlobalTeleportMessage;
 import net.minedo.mc.constants.command.message.hometeleportmessage.HomeTeleportMessage;
+import net.minedo.mc.constants.command.type.hometype.HomeType;
+import net.minedo.mc.models.playerhome.PlayerHome;
+import net.minedo.mc.repositories.playerhomerepository.PlayerHomeRepository;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -23,16 +27,24 @@ import java.util.UUID;
 public class HomeTeleport implements CommandExecutor, Listener, TabCompleter {
 
     private final List<UUID> globalTeleportingPlayers;
+    private final Minedo pluginInstance;
     private final HashMap<UUID, Integer> teleportingPlayers = new HashMap<>();
 
-    public HomeTeleport(List<UUID> globalTeleportingPlayers) {
+    public HomeTeleport(List<UUID> globalTeleportingPlayers, Minedo pluginInstance) {
         this.globalTeleportingPlayers = globalTeleportingPlayers;
+        this.pluginInstance = pluginInstance;
     }
 
     private boolean isCommandValid(String[] args) {
-        // TODO: Validate command.
+        if (args.length != 2) {
+            return false;
+        }
 
-        return true;
+        String homeType = args[0];
+
+        return homeType.equals(HomeType.TELEPORT.getType())
+                || homeType.equals(HomeType.SET.getType())
+                || homeType.equals(HomeType.REMOVE.getType());
     }
 
     @Override
@@ -75,11 +87,32 @@ public class HomeTeleport implements CommandExecutor, Listener, TabCompleter {
     ) {
         List<String> completions = new ArrayList<>();
 
-        if (!(sender instanceof Player)) {
+        if (!(sender instanceof Player player)) {
             return completions;
         }
 
-        // TODO: Add tab completions.
+        List<String> homeTypes = new ArrayList<>() {{
+            add(HomeType.TELEPORT.getType());
+            add(HomeType.SET.getType());
+            add(HomeType.REMOVE.getType());
+        }};
+
+        String homeType = args[0];
+
+        if (args.length == 1) {
+            completions.addAll(homeTypes);
+        } else if (args.length == 2
+                && (homeType.equals(HomeType.TELEPORT.getType()) || homeType.equals(HomeType.REMOVE.getType()))
+        ) {
+            PlayerHomeRepository playerHomeRepository = new PlayerHomeRepository();
+            List<String> homes = playerHomeRepository
+                    .getPlayerHomeList(player.getUniqueId())
+                    .stream()
+                    .map(PlayerHome::getName)
+                    .toList();
+
+            completions.addAll(homes);
+        }
 
         return completions;
     }
