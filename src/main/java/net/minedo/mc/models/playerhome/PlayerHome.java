@@ -1,9 +1,12 @@
 package net.minedo.mc.models.playerhome;
 
+import org.bukkit.World;
+
 public class PlayerHome {
 
     private int playerId;
     private String name;
+    private World worldType;
     private double coordinateX;
     private double coordinateY;
     private double coordinateZ;
@@ -22,6 +25,14 @@ public class PlayerHome {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public World getWorldType() {
+        return worldType;
+    }
+
+    public void setWorldType(World worldType) {
+        this.worldType = worldType;
     }
 
     public double getCoordinateX() {

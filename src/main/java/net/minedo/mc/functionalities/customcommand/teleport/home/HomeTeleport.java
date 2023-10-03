@@ -84,7 +84,7 @@ public class HomeTeleport implements CommandExecutor, Listener, TabCompleter {
                 || homeType.equals(HomeType.UPDATE.getType())
                 || homeType.equals(HomeType.REMOVE.getType())
         ) {
-            PlayerHomeRepository playerHomeRepository = new PlayerHomeRepository();
+            PlayerHomeRepository playerHomeRepository = new PlayerHomeRepository(this.pluginInstance);
             PlayerHome playerHome = playerHomeRepository.getPlayerHome(player.getUniqueId(), homeName);
 
             if (playerHome == null) {
@@ -119,9 +119,22 @@ public class HomeTeleport implements CommandExecutor, Listener, TabCompleter {
                 return true;
             }
 
-            // TODO: Teleport to home.
+            PlayerHomeRepository playerHomeRepository = new PlayerHomeRepository(this.pluginInstance);
+            PlayerHome playerHome = playerHomeRepository.getPlayerHome(player.getUniqueId(), homeName);
+            int teleportTaskId = new HomeTeleportScheduler(
+                    player, playerHome,
+                    this.globalTeleportingPlayers, this.teleportingPlayers
+            ).runTaskTimer(this.pluginInstance, 20, 20).getTaskId();
+
+            this.globalTeleportingPlayers.add(player.getUniqueId());
+            this.teleportingPlayers.put(player.getUniqueId(), teleportTaskId);
+
+            player.sendMessage(Component
+                    .text(String.format(HomeTeleportMessage.INFO_TELEPORTING.getMessage(), homeName))
+                    .color(NamedTextColor.YELLOW)
+            );
         } else if (homeType.equals(HomeType.ADD.getType())) {
-            PlayerHomeRepository playerHomeRepository = new PlayerHomeRepository();
+            PlayerHomeRepository playerHomeRepository = new PlayerHomeRepository(this.pluginInstance);
             List<PlayerHome> homeList = playerHomeRepository.getPlayerHomeList(player.getUniqueId());
             int homeCount = homeList.size();
             boolean isAllowed = PermissionUtils.validatePlayerPermissionForHomeCount(player, homeCount);
@@ -146,7 +159,7 @@ public class HomeTeleport implements CommandExecutor, Listener, TabCompleter {
                 );
             }
         } else if (homeType.equals(HomeType.UPDATE.getType())) {
-            PlayerHomeRepository playerHomeRepository = new PlayerHomeRepository();
+            PlayerHomeRepository playerHomeRepository = new PlayerHomeRepository(this.pluginInstance);
             playerHomeRepository.upsertHome(player.getUniqueId(), player.getLocation(), homeName);
 
             player.sendMessage(Component
@@ -154,7 +167,7 @@ public class HomeTeleport implements CommandExecutor, Listener, TabCompleter {
                     .color(NamedTextColor.GREEN)
             );
         } else if (homeType.equals(HomeType.REMOVE.getType())) {
-            PlayerHomeRepository playerHomeRepository = new PlayerHomeRepository();
+            PlayerHomeRepository playerHomeRepository = new PlayerHomeRepository(this.pluginInstance);
             playerHomeRepository.removeHome(player.getUniqueId(), homeName);
 
             player.sendMessage(Component
@@ -197,7 +210,7 @@ public class HomeTeleport implements CommandExecutor, Listener, TabCompleter {
                 || homeType.equals(HomeType.REMOVE.getType())
                 || homeType.equals(HomeType.UPDATE.getType()))
         ) {
-            PlayerHomeRepository playerHomeRepository = new PlayerHomeRepository();
+            PlayerHomeRepository playerHomeRepository = new PlayerHomeRepository(this.pluginInstance);
             List<String> homes = playerHomeRepository
                     .getPlayerHomeList(player.getUniqueId())
                     .stream()

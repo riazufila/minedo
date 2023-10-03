@@ -27,6 +27,7 @@ CREATE TABLE player_color (
 CREATE TABLE player_home (
     player_id INT NOT NULL,
     name VARCHAR(20) NOT NULL,
+    world_type VARCHAR(20) NOT NULL,
     coordinate_x DOUBLE DEFAULT NULL,
     coordinate_y DOUBLE DEFAULT NULL,
     coordinate_z DOUBLE DEFAULT NULL,

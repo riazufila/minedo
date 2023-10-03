@@ -1,5 +1,6 @@
 package net.minedo.mc.repositories.playerhomerepository;
 
+import net.minedo.mc.Minedo;
 import net.minedo.mc.models.playerhome.PlayerHome;
 import net.minedo.mc.models.playerprofile.PlayerProfile;
 import net.minedo.mc.repositories.Database;
@@ -16,7 +17,12 @@ import java.util.logging.Logger;
 
 public class PlayerHomeRepository {
 
+    private final Minedo pluginInstance;
     private final Logger logger = Logger.getLogger(this.getClass().getName());
+
+    public PlayerHomeRepository(Minedo pluginInstance) {
+        this.pluginInstance = pluginInstance;
+    }
 
     public PlayerHome getPlayerHome(UUID playerUuid, String name) {
         Database database = new Database();
@@ -39,6 +45,7 @@ public class PlayerHomeRepository {
             if (resultSet.next()) {
                 int playerId = resultSet.getInt("player_id");
                 String homeName = resultSet.getString("name");
+                String world = resultSet.getString("world_type");
                 double coordinateX = resultSet.getDouble("coordinate_x");
                 double coordinateY = resultSet.getDouble("coordinate_y");
                 double coordinateZ = resultSet.getDouble("coordinate_z");
@@ -46,6 +53,7 @@ public class PlayerHomeRepository {
                 playerHome = new PlayerHome();
                 playerHome.setPlayerId(playerId);
                 playerHome.setName(homeName);
+                playerHome.setWorldType(this.pluginInstance.getWorldBasedOnName(world));
                 playerHome.setCoordinateX(coordinateX);
                 playerHome.setCoordinateY(coordinateY);
                 playerHome.setCoordinateZ(coordinateZ);
@@ -82,6 +90,7 @@ public class PlayerHomeRepository {
             while (resultSet.next()) {
                 int playerId = resultSet.getInt("player_id");
                 String homeName = resultSet.getString("name");
+                String world = resultSet.getString("world_type");
                 double coordinateX = resultSet.getDouble("coordinate_x");
                 double coordinateY = resultSet.getDouble("coordinate_y");
                 double coordinateZ = resultSet.getDouble("coordinate_z");
@@ -89,6 +98,7 @@ public class PlayerHomeRepository {
                 PlayerHome playerHome = new PlayerHome();
                 playerHome.setPlayerId(playerId);
                 playerHome.setName(homeName);
+                playerHome.setWorldType(this.pluginInstance.getWorldBasedOnName(world));
                 playerHome.setCoordinateX(coordinateX);
                 playerHome.setCoordinateY(coordinateY);
                 playerHome.setCoordinateZ(coordinateZ);
@@ -113,17 +123,18 @@ public class PlayerHomeRepository {
 
         String query = """
                     REPLACE INTO player_home
-                        (player_id, name, coordinate_x, coordinate_y, coordinate_z)
+                        (player_id, name, world_type, coordinate_x, coordinate_y, coordinate_z)
                     VALUES
-                        (?, ?, ?, ?, ?);
+                        (?, ?, ?, ?, ?, ?);
                 """;
 
         HashMap<Integer, String> replacements = new HashMap<>();
         replacements.put(1, String.valueOf(playerProfile.getId()));
         replacements.put(2, homeName);
-        replacements.put(3, String.valueOf(location.getX()));
-        replacements.put(4, String.valueOf(location.getY()));
-        replacements.put(5, String.valueOf(location.getZ()));
+        replacements.put(3, location.getWorld().getName());
+        replacements.put(4, String.valueOf(location.getX()));
+        replacements.put(5, String.valueOf(location.getY()));
+        replacements.put(6, String.valueOf(location.getZ()));
         database.executeStatement(query, replacements);
 
         database.disconnect();
