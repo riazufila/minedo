@@ -4,6 +4,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.minedo.mc.Minedo;
+import net.minedo.mc.constants.betteritemtype.BetterItemType;
 import net.minedo.mc.models.betteritem.BetterItem;
 import net.minedo.mc.models.betteritemattribute.BetterItemAttribute;
 import net.minedo.mc.models.betteritemenchantment.BetterItemEnchantment;
@@ -85,7 +86,8 @@ public class ItemBuilder implements Listener {
 
         // Set NBT tag.
         NamespacedKey typeKey = new NamespacedKey(this.pluginInstance, "type");
-        meta.getPersistentDataContainer().set(typeKey, PersistentDataType.STRING, "ASTRAL_GEAR");
+        meta.getPersistentDataContainer()
+                .set(typeKey, PersistentDataType.STRING, BetterItemType.CUSTOM.getType());
 
         // Set display name.
         Component displayNameComponent = Component
