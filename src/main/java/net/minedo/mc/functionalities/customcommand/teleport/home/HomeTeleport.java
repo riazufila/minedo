@@ -21,6 +21,8 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class HomeTeleport implements CommandExecutor, Listener, TabCompleter {
 
@@ -31,6 +33,18 @@ public class HomeTeleport implements CommandExecutor, Listener, TabCompleter {
     public HomeTeleport(List<UUID> globalTeleportingPlayers, Minedo pluginInstance) {
         this.globalTeleportingPlayers = globalTeleportingPlayers;
         this.pluginInstance = pluginInstance;
+    }
+
+    private boolean isValidHomeName(String nickname) {
+        if (nickname == null) {
+            return false;
+        }
+
+        String NAME_REGEX = "^[a-zA-Z][a-zA-Z0-9-]{0,19}$";
+        Pattern pattern = Pattern.compile(NAME_REGEX);
+        Matcher matcher = pattern.matcher(nickname);
+
+        return matcher.matches();
     }
 
     private boolean isCommandValid(String[] args, UUID playerUuid) {
@@ -78,22 +92,31 @@ public class HomeTeleport implements CommandExecutor, Listener, TabCompleter {
             return true;
         }
 
-        if (
-                globalTeleportingPlayers.contains(player.getUniqueId())
-                        || teleportingPlayers.containsKey(player.getUniqueId())
-        ) {
+        String homeType = args[0];
+        String homeName = args[1];
+
+        if (!this.isValidHomeName(homeName)) {
             player.sendMessage(Component
-                    .text(GlobalTeleportMessage.ERROR_USE_MORE_THAN_ONCE_AT_A_TIME.getMessage())
+                    .text(HomeTeleportMessage.ERROR_INVALID_NAME.getMessage())
                     .color(NamedTextColor.RED)
             );
 
             return true;
         }
 
-        String homeType = args[0];
-        String homeName = args[1];
-
         if (homeType.equals(HomeType.TELEPORT.getType())) {
+            if (
+                    globalTeleportingPlayers.contains(player.getUniqueId())
+                            || teleportingPlayers.containsKey(player.getUniqueId())
+            ) {
+                player.sendMessage(Component
+                        .text(GlobalTeleportMessage.ERROR_USE_MORE_THAN_ONCE_AT_A_TIME.getMessage())
+                        .color(NamedTextColor.RED)
+                );
+
+                return true;
+            }
+
             // TODO: Teleport to home.
         } else if (homeType.equals(HomeType.ADD.getType())) {
             PlayerHomeRepository playerHomeRepository = new PlayerHomeRepository();

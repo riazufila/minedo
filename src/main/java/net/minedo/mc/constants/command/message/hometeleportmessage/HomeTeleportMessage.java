@@ -18,6 +18,11 @@ public enum HomeTeleportMessage {
             HomeType.REMOVE.getType()
     )),
     ERROR_MAX_HOME("Unable to add more homes."),
+    ERROR_INVALID_NAME(
+            "Home name must be less than 20 characters, "
+                    + "consists of only letters, digits, and dash, "
+                    + "and does not start with a digit."
+    ),
     ERROR_HOME_NAME_NOT_UNIQUE("Home name exists."),
     ERROR_TELEPORTATION_CANCELLED("Teleportation cancelled.");
 
