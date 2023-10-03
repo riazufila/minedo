@@ -35,7 +35,7 @@ public class PlayerBlockedRepository {
             replacements.put(1, String.valueOf(playerProfile.getId()));
             ResultSet resultSet = database.queryWithWhereClause(query, replacements);
 
-            if (resultSet.next()) {
+            while (resultSet.next()) {
                 int playerId = resultSet.getInt("player_id");
                 int blockedPlayerId = resultSet.getInt("blocked_player_id");
 

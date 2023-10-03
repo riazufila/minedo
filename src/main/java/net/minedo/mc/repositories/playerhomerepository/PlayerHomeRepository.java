@@ -36,7 +36,7 @@ public class PlayerHomeRepository {
             replacements.put(1, String.valueOf(playerProfile.getId()));
             ResultSet resultSet = database.queryWithWhereClause(query, replacements);
 
-            if (resultSet.next()) {
+            while (resultSet.next()) {
                 int playerId = resultSet.getInt("player_id");
                 String homeName = resultSet.getString("name");
                 double coordinateX = resultSet.getDouble("coordinate_x");

@@ -146,7 +146,7 @@ public class PlayerProfileRepository {
             replacements.put(1, String.valueOf(playerUuid));
             ResultSet resultSet = database.queryWithWhereClause(query, replacements);
 
-            if (resultSet.next()) {
+            while (resultSet.next()) {
                 String nickname = resultSet.getString("nickname");
                 otherPlayersNickname.add(nickname);
             }
@@ -196,7 +196,7 @@ public class PlayerProfileRepository {
 
             ResultSet resultSet = database.queryWithWhereClause(query, replacements);
 
-            if (resultSet.next()) {
+            while (resultSet.next()) {
                 String nickname = resultSet.getString("nickname");
                 otherPlayersNickname.add(nickname);
             }
