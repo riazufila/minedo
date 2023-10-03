@@ -24,6 +24,7 @@ public enum HomeTeleportMessage {
                     + "and does not start with a digit."
     ),
     ERROR_HOME_NAME_NOT_UNIQUE("Home name exists."),
+    ERROR_HOME_DOES_NOT_EXISTS("Home doesn't exists."),
     ERROR_TELEPORTATION_CANCELLED("Teleportation cancelled.");
 
     private final String message;

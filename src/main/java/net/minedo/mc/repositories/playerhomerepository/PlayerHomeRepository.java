@@ -18,6 +18,49 @@ public class PlayerHomeRepository {
 
     private final Logger logger = Logger.getLogger(this.getClass().getName());
 
+    public PlayerHome getPlayerHome(UUID playerUuid, String name) {
+        Database database = new Database();
+        database.connect();
+
+        PlayerProfileRepository playerProfileRepository = new PlayerProfileRepository();
+        PlayerProfile playerProfile = playerProfileRepository.getPlayerProfileByUuid(playerUuid);
+        PlayerHome playerHome = null;
+
+        try {
+            String query = """
+                        SELECT * FROM player_home WHERE player_id = ? AND name = ?;
+                    """;
+
+            HashMap<Integer, String> replacements = new HashMap<>();
+            replacements.put(1, String.valueOf(playerProfile.getId()));
+            replacements.put(2, name);
+            ResultSet resultSet = database.queryWithWhereClause(query, replacements);
+
+            if (resultSet.next()) {
+                int playerId = resultSet.getInt("player_id");
+                String homeName = resultSet.getString("name");
+                double coordinateX = resultSet.getDouble("coordinate_x");
+                double coordinateY = resultSet.getDouble("coordinate_y");
+                double coordinateZ = resultSet.getDouble("coordinate_z");
+
+                playerHome = new PlayerHome();
+                playerHome.setPlayerId(playerId);
+                playerHome.setName(homeName);
+                playerHome.setCoordinateX(coordinateX);
+                playerHome.setCoordinateY(coordinateY);
+                playerHome.setCoordinateZ(coordinateZ);
+            }
+        } catch (SQLException error) {
+            this.logger.severe(String.format(
+                    "Unable to get player home by player id and name: %s", error.getMessage()
+            ));
+        } finally {
+            database.disconnect();
+        }
+
+        return playerHome;
+    }
+
     public List<PlayerHome> getPlayerHomeList(UUID playerUuid) {
         Database database = new Database();
         database.connect();

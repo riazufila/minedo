@@ -53,26 +53,11 @@ public class HomeTeleport implements CommandExecutor, Listener, TabCompleter {
         }
 
         String homeType = args[0];
-        String homeName = args[1];
-        PlayerHomeRepository playerHomeRepository = new PlayerHomeRepository();
-        List<String> homes = playerHomeRepository
-                .getPlayerHomeList(playerUuid)
-                .stream()
-                .map(PlayerHome::getName)
-                .toList();
 
-        boolean isHomeExist = homes.contains(homeName);
-
-        if (homeType.equals(HomeType.TELEPORT.getType())
+        return homeType.equals(HomeType.TELEPORT.getType())
+                || homeType.equals(HomeType.ADD.getType())
                 || homeType.equals(HomeType.UPDATE.getType())
-                || homeType.equals(HomeType.REMOVE.getType())
-        ) {
-            if (!isHomeExist) {
-                return false;
-            }
-        }
-
-        return homeType.equals(HomeType.ADD.getType());
+                || homeType.equals(HomeType.REMOVE.getType());
     }
 
     @Override
@@ -94,6 +79,23 @@ public class HomeTeleport implements CommandExecutor, Listener, TabCompleter {
 
         String homeType = args[0];
         String homeName = args[1];
+
+        if (homeType.equals(HomeType.TELEPORT.getType())
+                || homeType.equals(HomeType.UPDATE.getType())
+                || homeType.equals(HomeType.REMOVE.getType())
+        ) {
+            PlayerHomeRepository playerHomeRepository = new PlayerHomeRepository();
+            PlayerHome playerHome = playerHomeRepository.getPlayerHome(player.getUniqueId(), homeName);
+
+            if (playerHome == null) {
+                player.sendMessage(Component
+                        .text(String.format(HomeTeleportMessage.ERROR_HOME_DOES_NOT_EXISTS.getMessage()))
+                        .color(NamedTextColor.RED)
+                );
+
+                return true;
+            }
+        }
 
         if (!this.isValidHomeName(homeName)) {
             player.sendMessage(Component
