@@ -84,7 +84,7 @@ public class ItemBuilder implements Listener {
         ItemStack item = new ItemStack(customItem.getMaterial());
         ItemMeta meta = item.getItemMeta();
 
-        // Set NBT tag.
+        // Set PDC.
         NamespacedKey typeKey = new NamespacedKey(this.pluginInstance, "type");
         meta.getPersistentDataContainer()
                 .set(typeKey, PersistentDataType.STRING, CustomItemType.CUSTOM_ITEM.getType());
