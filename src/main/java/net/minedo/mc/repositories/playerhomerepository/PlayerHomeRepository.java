@@ -129,4 +129,23 @@ public class PlayerHomeRepository {
         database.disconnect();
     }
 
+    public void removeHome(UUID playerUuid, String homeName) {
+        Database database = new Database();
+        database.connect();
+
+        PlayerProfileRepository playerProfileRepository = new PlayerProfileRepository();
+        PlayerProfile playerProfile = playerProfileRepository.getPlayerProfileByUuid(playerUuid);
+
+        String query = """
+                    DELETE FROM player_home WHERE (player_id = ?) AND (name = ?);
+                """;
+
+        HashMap<Integer, String> replacements = new HashMap<>();
+        replacements.put(1, String.valueOf(playerProfile.getId()));
+        replacements.put(2, homeName);
+        database.executeStatement(query, replacements);
+
+        database.disconnect();
+    }
+
 }

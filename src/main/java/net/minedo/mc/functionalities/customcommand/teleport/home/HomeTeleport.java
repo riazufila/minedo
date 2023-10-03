@@ -70,7 +70,7 @@ public class HomeTeleport implements CommandExecutor, Listener, TabCompleter {
 
         if (!this.isCommandValid(args, player.getUniqueId())) {
             player.sendMessage(Component
-                    .text(String.format(HomeTeleportMessage.ERROR_USAGE.getMessage()))
+                    .text(HomeTeleportMessage.ERROR_USAGE.getMessage())
                     .color(NamedTextColor.GRAY)
             );
 
@@ -89,7 +89,7 @@ public class HomeTeleport implements CommandExecutor, Listener, TabCompleter {
 
             if (playerHome == null) {
                 player.sendMessage(Component
-                        .text(String.format(HomeTeleportMessage.ERROR_HOME_DOES_NOT_EXISTS.getMessage()))
+                        .text(HomeTeleportMessage.ERROR_HOME_DOES_NOT_EXISTS.getMessage())
                         .color(NamedTextColor.RED)
                 );
 
@@ -131,27 +131,33 @@ public class HomeTeleport implements CommandExecutor, Listener, TabCompleter {
                 playerHomeRepository.addHome(player.getUniqueId(), player.getLocation(), homeName);
 
                 player.sendMessage(Component
-                        .text(String.format(HomeTeleportMessage.SUCCESS_ADD_HOME.getMessage()))
+                        .text(HomeTeleportMessage.SUCCESS_ADD_HOME.getMessage())
                         .color(NamedTextColor.GREEN)
                 );
             } else if (!isAllowed) {
                 player.sendMessage(Component
-                        .text(String.format(HomeTeleportMessage.ERROR_MAX_HOME.getMessage()))
+                        .text(HomeTeleportMessage.ERROR_MAX_HOME.getMessage())
                         .color(NamedTextColor.RED)
                 );
             } else {
                 player.sendMessage(Component
-                        .text(String.format(HomeTeleportMessage.ERROR_HOME_NAME_NOT_UNIQUE.getMessage()))
+                        .text(HomeTeleportMessage.ERROR_HOME_NAME_NOT_UNIQUE.getMessage())
                         .color(NamedTextColor.RED)
                 );
             }
         } else if (homeType.equals(HomeType.UPDATE.getType())) {
             // TODO: Update home.
         } else if (homeType.equals(HomeType.REMOVE.getType())) {
-            // TODO: Remove home.
+            PlayerHomeRepository playerHomeRepository = new PlayerHomeRepository();
+            playerHomeRepository.removeHome(player.getUniqueId(), homeName);
+
+            player.sendMessage(Component
+                    .text(HomeTeleportMessage.SUCCESS_REMOVE_HOME.getMessage())
+                    .color(NamedTextColor.GREEN)
+            );
         } else {
             player.sendMessage(Component
-                    .text(String.format(HomeTeleportMessage.ERROR_USAGE.getMessage()))
+                    .text(HomeTeleportMessage.ERROR_USAGE.getMessage())
                     .color(NamedTextColor.GRAY)
             );
         }

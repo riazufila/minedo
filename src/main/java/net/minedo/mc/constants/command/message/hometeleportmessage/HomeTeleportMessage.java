@@ -6,7 +6,9 @@ import net.minedo.mc.constants.command.type.hometype.HomeType;
 public enum HomeTeleportMessage {
 
     SUCCESS_TELEPORT("Teleported to %s!"),
-    SUCCESS_ADD_HOME("Added home."),
+    SUCCESS_ADD_HOME("Home added."),
+    SUCCESS_UPDATE_HOME("Home updated."),
+    SUCCESS_REMOVE_HOME("Home removed."),
     INFO_TELEPORTING("Teleporting to %s in 5.."),
     INFO_COUNTDOWN("%s.."),
     ERROR_USAGE(String.format(
