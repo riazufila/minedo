@@ -44,15 +44,23 @@ public final class ChatUtils {
         String selectedColor;
 
         if (isContent) {
-            if (playerColor.getContentCustom() != null) {
-                selectedColor = playerColor.getContentCustom();
+            String contentCustom = playerColor.getContentCustom();
+            if (contentCustom != null
+                    && PermissionUtils.validatePlayerPermissionForColorSettingByColorTypeAndColor(
+                            player, ColorType.CUSTOM.getType(), contentCustom
+            )) {
+                selectedColor = contentCustom;
                 isCustom = true;
             } else {
                 selectedColor = playerColor.getContentPreset();
             }
         } else {
-            if (playerColor.getPrefixCustom() != null) {
-                selectedColor = playerColor.getPrefixCustom();
+            String prefixCustom = playerColor.getPrefixCustom();
+            if (prefixCustom != null
+                    && PermissionUtils.validatePlayerPermissionForColorSettingByColorTypeAndColor(
+                    player, ColorType.CUSTOM.getType(), prefixCustom
+            )) {
+                selectedColor = prefixCustom;
                 isCustom = true;
             } else {
                 selectedColor = playerColor.getPrefixPreset();
