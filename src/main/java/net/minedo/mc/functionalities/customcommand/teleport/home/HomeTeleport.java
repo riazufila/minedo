@@ -33,16 +33,32 @@ public class HomeTeleport implements CommandExecutor, Listener, TabCompleter {
         this.pluginInstance = pluginInstance;
     }
 
-    private boolean isCommandValid(String[] args) {
+    private boolean isCommandValid(String[] args, UUID playerUuid) {
         if (args.length != 2) {
             return false;
         }
 
         String homeType = args[0];
+        String homeName = args[1];
+        PlayerHomeRepository playerHomeRepository = new PlayerHomeRepository();
+        List<String> homes = playerHomeRepository
+                .getPlayerHomeList(playerUuid)
+                .stream()
+                .map(PlayerHome::getName)
+                .toList();
 
-        return homeType.equals(HomeType.TELEPORT.getType())
-                || homeType.equals(HomeType.ADD.getType())
-                || homeType.equals(HomeType.REMOVE.getType());
+        boolean isHomeExist = homes.contains(homeName);
+
+        if (homeType.equals(HomeType.TELEPORT.getType())
+                || homeType.equals(HomeType.UPDATE.getType())
+                || homeType.equals(HomeType.REMOVE.getType())
+        ) {
+            if (!isHomeExist) {
+                return false;
+            }
+        }
+
+        return homeType.equals(HomeType.ADD.getType());
     }
 
     @Override
@@ -53,7 +69,7 @@ public class HomeTeleport implements CommandExecutor, Listener, TabCompleter {
             return true;
         }
 
-        if (!this.isCommandValid(args)) {
+        if (!this.isCommandValid(args, player.getUniqueId())) {
             player.sendMessage(Component
                     .text(String.format(HomeTeleportMessage.ERROR_USAGE.getMessage()))
                     .color(NamedTextColor.GRAY)
