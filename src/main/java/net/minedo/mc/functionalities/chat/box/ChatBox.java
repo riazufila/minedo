@@ -3,6 +3,7 @@ package net.minedo.mc.functionalities.chat.box;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.text.Component;
 import net.minedo.mc.functionalities.chat.ChatUtils;
+import net.minedo.mc.functionalities.permissions.PermissionUtils;
 import net.minedo.mc.models.playerprofile.PlayerProfile;
 import net.minedo.mc.repositories.playerprofilerepository.PlayerProfileRepository;
 import org.apache.commons.lang3.StringUtils;
@@ -22,7 +23,7 @@ public class ChatBox implements Listener {
             String nickname = playerProfile.getNickname();
             Component nameComponent = sourceDisplayName;
 
-            if (ChatUtils.validatePlayerPermissionForNicknameDisplay(player) && nickname != null) {
+            if (PermissionUtils.validatePlayerPermissionForNicknameDisplay(player) && nickname != null) {
                 nameComponent = Component.text(nickname);
             }
 

@@ -4,6 +4,7 @@ public enum CustomCommandType {
 
     REGION_TELEPORT("warp"),
     PLAYER_TELEPORT("teleport"),
+    HOME_TELEPORT("home"),
     NARRATE("narrate"),
     LIKE("like"),
     IGNORE("ignore"),

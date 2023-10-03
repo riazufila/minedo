@@ -5,7 +5,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.minedo.mc.Minedo;
 import net.minedo.mc.constants.command.message.nicknamemessage.NicknameMessage;
 import net.minedo.mc.constants.command.type.nicknametype.NicknameType;
-import net.minedo.mc.functionalities.chat.ChatUtils;
+import net.minedo.mc.functionalities.permissions.PermissionUtils;
 import net.minedo.mc.models.playerprofile.PlayerProfile;
 import net.minedo.mc.repositories.playerprofilerepository.PlayerProfileRepository;
 import org.bukkit.command.Command;
@@ -132,7 +132,7 @@ public class Nickname implements CommandExecutor, TabCompleter, Listener {
                     .color(NamedTextColor.GREEN)
             );
         } else if (nicknameType.equals(NicknameType.REVEAL.getType())) {
-            if (!ChatUtils.validatePlayerPermissionForNicknameReveal(player)) {
+            if (!PermissionUtils.validatePlayerPermissionForNicknameReveal(player)) {
                 player.sendMessage(Component
                         .text(NicknameMessage.ERROR_NO_PERMISSION.getMessage())
                         .color(NamedTextColor.RED)
@@ -207,7 +207,7 @@ public class Nickname implements CommandExecutor, TabCompleter, Listener {
         if (args.length == 1) {
             for (String nicknameType : nicknameTypes) {
                 if (nicknameType.equals(NicknameType.REVEAL.getType())) {
-                    if (ChatUtils.validatePlayerPermissionForNicknameReveal(player)) {
+                    if (PermissionUtils.validatePlayerPermissionForNicknameReveal(player)) {
                         completions.add(nicknameType);
                     }
                 } else {
@@ -216,7 +216,7 @@ public class Nickname implements CommandExecutor, TabCompleter, Listener {
             }
         } else if (args.length == 2
                 && args[0].equals(NicknameType.REVEAL.getType())
-                && ChatUtils.validatePlayerPermissionForNicknameReveal(player)) {
+                && PermissionUtils.validatePlayerPermissionForNicknameReveal(player)) {
             PlayerProfileRepository playerProfileRepository = new PlayerProfileRepository();
             Collection<? extends Player> onlinePlayers = this.pluginInstance.getServer().getOnlinePlayers();
 

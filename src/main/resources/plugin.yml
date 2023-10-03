@@ -33,6 +33,9 @@ permissions:
   minedo.command.nickname:
     description: "Access to /nickname command."
 
+  minedo.command.home:
+    description: "Access to /home command."
+
   minedo.group.default:
     description: "Default features."
     default: true
@@ -42,6 +45,7 @@ permissions:
       - "minedo.command.like"
       - "minedo.command.ignore"
       - "minedo.command.message"
+      - "minedo.command.home"
 
   minedo.group.gold:
     description: "Allow access to Gold features, along with the defaults."
@@ -111,3 +115,8 @@ commands:
     description: "Set and reveal nicknames."
     usage: "/nickname <set <nickname> | reveal <nickname> | remove>"
     permission: "minedo.command.nickname"
+
+  home:
+    description: "Teleport, add, update, and remove homes.."
+    usage: "/home <teleport | add | update | remove> <home>"
+    permission: "minedo.command.home"

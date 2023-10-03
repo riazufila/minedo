@@ -8,6 +8,7 @@ import net.minedo.mc.functionalities.customcommand.like.Like;
 import net.minedo.mc.functionalities.customcommand.message.Message;
 import net.minedo.mc.functionalities.customcommand.narrate.Narrate;
 import net.minedo.mc.functionalities.customcommand.nickname.Nickname;
+import net.minedo.mc.functionalities.customcommand.teleport.home.HomeTeleport;
 import net.minedo.mc.functionalities.customcommand.teleport.player.PlayerTeleport;
 import net.minedo.mc.functionalities.customcommand.teleport.region.RegionTeleport;
 import net.minedo.mc.models.region.Region;
@@ -49,10 +50,16 @@ public class CustomCommand {
         // Player teleport.
         PlayerTeleport playerTeleport = new PlayerTeleport(globalTeleportingPlayers, this.pluginInstance);
         server.getPluginManager().registerEvents(playerTeleport, this.pluginInstance);
-
         Objects.requireNonNull(this.pluginInstance.getCommand(
                 CustomCommandType.PLAYER_TELEPORT.getMessage()
         )).setExecutor(playerTeleport);
+
+        // Home teleport.
+        HomeTeleport homeTeleport = new HomeTeleport(globalTeleportingPlayers, this.pluginInstance);
+        server.getPluginManager().registerEvents(homeTeleport, this.pluginInstance);
+        Objects.requireNonNull(this.pluginInstance.getCommand(
+                CustomCommandType.HOME_TELEPORT.getMessage()
+        )).setExecutor(homeTeleport);
 
         // Narrate.
         Objects.requireNonNull(this.pluginInstance.getCommand(
@@ -81,10 +88,10 @@ public class CustomCommand {
 
         // Nickname.
         Nickname nickname = new Nickname(this.pluginInstance);
+        this.pluginInstance.getServer().getPluginManager().registerEvents(nickname, this.pluginInstance);
         Objects.requireNonNull(this.pluginInstance.getCommand(
                 CustomCommandType.NICKNAME.getMessage()
         )).setExecutor(nickname);
-        this.pluginInstance.getServer().getPluginManager().registerEvents(nickname, this.pluginInstance);
     }
 
 }

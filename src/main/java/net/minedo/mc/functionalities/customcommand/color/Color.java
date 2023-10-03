@@ -5,7 +5,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.minedo.mc.constants.command.message.colormessage.ColorMessage;
 import net.minedo.mc.constants.command.type.colortype.ColorType;
 import net.minedo.mc.constants.groupcolor.GroupColor;
-import net.minedo.mc.functionalities.chat.ChatUtils;
+import net.minedo.mc.functionalities.permissions.PermissionUtils;
 import net.minedo.mc.models.playercolor.PlayerColor;
 import net.minedo.mc.repositories.playercolorrepository.PlayerColorRepository;
 import org.bukkit.command.Command;
@@ -79,7 +79,7 @@ public class Color implements CommandExecutor, TabCompleter {
         String colorType = args[1];
         String color = args[2];
 
-        if (!ChatUtils.validatePlayerPermissionForColorSettingByColorTypeAndColor(player, colorType, color)) {
+        if (!PermissionUtils.validatePlayerPermissionForColorSettingByColorTypeAndColor(player, colorType, color)) {
             player.sendMessage(Component
                     .text(ColorMessage.ERROR_NO_PERMISSION.getMessage())
                     .color(NamedTextColor.RED)
@@ -145,7 +145,7 @@ public class Color implements CommandExecutor, TabCompleter {
         } else if (args.length == 2 && prefixOrContent.contains(args[0])) {
             for (String colorType : colorTypes) {
                 if (colorType.equals(ColorType.CUSTOM.getType())) {
-                    if (ChatUtils.validatePlayerPermissionForCustomColor(player)) {
+                    if (PermissionUtils.validatePlayerPermissionForCustomColor(player)) {
                         completions.add(colorType);
                     }
                 } else {
@@ -155,7 +155,7 @@ public class Color implements CommandExecutor, TabCompleter {
         } else if (args.length == 3 && colorTypes.contains(args[1])) {
             for (String preset : presets) {
                 if (args[1].equals(ColorType.PRESET.getType())
-                        && ChatUtils.validatePlayerPermissionForPresetColor(player, preset)) {
+                        && PermissionUtils.validatePlayerPermissionForPresetColor(player, preset)) {
                     completions.add(preset);
                 }
             }
