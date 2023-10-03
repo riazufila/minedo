@@ -24,6 +24,15 @@ CREATE TABLE player_color (
     FOREIGN KEY (player_id) REFERENCES player_profile (id)
 );
 
+CREATE TABLE player_home (
+    player_id DOUBLE NOT NULL,
+    name VARCHAR(20) NOT NULL,
+    coordinate_x DOUBLE DEFAULT NULL,
+    coordinate_y DOUBLE DEFAULT NULL,
+    coordinate_z DOUBLE DEFAULT NULL,
+    FOREIGN KEY (player_id) REFERENCES player_profile (id)
+);
+
 CREATE TABLE player_like (
     player_id int NOT NULL,
     like_received_count INT DEFAULT 0,
