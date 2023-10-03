@@ -30,6 +30,7 @@ CREATE TABLE player_home (
     coordinate_x DOUBLE DEFAULT NULL,
     coordinate_y DOUBLE DEFAULT NULL,
     coordinate_z DOUBLE DEFAULT NULL,
+    CONSTRAINT player_id_name_UNIQUE UNIQUE (player_id, name),
     FOREIGN KEY (player_id) REFERENCES player_profile (id)
 );
 

@@ -20,10 +20,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class HomeTeleport implements CommandExecutor, Listener, TabCompleter {
 
@@ -84,19 +81,26 @@ public class HomeTeleport implements CommandExecutor, Listener, TabCompleter {
             // TODO: Teleport to home.
         } else if (homeType.equals(HomeType.ADD.getType())) {
             PlayerHomeRepository playerHomeRepository = new PlayerHomeRepository();
-            int homeCount = playerHomeRepository.getPlayerHomeList(player.getUniqueId()).size();
+            List<PlayerHome> homeList = playerHomeRepository.getPlayerHomeList(player.getUniqueId());
+            int homeCount = homeList.size();
             boolean isAllowed = PermissionUtils.validatePlayerPermissionForHomeCount(player, homeCount);
+            boolean isHomeNameUnique = homeList.stream().noneMatch(home -> Objects.equals(home.getName(), homeName));
 
-            if (isAllowed) {
+            if (isAllowed && isHomeNameUnique) {
                 playerHomeRepository.addHome(player.getUniqueId(), player.getLocation(), homeName);
 
                 player.sendMessage(Component
                         .text(String.format(HomeTeleportMessage.SUCCESS_ADD_HOME.getMessage()))
                         .color(NamedTextColor.GREEN)
                 );
-            } else {
+            } else if (!isAllowed) {
                 player.sendMessage(Component
                         .text(String.format(HomeTeleportMessage.ERROR_MAX_HOME.getMessage()))
+                        .color(NamedTextColor.RED)
+                );
+            } else {
+                player.sendMessage(Component
+                        .text(String.format(HomeTeleportMessage.ERROR_HOME_NAME_NOT_UNIQUE.getMessage()))
                         .color(NamedTextColor.RED)
                 );
             }

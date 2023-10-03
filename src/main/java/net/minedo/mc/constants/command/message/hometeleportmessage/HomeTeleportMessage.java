@@ -18,6 +18,7 @@ public enum HomeTeleportMessage {
             HomeType.REMOVE.getType()
     )),
     ERROR_MAX_HOME("Unable to add more homes."),
+    ERROR_HOME_NAME_NOT_UNIQUE("Home name exists."),
     ERROR_TELEPORTATION_CANCELLED("Teleportation cancelled.");
 
     private final String message;
