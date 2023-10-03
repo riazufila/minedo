@@ -73,5 +73,24 @@ public class PermissionUtils {
         return player.hasPermission(GroupPermission.OBSIDIAN.getPermission());
     }
 
+    public static boolean validatePlayerPermissionForHomeCount(Player player, int homeCount) {
+        boolean isAllowed = false;
+        int EMERALD_HOME_COUNT = 30;
+        int GOLD_HOME_COUNT = 30;
+
+        if (player.hasPermission(GroupPermission.DIAMOND.getPermission())) {
+            isAllowed = true;
+        } else if (player.hasPermission(GroupPermission.EMERALD.getPermission())
+                && homeCount <= EMERALD_HOME_COUNT
+        ) {
+            isAllowed = true;
+        } else if (player.hasPermission(GroupPermission.GOLD.getPermission())
+                && homeCount <= GOLD_HOME_COUNT
+        ) {
+            isAllowed = true;
+        }
+
+        return isAllowed;
+    }
 
 }

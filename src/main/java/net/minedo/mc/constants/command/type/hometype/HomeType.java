@@ -3,7 +3,8 @@ package net.minedo.mc.constants.command.type.hometype;
 public enum HomeType {
 
     TELEPORT("teleport"),
-    SET("set"),
+    ADD("add"),
+    UPDATE("update"),
     REMOVE("remove");
 
     private final String type;

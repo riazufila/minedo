@@ -6,6 +6,7 @@ import net.minedo.mc.Minedo;
 import net.minedo.mc.constants.command.message.globalteleportmessage.GlobalTeleportMessage;
 import net.minedo.mc.constants.command.message.hometeleportmessage.HomeTeleportMessage;
 import net.minedo.mc.constants.command.type.hometype.HomeType;
+import net.minedo.mc.functionalities.permissions.PermissionUtils;
 import net.minedo.mc.models.playerhome.PlayerHome;
 import net.minedo.mc.repositories.playerhomerepository.PlayerHomeRepository;
 import org.bukkit.Bukkit;
@@ -43,7 +44,7 @@ public class HomeTeleport implements CommandExecutor, Listener, TabCompleter {
         String homeType = args[0];
 
         return homeType.equals(HomeType.TELEPORT.getType())
-                || homeType.equals(HomeType.SET.getType())
+                || homeType.equals(HomeType.ADD.getType())
                 || homeType.equals(HomeType.REMOVE.getType());
     }
 
@@ -76,7 +77,39 @@ public class HomeTeleport implements CommandExecutor, Listener, TabCompleter {
             return true;
         }
 
-        // TODO: Handle commands teleport, set, and remove.
+        String homeType = args[0];
+        String homeName = args[1];
+
+        if (homeType.equals(HomeType.TELEPORT.getType())) {
+            // TODO: Teleport to home.
+        } else if (homeType.equals(HomeType.ADD.getType())) {
+            PlayerHomeRepository playerHomeRepository = new PlayerHomeRepository();
+            int homeCount = playerHomeRepository.getPlayerHomeList(player.getUniqueId()).size();
+            boolean isAllowed = PermissionUtils.validatePlayerPermissionForHomeCount(player, homeCount);
+
+            if (isAllowed) {
+                playerHomeRepository.addHome(player.getUniqueId(), player.getLocation(), homeName);
+
+                player.sendMessage(Component
+                        .text(String.format(HomeTeleportMessage.SUCCESS_ADD_HOME.getMessage()))
+                        .color(NamedTextColor.GREEN)
+                );
+            } else {
+                player.sendMessage(Component
+                        .text(String.format(HomeTeleportMessage.ERROR_MAX_HOME.getMessage()))
+                        .color(NamedTextColor.RED)
+                );
+            }
+        } else if (homeType.equals(HomeType.UPDATE.getType())) {
+            // TODO: Update home.
+        } else if (homeType.equals(HomeType.REMOVE.getType())) {
+            // TODO: Remove home.
+        } else {
+            player.sendMessage(Component
+                    .text(String.format(HomeTeleportMessage.ERROR_USAGE.getMessage()))
+                    .color(NamedTextColor.GRAY)
+            );
+        }
 
         return true;
     }
@@ -93,7 +126,8 @@ public class HomeTeleport implements CommandExecutor, Listener, TabCompleter {
 
         List<String> homeTypes = new ArrayList<>() {{
             add(HomeType.TELEPORT.getType());
-            add(HomeType.SET.getType());
+            add(HomeType.ADD.getType());
+            add(HomeType.UPDATE.getType());
             add(HomeType.REMOVE.getType());
         }};
 
@@ -102,7 +136,9 @@ public class HomeTeleport implements CommandExecutor, Listener, TabCompleter {
         if (args.length == 1) {
             completions.addAll(homeTypes);
         } else if (args.length == 2
-                && (homeType.equals(HomeType.TELEPORT.getType()) || homeType.equals(HomeType.REMOVE.getType()))
+                && (homeType.equals(HomeType.TELEPORT.getType())
+                || homeType.equals(HomeType.REMOVE.getType())
+                || homeType.equals(HomeType.UPDATE.getType()))
         ) {
             PlayerHomeRepository playerHomeRepository = new PlayerHomeRepository();
             List<String> homes = playerHomeRepository

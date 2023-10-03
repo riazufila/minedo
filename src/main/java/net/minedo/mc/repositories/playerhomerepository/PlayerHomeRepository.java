@@ -1,6 +1,5 @@
 package net.minedo.mc.repositories.playerhomerepository;
 
-import net.minedo.mc.models.playerblockedlist.PlayerBlocked;
 import net.minedo.mc.models.playerhome.PlayerHome;
 import net.minedo.mc.models.playerprofile.PlayerProfile;
 import net.minedo.mc.repositories.Database;

@@ -117,6 +117,6 @@ commands:
     permission: "minedo.command.nickname"
 
   home:
-    description: "Teleport, set, and remove homes.."
-    usage: "/home <teleport | set | remove> <home>"
+    description: "Teleport, add, update, and remove homes.."
+    usage: "/home <teleport | add | update | remove> <home>"
     permission: "minedo.command.home"
