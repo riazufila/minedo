@@ -1,4 +1,4 @@
-package net.minedo.mc.functionalities.itembuilder;
+package net.minedo.mc.functionalities.customitembuilder;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
@@ -30,12 +30,12 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.logging.Logger;
 
-public class ItemBuilder implements Listener {
+public class CustomItemBuilder implements Listener {
 
     private final Logger logger = Logger.getLogger(this.getClass().getName());
     private final Minedo pluginInstance;
 
-    public ItemBuilder(Minedo pluginInstance) {
+    public CustomItemBuilder(Minedo pluginInstance) {
         this.pluginInstance = pluginInstance;
     }
 

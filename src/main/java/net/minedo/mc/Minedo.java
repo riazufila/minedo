@@ -4,7 +4,7 @@ import com.sk89q.worldedit.WorldEdit;
 import net.minedo.mc.constants.worldtype.WorldType;
 import net.minedo.mc.functionalities.chat.Chat;
 import net.minedo.mc.functionalities.customcommand.CustomCommand;
-import net.minedo.mc.functionalities.itembuilder.ItemBuilder;
+import net.minedo.mc.functionalities.customitembuilder.CustomItemBuilder;
 import net.minedo.mc.functionalities.joinleavebroadcast.JoinLeaveBroadcast;
 import net.minedo.mc.functionalities.player.PlayerProfileManager;
 import net.minedo.mc.functionalities.regionregeneration.RegionRegeneration;
@@ -34,7 +34,7 @@ public class Minedo extends JavaPlugin {
         this.getServer().getPluginManager().registerEvents(new JoinLeaveBroadcast(), this);
 
         // Populate newly generated chests with custom items.
-        this.getServer().getPluginManager().registerEvents(new ItemBuilder(this), this);
+        this.getServer().getPluginManager().registerEvents(new CustomItemBuilder(this), this);
 
         // Custom commands.
         CustomCommand customCommand = new CustomCommand(this);
