@@ -1,5 +1,6 @@
 package net.minedo.mc.functionalities.customenchantment.list;
 
+import net.minedo.mc.constants.common.Common;
 import net.minedo.mc.constants.customenchantment.type.CustomEnchantmentType;
 import net.minedo.mc.functionalities.customenchantment.CustomEnchantment;
 import net.minedo.mc.functionalities.customenchantment.CustomEnchantmentUtils;
@@ -27,7 +28,7 @@ public class LightningEnchantment extends CustomEnchantment implements Listener 
         if (event.getDamager() instanceof Player player) {
             ItemStack itemAtHand = player.getInventory().getItemInMainHand();
 
-            if (itemAtHand.isEmpty()) {
+            if (itemAtHand.isEmpty() || player.getAttackCooldown() != (float) Common.ATTACK_COOL_DOWN.getValue()) {
                 return;
             }
 

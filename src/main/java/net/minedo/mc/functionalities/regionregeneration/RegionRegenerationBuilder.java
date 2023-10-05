@@ -45,7 +45,7 @@ public class RegionRegenerationBuilder extends BukkitRunnable {
 
     private Location getCenterLocationOfChunk(Chunk chunk) {
         World world = this.region.getWorldType();
-        int CHUNK_SIZE = Common.CHUNK_SIZE.getValue();
+        int CHUNK_SIZE = (int) Common.CHUNK_SIZE.getValue();
         int coordinateMinX = chunk.getX() * CHUNK_SIZE;
         int coordinateMinZ = chunk.getZ() * CHUNK_SIZE;
         // Skip subtracting 1 from max coordinates, as we're looking to

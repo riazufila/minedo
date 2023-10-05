@@ -67,7 +67,7 @@ public class RegionRegeneration implements Listener {
     }
 
     private boolean processChunks(World world, ChunkProcessor chunkProcessor, boolean isGetter) {
-        int CHUNK_SIZE = Common.CHUNK_SIZE.getValue();
+        int CHUNK_SIZE = (int) Common.CHUNK_SIZE.getValue();
         int minX = this.region.getMinX();
         int maxX = this.region.getMaxX();
         int minZ = this.region.getMinZ();
