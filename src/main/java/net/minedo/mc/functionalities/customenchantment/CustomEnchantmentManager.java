@@ -10,21 +10,20 @@ import java.util.List;
 
 public class CustomEnchantmentManager implements Listener {
 
-    private final Minedo pluginInstance;
     private final List<CustomEnchantment> customEnchantments = new ArrayList<>();
 
-    public CustomEnchantmentManager(Minedo pluginInstance) {
-        this.pluginInstance = pluginInstance;
-
+    public CustomEnchantmentManager() {
         // TODO: Make a database call and loop through all the custom enchants and add accordingly.
         this.customEnchantments.add(new LightningEnchantment(
-                CustomEnchantmentType.LIGHTNING, (short) 1, this.pluginInstance, "Summons lightning to target."
+                CustomEnchantmentType.LIGHTNING, (short) 1, "Summons lightning to target."
         ));
     }
 
     public void registerEvents() {
+        Minedo instance = Minedo.getInstance();
+
         for (CustomEnchantment customEnchantment : this.customEnchantments) {
-            this.pluginInstance.getServer().getPluginManager().registerEvents(customEnchantment, this.pluginInstance);
+            instance.getServer().getPluginManager().registerEvents(customEnchantment, instance);
         }
     }
 

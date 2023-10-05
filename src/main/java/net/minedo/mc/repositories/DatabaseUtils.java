@@ -1,6 +1,6 @@
 package net.minedo.mc.repositories;
 
-public class DatabaseUtils {
+public final class DatabaseUtils {
 
     public static String buildWhereInClause(int count) {
         StringBuilder placeholders = new StringBuilder();

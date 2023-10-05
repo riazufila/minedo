@@ -19,9 +19,8 @@ public class ChatBlocked implements Listener {
         for (Audience audience : audiences) {
             if (audience instanceof Player player) {
                 UUID playerUuid = player.getUniqueId();
-                PlayerBlockedRepository playerBlockedRepository = new PlayerBlockedRepository();
 
-                if (playerBlockedRepository.isPlayerBlockedByPlayer(
+                if (PlayerBlockedRepository.isPlayerBlockedByPlayer(
                         event.getPlayer().getUniqueId(), playerUuid)) {
                     event.viewers().remove(player);
                 }

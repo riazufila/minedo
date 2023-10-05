@@ -11,75 +11,15 @@ import java.util.HashMap;
 import java.util.UUID;
 import java.util.logging.Logger;
 
-public class PlayerColorRepository {
+public final class PlayerColorRepository {
 
-    private final Logger logger = Logger.getLogger(this.getClass().getName());
+    private static final Logger logger = Logger.getLogger(PlayerColorRepository.class.getName());
 
-    public void insertNewPlayerColor(UUID playerUuid) {
+    public static void updatePlayerColor(UUID playerUuid, PlayerColor playerColor) {
         Database database = new Database();
         database.connect();
 
-        PlayerProfileRepository playerProfileRepository = new PlayerProfileRepository();
-        PlayerProfile playerProfile = playerProfileRepository.getPlayerProfileByUuid(playerUuid);
-
-        String query = """
-                    INSERT INTO player_color (player_id) VALUES (?);
-                """;
-
-        HashMap<Integer, String> replacements = new HashMap<>();
-        replacements.put(1, String.valueOf(playerProfile.getId()));
-        database.executeStatement(query, replacements);
-
-        database.disconnect();
-    }
-
-    public PlayerColor getPlayerColorByPlayerUuid(UUID playerUuid) {
-        Database database = new Database();
-        database.connect();
-
-        PlayerProfileRepository playerProfileRepository = new PlayerProfileRepository();
-        PlayerProfile playerProfile = playerProfileRepository.getPlayerProfileByUuid(playerUuid);
-
-        PlayerColor playerColor = null;
-
-        try {
-            String query = """
-                        SELECT * FROM player_color WHERE player_id = ?;
-                    """;
-
-            HashMap<Integer, String> replacements = new HashMap<>();
-            replacements.put(1, String.valueOf(playerProfile.getId()));
-            ResultSet resultSet = database.queryWithWhereClause(query, replacements);
-
-            if (resultSet.next()) {
-                int id = resultSet.getInt("player_id");
-                String prefixPreset = resultSet.getString("prefix_preset");
-                String prefixCustom = resultSet.getString("prefix_custom");
-                String contentPreset = resultSet.getString("content_preset");
-                String contentCustom = resultSet.getString("content_custom");
-
-                playerColor = new PlayerColor();
-                playerColor.setPlayerId(id);
-                playerColor.setPrefixPreset(prefixPreset);
-                playerColor.setPrefixCustom(prefixCustom);
-                playerColor.setContentPreset(contentPreset);
-                playerColor.setContentCustom(contentCustom);
-            }
-        } catch (SQLException error) {
-            this.logger.severe(String.format("Unable to get player color by uuid: %s", error.getMessage()));
-        } finally {
-            database.disconnect();
-        }
-
-        return playerColor;
-    }
-
-    public void updatePlayerColor(UUID playerUuid, PlayerColor playerColor) {
-        Database database = new Database();
-        database.connect();
-
-        PlayerProfileRepository playerProfileRepository = new PlayerProfileRepository();
-        PlayerProfile playerProfile = playerProfileRepository.getPlayerProfileByUuid(playerUuid);
+        PlayerProfile playerProfile = PlayerProfileRepository.getPlayerProfileByUuid(playerUuid);
 
         String query = """
                     UPDATE player_color
@@ -107,6 +47,63 @@ public class PlayerColorRepository {
         database.executeStatement(query, replacements);
 
         database.disconnect();
+    }
+
+    public static void insertNewPlayerColor(UUID playerUuid) {
+        Database database = new Database();
+        database.connect();
+
+        PlayerProfile playerProfile = PlayerProfileRepository.getPlayerProfileByUuid(playerUuid);
+
+        String query = """
+                    INSERT INTO player_color (player_id) VALUES (?);
+                """;
+
+        HashMap<Integer, String> replacements = new HashMap<>();
+        replacements.put(1, String.valueOf(playerProfile.getId()));
+        database.executeStatement(query, replacements);
+
+        database.disconnect();
+    }
+
+    public static PlayerColor getPlayerColorByPlayerUuid(UUID playerUuid) {
+        Database database = new Database();
+        database.connect();
+
+        PlayerProfile playerProfile = PlayerProfileRepository.getPlayerProfileByUuid(playerUuid);
+
+        PlayerColor playerColor = null;
+
+        try {
+            String query = """
+                        SELECT * FROM player_color WHERE player_id = ?;
+                    """;
+
+            HashMap<Integer, String> replacements = new HashMap<>();
+            replacements.put(1, String.valueOf(playerProfile.getId()));
+            ResultSet resultSet = database.queryWithWhereClause(query, replacements);
+
+            if (resultSet.next()) {
+                int id = resultSet.getInt("player_id");
+                String prefixPreset = resultSet.getString("prefix_preset");
+                String prefixCustom = resultSet.getString("prefix_custom");
+                String contentPreset = resultSet.getString("content_preset");
+                String contentCustom = resultSet.getString("content_custom");
+
+                playerColor = new PlayerColor();
+                playerColor.setPlayerId(id);
+                playerColor.setPrefixPreset(prefixPreset);
+                playerColor.setPrefixCustom(prefixCustom);
+                playerColor.setContentPreset(contentPreset);
+                playerColor.setContentCustom(contentCustom);
+            }
+        } catch (SQLException error) {
+            logger.severe(String.format("Unable to get player color by uuid: %s", error.getMessage()));
+        } finally {
+            database.disconnect();
+        }
+
+        return playerColor;
     }
 
 }

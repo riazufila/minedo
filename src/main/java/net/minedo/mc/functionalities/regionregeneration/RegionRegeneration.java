@@ -46,13 +46,11 @@ import java.util.logging.Logger;
 public class RegionRegeneration implements Listener {
 
     private final Region region;
-    private final Minedo pluginInstance;
     private final Logger logger = Logger.getLogger(this.getClass().getName());
     private final HashMap<String, Integer> restoringChunks = new HashMap<>();
 
-    public RegionRegeneration(Region region, Minedo pluginInstance) {
+    public RegionRegeneration(Region region) {
         this.region = region;
-        this.pluginInstance = pluginInstance;
     }
 
     private File getFile(int chunkX, int chunkZ) {
@@ -143,7 +141,7 @@ public class RegionRegeneration implements Listener {
         );
 
         BlockArrayClipboard blockArrayClipboard = new BlockArrayClipboard(cuboidRegion);
-        WorldEdit worldEdit = this.pluginInstance.getWorldEdit();
+        WorldEdit worldEdit = WorldEdit.getInstance();
         EditSession editSession = worldEdit.newEditSession(BukkitAdapter.adapt(world));
 
         ForwardExtentCopy forwardExtentCopy = new ForwardExtentCopy(
@@ -199,11 +197,11 @@ public class RegionRegeneration implements Listener {
 
         // Run region regeneration scheduler after 30 seconds.
         RegionRegenerationLauncher regionRegenerationLauncher = new RegionRegenerationLauncher(
-                chunk, this.region, this.restoringChunks, this.pluginInstance
+                chunk, this.region, this.restoringChunks
         );
 
         int restoringTaskId = regionRegenerationLauncher
-                .runTaskLater(this.pluginInstance, 600)
+                .runTaskLater(Minedo.getInstance(), 600)
                 .getTaskId();
 
         // Place task ID and update restoring chunk details.

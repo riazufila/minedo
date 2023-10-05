@@ -12,16 +12,15 @@ import java.util.HashMap;
 import java.util.UUID;
 import java.util.logging.Logger;
 
-public class PlayerLikeRepository {
+public final class PlayerLikeRepository {
 
-    private final Logger logger = Logger.getLogger(this.getClass().getName());
+    private static final Logger logger = Logger.getLogger(PlayerLikeRepository.class.getName());
 
-    public void insertNewPlayerLike(UUID playerUuid) {
+    public static void insertNewPlayerLike(UUID playerUuid) {
         Database database = new Database();
         database.connect();
 
-        PlayerProfileRepository playerProfileRepository = new PlayerProfileRepository();
-        PlayerProfile playerProfile = playerProfileRepository.getPlayerProfileByUuid(playerUuid);
+        PlayerProfile playerProfile = PlayerProfileRepository.getPlayerProfileByUuid(playerUuid);
 
         String query = """
                     INSERT INTO player_like (player_id) VALUES (?);
@@ -34,12 +33,11 @@ public class PlayerLikeRepository {
         database.disconnect();
     }
 
-    public void updatePlayerLike(UUID playerUuid, PlayerLike playerLike) {
+    public static void updatePlayerLike(UUID playerUuid, PlayerLike playerLike) {
         Database database = new Database();
         database.connect();
 
-        PlayerProfileRepository playerProfileRepository = new PlayerProfileRepository();
-        PlayerProfile playerProfile = playerProfileRepository.getPlayerProfileByUuid(playerUuid);
+        PlayerProfile playerProfile = PlayerProfileRepository.getPlayerProfileByUuid(playerUuid);
 
         String query = """
                     UPDATE player_like
@@ -65,12 +63,11 @@ public class PlayerLikeRepository {
         database.disconnect();
     }
 
-    public PlayerLike getPlayerLikeByPlayerUuid(UUID playerUuid) {
+    public static PlayerLike getPlayerLikeByPlayerUuid(UUID playerUuid) {
         Database database = new Database();
         database.connect();
 
-        PlayerProfileRepository playerProfileRepository = new PlayerProfileRepository();
-        PlayerProfile playerProfile = playerProfileRepository.getPlayerProfileByUuid(playerUuid);
+        PlayerProfile playerProfile = PlayerProfileRepository.getPlayerProfileByUuid(playerUuid);
 
         PlayerLike playerLike = null;
 
@@ -96,7 +93,7 @@ public class PlayerLikeRepository {
                 playerLike.setLastLikeSent(lastLikeSent != null ? lastLikeSent.toInstant() : null);
             }
         } catch (SQLException error) {
-            this.logger.severe(String.format("Unable to get player color by uuid: %s", error.getMessage()));
+            logger.severe(String.format("Unable to get player color by uuid: %s", error.getMessage()));
         } finally {
             database.disconnect();
         }

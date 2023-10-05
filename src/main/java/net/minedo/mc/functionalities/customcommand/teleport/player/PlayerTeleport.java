@@ -23,16 +23,14 @@ import java.util.*;
 
 public class PlayerTeleport implements CommandExecutor, Listener, TabCompleter {
 
-    private final Minedo pluginInstance;
     private final List<UUID> globalTeleportingPlayers;
     private final HashMap<UUID, Integer> teleportRequestRequesters = new HashMap<>();
     private final HashMap<UUID, Integer> teleportRequestRequestees = new HashMap<>();
     private final HashMap<UUID, Integer> teleportingRequesters = new HashMap<>();
     private final HashMap<UUID, Integer> standingStillRequestees = new HashMap<>();
 
-    public PlayerTeleport(List<UUID> globalTeleportingPlayers, Minedo pluginInstance) {
+    public PlayerTeleport(List<UUID> globalTeleportingPlayers) {
         this.globalTeleportingPlayers = globalTeleportingPlayers;
-        this.pluginInstance = pluginInstance;
     }
 
     private boolean isCommandValid(String[] args) {
@@ -101,7 +99,7 @@ public class PlayerTeleport implements CommandExecutor, Listener, TabCompleter {
 
         if (Objects.equals(teleportType, PlayerTeleportType.REQUEST.getType())) {
             String teleportTarget = args[1];
-            Player otherPlayer = this.pluginInstance.getServer().getPlayer(teleportTarget);
+            Player otherPlayer = Minedo.getInstance().getServer().getPlayer(teleportTarget);
             Integer existingTeleportRequestTaskId = teleportRequestRequesters.get(player.getUniqueId());
 
             if (globalTeleportingPlayers.contains(player.getUniqueId())) {
@@ -122,9 +120,7 @@ public class PlayerTeleport implements CommandExecutor, Listener, TabCompleter {
             }
 
             if (otherPlayer != null && otherPlayer.isOnline()) {
-                PlayerBlockedRepository playerBlockedRepository = new PlayerBlockedRepository();
-
-                if (playerBlockedRepository.isPlayerBlockedByPlayer(
+                if (PlayerBlockedRepository.isPlayerBlockedByPlayer(
                         player.getUniqueId(), otherPlayer.getUniqueId())) {
                     player.sendMessage(Component
                             .text(String.format(
@@ -149,7 +145,7 @@ public class PlayerTeleport implements CommandExecutor, Listener, TabCompleter {
                 int teleportRequestTaskId = new PlayerTeleportRequestScheduler(
                         player, otherPlayer, teleportRequestRequesters, teleportRequestRequestees
                 )
-                        .runTaskLater(this.pluginInstance, 600)
+                        .runTaskLater(Minedo.getInstance(), 600)
                         .getTaskId();
 
                 this.teleportRequestRequesters.put(player.getUniqueId(), teleportRequestTaskId);
@@ -178,6 +174,7 @@ public class PlayerTeleport implements CommandExecutor, Listener, TabCompleter {
 
             return true;
         } else if (Objects.equals(teleportType, PlayerTeleportType.ACCEPT.getType())) {
+            Minedo instance = Minedo.getInstance();
             Integer existingTeleportRequestTaskId = teleportRequestRequestees.get(player.getUniqueId());
             Integer existingTeleportingTaskId = teleportingRequesters.get(player.getUniqueId());
             Integer existingStandingStillTaskId = standingStillRequestees.get(player.getUniqueId());
@@ -203,7 +200,7 @@ public class PlayerTeleport implements CommandExecutor, Listener, TabCompleter {
             UUID otherPlayerUuid = this.getPlayerUuidFromTaskId(
                     existingTeleportRequestTaskId, teleportRequestRequesters
             );
-            Player otherPlayer = this.pluginInstance.getServer().getPlayer(Objects.requireNonNull(otherPlayerUuid));
+            Player otherPlayer = instance.getServer().getPlayer(Objects.requireNonNull(otherPlayerUuid));
 
             this.removePlayersFromQueueAndCancelRunnable(
                     player.getUniqueId(), otherPlayerUuid,
@@ -216,7 +213,7 @@ public class PlayerTeleport implements CommandExecutor, Listener, TabCompleter {
                 int teleportingTaskId = new PlayerTeleportScheduler(
                         otherPlayer, player, teleportingRequesters,
                         standingStillRequestees, globalTeleportingPlayers
-                ).runTaskTimer(this.pluginInstance, 20, 20).getTaskId();
+                ).runTaskTimer(instance, 20, 20).getTaskId();
 
                 this.globalTeleportingPlayers.add(player.getUniqueId());
                 this.globalTeleportingPlayers.add(otherPlayerUuid);
@@ -256,7 +253,7 @@ public class PlayerTeleport implements CommandExecutor, Listener, TabCompleter {
             UUID otherPlayerUuid = this.getPlayerUuidFromTaskId(
                     existingTeleportRequestTaskId, teleportRequestRequesters
             );
-            Player otherPlayer = this.pluginInstance.getServer().getPlayer(Objects.requireNonNull(otherPlayerUuid));
+            Player otherPlayer = Minedo.getInstance().getServer().getPlayer(Objects.requireNonNull(otherPlayerUuid));
 
             this.removePlayersFromQueueAndCancelRunnable(
                     player.getUniqueId(), otherPlayerUuid,
@@ -303,7 +300,7 @@ public class PlayerTeleport implements CommandExecutor, Listener, TabCompleter {
             UUID otherPlayerUuid = this.getPlayerUuidFromTaskId(
                     existingTeleportRequestTaskId, teleportRequestRequestees
             );
-            Player otherPlayer = this.pluginInstance.getServer().getPlayer(Objects.requireNonNull(otherPlayerUuid));
+            Player otherPlayer = Minedo.getInstance().getServer().getPlayer(Objects.requireNonNull(otherPlayerUuid));
 
             this.removePlayersFromQueueAndCancelRunnable(
                     otherPlayerUuid, player.getUniqueId(),
@@ -362,7 +359,7 @@ public class PlayerTeleport implements CommandExecutor, Listener, TabCompleter {
         if (args.length == 1) {
             completions.addAll(teleportTypes);
         } else if (args.length == 2 && Objects.equals(args[0], PlayerTeleportType.REQUEST.getType())) {
-            Collection<? extends Player> onlinePlayers = this.pluginInstance.getServer().getOnlinePlayers();
+            Collection<? extends Player> onlinePlayers = Minedo.getInstance().getServer().getOnlinePlayers();
 
             completions.addAll(onlinePlayers.stream()
                     .filter(onlinePlayer -> onlinePlayer != player)
@@ -384,7 +381,7 @@ public class PlayerTeleport implements CommandExecutor, Listener, TabCompleter {
         for (Map.Entry<UUID, Integer> entry : teleportingPlayer.entrySet()) {
             if (Objects.equals(entry.getValue(), teleportTaskId)) {
                 otherPlayerUuid = entry.getKey();
-                otherPlayer = this.pluginInstance.getServer().getPlayer(otherPlayerUuid);
+                otherPlayer = Minedo.getInstance().getServer().getPlayer(otherPlayerUuid);
             }
         }
 

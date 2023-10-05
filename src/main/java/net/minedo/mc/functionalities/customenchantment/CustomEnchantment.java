@@ -1,7 +1,7 @@
 package net.minedo.mc.functionalities.customenchantment;
 
-import net.minedo.mc.Minedo;
 import net.minedo.mc.constants.customenchantment.type.CustomEnchantmentType;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -9,23 +9,13 @@ import org.bukkit.event.player.PlayerInteractEvent;
 
 public abstract class CustomEnchantment extends SimpleCustomEnchantment implements Listener {
 
-    private Minedo pluginInstance;
     private String lore;
 
     public CustomEnchantment(
-            CustomEnchantmentType customEnchantmentType, short level, Minedo pluginInstance, String lore
+            CustomEnchantmentType customEnchantmentType, short level, String lore
     ) {
         super(customEnchantmentType, level);
-        this.pluginInstance = pluginInstance;
         this.lore = lore;
-    }
-
-    public Minedo getPluginInstance() {
-        return pluginInstance;
-    }
-
-    public void setPluginInstance(Minedo pluginInstance) {
-        this.pluginInstance = pluginInstance;
     }
 
     public String getLore() {
@@ -36,14 +26,17 @@ public abstract class CustomEnchantment extends SimpleCustomEnchantment implemen
         this.lore = lore;
     }
 
+    @EventHandler
     public void onHit(EntityDamageByEntityEvent event) {
         // Override and add custom effects if needed.
     }
 
+    @EventHandler
     public void onDamaged(EntityDamageEvent event) {
         // Override and add custom effects if needed.
     }
 
+    @EventHandler
     public void onInteract(PlayerInteractEvent event) {
         // Override and add custom effects if needed.
     }

@@ -20,12 +20,6 @@ import java.util.List;
 
 public class Like implements CommandExecutor, TabCompleter {
 
-    private final Minedo pluginInstance;
-
-    public Like(Minedo pluginInstance) {
-        this.pluginInstance = pluginInstance;
-    }
-
     private boolean isCommandValid(String[] args) {
         return args.length == 1;
     }
@@ -47,8 +41,7 @@ public class Like implements CommandExecutor, TabCompleter {
             return true;
         }
 
-        PlayerLikeRepository playerLikeRepository = new PlayerLikeRepository();
-        PlayerLike playerLike = playerLikeRepository.getPlayerLikeByPlayerUuid(player.getUniqueId());
+        PlayerLike playerLike = PlayerLikeRepository.getPlayerLikeByPlayerUuid(player.getUniqueId());
 
         if (playerLike.isLikeSentRecently()) {
             player.sendMessage(Component
@@ -60,7 +53,7 @@ public class Like implements CommandExecutor, TabCompleter {
         }
 
         String likeTarget = args[0];
-        Player otherPlayer = this.pluginInstance.getServer().getPlayer(likeTarget);
+        Player otherPlayer = Minedo.getInstance().getServer().getPlayer(likeTarget);
 
         if (player.equals(otherPlayer)) {
             player.sendMessage(Component
@@ -76,14 +69,13 @@ public class Like implements CommandExecutor, TabCompleter {
 
             playerLike.setLikeSentCount(playerLike.getLikeSentCount() + 1);
             playerLike.setLastLikeSent(instant);
-            playerLikeRepository.updatePlayerLike(player.getUniqueId(), playerLike);
+            PlayerLikeRepository.updatePlayerLike(player.getUniqueId(), playerLike);
 
-            PlayerLikeRepository otherPlayerLikeRepository = new PlayerLikeRepository();
-            PlayerLike otherPlayerLike = otherPlayerLikeRepository
+            PlayerLike otherPlayerLike = PlayerLikeRepository
                     .getPlayerLikeByPlayerUuid(otherPlayer.getUniqueId());
 
             otherPlayerLike.setLikeReceivedCount(otherPlayerLike.getLikeReceivedCount() + 1);
-            otherPlayerLikeRepository.updatePlayerLike(otherPlayer.getUniqueId(), otherPlayerLike);
+            PlayerLikeRepository.updatePlayerLike(otherPlayer.getUniqueId(), otherPlayerLike);
 
             player.sendMessage(Component
                     .text(String.format(
@@ -120,7 +112,7 @@ public class Like implements CommandExecutor, TabCompleter {
         }
 
         if (args.length == 1) {
-            Collection<? extends Player> onlinePlayers = this.pluginInstance.getServer().getOnlinePlayers();
+            Collection<? extends Player> onlinePlayers = Minedo.getInstance().getServer().getOnlinePlayers();
 
             completions.addAll(onlinePlayers.stream()
                     .filter(onlinePlayer -> onlinePlayer != player)

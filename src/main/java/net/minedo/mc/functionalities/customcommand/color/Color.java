@@ -89,8 +89,7 @@ public class Color implements CommandExecutor, TabCompleter {
         }
 
         UUID playerUuid = player.getUniqueId();
-        PlayerColorRepository playerColorRepository = new PlayerColorRepository();
-        PlayerColor playerColor = playerColorRepository.getPlayerColorByPlayerUuid(playerUuid);
+        PlayerColor playerColor = PlayerColorRepository.getPlayerColorByPlayerUuid(playerUuid);
         String updatedColor = color.equals(ColorType.REMOVE.getType()) ? null : color.toUpperCase();
 
         if (chatOrName.equals(ColorType.NAME.getType())) {
@@ -107,7 +106,7 @@ public class Color implements CommandExecutor, TabCompleter {
             }
         }
 
-        playerColorRepository.updatePlayerColor(playerUuid, playerColor);
+        PlayerColorRepository.updatePlayerColor(playerUuid, playerColor);
 
         player.sendMessage(Component
                 .text(ColorMessage.SUCCESS_COLOR_UPDATE.getMessage())

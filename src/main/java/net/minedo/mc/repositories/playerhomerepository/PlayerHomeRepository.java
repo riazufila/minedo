@@ -1,10 +1,10 @@
 package net.minedo.mc.repositories.playerhomerepository;
 
-import net.minedo.mc.Minedo;
 import net.minedo.mc.models.playerhome.PlayerHome;
 import net.minedo.mc.models.playerprofile.PlayerProfile;
 import net.minedo.mc.repositories.Database;
 import net.minedo.mc.repositories.playerprofilerepository.PlayerProfileRepository;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
 import java.sql.ResultSet;
@@ -15,21 +15,15 @@ import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
 
-public class PlayerHomeRepository {
+public final class PlayerHomeRepository {
 
-    private final Minedo pluginInstance;
-    private final Logger logger = Logger.getLogger(this.getClass().getName());
+    private static final Logger logger = Logger.getLogger(PlayerHomeRepository.class.getName());
 
-    public PlayerHomeRepository(Minedo pluginInstance) {
-        this.pluginInstance = pluginInstance;
-    }
-
-    public PlayerHome getPlayerHome(UUID playerUuid, String name) {
+    public static PlayerHome getPlayerHome(UUID playerUuid, String name) {
         Database database = new Database();
         database.connect();
 
-        PlayerProfileRepository playerProfileRepository = new PlayerProfileRepository();
-        PlayerProfile playerProfile = playerProfileRepository.getPlayerProfileByUuid(playerUuid);
+        PlayerProfile playerProfile = PlayerProfileRepository.getPlayerProfileByUuid(playerUuid);
         PlayerHome playerHome = null;
 
         try {
@@ -53,13 +47,13 @@ public class PlayerHomeRepository {
                 playerHome = new PlayerHome();
                 playerHome.setPlayerId(playerId);
                 playerHome.setName(homeName);
-                playerHome.setWorldType(this.pluginInstance.getWorldBasedOnName(world));
+                playerHome.setWorldType(Bukkit.getWorld(world));
                 playerHome.setCoordinateX(coordinateX);
                 playerHome.setCoordinateY(coordinateY);
                 playerHome.setCoordinateZ(coordinateZ);
             }
         } catch (SQLException error) {
-            this.logger.severe(String.format(
+            logger.severe(String.format(
                     "Unable to get player home by player id and name: %s", error.getMessage()
             ));
         } finally {
@@ -69,12 +63,11 @@ public class PlayerHomeRepository {
         return playerHome;
     }
 
-    public List<PlayerHome> getPlayerHomeList(UUID playerUuid) {
+    public static List<PlayerHome> getPlayerHomeList(UUID playerUuid) {
         Database database = new Database();
         database.connect();
 
-        PlayerProfileRepository playerProfileRepository = new PlayerProfileRepository();
-        PlayerProfile playerProfile = playerProfileRepository.getPlayerProfileByUuid(playerUuid);
+        PlayerProfile playerProfile = PlayerProfileRepository.getPlayerProfileByUuid(playerUuid);
 
         List<PlayerHome> playerHomeList = new ArrayList<>();
 
@@ -98,7 +91,7 @@ public class PlayerHomeRepository {
                 PlayerHome playerHome = new PlayerHome();
                 playerHome.setPlayerId(playerId);
                 playerHome.setName(homeName);
-                playerHome.setWorldType(this.pluginInstance.getWorldBasedOnName(world));
+                playerHome.setWorldType(Bukkit.getWorld(world));
                 playerHome.setCoordinateX(coordinateX);
                 playerHome.setCoordinateY(coordinateY);
                 playerHome.setCoordinateZ(coordinateZ);
@@ -106,7 +99,7 @@ public class PlayerHomeRepository {
                 playerHomeList.add(playerHome);
             }
         } catch (SQLException error) {
-            this.logger.severe(String.format("Unable to get player home: %s", error.getMessage()));
+            logger.severe(String.format("Unable to get player home: %s", error.getMessage()));
         } finally {
             database.disconnect();
         }
@@ -114,12 +107,11 @@ public class PlayerHomeRepository {
         return playerHomeList;
     }
 
-    public void upsertHome(UUID playerUuid, Location location, String homeName) {
+    public static void upsertHome(UUID playerUuid, Location location, String homeName) {
         Database database = new Database();
         database.connect();
 
-        PlayerProfileRepository playerProfileRepository = new PlayerProfileRepository();
-        PlayerProfile playerProfile = playerProfileRepository.getPlayerProfileByUuid(playerUuid);
+        PlayerProfile playerProfile = PlayerProfileRepository.getPlayerProfileByUuid(playerUuid);
 
         String query = """
                     REPLACE INTO player_home
@@ -140,12 +132,11 @@ public class PlayerHomeRepository {
         database.disconnect();
     }
 
-    public void removeHome(UUID playerUuid, String homeName) {
+    public static void removeHome(UUID playerUuid, String homeName) {
         Database database = new Database();
         database.connect();
 
-        PlayerProfileRepository playerProfileRepository = new PlayerProfileRepository();
-        PlayerProfile playerProfile = playerProfileRepository.getPlayerProfileByUuid(playerUuid);
+        PlayerProfile playerProfile = PlayerProfileRepository.getPlayerProfileByUuid(playerUuid);
 
         String query = """
                     DELETE FROM player_home WHERE (player_id = ?) AND (name = ?);

@@ -12,11 +12,11 @@ import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
 
-public class PlayerProfileRepository {
+public final class PlayerProfileRepository {
 
-    private final Logger logger = Logger.getLogger(this.getClass().getName());
+    private static final Logger logger = Logger.getLogger(PlayerProfileRepository.class.getName());
 
-    public void insertNewPlayerProfile(UUID playerUuid) {
+    public static void insertNewPlayerProfile(UUID playerUuid) {
         Database database = new Database();
         database.connect();
 
@@ -31,7 +31,7 @@ public class PlayerProfileRepository {
         database.disconnect();
     }
 
-    public PlayerProfile getPlayerProfileByUuid(UUID playerUuid) {
+    public static PlayerProfile getPlayerProfileByUuid(UUID playerUuid) {
         Database database = new Database();
         database.connect();
 
@@ -57,7 +57,7 @@ public class PlayerProfileRepository {
                 playerProfile.setNickname(nickname);
             }
         } catch (SQLException error) {
-            this.logger.severe(String.format("Unable to get player profile by uuid: %s", error.getMessage()));
+            logger.severe(String.format("Unable to get player profile by uuid: %s", error.getMessage()));
         } finally {
             database.disconnect();
         }
@@ -65,7 +65,7 @@ public class PlayerProfileRepository {
         return playerProfile;
     }
 
-    public PlayerProfile getPlayerProfileByNickname(String playerName) {
+    public static PlayerProfile getPlayerProfileByNickname(String playerName) {
         Database database = new Database();
         database.connect();
 
@@ -91,7 +91,7 @@ public class PlayerProfileRepository {
                 playerProfile.setNickname(nickname);
             }
         } catch (SQLException error) {
-            this.logger.severe(String.format("Unable to get player profile by nickname: %s", error.getMessage()));
+            logger.severe(String.format("Unable to get player profile by nickname: %s", error.getMessage()));
         } finally {
             database.disconnect();
         }
@@ -99,7 +99,7 @@ public class PlayerProfileRepository {
         return playerProfile;
     }
 
-    public void updatePlayerNickname(UUID playerUuid, String nickname) {
+    public static void updatePlayerNickname(UUID playerUuid, String nickname) {
         Database database = new Database();
         database.connect();
 
@@ -125,7 +125,7 @@ public class PlayerProfileRepository {
      * @param playerUuid UUID of player to exclude from results.
      * @return List of nicknames.
      */
-    public List<String> getOtherPlayersNickname(UUID playerUuid) {
+    public static List<String> getOtherPlayersNickname(UUID playerUuid) {
         Database database = new Database();
         database.connect();
 
@@ -151,7 +151,7 @@ public class PlayerProfileRepository {
                 otherPlayersNickname.add(nickname);
             }
         } catch (SQLException error) {
-            this.logger.severe(String.format("Unable to get other player nicknames: %s", error.getMessage()));
+            logger.severe(String.format("Unable to get other player nicknames: %s", error.getMessage()));
         } finally {
             database.disconnect();
         }
@@ -166,7 +166,7 @@ public class PlayerProfileRepository {
      * @param otherOnlinePlayers List of UUID of players to search within.
      * @return List of nicknames.
      */
-    public List<String> getOtherPlayersNickname(UUID playerUuid, List<UUID> otherOnlinePlayers) {
+    public static List<String> getOtherPlayersNickname(UUID playerUuid, List<UUID> otherOnlinePlayers) {
         Database database = new Database();
         database.connect();
 
@@ -201,7 +201,7 @@ public class PlayerProfileRepository {
                 otherPlayersNickname.add(nickname);
             }
         } catch (SQLException error) {
-            this.logger.severe(String.format("Unable to get other player nicknames: %s", error.getMessage()));
+            logger.severe(String.format("Unable to get other player nicknames: %s", error.getMessage()));
         } finally {
             database.disconnect();
         }

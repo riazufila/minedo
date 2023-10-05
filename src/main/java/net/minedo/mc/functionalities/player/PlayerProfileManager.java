@@ -16,30 +16,27 @@ import java.util.UUID;
 public class PlayerProfileManager implements Listener {
 
     private void initializePlayerProfile(UUID playerUuid) {
-        PlayerProfileRepository playerProfileRepository = new PlayerProfileRepository();
-        PlayerProfile playerProfile = playerProfileRepository.getPlayerProfileByUuid(playerUuid);
+        PlayerProfile playerProfile = PlayerProfileRepository.getPlayerProfileByUuid(playerUuid);
 
         if (playerProfile == null) {
-            playerProfileRepository.insertNewPlayerProfile(playerUuid);
+            PlayerProfileRepository.insertNewPlayerProfile(playerUuid);
         }
 
     }
 
     private void initializePlayerColor(UUID playerUuid) {
-        PlayerColorRepository playerColorRepository = new PlayerColorRepository();
-        PlayerColor playerColor = playerColorRepository.getPlayerColorByPlayerUuid(playerUuid);
+        PlayerColor playerColor = PlayerColorRepository.getPlayerColorByPlayerUuid(playerUuid);
 
         if (playerColor == null) {
-            playerColorRepository.insertNewPlayerColor(playerUuid);
+            PlayerColorRepository.insertNewPlayerColor(playerUuid);
         }
     }
 
     private void initializePlayerLike(UUID playerUuid) {
-        PlayerLikeRepository playerLikeRepository = new PlayerLikeRepository();
-        PlayerLike playerLike = playerLikeRepository.getPlayerLikeByPlayerUuid(playerUuid);
+        PlayerLike playerLike = PlayerLikeRepository.getPlayerLikeByPlayerUuid(playerUuid);
 
         if (playerLike == null) {
-            playerLikeRepository.insertNewPlayerLike(playerUuid);
+            PlayerLikeRepository.insertNewPlayerLike(playerUuid);
         }
     }
 

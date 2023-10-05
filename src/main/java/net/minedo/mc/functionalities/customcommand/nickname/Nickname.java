@@ -27,12 +27,6 @@ import java.util.stream.Stream;
 
 public class Nickname implements CommandExecutor, TabCompleter, Listener {
 
-    private final Minedo pluginInstance;
-
-    public Nickname(Minedo pluginInstance) {
-        this.pluginInstance = pluginInstance;
-    }
-
     private boolean isValidNickname(String nickname) {
         if (nickname == null) {
             return false;
@@ -100,9 +94,8 @@ public class Nickname implements CommandExecutor, TabCompleter, Listener {
         if (nicknameType.equals(NicknameType.SET.getType())) {
             String nickname = args[1];
 
-            PlayerProfileRepository playerProfileRepository = new PlayerProfileRepository();
-            List<String> otherPlayersNickname = playerProfileRepository.getOtherPlayersNickname(player.getUniqueId());
-            List<String> otherPlayersRealName = this.pluginInstance.getServer()
+            List<String> otherPlayersNickname = PlayerProfileRepository.getOtherPlayersNickname(player.getUniqueId());
+            List<String> otherPlayersRealName = Minedo.getInstance().getServer()
                     .getOnlinePlayers()
                     .stream()
                     .filter(otherPlayer -> otherPlayer != player)
@@ -125,7 +118,7 @@ public class Nickname implements CommandExecutor, TabCompleter, Listener {
                 return true;
             }
 
-            playerProfileRepository.updatePlayerNickname(player.getUniqueId(), nickname);
+            PlayerProfileRepository.updatePlayerNickname(player.getUniqueId(), nickname);
 
             player.sendMessage(Component
                     .text(NicknameMessage.SUCCESS_SET_NICKNAME.getMessage())
@@ -142,12 +135,11 @@ public class Nickname implements CommandExecutor, TabCompleter, Listener {
             }
 
             String nickname = args[1];
-            PlayerProfileRepository playerProfileRepository = new PlayerProfileRepository();
-            PlayerProfile playerProfile = playerProfileRepository.getPlayerProfileByNickname(nickname);
+            PlayerProfile playerProfile = PlayerProfileRepository.getPlayerProfileByNickname(nickname);
 
             // Verify player's real name and make sure player is online.
             if (playerProfile != null) {
-                Player realPlayer = this.pluginInstance.getServer().getPlayer(playerProfile.getUuid());
+                Player realPlayer = Minedo.getInstance().getServer().getPlayer(playerProfile.getUuid());
 
                 if (realPlayer != null) {
                     player.sendMessage(Component
@@ -169,8 +161,7 @@ public class Nickname implements CommandExecutor, TabCompleter, Listener {
                     .color(NamedTextColor.RED)
             );
         } else if (nicknameType.equals(NicknameType.REMOVE.getType())) {
-            PlayerProfileRepository playerProfileRepository = new PlayerProfileRepository();
-            playerProfileRepository.updatePlayerNickname(player.getUniqueId(), null);
+            PlayerProfileRepository.updatePlayerNickname(player.getUniqueId(), null);
 
             player.sendMessage(Component
                     .text(NicknameMessage.SUCCESS_REMOVE_NICKNAME.getMessage())
@@ -217,11 +208,10 @@ public class Nickname implements CommandExecutor, TabCompleter, Listener {
         } else if (args.length == 2
                 && args[0].equals(NicknameType.REVEAL.getType())
                 && PermissionUtils.validatePlayerPermissionForNicknameReveal(player)) {
-            PlayerProfileRepository playerProfileRepository = new PlayerProfileRepository();
-            Collection<? extends Player> onlinePlayers = this.pluginInstance.getServer().getOnlinePlayers();
+            Collection<? extends Player> onlinePlayers = Minedo.getInstance().getServer().getOnlinePlayers();
 
             if (!onlinePlayers.isEmpty()) {
-                List<String> otherPlayersNickname = playerProfileRepository.getOtherPlayersNickname(
+                List<String> otherPlayersNickname = PlayerProfileRepository.getOtherPlayersNickname(
                         player.getUniqueId(),
                         onlinePlayers.stream().map(Player::getUniqueId).toList()
                 );
@@ -236,11 +226,10 @@ public class Nickname implements CommandExecutor, TabCompleter, Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player newPlayer = event.getPlayer();
-        PlayerProfileRepository playerProfileRepository = new PlayerProfileRepository();
-        PlayerProfile existingPlayerProfile = playerProfileRepository.getPlayerProfileByNickname(newPlayer.getName());
+        PlayerProfile existingPlayerProfile = PlayerProfileRepository.getPlayerProfileByNickname(newPlayer.getName());
 
         if (existingPlayerProfile != null) {
-            playerProfileRepository.updatePlayerNickname(existingPlayerProfile.getUuid(), null);
+            PlayerProfileRepository.updatePlayerNickname(existingPlayerProfile.getUuid(), null);
         }
     }
 

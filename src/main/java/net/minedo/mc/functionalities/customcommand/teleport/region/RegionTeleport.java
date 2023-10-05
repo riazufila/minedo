@@ -27,16 +27,14 @@ public class RegionTeleport implements CommandExecutor, Listener, TabCompleter {
     private final Region region;
     private final List<Region> regions;
     private final List<UUID> globalTeleportingPlayers;
-    private final Minedo pluginInstance;
     private final HashMap<UUID, Integer> teleportingPlayers = new HashMap<>();
 
     public RegionTeleport(
-            Region region, List<Region> regions, List<UUID> globalTeleportingPlayers, Minedo pluginInstance
+            Region region, List<Region> regions, List<UUID> globalTeleportingPlayers
     ) {
         this.region = region;
         this.regions = regions;
         this.globalTeleportingPlayers = globalTeleportingPlayers;
-        this.pluginInstance = pluginInstance;
     }
 
     private boolean isCommandValid(String[] args) {
@@ -83,7 +81,7 @@ public class RegionTeleport implements CommandExecutor, Listener, TabCompleter {
         int teleportTaskId = new RegionTeleportScheduler(
                 player, region, this.globalTeleportingPlayers,
                 this.teleportingPlayers
-        ).runTaskTimer(this.pluginInstance, 20, 20).getTaskId();
+        ).runTaskTimer(Minedo.getInstance(), 20, 20).getTaskId();
 
         this.globalTeleportingPlayers.add(player.getUniqueId());
         this.teleportingPlayers.put(player.getUniqueId(), teleportTaskId);

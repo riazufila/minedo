@@ -18,13 +18,7 @@ import java.util.List;
 /**
  * Uses PDC to store and get arbitrary data from within objects in Paper API.
  */
-public class DataEmbedder {
-
-    private final Minedo pluginInstance;
-
-    public DataEmbedder(Minedo pluginInstance) {
-        this.pluginInstance = pluginInstance;
-    }
+public final class DataEmbedder {
 
     /**
      * Create a key using PDC.
@@ -32,8 +26,8 @@ public class DataEmbedder {
      * @param key used as an identifier when setting and getting a value
      * @return key object
      */
-    public NamespacedKey createKey(String key) {
-        return new NamespacedKey(this.pluginInstance, key);
+    public static NamespacedKey createKey(String key) {
+        return new NamespacedKey(Minedo.getInstance(), key);
     }
 
     /**
@@ -43,7 +37,7 @@ public class DataEmbedder {
      * @param customEnchantments simplified custom enchantment list
      * @return item meta
      */
-    public ItemMeta applyCustomEnchantments(
+    public static ItemMeta applyCustomEnchantments(
             ItemMeta meta, List<CustomEnchantment> customEnchantments
     ) {
         PersistentDataContainer parentContainer = meta.getPersistentDataContainer();
@@ -51,8 +45,8 @@ public class DataEmbedder {
 
         for (CustomEnchantment customEnchantment : customEnchantments) {
             PersistentDataContainer newContainer = parentContainer.getAdapterContext().newPersistentDataContainer();
-            NamespacedKey idKey = this.createKey(CustomEnchantmentKey.CUSTOM_ENCHANTMENT_ID.getKey());
-            NamespacedKey levelKey = this.createKey(CustomEnchantmentKey.CUSTOM_ENCHANTMENT_LEVEL.getKey());
+            NamespacedKey idKey = createKey(CustomEnchantmentKey.CUSTOM_ENCHANTMENT_ID.getKey());
+            NamespacedKey levelKey = createKey(CustomEnchantmentKey.CUSTOM_ENCHANTMENT_LEVEL.getKey());
 
             newContainer.set(idKey, PersistentDataType.STRING,
                     customEnchantment.getCustomEnchantmentType().toString().toLowerCase());
@@ -63,7 +57,7 @@ public class DataEmbedder {
             childContainers.add(newContainer);
         }
 
-        NamespacedKey customEnchantmentKey = this.createKey(CustomEnchantmentKey.CUSTOM_ENCHANTMENT.getKey());
+        NamespacedKey customEnchantmentKey = createKey(CustomEnchantmentKey.CUSTOM_ENCHANTMENT.getKey());
         parentContainer.set(customEnchantmentKey, PersistentDataType.TAG_CONTAINER_ARRAY,
                 childContainers.toArray(new PersistentDataContainer[0]));
 
@@ -76,10 +70,10 @@ public class DataEmbedder {
      * @param item item to get custom enchantments from
      * @return simple custom enchantments list
      */
-    public List<SimpleCustomEnchantment> getCustomEnchantments(ItemStack item) {
+    public static List<SimpleCustomEnchantment> getCustomEnchantments(ItemStack item) {
         ItemMeta meta = item.getItemMeta();
         PersistentDataContainer container = meta.getPersistentDataContainer();
-        NamespacedKey customEnchantmentKey = this.createKey(CustomEnchantmentKey.CUSTOM_ENCHANTMENT.getKey());
+        NamespacedKey customEnchantmentKey = createKey(CustomEnchantmentKey.CUSTOM_ENCHANTMENT.getKey());
 
         if (container.has(customEnchantmentKey, PersistentDataType.TAG_CONTAINER_ARRAY)) {
             PersistentDataContainer[] childContainers = container
@@ -92,8 +86,8 @@ public class DataEmbedder {
             List<SimpleCustomEnchantment> simpleCustomEnchantments = new ArrayList<>();
 
             for (PersistentDataContainer childContainer : childContainers) {
-                NamespacedKey idKey = this.createKey(CustomEnchantmentKey.CUSTOM_ENCHANTMENT_ID.getKey());
-                NamespacedKey levelKey = this.createKey(CustomEnchantmentKey.CUSTOM_ENCHANTMENT_LEVEL.getKey());
+                NamespacedKey idKey = createKey(CustomEnchantmentKey.CUSTOM_ENCHANTMENT_ID.getKey());
+                NamespacedKey levelKey = createKey(CustomEnchantmentKey.CUSTOM_ENCHANTMENT_LEVEL.getKey());
 
                 if (childContainer.has(idKey, PersistentDataType.STRING)
                         && childContainer.has(levelKey, PersistentDataType.SHORT)) {

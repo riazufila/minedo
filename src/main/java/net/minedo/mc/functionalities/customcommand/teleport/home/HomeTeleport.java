@@ -27,12 +27,10 @@ import java.util.regex.Pattern;
 public class HomeTeleport implements CommandExecutor, Listener, TabCompleter {
 
     private final List<UUID> globalTeleportingPlayers;
-    private final Minedo pluginInstance;
     private final HashMap<UUID, Integer> teleportingPlayers = new HashMap<>();
 
-    public HomeTeleport(List<UUID> globalTeleportingPlayers, Minedo pluginInstance) {
+    public HomeTeleport(List<UUID> globalTeleportingPlayers) {
         this.globalTeleportingPlayers = globalTeleportingPlayers;
-        this.pluginInstance = pluginInstance;
     }
 
     private boolean isValidHomeName(String nickname) {
@@ -84,8 +82,7 @@ public class HomeTeleport implements CommandExecutor, Listener, TabCompleter {
                 || homeType.equals(HomeType.UPDATE.getType())
                 || homeType.equals(HomeType.REMOVE.getType())
         ) {
-            PlayerHomeRepository playerHomeRepository = new PlayerHomeRepository(this.pluginInstance);
-            PlayerHome playerHome = playerHomeRepository.getPlayerHome(player.getUniqueId(), homeName);
+            PlayerHome playerHome = PlayerHomeRepository.getPlayerHome(player.getUniqueId(), homeName);
 
             if (playerHome == null) {
                 player.sendMessage(Component
@@ -119,12 +116,11 @@ public class HomeTeleport implements CommandExecutor, Listener, TabCompleter {
                 return true;
             }
 
-            PlayerHomeRepository playerHomeRepository = new PlayerHomeRepository(this.pluginInstance);
-            PlayerHome playerHome = playerHomeRepository.getPlayerHome(player.getUniqueId(), homeName);
+            PlayerHome playerHome = PlayerHomeRepository.getPlayerHome(player.getUniqueId(), homeName);
             int teleportTaskId = new HomeTeleportScheduler(
                     player, playerHome,
                     this.globalTeleportingPlayers, this.teleportingPlayers
-            ).runTaskTimer(this.pluginInstance, 20, 20).getTaskId();
+            ).runTaskTimer(Minedo.getInstance(), 20, 20).getTaskId();
 
             this.globalTeleportingPlayers.add(player.getUniqueId());
             this.teleportingPlayers.put(player.getUniqueId(), teleportTaskId);
@@ -134,14 +130,13 @@ public class HomeTeleport implements CommandExecutor, Listener, TabCompleter {
                     .color(NamedTextColor.YELLOW)
             );
         } else if (homeType.equals(HomeType.ADD.getType())) {
-            PlayerHomeRepository playerHomeRepository = new PlayerHomeRepository(this.pluginInstance);
-            List<PlayerHome> homeList = playerHomeRepository.getPlayerHomeList(player.getUniqueId());
+            List<PlayerHome> homeList = PlayerHomeRepository.getPlayerHomeList(player.getUniqueId());
             int homeCount = homeList.size();
             boolean isAllowed = PermissionUtils.validatePlayerPermissionForHomeCount(player, homeCount);
             boolean isHomeNameUnique = homeList.stream().noneMatch(home -> Objects.equals(home.getName(), homeName));
 
             if (isAllowed && isHomeNameUnique) {
-                playerHomeRepository.upsertHome(player.getUniqueId(), player.getLocation(), homeName);
+                PlayerHomeRepository.upsertHome(player.getUniqueId(), player.getLocation(), homeName);
 
                 player.sendMessage(Component
                         .text(HomeTeleportMessage.SUCCESS_ADD_HOME.getMessage())
@@ -159,16 +154,14 @@ public class HomeTeleport implements CommandExecutor, Listener, TabCompleter {
                 );
             }
         } else if (homeType.equals(HomeType.UPDATE.getType())) {
-            PlayerHomeRepository playerHomeRepository = new PlayerHomeRepository(this.pluginInstance);
-            playerHomeRepository.upsertHome(player.getUniqueId(), player.getLocation(), homeName);
+            PlayerHomeRepository.upsertHome(player.getUniqueId(), player.getLocation(), homeName);
 
             player.sendMessage(Component
                     .text(HomeTeleportMessage.SUCCESS_UPDATE_HOME.getMessage())
                     .color(NamedTextColor.GREEN)
             );
         } else if (homeType.equals(HomeType.REMOVE.getType())) {
-            PlayerHomeRepository playerHomeRepository = new PlayerHomeRepository(this.pluginInstance);
-            playerHomeRepository.removeHome(player.getUniqueId(), homeName);
+            PlayerHomeRepository.removeHome(player.getUniqueId(), homeName);
 
             player.sendMessage(Component
                     .text(HomeTeleportMessage.SUCCESS_REMOVE_HOME.getMessage())
@@ -210,8 +203,7 @@ public class HomeTeleport implements CommandExecutor, Listener, TabCompleter {
                 || homeType.equals(HomeType.REMOVE.getType())
                 || homeType.equals(HomeType.UPDATE.getType()))
         ) {
-            PlayerHomeRepository playerHomeRepository = new PlayerHomeRepository(this.pluginInstance);
-            List<String> homes = playerHomeRepository
+            List<String> homes = PlayerHomeRepository
                     .getPlayerHomeList(player.getUniqueId())
                     .stream()
                     .map(PlayerHome::getName)

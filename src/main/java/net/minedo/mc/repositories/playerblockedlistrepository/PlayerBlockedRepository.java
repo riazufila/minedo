@@ -13,16 +13,15 @@ import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
 
-public class PlayerBlockedRepository {
+public final class PlayerBlockedRepository {
 
-    private final Logger logger = Logger.getLogger(this.getClass().getName());
+    private static final Logger logger = Logger.getLogger(PlayerBlockedRepository.class.getName());
 
-    public List<PlayerBlocked> getPlayerBlockedList(UUID playerUuid) {
+    public static List<PlayerBlocked> getPlayerBlockedList(UUID playerUuid) {
         Database database = new Database();
         database.connect();
 
-        PlayerProfileRepository playerProfileRepository = new PlayerProfileRepository();
-        PlayerProfile playerProfile = playerProfileRepository.getPlayerProfileByUuid(playerUuid);
+        PlayerProfile playerProfile = PlayerProfileRepository.getPlayerProfileByUuid(playerUuid);
 
         List<PlayerBlocked> playerBlockedList = new ArrayList<>();
 
@@ -46,7 +45,7 @@ public class PlayerBlockedRepository {
                 playerBlockedList.add(playerBlocked);
             }
         } catch (SQLException error) {
-            this.logger.severe(String.format("Unable to get player blocked: %s", error.getMessage()));
+            logger.severe(String.format("Unable to get player blocked: %s", error.getMessage()));
         } finally {
             database.disconnect();
         }
@@ -54,16 +53,12 @@ public class PlayerBlockedRepository {
         return playerBlockedList;
     }
 
-    public void addBlockedPlayer(UUID requesterUuid, UUID playerUuidToBeBlocked) {
+    public static void addBlockedPlayer(UUID requesterUuid, UUID playerUuidToBeBlocked) {
         Database database = new Database();
         database.connect();
 
-        PlayerProfileRepository requesterProfileRepository = new PlayerProfileRepository();
-        PlayerProfile requesterProfile = requesterProfileRepository.getPlayerProfileByUuid(requesterUuid);
-
-        PlayerProfileRepository playerToBeBlockedProfileRepository = new PlayerProfileRepository();
-        PlayerProfile playerToBeBlockedProfile = playerToBeBlockedProfileRepository
-                .getPlayerProfileByUuid(playerUuidToBeBlocked);
+        PlayerProfile requesterProfile = PlayerProfileRepository.getPlayerProfileByUuid(requesterUuid);
+        PlayerProfile playerToBeBlockedProfile = PlayerProfileRepository.getPlayerProfileByUuid(playerUuidToBeBlocked);
 
         String query = """
                     INSERT INTO player_blocked (player_id, blocked_player_id) VALUES (?, ?);
@@ -77,16 +72,12 @@ public class PlayerBlockedRepository {
         database.disconnect();
     }
 
-    public void removeBlockedPlayer(UUID requesterUuid, UUID playerUuidToBeBlocked) {
+    public static void removeBlockedPlayer(UUID requesterUuid, UUID playerUuidToBeBlocked) {
         Database database = new Database();
         database.connect();
 
-        PlayerProfileRepository requesterProfileRepository = new PlayerProfileRepository();
-        PlayerProfile requesterProfile = requesterProfileRepository.getPlayerProfileByUuid(requesterUuid);
-
-        PlayerProfileRepository playerToBeBlockedProfileRepository = new PlayerProfileRepository();
-        PlayerProfile playerToBeBlockedProfile = playerToBeBlockedProfileRepository
-                .getPlayerProfileByUuid(playerUuidToBeBlocked);
+        PlayerProfile requesterProfile = PlayerProfileRepository.getPlayerProfileByUuid(requesterUuid);
+        PlayerProfile playerToBeBlockedProfile = PlayerProfileRepository.getPlayerProfileByUuid(playerUuidToBeBlocked);
 
         String query = """
                     DELETE FROM player_blocked WHERE (player_id = ?) AND (blocked_player_id = ?);
@@ -100,18 +91,14 @@ public class PlayerBlockedRepository {
         database.disconnect();
     }
 
-    public boolean isPlayerBlockedByPlayer(UUID requesterUuid, UUID potentialBlockerUuid) {
-        PlayerBlockedRepository playerBlockedRepository = new PlayerBlockedRepository();
-        List<Integer> potentialBlockerPlayerBlockedList = playerBlockedRepository
+    public static boolean isPlayerBlockedByPlayer(UUID requesterUuid, UUID potentialBlockerUuid) {
+        List<Integer> potentialBlockerPlayerBlockedList = PlayerBlockedRepository
                 .getPlayerBlockedList(potentialBlockerUuid)
                 .stream()
                 .map(PlayerBlocked::getBlockedPlayerId)
                 .toList();
 
-        PlayerProfileRepository playerProfileRepository = new PlayerProfileRepository();
-        PlayerProfile requesterPlayerProfile = playerProfileRepository
-                .getPlayerProfileByUuid(requesterUuid);
-
+        PlayerProfile requesterPlayerProfile = PlayerProfileRepository.getPlayerProfileByUuid(requesterUuid);
         return potentialBlockerPlayerBlockedList.contains(requesterPlayerProfile.getId());
     }
 

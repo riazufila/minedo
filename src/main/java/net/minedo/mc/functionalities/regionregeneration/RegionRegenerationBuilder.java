@@ -12,7 +12,6 @@ import com.sk89q.worldedit.function.operation.Operation;
 import com.sk89q.worldedit.function.operation.Operations;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.session.ClipboardHolder;
-import net.minedo.mc.Minedo;
 import net.minedo.mc.constants.common.Common;
 import net.minedo.mc.constants.directory.Directory;
 import net.minedo.mc.constants.filetype.FileType;
@@ -34,16 +33,14 @@ public class RegionRegenerationBuilder extends BukkitRunnable {
     private final Chunk chunk;
     private final Region region;
     private final HashMap<String, Integer> restoringChunks;
-    private final Minedo pluginInstance;
     private final Logger logger = Logger.getLogger(this.getClass().getName());
 
     public RegionRegenerationBuilder(
-            Chunk chunk, Region region, HashMap<String, Integer> restoringChunks, Minedo pluginInstance
+            Chunk chunk, Region region, HashMap<String, Integer> restoringChunks
     ) {
         this.chunk = chunk;
         this.region = region;
         this.restoringChunks = restoringChunks;
-        this.pluginInstance = pluginInstance;
     }
 
     private Location getCenterLocationOfChunk(Chunk chunk) {
@@ -115,7 +112,7 @@ public class RegionRegenerationBuilder extends BukkitRunnable {
                 )
         ) {
             Clipboard clipboard = clipboardReader.read();
-            WorldEdit worldEdit = this.pluginInstance.getWorldEdit();
+            WorldEdit worldEdit = WorldEdit.getInstance();
             World world = this.region.getWorldType();
 
             try (EditSession editSession = worldEdit.newEditSession(BukkitAdapter.adapt(world))) {

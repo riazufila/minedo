@@ -23,12 +23,6 @@ import java.util.List;
 
 public class Message implements CommandExecutor, TabCompleter {
 
-    private final Minedo pluginInstance;
-
-    public Message(Minedo pluginInstance) {
-        this.pluginInstance = pluginInstance;
-    }
-
     private boolean isCommandValid(String[] args) {
         return args.length >= 2;
     }
@@ -51,7 +45,7 @@ public class Message implements CommandExecutor, TabCompleter {
         }
 
         String messageTarget = args[0];
-        Player otherPlayer = this.pluginInstance.getServer().getPlayer(messageTarget);
+        Player otherPlayer = Minedo.getInstance().getServer().getPlayer(messageTarget);
 
         if (otherPlayer != null && otherPlayer.isOnline()) {
             if (player.equals(otherPlayer)) {
@@ -63,9 +57,7 @@ public class Message implements CommandExecutor, TabCompleter {
                 return true;
             }
 
-            PlayerBlockedRepository playerBlockedRepository = new PlayerBlockedRepository();
-
-            if (playerBlockedRepository.isPlayerBlockedByPlayer(
+            if (PlayerBlockedRepository.isPlayerBlockedByPlayer(
                     player.getUniqueId(), otherPlayer.getUniqueId())) {
                 player.sendMessage(Component
                         .text(String.format(
@@ -108,7 +100,7 @@ public class Message implements CommandExecutor, TabCompleter {
         }
 
         if (args.length == 1) {
-            Collection<? extends Player> onlinePlayers = this.pluginInstance.getServer().getOnlinePlayers();
+            Collection<? extends Player> onlinePlayers = Minedo.getInstance().getServer().getOnlinePlayers();
 
             completions.addAll(onlinePlayers.stream()
                     .filter(onlinePlayer -> onlinePlayer != player)

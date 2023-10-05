@@ -1,6 +1,5 @@
 package net.minedo.mc.functionalities.customenchantment.list;
 
-import net.minedo.mc.Minedo;
 import net.minedo.mc.constants.customenchantment.type.CustomEnchantmentType;
 import net.minedo.mc.functionalities.customenchantment.CustomEnchantment;
 import net.minedo.mc.functionalities.customenchantment.CustomEnchantmentUtils;
@@ -14,9 +13,9 @@ import org.jetbrains.annotations.NotNull;
 public class LightningEnchantment extends CustomEnchantment implements Listener {
 
     public LightningEnchantment(
-            CustomEnchantmentType customEnchantmentType, short level, Minedo pluginInstance, String lore
+            CustomEnchantmentType customEnchantmentType, short level, String lore
     ) {
-        super(customEnchantmentType, level, pluginInstance, lore);
+        super(customEnchantmentType, level, lore);
     }
 
     @Override
@@ -29,9 +28,8 @@ public class LightningEnchantment extends CustomEnchantment implements Listener 
                 return;
             }
 
-            Minedo.getPlugin(Minedo.class);
             boolean isCustomEnchantmentExist = CustomEnchantmentUtils
-                    .isCustomEnchantmentInItem(super.getPluginInstance(), itemAtHand, this.getCustomEnchantmentType());
+                    .isCustomEnchantmentInItem(itemAtHand, this.getCustomEnchantmentType());
 
             if (isCustomEnchantmentExist) {
                 player.getWorld().strikeLightning(event.getEntity().getLocation());

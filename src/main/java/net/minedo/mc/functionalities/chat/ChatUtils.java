@@ -54,8 +54,7 @@ public final class ChatUtils {
 
     private static ChatInfo getChatInfo(Player player, boolean isContent) {
         UUID playerUuid = player.getUniqueId();
-        PlayerColorRepository playerColorRepository = new PlayerColorRepository();
-        PlayerColor playerColor = playerColorRepository.getPlayerColorByPlayerUuid(playerUuid);
+        PlayerColor playerColor = PlayerColorRepository.getPlayerColorByPlayerUuid(playerUuid);
 
         if (isContent) {
             return selectColor(playerColor, player, true);

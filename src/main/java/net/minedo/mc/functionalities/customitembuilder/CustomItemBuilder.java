@@ -3,8 +3,6 @@ package net.minedo.mc.functionalities.customitembuilder;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
-import net.minedo.mc.Minedo;
-import net.minedo.mc.constants.customitemtype.CustomItemType;
 import net.minedo.mc.models.customitem.CustomItem;
 import net.minedo.mc.models.customitemattribute.CustomItemAttribute;
 import net.minedo.mc.models.customitemenchantment.CustomItemEnchantment;
@@ -13,7 +11,6 @@ import net.minedo.mc.repositories.customitemrepository.CustomItemRepository;
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.sampling.DiscreteProbabilityCollectionSampler;
 import org.apache.commons.rng.simple.RandomSource;
-import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Chest;
@@ -22,7 +19,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.world.ChunkPopulateEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.persistence.PersistentDataType;
 
 import java.util.List;
 import java.util.Random;
@@ -32,11 +28,6 @@ import java.util.logging.Logger;
 public class CustomItemBuilder implements Listener {
 
     private final Logger logger = Logger.getLogger(this.getClass().getName());
-    private final Minedo pluginInstance;
-
-    public CustomItemBuilder(Minedo pluginInstance) {
-        this.pluginInstance = pluginInstance;
-    }
 
     @EventHandler
     public void onChunkPopulate(ChunkPopulateEvent event) {
@@ -56,11 +47,6 @@ public class CustomItemBuilder implements Listener {
     public ItemStack buildItem(CustomItem customItem) {
         ItemStack item = new ItemStack(customItem.getMaterial());
         ItemMeta meta = item.getItemMeta();
-
-        // Set PDC.
-        NamespacedKey typeKey = new NamespacedKey(this.pluginInstance, "type");
-        meta.getPersistentDataContainer()
-                .set(typeKey, PersistentDataType.STRING, CustomItemType.CUSTOM_ITEM.getType());
 
         // Set display name.
         Component displayNameComponent = Component
@@ -113,8 +99,7 @@ public class CustomItemBuilder implements Listener {
 
             // 50% chance to retrieve an item.
             if (random.nextBoolean()) {
-                CustomItemRepository customItemRepository = new CustomItemRepository();
-                List<CustomItem> customItemList = customItemRepository.getAllCustomItems();
+                List<CustomItem> customItemList = CustomItemRepository.getAllCustomItems();
 
                 double[] probabilities = new double[customItemList.size()];
                 int index = 0;

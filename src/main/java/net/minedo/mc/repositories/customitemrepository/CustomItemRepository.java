@@ -21,11 +21,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Logger;
 
-public class CustomItemRepository {
+public final class CustomItemRepository {
 
-    private final Logger logger = Logger.getLogger(this.getClass().getName());
+    private static final Logger logger = Logger.getLogger(CustomItemRepository.class.getName());
 
-    public List<CustomItem> getAllCustomItems() {
+    public static List<CustomItem> getAllCustomItems() {
         Database database = new Database();
         database.connect();
 
@@ -242,7 +242,7 @@ public class CustomItemRepository {
                 customItem.setProbability(probability);
             }
         } catch (SQLException e) {
-            this.logger.severe(String.format("Unable to get custom items: %s", e.getMessage()));
+            logger.severe(String.format("Unable to get custom items: %s", e.getMessage()));
         } finally {
             database.disconnect();
         }
