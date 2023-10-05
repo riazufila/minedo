@@ -24,7 +24,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
@@ -54,32 +53,6 @@ public class CustomItemBuilder implements Listener {
         }
     }
 
-    private List<String> sliceString(String input) {
-        List<String> result = new ArrayList<>();
-
-        // Split the input string by whitespace.
-        String[] words = input.split("\\s+");
-
-        // Iterate through each word.
-        StringBuilder builder = new StringBuilder();
-        for (String word : words) {
-            if (builder.length() + word.length() <= 40) {
-                // Append the word to the current line.
-                builder.append(word).append(" ");
-            } else {
-                // Add the current line to the result list.
-                result.add(builder.toString().trim());
-                // Start a new line with the current word.
-                builder = new StringBuilder(word).append(" ");
-            }
-        }
-
-        // Add the last line to the result list.
-        result.add(builder.toString().trim());
-
-        return result;
-    }
-
     public ItemStack buildItem(CustomItem customItem) {
         ItemStack item = new ItemStack(customItem.getMaterial());
         ItemMeta meta = item.getItemMeta();
@@ -106,21 +79,8 @@ public class CustomItemBuilder implements Listener {
 
         // Set lore.
         CustomItemLore customItemLore = customItem.getLore();
-        List<Component> list = new ArrayList<>();
-
-        for (String slicedLoreText : this.sliceString(customItemLore.getText())) {
-            Component loreComponent = Component.text(slicedLoreText).decoration(TextDecoration.ITALIC, false);
-
-            if (customItemLore.getColor() != null) {
-                loreComponent = loreComponent.color(TextColor.fromHexString(customItemLore.getColor()));
-            }
-
-            if (customItemLore.getDecoration() != null) {
-                loreComponent = loreComponent.decorate(customItemLore.getDecoration());
-            }
-
-            list.add(loreComponent);
-        }
+        List<Component> list = LoreUtils.getLoreComponents(customItemLore.getText(),
+                customItemLore.getColor(), customItemLore.getDecoration());
 
         meta.lore(list);
 

@@ -1,86 +1,51 @@
 package net.minedo.mc.functionalities.customenchantment;
 
-import io.papermc.paper.enchantments.EnchantmentRarity;
-import net.kyori.adventure.key.Key;
-import net.kyori.adventure.text.Component;
-import org.bukkit.NamespacedKey;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.enchantments.EnchantmentTarget;
-import org.bukkit.entity.EntityCategory;
-import org.bukkit.event.EventHandler;
+import net.minedo.mc.Minedo;
+import net.minedo.mc.constants.customenchantment.type.CustomEnchantmentType;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.EquipmentSlot;
-import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
 
-import java.util.Set;
+public abstract class CustomEnchantment extends SimpleCustomEnchantment implements Listener {
 
-public abstract class CustomEnchantment extends Enchantment implements Listener {
+    private Minedo pluginInstance;
+    private String lore;
 
-    public CustomEnchantment(@NotNull NamespacedKey key) {
-        super(key);
+    public CustomEnchantment(
+            CustomEnchantmentType customEnchantmentType, short level, Minedo pluginInstance, String lore
+    ) {
+        super(customEnchantmentType, level);
+        this.pluginInstance = pluginInstance;
+        this.lore = lore;
     }
 
-    public abstract @NotNull String getName();
-
-    public abstract int getMaxLevel();
-
-    @Override
-    public int getStartLevel() {
-        return 1;
+    public Minedo getPluginInstance() {
+        return pluginInstance;
     }
 
-    public abstract @NotNull EnchantmentTarget getItemTarget();
-
-    @Override
-    public boolean isTreasure() {
-        return false;
+    public void setPluginInstance(Minedo pluginInstance) {
+        this.pluginInstance = pluginInstance;
     }
 
-    @Override
-    public boolean isCursed() {
-        return false;
+    public String getLore() {
+        return lore;
     }
 
-    public abstract boolean conflictsWith(@NotNull Enchantment other);
-
-    public abstract boolean canEnchantItem(@NotNull ItemStack item);
-
-    public abstract @NotNull Component displayName(int level);
-
-    @Override
-    public boolean isTradeable() {
-        return false;
+    public void setLore(String lore) {
+        this.lore = lore;
     }
 
-    @Override
-    public boolean isDiscoverable() {
-        return false;
+    public void onHit(EntityDamageByEntityEvent event) {
+        // Override and add custom effects if needed.
     }
 
-    @Override
-    public @NotNull EnchantmentRarity getRarity() {
-        return EnchantmentRarity.VERY_RARE;
+    public void onDamaged(EntityDamageEvent event) {
+        // Override and add custom effects if needed.
     }
 
-    public abstract float getDamageIncrease(int level, @NotNull EntityCategory entityCategory);
-
-    public abstract @NotNull Set<EquipmentSlot> getActiveSlots();
-
-    public abstract @NotNull String translationKey();
-
-    public abstract @NotNull Key key();
-
-    @EventHandler
-    public abstract void onHit(EntityDamageByEntityEvent event);
-
-    @EventHandler
-    public abstract void onDamaged(EntityDamageEvent event);
-
-    @EventHandler
-    public abstract void onInteract(PlayerInteractEvent event);
+    public void onInteract(PlayerInteractEvent event) {
+        // Override and add custom effects if needed.
+    }
 
 }
