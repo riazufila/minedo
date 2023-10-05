@@ -35,9 +35,8 @@ public final class DataEmbedder {
      *
      * @param meta               item meta to apply data into
      * @param customEnchantments simplified custom enchantment list
-     * @return item meta
      */
-    public static ItemMeta applyCustomEnchantments(
+    public static void applyCustomEnchantments(
             ItemMeta meta, List<CustomEnchantment> customEnchantments
     ) {
         PersistentDataContainer parentContainer = meta.getPersistentDataContainer();
@@ -60,8 +59,6 @@ public final class DataEmbedder {
         NamespacedKey customEnchantmentKey = createKey(CustomEnchantmentKey.CUSTOM_ENCHANTMENT.getKey());
         parentContainer.set(customEnchantmentKey, PersistentDataType.TAG_CONTAINER_ARRAY,
                 childContainers.toArray(new PersistentDataContainer[0]));
-
-        return meta;
     }
 
     /**

@@ -10,6 +10,7 @@ import net.minedo.mc.functionalities.regionregeneration.RegionRegeneration;
 import net.minedo.mc.functionalities.spawnlocationinitializer.SpawnLocationInitializer;
 import net.minedo.mc.models.region.Region;
 import net.minedo.mc.repositories.regionrepository.RegionRepository;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.List;
@@ -25,6 +26,7 @@ public class Minedo extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
+        PluginManager pluginManager = this.getServer().getPluginManager();
 
         // Set spawn location.
         SpawnLocationInitializer spawnLocationInitializer = new SpawnLocationInitializer();
@@ -33,17 +35,17 @@ public class Minedo extends JavaPlugin {
         }
 
         // Player profile.
-        this.getServer().getPluginManager().registerEvents(new PlayerProfileManager(), this);
+        pluginManager.registerEvents(new PlayerProfileManager(), this);
 
         // Join and leave broadcast message.
-        this.getServer().getPluginManager().registerEvents(new JoinLeaveBroadcast(), this);
+        pluginManager.registerEvents(new JoinLeaveBroadcast(), this);
 
         // Populate newly generated chests with custom items.
-        this.getServer().getPluginManager().registerEvents(new CustomItemBuilder(), this);
+        pluginManager.registerEvents(new CustomItemBuilder(), this);
 
         // Custom enchantments.
         CustomEnchantmentManager customEnchantmentManager = new CustomEnchantmentManager();
-        customEnchantmentManager.registerEvents();
+        customEnchantmentManager.registerCustomEnchantments();
 
         // Custom commands.
         CustomCommand customCommand = new CustomCommand();
@@ -59,7 +61,7 @@ public class Minedo extends JavaPlugin {
                 regionRegeneration.setRegionSnapshot();
             }
 
-            this.getServer().getPluginManager().registerEvents(regionRegeneration, this);
+            pluginManager.registerEvents(regionRegeneration, this);
         }
 
         // Chat.
