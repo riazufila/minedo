@@ -50,7 +50,6 @@ public class Minedo extends JavaPlugin {
         customCommand.setupCustomCommands();
 
         // Region regenerations.
-        RegionRepository regionRepository = new RegionRepository();
         List<Region> regions = RegionRepository.getAllRegions();
 
         for (Region region : regions) {
