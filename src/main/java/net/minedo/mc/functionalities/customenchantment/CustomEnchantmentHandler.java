@@ -57,6 +57,34 @@ public abstract class CustomEnchantmentHandler extends SimpleCustomEnchantment i
         return new CombatEvent(itemAtHand, attackingEntity, defendingEntity);
     }
 
+    public void triggerCustomEffectsOnHit(
+            EntityDamageByEntityEvent event, PotionEffectType potionEffectType, boolean isAmplified
+    ) {
+        CombatEvent combatEvent = this.isOnHitValid(event);
+
+        if (combatEvent == null) {
+            return;
+        }
+
+        Optional<CustomEnchantment> customEnchantmentOptional = CustomEnchantmentWrapper
+                .getCustomEnchantment(combatEvent.item(), this.getCustomEnchantmentType());
+
+        if (customEnchantmentOptional.isEmpty()) {
+            return;
+        }
+
+        CustomEnchantment customEnchantment = customEnchantmentOptional.get();
+        int duration = isAmplified ? 3 : customEnchantment.getLevel();
+        int amplifier = isAmplified ? customEnchantment.getLevel() : 0;
+        PotionEffect potionEffect = new PotionEffect(
+                potionEffectType,
+                duration * (int) Common.TICK_PER_SECOND.getValue(),
+                amplifier
+        );
+
+        combatEvent.defendingEntity().addPotionEffect(potionEffect);
+    }
+
     private void updatePotionEffectsBasedOnItem(
             HashMap<PotionEffectType, PotionEffect> potionEffects, ItemStack item, PotionEffectType potionEffectType
     ) {
