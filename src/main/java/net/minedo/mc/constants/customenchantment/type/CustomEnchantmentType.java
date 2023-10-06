@@ -10,6 +10,7 @@ public enum CustomEnchantmentType {
     DARKNESS,
     HARM,
     HEAL,
-    GLOWING;
+    GLOWING,
+    HUNGER;
 
 }
