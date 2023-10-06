@@ -4,6 +4,7 @@ public enum CustomEnchantmentType {
 
     LIGHTNING,
     POISON,
-    BLINDING
+    BLINDNESS,
+    SLOW;
 
 }
