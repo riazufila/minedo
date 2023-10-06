@@ -9,6 +9,7 @@ public enum CustomEnchantmentType {
     CONFUSION,
     DARKNESS,
     HARM,
-    HEAL;
+    HEAL,
+    GLOWING;
 
 }
