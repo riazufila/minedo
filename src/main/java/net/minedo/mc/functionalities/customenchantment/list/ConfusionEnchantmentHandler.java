@@ -14,10 +14,10 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
-public class BlindnessEnchantmentHandler extends CustomEnchantmentHandler {
+public class ConfusionEnchantmentHandler extends CustomEnchantmentHandler {
 
-    public BlindnessEnchantmentHandler() {
-        super(CustomEnchantmentType.BLINDNESS);
+    public ConfusionEnchantmentHandler() {
+        super(CustomEnchantmentType.CONFUSION);
     }
 
     @Override
@@ -38,7 +38,7 @@ public class BlindnessEnchantmentHandler extends CustomEnchantmentHandler {
 
         CustomEnchantment customEnchantment = customEnchantmentOptional.get();
         PotionEffect potionEffect = new PotionEffect(
-                PotionEffectType.BLINDNESS,
+                PotionEffectType.CONFUSION,
                 customEnchantment.getLevel() * (int) Common.TICK_PER_SECOND.getValue(),
                 1
         );

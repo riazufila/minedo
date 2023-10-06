@@ -38,7 +38,6 @@ public class PoisonEnchantmentHandler extends CustomEnchantmentHandler {
 
         CustomEnchantment customEnchantment = customEnchantmentOptional.get();
         int EFFECT_DURATION = 3;
-
         PotionEffect potionEffect = new PotionEffect(
                 PotionEffectType.POISON,
                 EFFECT_DURATION * (int) Common.TICK_PER_SECOND.getValue(),
