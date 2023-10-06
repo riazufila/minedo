@@ -4,8 +4,6 @@ import net.minedo.mc.Minedo;
 import net.minedo.mc.constants.customenchantment.key.CustomEnchantmentKey;
 import net.minedo.mc.constants.customenchantment.type.CustomEnchantmentType;
 import net.minedo.mc.functionalities.customenchantment.CustomEnchantment;
-import net.minedo.mc.functionalities.customenchantment.SimpleCustomEnchantment;
-import net.minedo.mc.functionalities.customitembuilder.LoreUtils;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -51,7 +49,7 @@ public final class DataEmbedder {
                     customEnchantment.getCustomEnchantmentType().toString().toLowerCase());
             newContainer.set(levelKey, PersistentDataType.SHORT, customEnchantment.getLevel());
 
-            meta.lore(LoreUtils.getLoreComponents(customEnchantment.getLore()));
+            // meta.lore(LoreUtils.getLoreComponents(customEnchantment.getLore()));
 
             childContainers.add(newContainer);
         }
@@ -65,9 +63,9 @@ public final class DataEmbedder {
      * Get custom enchantments from item.
      *
      * @param item item to get custom enchantments from
-     * @return simple custom enchantments list
+     * @return custom enchantments list
      */
-    public static List<SimpleCustomEnchantment> getCustomEnchantments(ItemStack item) {
+    public static List<CustomEnchantment> getCustomEnchantments(ItemStack item) {
         ItemMeta meta = item.getItemMeta();
         PersistentDataContainer container = meta.getPersistentDataContainer();
         NamespacedKey customEnchantmentKey = createKey(CustomEnchantmentKey.CUSTOM_ENCHANTMENT.getKey());
@@ -80,7 +78,7 @@ public final class DataEmbedder {
                 return null;
             }
 
-            List<SimpleCustomEnchantment> simpleCustomEnchantments = new ArrayList<>();
+            List<CustomEnchantment> customEnchantments = new ArrayList<>();
 
             for (PersistentDataContainer childContainer : childContainers) {
                 NamespacedKey idKey = createKey(CustomEnchantmentKey.CUSTOM_ENCHANTMENT_ID.getKey());
@@ -92,16 +90,16 @@ public final class DataEmbedder {
                     Short level = childContainer.get(levelKey, PersistentDataType.SHORT);
 
                     if (id != null && level != null) {
-                        SimpleCustomEnchantment simpleCustomEnchantment = new SimpleCustomEnchantment(
+                        CustomEnchantment customEnchantment = new CustomEnchantment(
                                 CustomEnchantmentType.valueOf(id.toUpperCase()), level
                         );
 
-                        simpleCustomEnchantments.add(simpleCustomEnchantment);
+                        customEnchantments.add(customEnchantment);
                     }
                 }
             }
 
-            return simpleCustomEnchantments;
+            return customEnchantments;
         }
 
         return null;

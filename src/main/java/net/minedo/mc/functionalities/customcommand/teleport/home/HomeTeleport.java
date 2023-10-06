@@ -6,6 +6,7 @@ import net.minedo.mc.Minedo;
 import net.minedo.mc.constants.command.message.globalteleportmessage.GlobalTeleportMessage;
 import net.minedo.mc.constants.command.message.hometeleportmessage.HomeTeleportMessage;
 import net.minedo.mc.constants.command.type.hometype.HomeType;
+import net.minedo.mc.constants.common.Common;
 import net.minedo.mc.functionalities.permissions.PermissionUtils;
 import net.minedo.mc.models.playerhome.PlayerHome;
 import net.minedo.mc.repositories.playerhomerepository.PlayerHomeRepository;
@@ -117,10 +118,16 @@ public class HomeTeleport implements CommandExecutor, Listener, TabCompleter {
             }
 
             PlayerHome playerHome = PlayerHomeRepository.getPlayerHome(player.getUniqueId(), homeName);
+            long DURATION = 1;
+            long DELAY = 1;
             int teleportTaskId = new HomeTeleportScheduler(
                     player, playerHome,
                     this.globalTeleportingPlayers, this.teleportingPlayers
-            ).runTaskTimer(Minedo.getInstance(), 20, 20).getTaskId();
+            ).runTaskTimer(
+                    Minedo.getInstance(),
+                    DELAY * (int) Common.TICK_PER_SECOND.getValue(),
+                    DURATION * (int) Common.TICK_PER_SECOND.getValue()
+            ).getTaskId();
 
             this.globalTeleportingPlayers.add(player.getUniqueId());
             this.teleportingPlayers.put(player.getUniqueId(), teleportTaskId);

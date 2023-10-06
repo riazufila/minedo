@@ -5,6 +5,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.minedo.mc.Minedo;
 import net.minedo.mc.constants.command.message.globalteleportmessage.GlobalTeleportMessage;
 import net.minedo.mc.constants.command.message.regionteleportmessage.RegionTeleportMessage;
+import net.minedo.mc.constants.common.Common;
 import net.minedo.mc.models.region.Region;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -77,11 +78,16 @@ public class RegionTeleport implements CommandExecutor, Listener, TabCompleter {
         }
 
         String warpDestination = args[0];
-
+        long DURATION = 1;
+        long DELAY = 1;
         int teleportTaskId = new RegionTeleportScheduler(
                 player, region, this.globalTeleportingPlayers,
                 this.teleportingPlayers
-        ).runTaskTimer(Minedo.getInstance(), 20, 20).getTaskId();
+        ).runTaskTimer(
+                Minedo.getInstance(),
+                DELAY * (int) Common.TICK_PER_SECOND.getValue(),
+                DURATION * (int) Common.TICK_PER_SECOND.getValue()
+        ).getTaskId();
 
         this.globalTeleportingPlayers.add(player.getUniqueId());
         this.teleportingPlayers.put(player.getUniqueId(), teleportTaskId);

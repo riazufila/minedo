@@ -1,6 +1,7 @@
 package net.minedo.mc.functionalities.regionregeneration;
 
 import net.minedo.mc.Minedo;
+import net.minedo.mc.constants.common.Common;
 import net.minedo.mc.models.region.Region;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
@@ -81,7 +82,8 @@ public class RegionRegenerationLauncher extends BukkitRunnable {
                 this.chunk, this.region, this.restoringChunks
         );
 
-        builder.runTaskLater(Minedo.getInstance(), 20);
+        long DELAY = 1;
+        builder.runTaskLater(Minedo.getInstance(), DELAY * (int) Common.TICK_PER_SECOND.getValue());
     }
 
 }

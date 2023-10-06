@@ -7,6 +7,7 @@ import net.minedo.mc.constants.command.message.globalteleportmessage.GlobalTelep
 import net.minedo.mc.constants.command.message.ignoremessage.IgnoreMessage;
 import net.minedo.mc.constants.command.message.playerteleportmessage.PlayerTeleportMessage;
 import net.minedo.mc.constants.command.type.playerteleporttype.PlayerTeleportType;
+import net.minedo.mc.constants.common.Common;
 import net.minedo.mc.repositories.playerblockedlistrepository.PlayerBlockedRepository;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -142,10 +143,11 @@ public class PlayerTeleport implements CommandExecutor, Listener, TabCompleter {
                     return true;
                 }
 
+                long DELAY = 30;
                 int teleportRequestTaskId = new PlayerTeleportRequestScheduler(
                         player, otherPlayer, teleportRequestRequesters, teleportRequestRequestees
                 )
-                        .runTaskLater(Minedo.getInstance(), 600)
+                        .runTaskLater(Minedo.getInstance(), DELAY * (int) Common.TICK_PER_SECOND.getValue())
                         .getTaskId();
 
                 this.teleportRequestRequesters.put(player.getUniqueId(), teleportRequestTaskId);
@@ -210,10 +212,16 @@ public class PlayerTeleport implements CommandExecutor, Listener, TabCompleter {
             );
 
             if (otherPlayer != null && otherPlayer.isOnline()) {
+                long DURATION = 1;
+                long DELAY = 1;
                 int teleportingTaskId = new PlayerTeleportScheduler(
                         otherPlayer, player, teleportingRequesters,
                         standingStillRequestees, globalTeleportingPlayers
-                ).runTaskTimer(instance, 20, 20).getTaskId();
+                ).runTaskTimer(
+                        instance,
+                        DELAY * (int) Common.TICK_PER_SECOND.getValue(),
+                        DURATION * (int) Common.TICK_PER_SECOND.getValue()
+                ).getTaskId();
 
                 this.globalTeleportingPlayers.add(player.getUniqueId());
                 this.globalTeleportingPlayers.add(otherPlayerUuid);

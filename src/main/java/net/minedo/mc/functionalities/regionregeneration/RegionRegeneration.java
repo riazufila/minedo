@@ -200,8 +200,9 @@ public class RegionRegeneration implements Listener {
                 chunk, this.region, this.restoringChunks
         );
 
+        long DELAY = 30;
         int restoringTaskId = regionRegenerationLauncher
-                .runTaskLater(Minedo.getInstance(), 600)
+                .runTaskLater(Minedo.getInstance(), DELAY * (int) Common.TICK_PER_SECOND.getValue())
                 .getTaskId();
 
         // Place task ID and update restoring chunk details.

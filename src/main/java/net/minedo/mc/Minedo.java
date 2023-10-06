@@ -2,7 +2,7 @@ package net.minedo.mc;
 
 import net.minedo.mc.functionalities.chat.Chat;
 import net.minedo.mc.functionalities.customcommand.CustomCommand;
-import net.minedo.mc.functionalities.customenchantment.CustomEnchantmentManager;
+import net.minedo.mc.functionalities.customenchantment.CustomEnchantmentWrapper;
 import net.minedo.mc.functionalities.customitembuilder.CustomItemBuilder;
 import net.minedo.mc.functionalities.joinleavebroadcast.JoinLeaveBroadcast;
 import net.minedo.mc.functionalities.player.PlayerProfileManager;
@@ -44,8 +44,8 @@ public class Minedo extends JavaPlugin {
         pluginManager.registerEvents(new CustomItemBuilder(), this);
 
         // Custom enchantments.
-        CustomEnchantmentManager customEnchantmentManager = new CustomEnchantmentManager();
-        customEnchantmentManager.registerCustomEnchantments();
+        CustomEnchantmentWrapper customEnchantmentWrapper = new CustomEnchantmentWrapper();
+        customEnchantmentWrapper.registerCustomEnchantments();
 
         // Custom commands.
         CustomCommand customCommand = new CustomCommand();
