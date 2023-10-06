@@ -1,5 +1,6 @@
 package net.minedo.mc.functionalities.customenchantment;
 
+import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent;
 import net.minedo.mc.constants.common.Common;
 import net.minedo.mc.constants.customenchantment.type.CustomEnchantmentType;
 import org.bukkit.entity.LivingEntity;
@@ -8,6 +9,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -58,6 +60,16 @@ public abstract class CustomEnchantmentHandler extends SimpleCustomEnchantment i
 
     @EventHandler
     public void onInteract(PlayerInteractEvent event) {
+        // Override and add custom effects if needed.
+    }
+
+    @EventHandler
+    public void onPlayerArmorChange(PlayerArmorChangeEvent event) {
+        // Override and add custom effects if needed.
+    }
+
+    @EventHandler
+    public void onEntityPickupItem(EntityPickupItemEvent event) {
         // Override and add custom effects if needed.
     }
 

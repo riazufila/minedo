@@ -13,6 +13,7 @@ public enum CustomEnchantmentType {
     GLOWING,
     HUNGER,
     WEAKNESS,
-    WITHER;
+    WITHER,
+    HEALTH_BOOST;
 
 }
