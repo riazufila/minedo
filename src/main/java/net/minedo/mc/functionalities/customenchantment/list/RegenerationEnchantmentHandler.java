@@ -6,16 +6,16 @@ import net.minedo.mc.functionalities.customenchantment.CustomEnchantmentHandler;
 import org.bukkit.event.EventHandler;
 import org.bukkit.potion.PotionEffectType;
 
-public class HealthBoostEnchantmentHandler extends CustomEnchantmentHandler {
+public class RegenerationEnchantmentHandler extends CustomEnchantmentHandler {
 
-    public HealthBoostEnchantmentHandler() {
-        super(CustomEnchantmentType.HEALTH_BOOST);
+    public RegenerationEnchantmentHandler() {
+        super(CustomEnchantmentType.REGENERATION);
     }
 
     @Override
     @EventHandler
     public void onPlayerArmorChange(PlayerArmorChangeEvent event) {
-        super.updateCustomEffectsOnArmorChange(event, PotionEffectType.HEALTH_BOOST);
+        super.updateCustomEffectsOnArmorChange(event, PotionEffectType.REGENERATION);
     }
 
 }

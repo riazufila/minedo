@@ -45,6 +45,7 @@ public class CustomEnchantmentWrapper {
             add(new HungerEnchantmentHandler());
             add(new LightningEnchantmentHandler());
             add(new PoisonEnchantmentHandler());
+            add(new RegenerationEnchantmentHandler());
             add(new SlowEnchantmentHandler());
             add(new WeaknessEnchantmentHandler());
             add(new WitherEnchantmentHandler());

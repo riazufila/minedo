@@ -14,6 +14,7 @@ public enum CustomEnchantmentType {
     HUNGER,
     WEAKNESS,
     WITHER,
-    HEALTH_BOOST;
+    HEALTH_BOOST,
+    REGENERATION
 
 }
