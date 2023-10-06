@@ -6,6 +6,8 @@ public enum CustomEnchantmentType {
     POISON,
     BLINDNESS,
     SLOW,
-    CONFUSION;
+    CONFUSION,
+    DARKNESS,
+    HARM
 
 }

@@ -40,7 +40,7 @@ public class BlindnessEnchantmentHandler extends CustomEnchantmentHandler {
         PotionEffect potionEffect = new PotionEffect(
                 PotionEffectType.BLINDNESS,
                 customEnchantment.getLevel() * (int) Common.TICK_PER_SECOND.getValue(),
-                1
+                0
         );
 
         combatEvent.defendingEntity().addPotionEffect(potionEffect);

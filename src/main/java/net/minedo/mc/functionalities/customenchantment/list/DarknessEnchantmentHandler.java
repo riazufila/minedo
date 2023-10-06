@@ -14,10 +14,10 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
-public class SlowEnchantmentHandler extends CustomEnchantmentHandler {
+public class DarknessEnchantmentHandler extends CustomEnchantmentHandler {
 
-    public SlowEnchantmentHandler() {
-        super(CustomEnchantmentType.SLOW);
+    public DarknessEnchantmentHandler() {
+        super(CustomEnchantmentType.DARKNESS);
     }
 
     @Override
@@ -37,12 +37,10 @@ public class SlowEnchantmentHandler extends CustomEnchantmentHandler {
         }
 
         CustomEnchantment customEnchantment = customEnchantmentOptional.get();
-        int EFFECT_DURATION = 3;
-
         PotionEffect potionEffect = new PotionEffect(
-                PotionEffectType.DARKNESS,
-                EFFECT_DURATION * (int) Common.TICK_PER_SECOND.getValue(),
-                customEnchantment.getLevel() - 1
+                PotionEffectType.BLINDNESS,
+                customEnchantment.getLevel() * (int) Common.TICK_PER_SECOND.getValue(),
+                0
         );
 
         combatEvent.defendingEntity().addPotionEffect(potionEffect);

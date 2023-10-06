@@ -39,9 +39,9 @@ public class PoisonEnchantmentHandler extends CustomEnchantmentHandler {
         CustomEnchantment customEnchantment = customEnchantmentOptional.get();
         int EFFECT_DURATION = 3;
         PotionEffect potionEffect = new PotionEffect(
-                PotionEffectType.POISON,
+                PotionEffectType.HARM,
                 EFFECT_DURATION * (int) Common.TICK_PER_SECOND.getValue(),
-                customEnchantment.getLevel()
+                customEnchantment.getLevel() - 1
         );
 
         combatEvent.defendingEntity().addPotionEffect(potionEffect);

@@ -40,7 +40,7 @@ public class ConfusionEnchantmentHandler extends CustomEnchantmentHandler {
         PotionEffect potionEffect = new PotionEffect(
                 PotionEffectType.CONFUSION,
                 customEnchantment.getLevel() * (int) Common.TICK_PER_SECOND.getValue(),
-                1
+                0
         );
 
         combatEvent.defendingEntity().addPotionEffect(potionEffect);
