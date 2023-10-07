@@ -120,6 +120,10 @@ public final class CustomItemRepository {
                     String unconvertedLoreColor = resultSet.getString("lore_color");
                     String unconvertedLoreDecoration = resultSet.getString("lore_decoration");
 
+                    if (lore == null && unconvertedLoreColor == null && unconvertedLoreDecoration == null) {
+                        continue;
+                    }
+
                     customItemLore.setText(lore);
 
                     if (unconvertedLoreColor != null) {
@@ -139,6 +143,10 @@ public final class CustomItemRepository {
 
                 String enchantment = resultSet.getString("enchantment");
                 int enchantmentLevel = resultSet.getInt("enchantment_level");
+
+                if (enchantment == null) {
+                    continue;
+                }
 
                 customItemEnchantment.setEnchantment(enchantment);
                 customItemEnchantment.setLevel(enchantmentLevel);

@@ -98,7 +98,13 @@ CREATE TABLE region (
 INSERT INTO custom_item VALUES
 (1, 'IRON_BOOTS', 'Rabbit\'s Foot', 'GOLD', NULL),
 (2, 'IRON_AXE', 'Mjolnir', 'DARK_PURPLE', NULL),
-(3, 'DIAMOND_HOE', 'Death\'s Scythe', 'DARK_PURPLE', NULL);
+(3, 'DIAMOND_HOE', 'Death\'s Scythe', 'DARK_PURPLE', NULL),
+(4, 'IRON_HELMET', 'Iron Helmet', NULL, 'OBFUSCATED'),
+(5, 'IRON_CHESTPLATE', 'Iron Chestplate', NULL, 'OBFUSCATED'),
+(6, 'IRON_LEGGINGS', 'Iron Leggings', NULL, 'OBFUSCATED'),
+(7, 'IRON_BOOTS', 'Iron Boots', NULL, 'OBFUSCATED'),
+(8, 'IRON_SWORD', 'Iron Sword', NULL, 'OBFUSCATED'),
+(9, 'SHIELD', 'Shield', NULL, 'OBFUSCATED');
 
 INSERT INTO custom_item_lore VALUES
 (1, 'Boots infused with the agility of a rabbit.', 'GREEN', NULL),
@@ -123,9 +129,15 @@ INSERT INTO custom_item_enchantment VALUES
 (3, 'BLINDNESS', 5);
 
 INSERT INTO custom_item_probability VALUES
-(1, 100),
-(2, 100),
-(3, 100);
+(1, 10),
+(2, 10),
+(3, 10),
+(4, 100),
+(5, 100),
+(6, 100),
+(7, 100),
+(8, 100),
+(9, 100);
 
 INSERT INTO region VALUES
 (1, 'Spawn', 'world', -128, 127, -128, 127);

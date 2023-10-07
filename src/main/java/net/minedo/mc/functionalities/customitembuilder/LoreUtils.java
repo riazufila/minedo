@@ -41,7 +41,9 @@ public final class LoreUtils {
         List<Component> components = new ArrayList<>();
 
         for (String slicedLoreText : LoreUtils.sliceString(lore)) {
-            Component loreComponent = Component.text(slicedLoreText).decoration(TextDecoration.ITALIC, false);
+            Component loreComponent = Component
+                    .text(slicedLoreText)
+                    .decoration(TextDecoration.ITALIC, false);
 
             if (color != null) {
                 loreComponent = loreComponent.color(color);
@@ -51,6 +53,7 @@ public final class LoreUtils {
                 loreComponent = loreComponent.decorate(decoration);
             }
 
+            loreComponent = loreComponent.colorIfAbsent(NamedTextColor.WHITE);
             components.add(loreComponent);
         }
 

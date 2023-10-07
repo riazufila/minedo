@@ -1,6 +1,7 @@
 package net.minedo.mc.functionalities.customitembuilder;
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.minedo.mc.constants.customenchantment.type.CustomEnchantmentType;
 import net.minedo.mc.functionalities.customenchantment.CustomEnchantment;
@@ -67,38 +68,50 @@ public class CustomItemBuilder implements Listener {
             displayNameComponent = displayNameComponent.decorate(customItem.getDecoration());
         }
 
+        displayNameComponent = displayNameComponent.colorIfAbsent(NamedTextColor.WHITE);
         meta.displayName(displayNameComponent);
     }
 
     private void buildEnchantments(ItemMeta meta, CustomItem customItem) {
+        List<CustomItemEnchantment> customItemEnchantments = customItem.getEnchantments();
+
+        if (customItemEnchantments == null) {
+            return;
+        }
+
+        if (customItemEnchantments.isEmpty()) {
+            return;
+        }
+
         // Classify enchantments.
         List<CustomEnchantment> customEnchantments = new ArrayList<>();
         List<EnchantmentContainer> vanillaEnchantments = new ArrayList<>();
-        List<CustomItemEnchantment> customItemEnchantments = customItem.getEnchantments();
 
-        if (!customItemEnchantments.isEmpty()) {
-            for (CustomItemEnchantment enchantment : customItem.getEnchantments()) {
-                String unknownEnchantment = enchantment.getEnchantment();
+        for (CustomItemEnchantment enchantment : customItemEnchantments) {
+            String unknownEnchantment = enchantment.getEnchantment();
 
-                Enchantment vanillaEnchantment = Enchantment
-                        .getByKey(NamespacedKey.minecraft(unknownEnchantment.toLowerCase()));
-                if (vanillaEnchantment != null) {
-                    vanillaEnchantments.add(new EnchantmentContainer(vanillaEnchantment, enchantment.getLevel()));
-                } else {
-                    CustomEnchantmentType customEnchantment = CustomEnchantmentType.valueOf(unknownEnchantment);
-                    customEnchantments.add(new CustomEnchantment(customEnchantment, (short) enchantment.getLevel()));
-                }
+            Enchantment vanillaEnchantment = Enchantment
+                    .getByKey(NamespacedKey.minecraft(unknownEnchantment.toLowerCase()));
+            if (vanillaEnchantment != null) {
+                vanillaEnchantments.add(new EnchantmentContainer(vanillaEnchantment, enchantment.getLevel()));
+            } else {
+                CustomEnchantmentType customEnchantment = CustomEnchantmentType.valueOf(unknownEnchantment);
+                customEnchantments.add(new CustomEnchantment(customEnchantment, (short) enchantment.getLevel()));
             }
-
-            // Add all enchantments.
-            this.applyVanillaEnchantments(meta, vanillaEnchantments);
-            DataEmbedder.applyCustomEnchantments(meta, customEnchantments);
         }
 
+        // Add all enchantments.
+        this.applyVanillaEnchantments(meta, vanillaEnchantments);
+        DataEmbedder.applyCustomEnchantments(meta, customEnchantments);
     }
 
     private void buildLore(ItemMeta meta, CustomItem customItem) {
         CustomItemLore customItemLore = customItem.getLore();
+
+        if (customItemLore == null) {
+            return;
+        }
+
         List<Component> list = LoreUtils.getLoreComponents(customItemLore.getText(),
                 customItemLore.getColor(), customItemLore.getDecoration());
         LoreUtils.updateLore(meta, list, true);
