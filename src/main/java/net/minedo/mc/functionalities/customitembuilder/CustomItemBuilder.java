@@ -119,9 +119,9 @@ public class CustomItemBuilder implements Listener {
     public ItemStack getCustomItem() {
         try {
             Random random = new Random();
+            double PROBABILITY_NEEDED = 0.3;
 
-            // 50% chance to retrieve an item.
-            if (random.nextBoolean()) {
+            if (PROBABILITY_NEEDED >= random.nextDouble()) {
                 List<CustomItemProbability> customItemsProbabilities = CustomItemRepository
                         .getAllCustomItemsProbabilities();
 
