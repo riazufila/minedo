@@ -15,7 +15,7 @@ import org.apache.commons.rng.sampling.DiscreteProbabilityCollectionSampler;
 import org.apache.commons.rng.simple.RandomSource;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.BlockState;
-import org.bukkit.block.Chest;
+import org.bukkit.block.Container;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -37,11 +37,12 @@ public class CustomItemBuilder implements Listener {
         BlockState[] tileEntities = event.getChunk().getTileEntities();
 
         for (BlockState state : tileEntities) {
-            if (state.getBlock().getState() instanceof Chest chest) {
+            BlockState blockState = state.getBlock().getState();
+            if (blockState instanceof Container container) {
                 ItemStack item = this.getCustomItem();
 
                 if (item != null) {
-                    chest.getInventory().addItem(item);
+                    container.getInventory().addItem(item);
                 }
             }
         }
