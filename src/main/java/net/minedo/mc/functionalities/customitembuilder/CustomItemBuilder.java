@@ -54,11 +54,7 @@ public class CustomItemBuilder implements Listener {
         }
     }
 
-    private ItemStack buildItem(CustomItem customItem) {
-        ItemStack item = new ItemStack(customItem.getMaterial());
-        ItemMeta meta = item.getItemMeta();
-
-        // Set display name.
+    private void buildDisplayName(ItemMeta meta, CustomItem customItem) {
         Component displayNameComponent = Component
                 .text(customItem.getDisplayName())
                 .decoration(TextDecoration.ITALIC, false);
@@ -72,11 +68,14 @@ public class CustomItemBuilder implements Listener {
         }
 
         meta.displayName(displayNameComponent);
+    }
 
+    private void buildEnchantments(ItemMeta meta, CustomItem customItem) {
         // Classify enchantments.
         List<CustomEnchantment> customEnchantments = new ArrayList<>();
         List<EnchantmentContainer> vanillaEnchantments = new ArrayList<>();
         List<CustomItemEnchantment> customItemEnchantments = customItem.getEnchantments();
+
         if (!customItemEnchantments.isEmpty()) {
             for (CustomItemEnchantment enchantment : customItem.getEnchantments()) {
                 String unknownEnchantment = enchantment.getEnchantment();
@@ -96,14 +95,22 @@ public class CustomItemBuilder implements Listener {
             DataEmbedder.applyCustomEnchantments(meta, customEnchantments);
         }
 
-        // Set lore.
+    }
+
+    private void buildLore(ItemMeta meta, CustomItem customItem) {
         CustomItemLore customItemLore = customItem.getLore();
         List<Component> list = LoreUtils.getLoreComponents(customItemLore.getText(),
                 customItemLore.getColor(), customItemLore.getDecoration());
         LoreUtils.updateLore(meta, list, true);
+    }
 
+    private ItemStack buildItem(CustomItem customItem) {
+        ItemStack item = new ItemStack(customItem.getMaterial());
+        ItemMeta meta = item.getItemMeta();
 
-        // Set item with new metas.
+        this.buildDisplayName(meta, customItem);
+        this.buildEnchantments(meta, customItem);
+        this.buildLore(meta, customItem);
         item.setItemMeta(meta);
 
         return item;
