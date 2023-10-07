@@ -101,6 +101,7 @@ public abstract class CustomEnchantmentHandler extends SimpleCustomEnchantment i
 
         CustomEnchantment customEnchantment = customEnchantmentOptional.get();
         int amplifier = customEnchantment.getLevel() - 1;
+        int AMPLIFIER_LIMIT = 9;
 
         if (potionEffects.containsKey(potionEffectType)) {
             PotionEffect existingPotionEffect = potionEffects.get(potionEffectType);
@@ -110,7 +111,7 @@ public abstract class CustomEnchantmentHandler extends SimpleCustomEnchantment i
         PotionEffect potionEffect = new PotionEffect(
                 potionEffectType,
                 PotionEffect.INFINITE_DURATION,
-                amplifier
+                Math.min(amplifier, AMPLIFIER_LIMIT) // Limit maximum potion effect amplifier.
         );
 
         potionEffects.put(potionEffectType, potionEffect);
