@@ -98,7 +98,7 @@ CREATE TABLE region (
 INSERT INTO custom_item VALUES
 (1, 'IRON_BOOTS', 'Rabbit\'s Foot', 'GOLD', NULL),
 (2, 'IRON_AXE', 'Mjolnir', 'DARK_PURPLE', NULL),
-(3, 'DIAMOND_HOE', 'Death\'s Scythe', 'DARK_RED', NULL);
+(3, 'DIAMOND_HOE', 'Death\'s Scythe', 'DARK_PURPLE', NULL);
 
 INSERT INTO custom_item_lore VALUES
 (1, 'Boots infused with the agility of a rabbit.', 'GREEN', NULL),
