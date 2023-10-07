@@ -4,5 +4,5 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
 
 public record CombatEvent(ItemStack item, LivingEntity attackingEntity, LivingEntity defendingEntity) {
-    // Change to a class if needed.
+    // Change to Class if needed.
 }

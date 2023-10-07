@@ -1,12 +1,12 @@
 package net.minedo.mc.models.customitem;
 
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
-import net.minedo.mc.models.customitemattribute.CustomItemAttribute;
 import net.minedo.mc.models.customitemenchantment.CustomItemEnchantment;
 import net.minedo.mc.models.customitemlore.CustomItemLore;
-import net.minedo.mc.models.customitemprobability.CustomItemProbability;
 import org.bukkit.Material;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CustomItem {
@@ -14,12 +14,10 @@ public class CustomItem {
     private int id;
     private Material material;
     private String displayName;
-    private String color;
+    private NamedTextColor color;
     private TextDecoration decoration;
     private CustomItemLore lore;
     private List<CustomItemEnchantment> enchantments;
-    private List<CustomItemAttribute> attributes;
-    private CustomItemProbability probability;
 
     public int getId() {
         return id;
@@ -45,11 +43,11 @@ public class CustomItem {
         this.displayName = displayName;
     }
 
-    public String getColor() {
+    public NamedTextColor getColor() {
         return color;
     }
 
-    public void setColor(String color) {
+    public void setColor(NamedTextColor color) {
         this.color = color;
     }
 
@@ -73,32 +71,12 @@ public class CustomItem {
         return enchantments;
     }
 
-    public void setEnchantments(List<CustomItemEnchantment> enchantments) {
-        this.enchantments = enchantments;
-    }
-
     public void addEnchantment(CustomItemEnchantment enchantment) {
+        if (this.enchantments == null) {
+            this.enchantments = new ArrayList<>();
+        }
+
         this.enchantments.add(enchantment);
-    }
-
-    public List<CustomItemAttribute> getAttributes() {
-        return attributes;
-    }
-
-    public void setAttributes(List<CustomItemAttribute> attributes) {
-        this.attributes = attributes;
-    }
-
-    public void addAttribute(CustomItemAttribute attribute) {
-        this.attributes.add(attribute);
-    }
-
-    public CustomItemProbability getProbability() {
-        return probability;
-    }
-
-    public void setProbability(CustomItemProbability probability) {
-        this.probability = probability;
     }
 
 }

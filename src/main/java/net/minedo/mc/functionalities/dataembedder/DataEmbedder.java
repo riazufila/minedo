@@ -1,9 +1,15 @@
 package net.minedo.mc.functionalities.dataembedder;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import net.minedo.mc.Minedo;
 import net.minedo.mc.constants.customenchantment.key.CustomEnchantmentKey;
 import net.minedo.mc.constants.customenchantment.type.CustomEnchantmentType;
+import net.minedo.mc.functionalities.common.utils.RomanUtils;
 import net.minedo.mc.functionalities.customenchantment.CustomEnchantment;
+import net.minedo.mc.functionalities.customenchantment.CustomEnchantmentWrapper;
+import net.minedo.mc.functionalities.customitembuilder.LoreUtils;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -40,6 +46,10 @@ public final class DataEmbedder {
         PersistentDataContainer parentContainer = meta.getPersistentDataContainer();
         List<PersistentDataContainer> childContainers = new ArrayList<>();
 
+        if (customEnchantments.isEmpty()) {
+            return;
+        }
+
         for (CustomEnchantment customEnchantment : customEnchantments) {
             PersistentDataContainer newContainer = parentContainer.getAdapterContext().newPersistentDataContainer();
             NamespacedKey idKey = createKey(CustomEnchantmentKey.CUSTOM_ENCHANTMENT_ID.getKey());
@@ -49,7 +59,20 @@ public final class DataEmbedder {
                     customEnchantment.getCustomEnchantmentType().toString().toLowerCase());
             newContainer.set(levelKey, PersistentDataType.SHORT, customEnchantment.getLevel());
 
-            // meta.lore(LoreUtils.getLoreComponents(customEnchantment.getLore()));
+            short level = customEnchantment.getLevel();
+            String loreText = String.format(
+                    level > 1 ? "%s %s" : "%s",
+                    CustomEnchantmentWrapper
+                            .formatCustomEnchantmentName(customEnchantment.getCustomEnchantmentType().toString()),
+                    level > 1 ? RomanUtils.toRoman(customEnchantment.getLevel()) : null
+            );
+
+            Component customEnchantmentLore = Component
+                    .text(loreText)
+                    .color(NamedTextColor.GRAY)
+                    .decoration(TextDecoration.ITALIC, false);
+
+            LoreUtils.updateLore(meta, customEnchantmentLore, false);
 
             childContainers.add(newContainer);
         }

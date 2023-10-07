@@ -1,22 +1,13 @@
 package net.minedo.mc.models.customitemlore;
 
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 
 public class CustomItemLore {
 
-    private int id;
     private String text;
-    private String color;
+    private NamedTextColor color;
     private TextDecoration decoration;
-    private int customItemId;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getText() {
         return text;
@@ -26,11 +17,11 @@ public class CustomItemLore {
         this.text = text;
     }
 
-    public String getColor() {
+    public NamedTextColor getColor() {
         return color;
     }
 
-    public void setColor(String color) {
+    public void setColor(NamedTextColor color) {
         this.color = color;
     }
 
@@ -40,14 +31,6 @@ public class CustomItemLore {
 
     public void setDecoration(TextDecoration decoration) {
         this.decoration = decoration;
-    }
-
-    public int getCustomItemId() {
-        return customItemId;
-    }
-
-    public void setCustomItemId(int customItemId) {
-        this.customItemId = customItemId;
     }
 
 }

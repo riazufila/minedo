@@ -1,10 +1,12 @@
 package net.minedo.mc.functionalities.customitembuilder;
 
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public final class LoreUtils {
@@ -35,14 +37,14 @@ public final class LoreUtils {
         return result;
     }
 
-    private static List<Component> buildLore(String lore, String color, TextDecoration decoration) {
+    private static List<Component> buildLore(String lore, NamedTextColor color, TextDecoration decoration) {
         List<Component> components = new ArrayList<>();
 
         for (String slicedLoreText : LoreUtils.sliceString(lore)) {
             Component loreComponent = Component.text(slicedLoreText).decoration(TextDecoration.ITALIC, false);
 
             if (color != null) {
-                loreComponent = loreComponent.color(TextColor.fromHexString(color));
+                loreComponent = loreComponent.color(color);
             }
 
             if (decoration != null) {
@@ -55,12 +57,44 @@ public final class LoreUtils {
         return components;
     }
 
-    public static List<Component> getLoreComponents(String lore) {
-        return buildLore(lore, null, null);
+    public static List<Component> getLoreComponents(String lore, NamedTextColor color, TextDecoration decoration) {
+        return buildLore(lore, color, decoration);
     }
 
-    public static List<Component> getLoreComponents(String lore, String color, TextDecoration decoration) {
-        return buildLore(lore, color, decoration);
+    public static void updateLore(ItemMeta meta, Component component, boolean addNewLine) {
+        if (meta.hasLore()) {
+            List<Component> existingComponents = meta.lore();
+            List<Component> newComponents = new ArrayList<>();
+
+            if (addNewLine) {
+                newComponents.add(Component.empty());
+            }
+
+            newComponents.add(component);
+            assert existingComponents != null;
+            existingComponents.addAll(newComponents);
+            meta.lore(existingComponents);
+        } else {
+            meta.lore(Collections.singletonList(component));
+        }
+    }
+
+    public static void updateLore(ItemMeta meta, List<Component> components, boolean addNewLine) {
+        if (meta.hasLore()) {
+            List<Component> existingComponents = meta.lore();
+            List<Component> newComponents = new ArrayList<>();
+
+            if (addNewLine) {
+                newComponents.add(Component.empty());
+            }
+
+            newComponents.addAll(components);
+            assert existingComponents != null;
+            existingComponents.addAll(newComponents);
+            meta.lore(existingComponents);
+        } else {
+            meta.lore(components);
+        }
     }
 
 }

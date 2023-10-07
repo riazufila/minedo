@@ -29,6 +29,26 @@ public class CustomEnchantmentWrapper {
         return Optional.empty();
     }
 
+    public static String formatCustomEnchantmentName(String enchantmentName) {
+        String[] words = enchantmentName.split("_");
+
+        StringBuilder formattedName = new StringBuilder();
+
+        // Iterate through the words and capitalize the first letter of each word
+        for (String word : words) {
+            // Append a space if the formattedName is not empty
+            if (!formattedName.isEmpty()) {
+                formattedName.append(" ");
+            }
+
+            // Append the word with the first letter capitalized
+            formattedName.append(Character.toUpperCase(word.charAt(0)))
+                    .append(word.substring(1).toLowerCase());
+        }
+
+        return formattedName.toString();
+    }
+
     /**
      * Register the listeners for all custom enchantments.
      */
@@ -47,6 +67,7 @@ public class CustomEnchantmentWrapper {
             add(new PoisonEnchantmentHandler());
             add(new RegenerationEnchantmentHandler());
             add(new SlowEnchantmentHandler());
+            add(new SpeedEnchantmentHandler());
             add(new WeaknessEnchantmentHandler());
             add(new WitherEnchantmentHandler());
         }};

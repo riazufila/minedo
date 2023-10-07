@@ -15,6 +15,7 @@ public enum CustomEnchantmentType {
     WEAKNESS,
     WITHER,
     HEALTH_BOOST,
-    REGENERATION
+    REGENERATION,
+    SPEED
 
 }
