@@ -154,6 +154,11 @@ public class CustomItemBuilder implements Listener {
                 ).sample();
 
                 CustomItem customItem = CustomItemRepository.getCustomItemById(sample.customItemId());
+
+                if (customItem == null) {
+                    return null;
+                }
+
                 return this.buildItem(customItem);
             }
         } catch (Exception exception) {

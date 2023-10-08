@@ -22,12 +22,11 @@ public final class RegionRepository {
 
         try {
             String query = """
-                        SELECT * FROM region;
+                        SELECT name, world_type, minX, maxX, minZ, maxZ FROM region;
                     """;
 
             try (ResultSet resultSet = database.query(query)) {
                 while (resultSet.next()) {
-                    int id = resultSet.getInt("id");
                     String name = resultSet.getString("name");
                     String world = resultSet.getString("world_type");
                     int minX = resultSet.getInt("minX");
@@ -35,7 +34,7 @@ public final class RegionRepository {
                     int minZ = resultSet.getInt("minZ");
                     int maxZ = resultSet.getInt("maxZ");
 
-                    Region region = new Region(id, name, Bukkit.getWorld(world), minX, maxX, minZ, maxZ);
+                    Region region = new Region(name, Bukkit.getWorld(world), minX, maxX, minZ, maxZ);
                     regions.add(region);
                 }
             }

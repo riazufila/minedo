@@ -32,7 +32,7 @@ public class RegionRegenerationLauncher extends BukkitRunnable {
         Location location = livingEntity.getLocation();
         int LAUNCHING_GROUND_MAX_HEIGHT = 5;
 
-        int highestBlockAtY = this.region.getWorldType().getHighestBlockYAt(
+        int highestBlockAtY = this.region.worldType().getHighestBlockYAt(
                 location.getBlockX(), location.getBlockZ()
         );
 
@@ -46,7 +46,7 @@ public class RegionRegenerationLauncher extends BukkitRunnable {
             if (entity instanceof LivingEntity livingEntity
                     && this.isLivingEntityWithinLaunchingGround(livingEntity)
             ) {
-                this.region.getWorldType().playSound(
+                this.region.worldType().playSound(
                         livingEntity.getLocation(), Sound.BLOCK_AZALEA_LEAVES_STEP, 1, 1
                 );
 

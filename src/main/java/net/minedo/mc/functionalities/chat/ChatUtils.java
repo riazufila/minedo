@@ -15,8 +15,8 @@ public final class ChatUtils {
 
     public static Component updateComponentColor(Player player, Component component, boolean isContent) {
         ChatInfo chatInfo = getChatInfo(player, isContent);
-        String selectedColor = chatInfo.getSelectedColor();
-        boolean isCustom = chatInfo.isCustom();
+        String selectedColor = chatInfo.selectedColor();
+        boolean isCustom = chatInfo.custom();
 
         if (selectedColor != null) {
             if (!PermissionUtils.validatePlayerPermissionForColorSettingByColorTypeAndColor(player, isCustom

@@ -45,7 +45,7 @@ public class RegionTeleport implements CommandExecutor, Listener, TabCompleter {
 
         String warpDestination = args[0];
 
-        return this.regions.stream().anyMatch(region -> region.getName().toLowerCase().equals(warpDestination));
+        return this.regions.stream().anyMatch(region -> region.name().toLowerCase().equals(warpDestination));
     }
 
     @Override
@@ -110,7 +110,7 @@ public class RegionTeleport implements CommandExecutor, Listener, TabCompleter {
         }
 
         if (args.length == 1) {
-            completions.addAll(this.regions.stream().map(region -> region.getName().toLowerCase()).toList());
+            completions.addAll(this.regions.stream().map(region -> region.name().toLowerCase()).toList());
         }
 
         return completions;

@@ -4,7 +4,7 @@ import net.minedo.mc.constants.customenchantment.type.CustomEnchantmentType;
 
 public class CustomEnchantment extends SimpleCustomEnchantment {
 
-    private short level;
+    private final short level;
 
     public CustomEnchantment(CustomEnchantmentType customEnchantmentType, short level) {
         super(customEnchantmentType);
@@ -13,10 +13,6 @@ public class CustomEnchantment extends SimpleCustomEnchantment {
 
     public short getLevel() {
         return level;
-    }
-
-    public void setLevel(short level) {
-        this.level = level;
     }
 
 }

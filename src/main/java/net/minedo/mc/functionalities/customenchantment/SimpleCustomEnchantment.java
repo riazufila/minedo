@@ -4,7 +4,7 @@ import net.minedo.mc.constants.customenchantment.type.CustomEnchantmentType;
 
 public class SimpleCustomEnchantment {
 
-    private CustomEnchantmentType customEnchantmentType;
+    private final CustomEnchantmentType customEnchantmentType;
 
     public SimpleCustomEnchantment(CustomEnchantmentType customEnchantmentType) {
         this.customEnchantmentType = customEnchantmentType;
@@ -12,10 +12,6 @@ public class SimpleCustomEnchantment {
 
     public CustomEnchantmentType getCustomEnchantmentType() {
         return customEnchantmentType;
-    }
-
-    public void setCustomEnchantmentType(CustomEnchantmentType customEnchantmentType) {
-        this.customEnchantmentType = customEnchantmentType;
     }
 
 }
