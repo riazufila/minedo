@@ -24,7 +24,7 @@ import java.util.Optional;
 
 public abstract class CustomEnchantmentHandler extends SimpleCustomEnchantment implements Listener {
 
-    private int AMPLIFIER_LIMIT = 9;
+    private final int AMPLIFIER_LIMIT = 9;
 
     public CustomEnchantmentHandler(CustomEnchantmentType customEnchantmentType) {
         super(customEnchantmentType);
