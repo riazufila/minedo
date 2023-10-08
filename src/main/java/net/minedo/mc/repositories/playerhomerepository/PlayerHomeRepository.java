@@ -28,7 +28,13 @@ public final class PlayerHomeRepository {
 
         try {
             String query = """
-                        SELECT * FROM player_home WHERE player_id = ? AND name = ?;
+                        SELECT
+                            *
+                        FROM
+                            player_home
+                        WHERE
+                            player_id = (SELECT id FROM player_profile WHERE uuid = ?)
+                                AND name = ?;
                     """;
 
             HashMap<Integer, String> replacements = new HashMap<>();
@@ -54,7 +60,7 @@ public final class PlayerHomeRepository {
             }
         } catch (SQLException error) {
             logger.severe(String.format(
-                    "Unable to get player home by player id and name: %s", error.getMessage()
+                    "Unable to get player home by player uuid and name: %s", error.getMessage()
             ));
         } finally {
             database.disconnect();
@@ -67,17 +73,20 @@ public final class PlayerHomeRepository {
         Database database = new Database();
         database.connect();
 
-        PlayerProfile playerProfile = PlayerProfileRepository.getPlayerProfileByUuid(playerUuid);
-
         List<PlayerHome> playerHomeList = new ArrayList<>();
 
         try {
             String query = """
-                        SELECT * FROM player_home WHERE player_id = ?;
+                        SELECT
+                            *
+                        FROM
+                            player_home
+                        WHERE
+                            player_id = (SELECT id FROM player_profile WHERE uuid = ?);
                     """;
 
             HashMap<Integer, String> replacements = new HashMap<>();
-            replacements.put(1, String.valueOf(playerProfile.getId()));
+            replacements.put(1, String.valueOf(playerUuid));
             ResultSet resultSet = database.queryWithWhereClause(query, replacements);
 
             while (resultSet.next()) {
@@ -111,17 +120,15 @@ public final class PlayerHomeRepository {
         Database database = new Database();
         database.connect();
 
-        PlayerProfile playerProfile = PlayerProfileRepository.getPlayerProfileByUuid(playerUuid);
-
         String query = """
                     REPLACE INTO player_home
                         (player_id, name, world_type, coordinate_x, coordinate_y, coordinate_z)
                     VALUES
-                        (?, ?, ?, ?, ?, ?);
+                        ((SELECT id FROM player_profile WHERE uuid = ?), ?, ?, ?, ?, ?);
                 """;
 
         HashMap<Integer, String> replacements = new HashMap<>();
-        replacements.put(1, String.valueOf(playerProfile.getId()));
+        replacements.put(1, String.valueOf(playerUuid));
         replacements.put(2, homeName);
         replacements.put(3, location.getWorld().getName());
         replacements.put(4, String.valueOf(location.getX()));
@@ -136,14 +143,16 @@ public final class PlayerHomeRepository {
         Database database = new Database();
         database.connect();
 
-        PlayerProfile playerProfile = PlayerProfileRepository.getPlayerProfileByUuid(playerUuid);
-
         String query = """
-                    DELETE FROM player_home WHERE (player_id = ?) AND (name = ?);
+                    DELETE FROM
+                        player_home
+                    WHERE
+                        (player_id = (SELECT id FROM player_profile WHERE uuid = ?))
+                            AND (name = ?);
                 """;
 
         HashMap<Integer, String> replacements = new HashMap<>();
-        replacements.put(1, String.valueOf(playerProfile.getId()));
+        replacements.put(1, String.valueOf(playerUuid));
         replacements.put(2, homeName);
         database.executeStatement(query, replacements);
 

@@ -1,9 +1,7 @@
 package net.minedo.mc.repositories.playerlikerepository;
 
 import net.minedo.mc.models.playerlike.PlayerLike;
-import net.minedo.mc.models.playerprofile.PlayerProfile;
 import net.minedo.mc.repositories.Database;
-import net.minedo.mc.repositories.playerprofilerepository.PlayerProfileRepository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -20,14 +18,12 @@ public final class PlayerLikeRepository {
         Database database = new Database();
         database.connect();
 
-        PlayerProfile playerProfile = PlayerProfileRepository.getPlayerProfileByUuid(playerUuid);
-
         String query = """
-                    INSERT INTO player_like (player_id) VALUES (?);
+                    INSERT INTO player_like (player_id) VALUES ((SELECT id FROM player_profile WHERE uuid = ?));
                 """;
 
         HashMap<Integer, String> replacements = new HashMap<>();
-        replacements.put(1, String.valueOf(playerProfile.getId()));
+        replacements.put(1, String.valueOf(playerUuid));
         database.executeStatement(query, replacements);
 
         database.disconnect();
@@ -37,8 +33,6 @@ public final class PlayerLikeRepository {
         Database database = new Database();
         database.connect();
 
-        PlayerProfile playerProfile = PlayerProfileRepository.getPlayerProfileByUuid(playerUuid);
-
         String query = """
                     UPDATE player_like
                     SET
@@ -46,7 +40,7 @@ public final class PlayerLikeRepository {
                         like_sent_count = ?,
                         last_like_sent = ?
                     WHERE
-                        (player_id = ?);
+                        (player_id = (SELECT id FROM player_profile WHERE uuid = ?));
                 """;
 
         HashMap<Integer, Object> replacements = new HashMap<>();
@@ -57,7 +51,7 @@ public final class PlayerLikeRepository {
                 3, playerLike.getLastLikeSent() != null ? Timestamp.from(playerLike.getLastLikeSent()) : null
         );
 
-        replacements.put(4, String.valueOf(playerProfile.getId()));
+        replacements.put(4, String.valueOf(playerUuid));
         database.executeStatement(query, replacements);
 
         database.disconnect();
@@ -67,17 +61,15 @@ public final class PlayerLikeRepository {
         Database database = new Database();
         database.connect();
 
-        PlayerProfile playerProfile = PlayerProfileRepository.getPlayerProfileByUuid(playerUuid);
-
         PlayerLike playerLike = null;
 
         try {
             String query = """
-                        SELECT * FROM player_like WHERE player_id = ?;
+                        SELECT * FROM player_like WHERE player_id = (SELECT id FROM player_profile WHERE uuid = ?);
                     """;
 
             HashMap<Integer, String> replacements = new HashMap<>();
-            replacements.put(1, String.valueOf(playerProfile.getId()));
+            replacements.put(1, String.valueOf(playerUuid));
             ResultSet resultSet = database.queryWithWhereClause(query, replacements);
 
             if (resultSet.next()) {

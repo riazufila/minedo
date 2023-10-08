@@ -21,17 +21,20 @@ public final class PlayerBlockedRepository {
         Database database = new Database();
         database.connect();
 
-        PlayerProfile playerProfile = PlayerProfileRepository.getPlayerProfileByUuid(playerUuid);
-
         List<PlayerBlocked> playerBlockedList = new ArrayList<>();
 
         try {
             String query = """
-                        SELECT * FROM player_blocked WHERE player_id = ?;
+                        SELECT
+                            *
+                        FROM
+                            player_blocked
+                        WHERE
+                            player_id = (SELECT id FROM player_profile WHERE uuid = ?);
                     """;
 
             HashMap<Integer, String> replacements = new HashMap<>();
-            replacements.put(1, String.valueOf(playerProfile.getId()));
+            replacements.put(1, String.valueOf(playerUuid));
             ResultSet resultSet = database.queryWithWhereClause(query, replacements);
 
             while (resultSet.next()) {
