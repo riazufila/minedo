@@ -39,7 +39,7 @@ public final class PlayerProfileRepository {
 
         try {
             String query = """
-                        SELECT * FROM player_profile WHERE uuid = ?;
+                        SELECT id, uuid, nickname FROM player_profile WHERE uuid = ?;
                     """;
 
             HashMap<Integer, String> replacements = new HashMap<>();
@@ -71,7 +71,7 @@ public final class PlayerProfileRepository {
 
         try {
             String query = """
-                        SELECT * FROM player_profile WHERE UPPER(nickname) = ?;
+                        SELECT id, uuid, nickname FROM player_profile WHERE UPPER(nickname) = ?;
                     """;
 
             HashMap<Integer, String> replacements = new HashMap<>();

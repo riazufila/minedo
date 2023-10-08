@@ -29,7 +29,7 @@ public final class PlayerHomeRepository {
         try {
             String query = """
                         SELECT
-                            *
+                            name, world_type, coordinate_x, coordinate_y, coordinate_z
                         FROM
                             player_home
                         WHERE
@@ -72,7 +72,7 @@ public final class PlayerHomeRepository {
         try {
             String query = """
                         SELECT
-                            *
+                            name, world_type, coordinate_x, coordinate_y, coordinate_z
                         FROM
                             player_home
                         WHERE

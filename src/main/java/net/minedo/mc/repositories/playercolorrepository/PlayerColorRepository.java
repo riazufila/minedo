@@ -69,7 +69,7 @@ public final class PlayerColorRepository {
         try {
             String query = """
                         SELECT
-                            *
+                            prefix_preset, prefix_custom, content_preset, content_custom
                         FROM
                             player_color
                         WHERE

@@ -26,7 +26,7 @@ public final class PlayerBlockedRepository {
         try {
             String query = """
                         SELECT
-                            *
+                            blocked_player_id
                         FROM
                             player_blocked
                         WHERE

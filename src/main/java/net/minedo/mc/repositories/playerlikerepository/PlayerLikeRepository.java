@@ -65,7 +65,10 @@ public final class PlayerLikeRepository {
 
         try {
             String query = """
-                        SELECT * FROM player_like WHERE player_id = (SELECT id FROM player_profile WHERE uuid = ?);
+                        SELECT
+                            like_received_count, like_sent_count, last_like_sent
+                        FROM
+                            player_like WHERE player_id = (SELECT id FROM player_profile WHERE uuid = ?);
                     """;
 
             HashMap<Integer, String> replacements = new HashMap<>();
