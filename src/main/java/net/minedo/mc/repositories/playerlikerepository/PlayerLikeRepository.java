@@ -44,11 +44,11 @@ public final class PlayerLikeRepository {
                 """;
 
         HashMap<Integer, Object> replacements = new HashMap<>();
-        replacements.put(1, String.valueOf(playerLike.getLikeReceivedCount()));
-        replacements.put(2, String.valueOf(playerLike.getLikeSentCount()));
+        replacements.put(1, String.valueOf(playerLike.likeReceivedCount()));
+        replacements.put(2, String.valueOf(playerLike.likeSentCount()));
 
         replacements.put(
-                3, playerLike.getLastLikeSent() != null ? Timestamp.from(playerLike.getLastLikeSent()) : null
+                3, playerLike.lastLikeSent() != null ? Timestamp.from(playerLike.lastLikeSent()) : null
         );
 
         replacements.put(4, String.valueOf(playerUuid));
@@ -78,11 +78,8 @@ public final class PlayerLikeRepository {
                 int likeSentCount = resultSet.getInt("like_sent_count");
                 Timestamp lastLikeSent = resultSet.getTimestamp("last_like_sent");
 
-                playerLike = new PlayerLike();
-                playerLike.setPlayerId(id);
-                playerLike.setLikeReceivedCount(likeReceivedCount);
-                playerLike.setLikeSentCount(likeSentCount);
-                playerLike.setLastLikeSent(lastLikeSent != null ? lastLikeSent.toInstant() : null);
+                playerLike = new PlayerLike(likeReceivedCount, likeSentCount,
+                        lastLikeSent != null ? lastLikeSent.toInstant() : null);
             }
         } catch (SQLException error) {
             logger.severe(String.format("Unable to get player color by uuid: %s", error.getMessage()));

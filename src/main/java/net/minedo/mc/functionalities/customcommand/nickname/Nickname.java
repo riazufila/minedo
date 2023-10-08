@@ -139,7 +139,7 @@ public class Nickname implements CommandExecutor, TabCompleter, Listener {
 
             // Verify player's real name and make sure player is online.
             if (playerProfile != null) {
-                Player realPlayer = Minedo.getInstance().getServer().getPlayer(playerProfile.getUuid());
+                Player realPlayer = Minedo.getInstance().getServer().getPlayer(playerProfile.uuid());
 
                 if (realPlayer != null) {
                     player.sendMessage(Component
@@ -229,7 +229,7 @@ public class Nickname implements CommandExecutor, TabCompleter, Listener {
         PlayerProfile existingPlayerProfile = PlayerProfileRepository.getPlayerProfileByNickname(newPlayer.getName());
 
         if (existingPlayerProfile != null) {
-            PlayerProfileRepository.updatePlayerNickname(existingPlayerProfile.getUuid(), null);
+            PlayerProfileRepository.updatePlayerNickname(existingPlayerProfile.uuid(), null);
         }
     }
 

@@ -38,13 +38,9 @@ public final class PlayerBlockedRepository {
             ResultSet resultSet = database.queryWithWhereClause(query, replacements);
 
             while (resultSet.next()) {
-                int playerId = resultSet.getInt("player_id");
                 int blockedPlayerId = resultSet.getInt("blocked_player_id");
 
-                PlayerBlocked playerBlocked = new PlayerBlocked();
-                playerBlocked.setPlayerId(playerId);
-                playerBlocked.setBlockedPlayerId(blockedPlayerId);
-
+                PlayerBlocked playerBlocked = new PlayerBlocked(blockedPlayerId);
                 playerBlockedList.add(playerBlocked);
             }
         } catch (SQLException error) {
@@ -68,8 +64,8 @@ public final class PlayerBlockedRepository {
                 """;
 
         HashMap<Integer, String> replacements = new HashMap<>();
-        replacements.put(1, String.valueOf(requesterProfile.getId()));
-        replacements.put(2, String.valueOf(playerToBeBlockedProfile.getId()));
+        replacements.put(1, String.valueOf(requesterProfile.id()));
+        replacements.put(2, String.valueOf(playerToBeBlockedProfile.id()));
         database.executeStatement(query, replacements);
 
         database.disconnect();
@@ -87,8 +83,8 @@ public final class PlayerBlockedRepository {
                 """;
 
         HashMap<Integer, String> replacements = new HashMap<>();
-        replacements.put(1, String.valueOf(requesterProfile.getId()));
-        replacements.put(2, String.valueOf(playerToBeBlockedProfile.getId()));
+        replacements.put(1, String.valueOf(requesterProfile.id()));
+        replacements.put(2, String.valueOf(playerToBeBlockedProfile.id()));
         database.executeStatement(query, replacements);
 
         database.disconnect();
@@ -98,11 +94,11 @@ public final class PlayerBlockedRepository {
         List<Integer> potentialBlockerPlayerBlockedList = PlayerBlockedRepository
                 .getPlayerBlockedList(potentialBlockerUuid)
                 .stream()
-                .map(PlayerBlocked::getBlockedPlayerId)
+                .map(PlayerBlocked::blockedPlayerId)
                 .toList();
 
         PlayerProfile requesterPlayerProfile = PlayerProfileRepository.getPlayerProfileByUuid(requesterUuid);
-        return potentialBlockerPlayerBlockedList.contains(requesterPlayerProfile.getId());
+        return potentialBlockerPlayerBlockedList.contains(requesterPlayerProfile.id());
     }
 
 }

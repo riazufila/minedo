@@ -67,15 +67,22 @@ public class Like implements CommandExecutor, TabCompleter {
         if (otherPlayer != null && otherPlayer.isOnline()) {
             Instant instant = Instant.now();
 
-            playerLike.setLikeSentCount(playerLike.getLikeSentCount() + 1);
-            playerLike.setLastLikeSent(instant);
-            PlayerLikeRepository.updatePlayerLike(player.getUniqueId(), playerLike);
+            PlayerLike updatedPlayerLike = new PlayerLike(
+                    playerLike.likeReceivedCount(),
+                    playerLike.likeSentCount() + 1,
+                    instant
+            );
+            PlayerLikeRepository.updatePlayerLike(player.getUniqueId(), updatedPlayerLike);
 
             PlayerLike otherPlayerLike = PlayerLikeRepository
                     .getPlayerLikeByPlayerUuid(otherPlayer.getUniqueId());
 
-            otherPlayerLike.setLikeReceivedCount(otherPlayerLike.getLikeReceivedCount() + 1);
-            PlayerLikeRepository.updatePlayerLike(otherPlayer.getUniqueId(), otherPlayerLike);
+            PlayerLike updatedOtherPlayerLike = new PlayerLike(
+                    otherPlayerLike.likeReceivedCount() + 1,
+                    otherPlayerLike.likeSentCount(),
+                    instant
+            );
+            PlayerLikeRepository.updatePlayerLike(otherPlayer.getUniqueId(), updatedOtherPlayerLike);
 
             player.sendMessage(Component
                     .text(String.format(

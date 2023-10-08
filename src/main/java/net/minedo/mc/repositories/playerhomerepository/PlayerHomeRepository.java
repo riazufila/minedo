@@ -38,25 +38,18 @@ public final class PlayerHomeRepository {
                     """;
 
             HashMap<Integer, String> replacements = new HashMap<>();
-            replacements.put(1, String.valueOf(playerProfile.getId()));
+            replacements.put(1, String.valueOf(playerProfile.id()));
             replacements.put(2, name);
             ResultSet resultSet = database.queryWithWhereClause(query, replacements);
 
             if (resultSet.next()) {
-                int playerId = resultSet.getInt("player_id");
                 String homeName = resultSet.getString("name");
                 String world = resultSet.getString("world_type");
                 double coordinateX = resultSet.getDouble("coordinate_x");
                 double coordinateY = resultSet.getDouble("coordinate_y");
                 double coordinateZ = resultSet.getDouble("coordinate_z");
 
-                playerHome = new PlayerHome();
-                playerHome.setPlayerId(playerId);
-                playerHome.setName(homeName);
-                playerHome.setWorldType(Bukkit.getWorld(world));
-                playerHome.setCoordinateX(coordinateX);
-                playerHome.setCoordinateY(coordinateY);
-                playerHome.setCoordinateZ(coordinateZ);
+                playerHome = new PlayerHome(homeName, Bukkit.getWorld(world), coordinateX, coordinateY, coordinateZ);
             }
         } catch (SQLException error) {
             logger.severe(String.format(
@@ -90,21 +83,14 @@ public final class PlayerHomeRepository {
             ResultSet resultSet = database.queryWithWhereClause(query, replacements);
 
             while (resultSet.next()) {
-                int playerId = resultSet.getInt("player_id");
                 String homeName = resultSet.getString("name");
                 String world = resultSet.getString("world_type");
                 double coordinateX = resultSet.getDouble("coordinate_x");
                 double coordinateY = resultSet.getDouble("coordinate_y");
                 double coordinateZ = resultSet.getDouble("coordinate_z");
 
-                PlayerHome playerHome = new PlayerHome();
-                playerHome.setPlayerId(playerId);
-                playerHome.setName(homeName);
-                playerHome.setWorldType(Bukkit.getWorld(world));
-                playerHome.setCoordinateX(coordinateX);
-                playerHome.setCoordinateY(coordinateY);
-                playerHome.setCoordinateZ(coordinateZ);
-
+                PlayerHome playerHome = new PlayerHome(homeName, Bukkit.getWorld(world),
+                        coordinateX, coordinateY, coordinateZ);
                 playerHomeList.add(playerHome);
             }
         } catch (SQLException error) {

@@ -37,7 +37,7 @@ public final class ChatUtils {
     }
 
     private static ChatInfo selectColor(PlayerColor playerColor, Player player, boolean isContent) {
-        String selectedColor = isContent ? playerColor.getContentCustom() : playerColor.getPrefixCustom();
+        String selectedColor = isContent ? playerColor.contentCustom() : playerColor.prefixCustom();
         boolean isCustom = false;
 
         if (selectedColor != null
@@ -46,7 +46,7 @@ public final class ChatUtils {
         )) {
             isCustom = true;
         } else {
-            selectedColor = isContent ? playerColor.getContentPreset() : playerColor.getPrefixPreset();
+            selectedColor = isContent ? playerColor.contentPreset() : playerColor.prefixPreset();
         }
 
         return new ChatInfo(isCustom, selectedColor);

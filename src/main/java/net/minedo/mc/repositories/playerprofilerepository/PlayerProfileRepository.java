@@ -51,10 +51,7 @@ public final class PlayerProfileRepository {
                 UUID uuid = UUID.fromString(resultSet.getString("uuid"));
                 String nickname = resultSet.getString("nickname");
 
-                playerProfile = new PlayerProfile();
-                playerProfile.setId(id);
-                playerProfile.setUuid(uuid);
-                playerProfile.setNickname(nickname);
+                playerProfile = new PlayerProfile(id, uuid, nickname);
             }
         } catch (SQLException error) {
             logger.severe(String.format("Unable to get player profile by uuid: %s", error.getMessage()));
@@ -85,10 +82,7 @@ public final class PlayerProfileRepository {
                 UUID uuid = UUID.fromString(resultSet.getString("uuid"));
                 String nickname = resultSet.getString("nickname");
 
-                playerProfile = new PlayerProfile();
-                playerProfile.setId(id);
-                playerProfile.setUuid(uuid);
-                playerProfile.setNickname(nickname);
+                playerProfile = new PlayerProfile(id, uuid, nickname);
             }
         } catch (SQLException error) {
             logger.severe(String.format("Unable to get player profile by nickname: %s", error.getMessage()));

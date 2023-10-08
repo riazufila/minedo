@@ -89,24 +89,30 @@ public class Color implements CommandExecutor, TabCompleter {
         }
 
         UUID playerUuid = player.getUniqueId();
-        PlayerColor playerColor = PlayerColorRepository.getPlayerColorByPlayerUuid(playerUuid);
         String updatedColor = color.equals(ColorType.REMOVE.getType()) ? null : color.toUpperCase();
+
+        PlayerColor playerColor = PlayerColorRepository.getPlayerColorByPlayerUuid(playerUuid);
+        String prefixPreset = playerColor.prefixPreset();
+        String prefixCustom = playerColor.prefixCustom();
+        String contentPreset = playerColor.contentPreset();
+        String contentCustom = playerColor.contentCustom();
 
         if (chatOrName.equals(ColorType.NAME.getType())) {
             if (colorType.equals(ColorType.PRESET.getType())) {
-                playerColor.setPrefixPreset(updatedColor);
+                prefixPreset = updatedColor;
             } else if (colorType.equals(ColorType.CUSTOM.getType())) {
-                playerColor.setPrefixCustom(updatedColor);
+                prefixCustom = updatedColor;
             }
         } else if (chatOrName.equals(ColorType.CHAT.getType())) {
             if (colorType.equals(ColorType.PRESET.getType())) {
-                playerColor.setContentPreset(updatedColor);
+                contentPreset = updatedColor;
             } else if (colorType.equals(ColorType.CUSTOM.getType())) {
-                playerColor.setContentCustom(updatedColor);
+                contentCustom = updatedColor;
             }
         }
 
-        PlayerColorRepository.updatePlayerColor(playerUuid, playerColor);
+        PlayerColor updatedPlayerColor = new PlayerColor(prefixPreset, prefixCustom, contentPreset, contentCustom);
+        PlayerColorRepository.updatePlayerColor(playerUuid, updatedPlayerColor);
 
         player.sendMessage(Component
                 .text(ColorMessage.SUCCESS_COLOR_UPDATE.getMessage())

@@ -30,14 +30,14 @@ public final class PlayerColorRepository {
 
         HashMap<Integer, Object> replacements = new HashMap<>();
 
-        replacements.put(1, playerColor.getPrefixPreset() != null
-                ? String.valueOf(playerColor.getPrefixPreset()) : null);
-        replacements.put(2, playerColor.getPrefixCustom() != null
-                ? String.valueOf(playerColor.getPrefixCustom()) : null);
-        replacements.put(3, playerColor.getContentPreset() != null
-                ? String.valueOf(playerColor.getContentPreset()) : null);
-        replacements.put(4, playerColor.getContentCustom() != null
-                ? String.valueOf(playerColor.getContentCustom()) : null);
+        replacements.put(1, playerColor.prefixPreset() != null
+                ? playerColor.prefixPreset() : null);
+        replacements.put(2, playerColor.prefixCustom() != null
+                ? playerColor.prefixCustom() : null);
+        replacements.put(3, playerColor.contentPreset() != null
+                ? playerColor.contentPreset() : null);
+        replacements.put(4, playerColor.contentCustom() != null
+                ? playerColor.contentCustom() : null);
 
         replacements.put(5, String.valueOf(playerUuid));
         database.executeStatement(query, replacements);
@@ -87,12 +87,7 @@ public final class PlayerColorRepository {
                 String contentPreset = resultSet.getString("content_preset");
                 String contentCustom = resultSet.getString("content_custom");
 
-                playerColor = new PlayerColor();
-                playerColor.setPlayerId(id);
-                playerColor.setPrefixPreset(prefixPreset);
-                playerColor.setPrefixCustom(prefixCustom);
-                playerColor.setContentPreset(contentPreset);
-                playerColor.setContentCustom(contentCustom);
+                playerColor = new PlayerColor(prefixPreset, prefixCustom, contentPreset, contentCustom);
             }
         } catch (SQLException error) {
             logger.severe(String.format("Unable to get player color by uuid: %s", error.getMessage()));

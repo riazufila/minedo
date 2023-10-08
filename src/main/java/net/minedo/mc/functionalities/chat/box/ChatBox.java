@@ -19,7 +19,7 @@ public class ChatBox implements Listener {
         PlayerProfile playerProfile = PlayerProfileRepository.getPlayerProfileByUuid(player.getUniqueId());
 
         event.renderer(((source, sourceDisplayName, message, viewer) -> {
-            String nickname = playerProfile.getNickname();
+            String nickname = playerProfile.nickname();
             Component nameComponent = sourceDisplayName;
 
             if (PermissionUtils.validatePlayerPermissionForNicknameDisplay(player) && nickname != null) {
