@@ -24,19 +24,20 @@ public final class RegionRepository {
             String query = """
                         SELECT * FROM region;
                     """;
-            ResultSet resultSet = database.query(query);
 
-            while (resultSet.next()) {
-                int id = resultSet.getInt("id");
-                String name = resultSet.getString("name");
-                String world = resultSet.getString("world_type");
-                int minX = resultSet.getInt("minX");
-                int maxX = resultSet.getInt("maxX");
-                int minZ = resultSet.getInt("minZ");
-                int maxZ = resultSet.getInt("maxZ");
+            try (ResultSet resultSet = database.query(query)) {
+                while (resultSet.next()) {
+                    int id = resultSet.getInt("id");
+                    String name = resultSet.getString("name");
+                    String world = resultSet.getString("world_type");
+                    int minX = resultSet.getInt("minX");
+                    int maxX = resultSet.getInt("maxX");
+                    int minZ = resultSet.getInt("minZ");
+                    int maxZ = resultSet.getInt("maxZ");
 
-                Region region = new Region(id, name, Bukkit.getWorld(world), minX, maxX, minZ, maxZ);
-                regions.add(region);
+                    Region region = new Region(id, name, Bukkit.getWorld(world), minX, maxX, minZ, maxZ);
+                    regions.add(region);
+                }
             }
         } catch (SQLException error) {
             logger.severe(String.format("Unable to get regions: %s", error.getMessage()));

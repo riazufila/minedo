@@ -44,14 +44,15 @@ public final class PlayerProfileRepository {
 
             HashMap<Integer, String> replacements = new HashMap<>();
             replacements.put(1, playerUuid.toString());
-            ResultSet resultSet = database.queryWithWhereClause(query, replacements);
 
-            if (resultSet.next()) {
-                int id = resultSet.getInt("id");
-                UUID uuid = UUID.fromString(resultSet.getString("uuid"));
-                String nickname = resultSet.getString("nickname");
+            try (ResultSet resultSet = database.queryWithWhereClause(query, replacements)) {
+                if (resultSet.next()) {
+                    int id = resultSet.getInt("id");
+                    UUID uuid = UUID.fromString(resultSet.getString("uuid"));
+                    String nickname = resultSet.getString("nickname");
 
-                playerProfile = new PlayerProfile(id, uuid, nickname);
+                    playerProfile = new PlayerProfile(id, uuid, nickname);
+                }
             }
         } catch (SQLException error) {
             logger.severe(String.format("Unable to get player profile by uuid: %s", error.getMessage()));
@@ -75,14 +76,15 @@ public final class PlayerProfileRepository {
 
             HashMap<Integer, String> replacements = new HashMap<>();
             replacements.put(1, playerName.toUpperCase());
-            ResultSet resultSet = database.queryWithWhereClause(query, replacements);
 
-            if (resultSet.next()) {
-                int id = resultSet.getInt("id");
-                UUID uuid = UUID.fromString(resultSet.getString("uuid"));
-                String nickname = resultSet.getString("nickname");
+            try (ResultSet resultSet = database.queryWithWhereClause(query, replacements)) {
+                if (resultSet.next()) {
+                    int id = resultSet.getInt("id");
+                    UUID uuid = UUID.fromString(resultSet.getString("uuid"));
+                    String nickname = resultSet.getString("nickname");
 
-                playerProfile = new PlayerProfile(id, uuid, nickname);
+                    playerProfile = new PlayerProfile(id, uuid, nickname);
+                }
             }
         } catch (SQLException error) {
             logger.severe(String.format("Unable to get player profile by nickname: %s", error.getMessage()));
@@ -138,11 +140,12 @@ public final class PlayerProfileRepository {
 
             HashMap<Integer, String> replacements = new HashMap<>();
             replacements.put(1, String.valueOf(playerUuid));
-            ResultSet resultSet = database.queryWithWhereClause(query, replacements);
 
-            while (resultSet.next()) {
-                String nickname = resultSet.getString("nickname");
-                otherPlayersNickname.add(nickname);
+            try (ResultSet resultSet = database.queryWithWhereClause(query, replacements)) {
+                while (resultSet.next()) {
+                    String nickname = resultSet.getString("nickname");
+                    otherPlayersNickname.add(nickname);
+                }
             }
         } catch (SQLException error) {
             logger.severe(String.format("Unable to get other player nicknames: %s", error.getMessage()));
@@ -188,11 +191,11 @@ public final class PlayerProfileRepository {
                 replacements.put(queryIndex + i, String.valueOf(otherOnlinePlayers.get(i)));
             }
 
-            ResultSet resultSet = database.queryWithWhereClause(query, replacements);
-
-            while (resultSet.next()) {
-                String nickname = resultSet.getString("nickname");
-                otherPlayersNickname.add(nickname);
+            try (ResultSet resultSet = database.queryWithWhereClause(query, replacements)) {
+                while (resultSet.next()) {
+                    String nickname = resultSet.getString("nickname");
+                    otherPlayersNickname.add(nickname);
+                }
             }
         } catch (SQLException error) {
             logger.severe(String.format("Unable to get other player nicknames: %s", error.getMessage()));

@@ -50,69 +50,77 @@ public final class CustomItemRepository {
 
             HashMap<Integer, String> replacements = new HashMap<>();
             replacements.put(1, String.valueOf(customItemId));
-            ResultSet resultSet = database.queryWithWhereClause(query, replacements);
+            Integer id;
+            Material material;
+            String displayName;
+            NamedTextColor displayNameColor;
+            TextDecoration displayNameDecoration;
+            CustomItemLore customItemLore;
+            List<CustomItemEnchantment> customItemEnchantments;
 
-            Integer id = null;
-            Material material = null;
-            String displayName = null;
-            NamedTextColor displayNameColor = null;
-            TextDecoration displayNameDecoration = null;
-            CustomItemLore customItemLore = null;
-            List<CustomItemEnchantment> customItemEnchantments = null;
+            try (ResultSet resultSet = database.queryWithWhereClause(query, replacements)) {
+                id = null;
+                material = null;
+                displayName = null;
+                displayNameColor = null;
+                displayNameDecoration = null;
+                customItemLore = null;
+                customItemEnchantments = null;
 
-            while (resultSet.next()) {
-                if (resultSet.getRow() == 1) {
-                    id = resultSet.getInt("id");
-                    material = Material.valueOf(resultSet.getString("material"));
-                    displayName = resultSet.getString("display_name");
-                    String unconvertedDisplayNameColor = resultSet.getString("display_name_color");
-                    String unconvertedDisplayNameDecoration = resultSet.getString("display_name_decoration");
+                while (resultSet.next()) {
+                    if (resultSet.getRow() == 1) {
+                        id = resultSet.getInt("id");
+                        material = Material.valueOf(resultSet.getString("material"));
+                        displayName = resultSet.getString("display_name");
+                        String unconvertedDisplayNameColor = resultSet.getString("display_name_color");
+                        String unconvertedDisplayNameDecoration = resultSet.getString("display_name_decoration");
 
 
-                    if (unconvertedDisplayNameColor != null) {
-                        displayNameColor = NamedTextColor.NAMES.value(unconvertedDisplayNameColor.toLowerCase());
+                        if (unconvertedDisplayNameColor != null) {
+                            displayNameColor = NamedTextColor.NAMES.value(unconvertedDisplayNameColor.toLowerCase());
+                        }
+
+                        if (unconvertedDisplayNameDecoration != null) {
+                            displayNameDecoration = TextDecoration
+                                    .valueOf(resultSet.getString("display_name_decoration"));
+                        }
+
+                        String lore = resultSet.getString("lore");
+                        String unconvertedLoreColor = resultSet.getString("lore_color");
+                        String unconvertedLoreDecoration = resultSet.getString("lore_decoration");
+
+                        if (lore == null) {
+                            continue;
+                        }
+
+                        NamedTextColor loreColor = null;
+                        if (unconvertedLoreColor != null) {
+                            loreColor = NamedTextColor.NAMES.value(unconvertedLoreColor.toLowerCase());
+                        }
+
+                        TextDecoration loreDecoration = null;
+                        if (unconvertedLoreDecoration != null) {
+                            loreDecoration = TextDecoration.valueOf(unconvertedLoreDecoration);
+                        }
+
+                        customItemLore = new CustomItemLore(lore, loreColor, loreDecoration);
                     }
 
-                    if (unconvertedDisplayNameDecoration != null) {
-                        displayNameDecoration = TextDecoration
-                                .valueOf(resultSet.getString("display_name_decoration"));
-                    }
+                    String enchantment = resultSet.getString("enchantment");
+                    int enchantmentLevel = resultSet.getInt("enchantment_level");
 
-                    String lore = resultSet.getString("lore");
-                    String unconvertedLoreColor = resultSet.getString("lore_color");
-                    String unconvertedLoreDecoration = resultSet.getString("lore_decoration");
-
-                    if (lore == null) {
+                    if (enchantment == null) {
                         continue;
                     }
 
-                    NamedTextColor loreColor = null;
-                    if (unconvertedLoreColor != null) {
-                        loreColor = NamedTextColor.NAMES.value(unconvertedLoreColor.toLowerCase());
+                    CustomItemEnchantment customItemEnchantment = new CustomItemEnchantment(enchantment, enchantmentLevel);
+
+                    if (customItemEnchantments == null) {
+                        customItemEnchantments = new ArrayList<>();
                     }
 
-                    TextDecoration loreDecoration = null;
-                    if (unconvertedLoreDecoration != null) {
-                        loreDecoration = TextDecoration.valueOf(unconvertedLoreDecoration);
-                    }
-
-                    customItemLore = new CustomItemLore(lore, loreColor, loreDecoration);
+                    customItemEnchantments.add(customItemEnchantment);
                 }
-
-                String enchantment = resultSet.getString("enchantment");
-                int enchantmentLevel = resultSet.getInt("enchantment_level");
-
-                if (enchantment == null) {
-                    continue;
-                }
-
-                CustomItemEnchantment customItemEnchantment = new CustomItemEnchantment(enchantment, enchantmentLevel);
-
-                if (customItemEnchantments == null) {
-                    customItemEnchantments = new ArrayList<>();
-                }
-
-                customItemEnchantments.add(customItemEnchantment);
             }
 
             if (id == null || displayName == null) {

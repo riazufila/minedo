@@ -78,16 +78,16 @@ public final class PlayerColorRepository {
 
             HashMap<Integer, String> replacements = new HashMap<>();
             replacements.put(1, String.valueOf(playerUuid));
-            ResultSet resultSet = database.queryWithWhereClause(query, replacements);
 
-            if (resultSet.next()) {
-                int id = resultSet.getInt("player_id");
-                String prefixPreset = resultSet.getString("prefix_preset");
-                String prefixCustom = resultSet.getString("prefix_custom");
-                String contentPreset = resultSet.getString("content_preset");
-                String contentCustom = resultSet.getString("content_custom");
+            try (ResultSet resultSet = database.queryWithWhereClause(query, replacements)) {
+                if (resultSet.next()) {
+                    String prefixPreset = resultSet.getString("prefix_preset");
+                    String prefixCustom = resultSet.getString("prefix_custom");
+                    String contentPreset = resultSet.getString("content_preset");
+                    String contentCustom = resultSet.getString("content_custom");
 
-                playerColor = new PlayerColor(prefixPreset, prefixCustom, contentPreset, contentCustom);
+                    playerColor = new PlayerColor(prefixPreset, prefixCustom, contentPreset, contentCustom);
+                }
             }
         } catch (SQLException error) {
             logger.severe(String.format("Unable to get player color by uuid: %s", error.getMessage()));

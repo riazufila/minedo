@@ -70,16 +70,16 @@ public final class PlayerLikeRepository {
 
             HashMap<Integer, String> replacements = new HashMap<>();
             replacements.put(1, String.valueOf(playerUuid));
-            ResultSet resultSet = database.queryWithWhereClause(query, replacements);
 
-            if (resultSet.next()) {
-                int id = resultSet.getInt("player_id");
-                int likeReceivedCount = resultSet.getInt("like_received_count");
-                int likeSentCount = resultSet.getInt("like_sent_count");
-                Timestamp lastLikeSent = resultSet.getTimestamp("last_like_sent");
+            try (ResultSet resultSet = database.queryWithWhereClause(query, replacements)) {
+                if (resultSet.next()) {
+                    int likeReceivedCount = resultSet.getInt("like_received_count");
+                    int likeSentCount = resultSet.getInt("like_sent_count");
+                    Timestamp lastLikeSent = resultSet.getTimestamp("last_like_sent");
 
-                playerLike = new PlayerLike(likeReceivedCount, likeSentCount,
-                        lastLikeSent != null ? lastLikeSent.toInstant() : null);
+                    playerLike = new PlayerLike(likeReceivedCount, likeSentCount,
+                            lastLikeSent != null ? lastLikeSent.toInstant() : null);
+                }
             }
         } catch (SQLException error) {
             logger.severe(String.format("Unable to get player color by uuid: %s", error.getMessage()));

@@ -35,13 +35,14 @@ public final class PlayerBlockedRepository {
 
             HashMap<Integer, String> replacements = new HashMap<>();
             replacements.put(1, String.valueOf(playerUuid));
-            ResultSet resultSet = database.queryWithWhereClause(query, replacements);
 
-            while (resultSet.next()) {
-                int blockedPlayerId = resultSet.getInt("blocked_player_id");
+            try (ResultSet resultSet = database.queryWithWhereClause(query, replacements)) {
+                while (resultSet.next()) {
+                    int blockedPlayerId = resultSet.getInt("blocked_player_id");
 
-                PlayerBlocked playerBlocked = new PlayerBlocked(blockedPlayerId);
-                playerBlockedList.add(playerBlocked);
+                    PlayerBlocked playerBlocked = new PlayerBlocked(blockedPlayerId);
+                    playerBlockedList.add(playerBlocked);
+                }
             }
         } catch (SQLException error) {
             logger.severe(String.format("Unable to get player blocked: %s", error.getMessage()));

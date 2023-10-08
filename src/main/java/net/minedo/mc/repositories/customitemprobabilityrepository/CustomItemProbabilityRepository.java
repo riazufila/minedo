@@ -27,14 +27,14 @@ public final class CustomItemProbabilityRepository {
                             custom_item_probability;
                     """;
 
-            ResultSet resultSet = database.query(query);
+            try (ResultSet resultSet = database.query(query)) {
+                while (resultSet.next()) {
+                    int id = resultSet.getInt("custom_item_id");
+                    double probability = resultSet.getDouble("probability");
 
-            while (resultSet.next()) {
-                int id = resultSet.getInt("custom_item_id");
-                double probability = resultSet.getDouble("probability");
-
-                CustomItemProbability customItemProbability = new CustomItemProbability(id, probability);
-                customItemProbabilities.add(customItemProbability);
+                    CustomItemProbability customItemProbability = new CustomItemProbability(id, probability);
+                    customItemProbabilities.add(customItemProbability);
+                }
             }
         } catch (SQLException exception) {
             logger.severe(String.format("Unable to get custom items probabilities: %s", exception.getMessage()));

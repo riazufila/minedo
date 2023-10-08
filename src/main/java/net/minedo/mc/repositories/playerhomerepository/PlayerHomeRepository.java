@@ -40,16 +40,17 @@ public final class PlayerHomeRepository {
             HashMap<Integer, String> replacements = new HashMap<>();
             replacements.put(1, String.valueOf(playerProfile.id()));
             replacements.put(2, name);
-            ResultSet resultSet = database.queryWithWhereClause(query, replacements);
 
-            if (resultSet.next()) {
-                String homeName = resultSet.getString("name");
-                String world = resultSet.getString("world_type");
-                double coordinateX = resultSet.getDouble("coordinate_x");
-                double coordinateY = resultSet.getDouble("coordinate_y");
-                double coordinateZ = resultSet.getDouble("coordinate_z");
+            try (ResultSet resultSet = database.queryWithWhereClause(query, replacements)) {
+                if (resultSet.next()) {
+                    String homeName = resultSet.getString("name");
+                    String world = resultSet.getString("world_type");
+                    double coordinateX = resultSet.getDouble("coordinate_x");
+                    double coordinateY = resultSet.getDouble("coordinate_y");
+                    double coordinateZ = resultSet.getDouble("coordinate_z");
 
-                playerHome = new PlayerHome(homeName, Bukkit.getWorld(world), coordinateX, coordinateY, coordinateZ);
+                    playerHome = new PlayerHome(homeName, Bukkit.getWorld(world), coordinateX, coordinateY, coordinateZ);
+                }
             }
         } catch (SQLException error) {
             logger.severe(String.format(
@@ -80,18 +81,19 @@ public final class PlayerHomeRepository {
 
             HashMap<Integer, String> replacements = new HashMap<>();
             replacements.put(1, String.valueOf(playerUuid));
-            ResultSet resultSet = database.queryWithWhereClause(query, replacements);
 
-            while (resultSet.next()) {
-                String homeName = resultSet.getString("name");
-                String world = resultSet.getString("world_type");
-                double coordinateX = resultSet.getDouble("coordinate_x");
-                double coordinateY = resultSet.getDouble("coordinate_y");
-                double coordinateZ = resultSet.getDouble("coordinate_z");
+            try (ResultSet resultSet = database.queryWithWhereClause(query, replacements)) {
+                while (resultSet.next()) {
+                    String homeName = resultSet.getString("name");
+                    String world = resultSet.getString("world_type");
+                    double coordinateX = resultSet.getDouble("coordinate_x");
+                    double coordinateY = resultSet.getDouble("coordinate_y");
+                    double coordinateZ = resultSet.getDouble("coordinate_z");
 
-                PlayerHome playerHome = new PlayerHome(homeName, Bukkit.getWorld(world),
-                        coordinateX, coordinateY, coordinateZ);
-                playerHomeList.add(playerHome);
+                    PlayerHome playerHome = new PlayerHome(homeName, Bukkit.getWorld(world),
+                            coordinateX, coordinateY, coordinateZ);
+                    playerHomeList.add(playerHome);
+                }
             }
         } catch (SQLException error) {
             logger.severe(String.format("Unable to get player home: %s", error.getMessage()));
