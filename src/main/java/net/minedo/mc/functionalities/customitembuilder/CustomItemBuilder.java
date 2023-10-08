@@ -10,6 +10,7 @@ import net.minedo.mc.models.customitem.CustomItem;
 import net.minedo.mc.models.customitemenchantment.CustomItemEnchantment;
 import net.minedo.mc.models.customitemlore.CustomItemLore;
 import net.minedo.mc.models.customitemprobability.CustomItemProbability;
+import net.minedo.mc.repositories.customitemprobabilityrepository.CustomItemProbabilityRepository;
 import net.minedo.mc.repositories.customitemrepository.CustomItemRepository;
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.sampling.DiscreteProbabilityCollectionSampler;
@@ -135,7 +136,7 @@ public class CustomItemBuilder implements Listener {
             double PROBABILITY_NEEDED = 0.3;
 
             if (PROBABILITY_NEEDED >= random.nextDouble()) {
-                List<CustomItemProbability> customItemsProbabilities = CustomItemRepository
+                List<CustomItemProbability> customItemsProbabilities = CustomItemProbabilityRepository
                         .getAllCustomItemsProbabilities();
 
                 double[] probabilities = new double[customItemsProbabilities.size()];

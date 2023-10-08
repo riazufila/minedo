@@ -5,7 +5,6 @@ import net.kyori.adventure.text.format.TextDecoration;
 import net.minedo.mc.models.customitem.CustomItem;
 import net.minedo.mc.models.customitemenchantment.CustomItemEnchantment;
 import net.minedo.mc.models.customitemlore.CustomItemLore;
-import net.minedo.mc.models.customitemprobability.CustomItemProbability;
 import net.minedo.mc.repositories.Database;
 import org.bukkit.Material;
 
@@ -19,38 +18,6 @@ import java.util.logging.Logger;
 public final class CustomItemRepository {
 
     private static final Logger logger = Logger.getLogger(CustomItemRepository.class.getName());
-
-    public static List<CustomItemProbability> getAllCustomItemsProbabilities() {
-        Database database = new Database();
-        database.connect();
-
-        List<CustomItemProbability> customItemProbabilities = new ArrayList<>();
-
-        try {
-            String query = """
-                        SELECT
-                            custom_item_id, probability
-                        FROM
-                            custom_item_probability;
-                    """;
-
-            ResultSet resultSet = database.query(query);
-
-            while (resultSet.next()) {
-                int id = resultSet.getInt("custom_item_id");
-                double probability = resultSet.getDouble("probability");
-
-                CustomItemProbability customItemProbability = new CustomItemProbability(id, probability);
-                customItemProbabilities.add(customItemProbability);
-            }
-        } catch (SQLException exception) {
-            logger.severe(String.format("Unable to get custom items probabilities: %s", exception.getMessage()));
-        } finally {
-            database.disconnect();
-        }
-
-        return customItemProbabilities;
-    }
 
     public static CustomItem getCustomItemById(int customItemId) {
         Database database = new Database();
