@@ -24,6 +24,8 @@ import java.util.Optional;
 
 public abstract class CustomEnchantmentHandler extends SimpleCustomEnchantment implements Listener {
 
+    private int AMPLIFIER_LIMIT = 9;
+
     public CustomEnchantmentHandler(CustomEnchantmentType customEnchantmentType) {
         super(customEnchantmentType);
     }
@@ -74,12 +76,18 @@ public abstract class CustomEnchantmentHandler extends SimpleCustomEnchantment i
         }
 
         CustomEnchantment customEnchantment = customEnchantmentOptional.get();
-        int duration = isAmplified ? 3 : customEnchantment.getLevel();
-        int amplifier = isAmplified ? customEnchantment.getLevel() : 0;
+        int DEFAULT_DURATION = 3;
+        double INCREMENT_DURATION = 0.2;
+        int enchantmentLevel = customEnchantment.getLevel();
+        int duration = isAmplified
+                ? (int) (DEFAULT_DURATION + (enchantmentLevel * INCREMENT_DURATION))
+                : DEFAULT_DURATION * customEnchantment.getLevel();
+        int amplifier = isAmplified ? enchantmentLevel : 0;
+
         PotionEffect potionEffect = new PotionEffect(
                 potionEffectType,
                 duration * (int) Common.TICK_PER_SECOND.getValue(),
-                amplifier
+                Math.min(amplifier, this.AMPLIFIER_LIMIT) // Limit maximum potion effect amplifier.
         );
 
         combatEvent.defendingEntity().addPotionEffect(potionEffect);
@@ -101,7 +109,6 @@ public abstract class CustomEnchantmentHandler extends SimpleCustomEnchantment i
 
         CustomEnchantment customEnchantment = customEnchantmentOptional.get();
         int amplifier = customEnchantment.getLevel() - 1;
-        int AMPLIFIER_LIMIT = 9;
 
         if (potionEffects.containsKey(potionEffectType)) {
             PotionEffect existingPotionEffect = potionEffects.get(potionEffectType);
@@ -111,7 +118,7 @@ public abstract class CustomEnchantmentHandler extends SimpleCustomEnchantment i
         PotionEffect potionEffect = new PotionEffect(
                 potionEffectType,
                 PotionEffect.INFINITE_DURATION,
-                Math.min(amplifier, AMPLIFIER_LIMIT) // Limit maximum potion effect amplifier.
+                Math.min(amplifier, this.AMPLIFIER_LIMIT) // Limit maximum potion effect amplifier.
         );
 
         potionEffects.put(potionEffectType, potionEffect);
