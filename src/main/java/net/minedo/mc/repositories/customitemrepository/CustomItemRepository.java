@@ -40,10 +40,7 @@ public final class CustomItemRepository {
                 int id = resultSet.getInt("custom_item_id");
                 double probability = resultSet.getDouble("probability");
 
-                CustomItemProbability customItemProbability = new CustomItemProbability();
-                customItemProbability.setCustomItemId(id);
-                customItemProbability.setProbability(probability);
-
+                CustomItemProbability customItemProbability = new CustomItemProbability(id, probability);
                 customItemProbabilities.add(customItemProbability);
             }
         } catch (SQLException exception) {
@@ -88,58 +85,52 @@ public final class CustomItemRepository {
             replacements.put(1, String.valueOf(customItemId));
             ResultSet resultSet = database.queryWithWhereClause(query, replacements);
 
-            while (resultSet.next()) {
-                if (customItem == null) {
-                    customItem = new CustomItem();
+            Integer id = null;
+            Material material = null;
+            String displayName = null;
+            NamedTextColor displayNameColor = null;
+            TextDecoration displayNameDecoration = null;
+            CustomItemLore customItemLore = null;
+            List<CustomItemEnchantment> customItemEnchantments = null;
 
-                    int id = resultSet.getInt("id");
-                    Material material = Material.valueOf(resultSet.getString("material"));
-                    String displayName = resultSet.getString("display_name");
+            while (resultSet.next()) {
+                if (resultSet.getRow() == 1) {
+                    id = resultSet.getInt("id");
+                    material = Material.valueOf(resultSet.getString("material"));
+                    displayName = resultSet.getString("display_name");
                     String unconvertedDisplayNameColor = resultSet.getString("display_name_color");
                     String unconvertedDisplayNameDecoration = resultSet.getString("display_name_decoration");
 
-                    customItem.setId(id);
-                    customItem.setMaterial(material);
-                    customItem.setDisplayName(displayName);
 
                     if (unconvertedDisplayNameColor != null) {
-                        NamedTextColor displayNameColor = NamedTextColor.NAMES
-                                .value(unconvertedDisplayNameColor.toLowerCase());
-                        customItem.setColor(displayNameColor);
+                        displayNameColor = NamedTextColor.NAMES.value(unconvertedDisplayNameColor.toLowerCase());
                     }
 
                     if (unconvertedDisplayNameDecoration != null) {
-                        TextDecoration displayNameDecoration = TextDecoration
+                        displayNameDecoration = TextDecoration
                                 .valueOf(resultSet.getString("display_name_decoration"));
-                        customItem.setDecoration(displayNameDecoration);
                     }
-
-                    CustomItemLore customItemLore = new CustomItemLore();
 
                     String lore = resultSet.getString("lore");
                     String unconvertedLoreColor = resultSet.getString("lore_color");
                     String unconvertedLoreDecoration = resultSet.getString("lore_decoration");
 
-                    if (lore == null && unconvertedLoreColor == null && unconvertedLoreDecoration == null) {
+                    if (lore == null) {
                         continue;
                     }
 
-                    customItemLore.setText(lore);
-
+                    NamedTextColor loreColor = null;
                     if (unconvertedLoreColor != null) {
-                        NamedTextColor loreColor = NamedTextColor.NAMES.value(unconvertedLoreColor.toLowerCase());
-                        customItemLore.setColor(loreColor);
+                        loreColor = NamedTextColor.NAMES.value(unconvertedLoreColor.toLowerCase());
                     }
 
+                    TextDecoration loreDecoration = null;
                     if (unconvertedLoreDecoration != null) {
-                        TextDecoration loreDecoration = TextDecoration.valueOf(unconvertedLoreDecoration);
-                        customItemLore.setDecoration(loreDecoration);
+                        loreDecoration = TextDecoration.valueOf(unconvertedLoreDecoration);
                     }
 
-                    customItem.setLore(customItemLore);
+                    customItemLore = new CustomItemLore(lore, loreColor, loreDecoration);
                 }
-
-                CustomItemEnchantment customItemEnchantment = new CustomItemEnchantment();
 
                 String enchantment = resultSet.getString("enchantment");
                 int enchantmentLevel = resultSet.getInt("enchantment_level");
@@ -148,10 +139,21 @@ public final class CustomItemRepository {
                     continue;
                 }
 
-                customItemEnchantment.setEnchantment(enchantment);
-                customItemEnchantment.setLevel(enchantmentLevel);
-                customItem.addEnchantment(customItemEnchantment);
+                CustomItemEnchantment customItemEnchantment = new CustomItemEnchantment(enchantment, enchantmentLevel);
+
+                if (customItemEnchantments == null) {
+                    customItemEnchantments = new ArrayList<>();
+                }
+
+                customItemEnchantments.add(customItemEnchantment);
             }
+
+            if (id == null || displayName == null) {
+                return null;
+            }
+
+            customItem = new CustomItem(id, material, displayName, displayNameColor, displayNameDecoration,
+                    customItemLore, customItemEnchantments);
         } catch (SQLException exception) {
             logger.severe(String.format("Unable to get custom item by id: %s", exception.getMessage()));
         } finally {

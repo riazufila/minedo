@@ -57,15 +57,15 @@ public class CustomItemBuilder implements Listener {
 
     private void buildDisplayName(ItemMeta meta, CustomItem customItem) {
         Component displayNameComponent = Component
-                .text(customItem.getDisplayName())
+                .text(customItem.displayName())
                 .decoration(TextDecoration.ITALIC, false);
 
-        if (customItem.getColor() != null) {
-            displayNameComponent = displayNameComponent.color(customItem.getColor());
+        if (customItem.color() != null) {
+            displayNameComponent = displayNameComponent.color(customItem.color());
         }
 
-        if (customItem.getDecoration() != null) {
-            displayNameComponent = displayNameComponent.decorate(customItem.getDecoration());
+        if (customItem.decoration() != null) {
+            displayNameComponent = displayNameComponent.decorate(customItem.decoration());
         }
 
         displayNameComponent = displayNameComponent.colorIfAbsent(NamedTextColor.WHITE);
@@ -73,7 +73,7 @@ public class CustomItemBuilder implements Listener {
     }
 
     private void buildEnchantments(ItemMeta meta, CustomItem customItem) {
-        List<CustomItemEnchantment> customItemEnchantments = customItem.getEnchantments();
+        List<CustomItemEnchantment> customItemEnchantments = customItem.enchantments();
 
         if (customItemEnchantments == null) {
             return;
@@ -88,15 +88,15 @@ public class CustomItemBuilder implements Listener {
         List<EnchantmentContainer> vanillaEnchantments = new ArrayList<>();
 
         for (CustomItemEnchantment enchantment : customItemEnchantments) {
-            String unknownEnchantment = enchantment.getEnchantment();
+            String unknownEnchantment = enchantment.enchantment();
 
             Enchantment vanillaEnchantment = Enchantment
                     .getByKey(NamespacedKey.minecraft(unknownEnchantment.toLowerCase()));
             if (vanillaEnchantment != null) {
-                vanillaEnchantments.add(new EnchantmentContainer(vanillaEnchantment, enchantment.getLevel()));
+                vanillaEnchantments.add(new EnchantmentContainer(vanillaEnchantment, enchantment.level()));
             } else {
                 CustomEnchantmentType customEnchantment = CustomEnchantmentType.valueOf(unknownEnchantment);
-                customEnchantments.add(new CustomEnchantment(customEnchantment, (short) enchantment.getLevel()));
+                customEnchantments.add(new CustomEnchantment(customEnchantment, (short) enchantment.level()));
             }
         }
 
@@ -106,19 +106,19 @@ public class CustomItemBuilder implements Listener {
     }
 
     private void buildLore(ItemMeta meta, CustomItem customItem) {
-        CustomItemLore customItemLore = customItem.getLore();
+        CustomItemLore customItemLore = customItem.lore();
 
         if (customItemLore == null) {
             return;
         }
 
-        List<Component> list = LoreUtils.getLoreComponents(customItemLore.getText(),
-                customItemLore.getColor(), customItemLore.getDecoration());
+        List<Component> list = LoreUtils.getLoreComponents(customItemLore.text(),
+                customItemLore.color(), customItemLore.decoration());
         LoreUtils.updateLore(meta, list, true);
     }
 
     private ItemStack buildItem(CustomItem customItem) {
-        ItemStack item = new ItemStack(customItem.getMaterial());
+        ItemStack item = new ItemStack(customItem.material());
         ItemMeta meta = item.getItemMeta();
 
         this.buildDisplayName(meta, customItem);
@@ -142,7 +142,7 @@ public class CustomItemBuilder implements Listener {
                 int index = 0;
 
                 for (CustomItemProbability customItemProbability : customItemsProbabilities) {
-                    probabilities[index] = customItemProbability.getProbability();
+                    probabilities[index] = customItemProbability.probability();
                     index++;
                 }
 
@@ -152,7 +152,7 @@ public class CustomItemBuilder implements Listener {
                         rng, customItemsProbabilities, probabilities
                 ).sample();
 
-                CustomItem customItem = CustomItemRepository.getCustomItemById(sample.getCustomItemId());
+                CustomItem customItem = CustomItemRepository.getCustomItemById(sample.customItemId());
                 return this.buildItem(customItem);
             }
         } catch (Exception exception) {

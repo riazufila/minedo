@@ -27,7 +27,6 @@ public final class RegionRepository {
             ResultSet resultSet = database.query(query);
 
             while (resultSet.next()) {
-                // Retrieve Region.
                 int id = resultSet.getInt("id");
                 String name = resultSet.getString("name");
                 String world = resultSet.getString("world_type");
@@ -36,16 +35,7 @@ public final class RegionRepository {
                 int minZ = resultSet.getInt("minZ");
                 int maxZ = resultSet.getInt("maxZ");
 
-                // Set Region object and push to Array.
-                Region region = new Region();
-                region.setId(id);
-                region.setName(name);
-                region.setWorldType(Bukkit.getWorld(world));
-                region.setMinX(minX);
-                region.setMaxX(maxX);
-                region.setMinZ(minZ);
-                region.setMaxZ(maxZ);
-
+                Region region = new Region(id, name, Bukkit.getWorld(world), minX, maxX, minZ, maxZ);
                 regions.add(region);
             }
         } catch (SQLException error) {

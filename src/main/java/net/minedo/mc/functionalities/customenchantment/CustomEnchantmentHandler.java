@@ -151,27 +151,22 @@ public abstract class CustomEnchantmentHandler extends SimpleCustomEnchantment i
 
     @EventHandler
     public void onHit(EntityDamageByEntityEvent event) {
-        // Override and add custom effects if needed.
     }
 
     @EventHandler
     public void onDamaged(EntityDamageEvent event) {
-        // Override and add custom effects if needed.
     }
 
     @EventHandler
     public void onInteract(PlayerInteractEvent event) {
-        // Override and add custom effects if needed.
     }
 
     @EventHandler
     public void onPlayerArmorChange(PlayerArmorChangeEvent event) {
-        // Override and add custom effects if needed.
     }
 
     @EventHandler
     public void onEntityPickupItem(EntityPickupItemEvent event) {
-        // Override and add custom effects if needed.
     }
 
 }
