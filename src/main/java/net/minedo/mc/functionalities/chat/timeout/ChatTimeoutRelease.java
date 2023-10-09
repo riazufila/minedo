@@ -9,12 +9,22 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.util.HashMap;
 import java.util.UUID;
 
+/**
+ * Chat timeout release.
+ */
 public class ChatTimeoutRelease extends BukkitRunnable {
 
     private final Player player;
     private final HashMap<UUID, Integer> playerChatCount;
     private final int chatLimit;
 
+    /**
+     * Initialize chat timeout release.
+     *
+     * @param player          player
+     * @param playerChatCount player chat count
+     * @param chatLimit       chat limit
+     */
     public ChatTimeoutRelease(Player player, HashMap<UUID, Integer> playerChatCount, int chatLimit) {
         this.player = player;
         this.playerChatCount = playerChatCount;

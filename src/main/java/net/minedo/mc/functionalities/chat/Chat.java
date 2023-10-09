@@ -6,8 +6,14 @@ import net.minedo.mc.functionalities.chat.box.ChatBox;
 import net.minedo.mc.functionalities.chat.timeout.ChatTimeout;
 import org.bukkit.plugin.PluginManager;
 
+/**
+ * Chat handler.
+ */
 public class Chat {
 
+    /**
+     * Setup chat handler.
+     */
     public void setupChat() {
         Minedo instance = Minedo.getInstance();
         PluginManager pluginManager = instance.getServer().getPluginManager();
