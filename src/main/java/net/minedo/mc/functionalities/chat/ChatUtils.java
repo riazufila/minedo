@@ -8,12 +8,24 @@ import net.minedo.mc.functionalities.permissions.PermissionUtils;
 import net.minedo.mc.models.playercolor.PlayerColor;
 import net.minedo.mc.repositories.playercolorrepository.PlayerColorRepository;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
+/**
+ * Chat utils.
+ */
 public final class ChatUtils {
 
-    public static Component updateComponentColor(Player player, Component component, boolean isContent) {
+    /**
+     * Update component color.
+     *
+     * @param player    player
+     * @param component component
+     * @param isContent whether is content
+     * @return updated component color
+     */
+    public static @NotNull Component updateComponentColor(Player player, Component component, boolean isContent) {
         ChatInfo chatInfo = getChatInfo(player, isContent);
         String selectedColor = chatInfo.selectedColor();
         boolean isCustom = chatInfo.custom();
@@ -36,7 +48,15 @@ public final class ChatUtils {
         return component;
     }
 
-    private static ChatInfo selectColor(PlayerColor playerColor, Player player, boolean isContent) {
+    /**
+     * Select color by color type.
+     *
+     * @param playerColor player color
+     * @param player      player
+     * @param isContent   whether is content
+     * @return selected color
+     */
+    private static @NotNull ChatInfo selectColor(PlayerColor playerColor, Player player, boolean isContent) {
         String selectedColor = isContent ? playerColor.contentCustom() : playerColor.prefixCustom();
         boolean isCustom = false;
 
@@ -52,7 +72,14 @@ public final class ChatUtils {
         return new ChatInfo(isCustom, selectedColor);
     }
 
-    private static ChatInfo getChatInfo(Player player, boolean isContent) {
+    /**
+     * Get chat info.
+     *
+     * @param player    player
+     * @param isContent whether is content
+     * @return chat info
+     */
+    private static @NotNull ChatInfo getChatInfo(Player player, boolean isContent) {
         UUID playerUuid = player.getUniqueId();
         PlayerColor playerColor = PlayerColorRepository.getPlayerColorByPlayerUuid(playerUuid);
 
@@ -63,6 +90,13 @@ public final class ChatUtils {
         }
     }
 
+    /**
+     * Get whether group color is same.
+     *
+     * @param color      color
+     * @param groupColor group color values as in {@link GroupColor#values()}
+     * @return whether group color is same
+     */
     public static boolean isGroupColorTheSame(String color, GroupColor groupColor) {
         return GroupColor.valueOf(color.toUpperCase()).equals(groupColor);
     }

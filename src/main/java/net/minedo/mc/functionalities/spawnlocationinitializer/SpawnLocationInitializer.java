@@ -8,10 +8,16 @@ import org.bukkit.World;
 
 import java.util.logging.Logger;
 
+/**
+ * Spawn location initializer.
+ */
 public class SpawnLocationInitializer {
 
     private final Logger logger = Logger.getLogger(this.getClass().getName());
 
+    /**
+     * Set spawn location.
+     */
     public void setSpawnLocation() {
         this.logger.info("Setting spawn location.");
         World world = Bukkit.getWorld(WorldType.WORLD.getType());
@@ -35,6 +41,11 @@ public class SpawnLocationInitializer {
         }
     }
 
+    /**
+     * Get whether spawn location is set based on {@link SpawnLocation#values()}.
+     *
+     * @return whether spawn location is set based on {@link SpawnLocation#values()}
+     */
     public boolean hasSpawnLocationSet() {
         World world = Bukkit.getWorld(WorldType.WORLD.getType());
 

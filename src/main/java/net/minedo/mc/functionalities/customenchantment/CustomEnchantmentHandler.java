@@ -16,21 +16,36 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Custom enchantment handler abstract class. Custom enchantments should all extends from this.
+ */
 public abstract class CustomEnchantmentHandler extends SimpleCustomEnchantment implements Listener {
 
     private final int AMPLIFIER_LIMIT = 9;
 
+    /**
+     * Custom enchantment handler initializer.
+     *
+     * @param customEnchantmentType custom enchantment type as in {@link CustomEnchantmentType#values()}
+     */
     public CustomEnchantmentHandler(CustomEnchantmentType customEnchantmentType) {
         super(customEnchantmentType);
     }
 
-    public CombatEvent isOnHitValid(EntityDamageByEntityEvent event) {
+    /**
+     * Get whether hit is valid.
+     *
+     * @param event event
+     * @return whether hit is valid
+     */
+    public @Nullable CombatEvent isOnHitValid(EntityDamageByEntityEvent event) {
         if (!(event.getEntity() instanceof LivingEntity defendingEntity)) {
             return null;
         }
@@ -59,6 +74,13 @@ public abstract class CustomEnchantmentHandler extends SimpleCustomEnchantment i
         return new CombatEvent(itemAtHand, attackingEntity, defendingEntity);
     }
 
+    /**
+     * Trigger custom effects on hit.
+     *
+     * @param event            event
+     * @param potionEffectType potion effect type as in {@link PotionEffectType#values()}
+     * @param isAmplified      whether potion effect can be amplified
+     */
     public void triggerCustomEffectsOnHit(
             EntityDamageByEntityEvent event, PotionEffectType potionEffectType, boolean isAmplified
     ) {
@@ -93,6 +115,13 @@ public abstract class CustomEnchantmentHandler extends SimpleCustomEnchantment i
         combatEvent.defendingEntity().addPotionEffect(potionEffect);
     }
 
+    /**
+     * Update potion effects based on item.
+     *
+     * @param potionEffects    potion effects
+     * @param item             item
+     * @param potionEffectType potion effect type as in {@link PotionEffectType#values()}
+     */
     private void updatePotionEffectsBasedOnItem(
             HashMap<PotionEffectType, PotionEffect> potionEffects, ItemStack item, PotionEffectType potionEffectType
     ) {
@@ -124,6 +153,12 @@ public abstract class CustomEnchantmentHandler extends SimpleCustomEnchantment i
         potionEffects.put(potionEffectType, potionEffect);
     }
 
+    /**
+     * Update custom effects on armor change.
+     *
+     * @param event            event
+     * @param potionEffectType potion effect type as in {@link PotionEffectType#values()}
+     */
     public void updateCustomEffectsOnArmorChange(PlayerArmorChangeEvent event, PotionEffectType potionEffectType) {
         Inventory inventory = event.getPlayer().getInventory();
         int HEAD_SLOT = 39;

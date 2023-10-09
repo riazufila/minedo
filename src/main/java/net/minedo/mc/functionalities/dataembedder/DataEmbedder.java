@@ -15,12 +15,14 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Uses PDC to store and get arbitrary data from within objects in Paper API.
+ * Uses PDC to store and get arbitrary data from within objects.
  */
 public final class DataEmbedder {
 
@@ -30,7 +32,7 @@ public final class DataEmbedder {
      * @param key used as an identifier when setting and getting a value
      * @return key object
      */
-    public static NamespacedKey createKey(String key) {
+    public static @NotNull NamespacedKey createKey(String key) {
         return new NamespacedKey(Minedo.getInstance(), key);
     }
 
@@ -88,7 +90,7 @@ public final class DataEmbedder {
      * @param item item to get custom enchantments from
      * @return custom enchantments list
      */
-    public static List<CustomEnchantment> getCustomEnchantments(ItemStack item) {
+    public static @Nullable List<CustomEnchantment> getCustomEnchantments(ItemStack item) {
         ItemMeta meta = item.getItemMeta();
         PersistentDataContainer container = meta.getPersistentDataContainer();
         NamespacedKey customEnchantmentKey = createKey(CustomEnchantmentKey.CUSTOM_ENCHANTMENT.getKey());

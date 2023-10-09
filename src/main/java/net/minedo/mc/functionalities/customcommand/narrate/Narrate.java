@@ -19,8 +19,17 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Narrate command.
+ */
 public class Narrate implements CommandExecutor, TabCompleter {
 
+    /**
+     * Get whether command is valid.
+     *
+     * @param args arguments
+     * @return whether command is valid
+     */
     private boolean isCommandValid(String[] args) {
         return args.length != 0;
     }

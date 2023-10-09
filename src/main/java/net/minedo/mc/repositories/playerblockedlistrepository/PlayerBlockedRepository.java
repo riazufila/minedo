@@ -4,6 +4,7 @@ import net.minedo.mc.models.playerblockedlist.PlayerBlocked;
 import net.minedo.mc.models.playerprofile.PlayerProfile;
 import net.minedo.mc.repositories.Database;
 import net.minedo.mc.repositories.playerprofilerepository.PlayerProfileRepository;
+import org.jetbrains.annotations.Nullable;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -13,15 +14,24 @@ import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
 
+/**
+ * Player blocked repository.
+ */
 public final class PlayerBlockedRepository {
 
     private static final Logger logger = Logger.getLogger(PlayerBlockedRepository.class.getName());
 
-    public static List<PlayerBlocked> getPlayerBlockedList(UUID playerUuid) {
+    /**
+     * Get player block list.
+     *
+     * @param playerUuid player UUID
+     * @return player block list
+     */
+    public static @Nullable List<PlayerBlocked> getPlayerBlockedList(UUID playerUuid) {
         Database database = new Database();
         database.connect();
 
-        List<PlayerBlocked> playerBlockedList = new ArrayList<>();
+        List<PlayerBlocked> playerBlockedList = null;
 
         try {
             String query = """
@@ -38,6 +48,10 @@ public final class PlayerBlockedRepository {
 
             try (ResultSet resultSet = database.queryWithWhereClause(query, replacements)) {
                 while (resultSet.next()) {
+                    if (playerBlockedList == null) {
+                        playerBlockedList = new ArrayList<>();
+                    }
+
                     int blockedPlayerId = resultSet.getInt("blocked_player_id");
 
                     PlayerBlocked playerBlocked = new PlayerBlocked(blockedPlayerId);
@@ -53,6 +67,12 @@ public final class PlayerBlockedRepository {
         return playerBlockedList;
     }
 
+    /**
+     * Add player to a player's blocked list.
+     *
+     * @param requesterUuid         player UUID requesting to block
+     * @param playerUuidToBeBlocked player UUID to be blocked
+     */
     public static void addBlockedPlayer(UUID requesterUuid, UUID playerUuidToBeBlocked) {
         Database database = new Database();
         database.connect();
@@ -72,6 +92,12 @@ public final class PlayerBlockedRepository {
         database.disconnect();
     }
 
+    /**
+     * Remove a player block a player's block list.
+     *
+     * @param requesterUuid         player UUID requesting to block
+     * @param playerUuidToBeBlocked player UUID to be blocked
+     */
     public static void removeBlockedPlayer(UUID requesterUuid, UUID playerUuidToBeBlocked) {
         Database database = new Database();
         database.connect();
@@ -91,9 +117,22 @@ public final class PlayerBlockedRepository {
         database.disconnect();
     }
 
+    /**
+     * Get whether player is blocked by another player.
+     *
+     * @param requesterUuid        player UUID checking whether blocked or not
+     * @param potentialBlockerUuid player UUID of a potential blocker
+     * @return whether player is blocked by another player
+     */
     public static boolean isPlayerBlockedByPlayer(UUID requesterUuid, UUID potentialBlockerUuid) {
-        List<Integer> potentialBlockerPlayerBlockedList = PlayerBlockedRepository
-                .getPlayerBlockedList(potentialBlockerUuid)
+        List<PlayerBlocked> playerBlockedList = PlayerBlockedRepository
+                .getPlayerBlockedList(potentialBlockerUuid);
+
+        if (playerBlockedList == null) {
+            return false;
+        }
+
+        List<Integer> potentialBlockerPlayerBlockedList = playerBlockedList
                 .stream()
                 .map(PlayerBlocked::blockedPlayerId)
                 .toList();

@@ -1,8 +1,5 @@
 package net.minedo.mc.functionalities.player;
 
-import net.minedo.mc.models.playercolor.PlayerColor;
-import net.minedo.mc.models.playerlike.PlayerLike;
-import net.minedo.mc.models.playerprofile.PlayerProfile;
 import net.minedo.mc.repositories.playercolorrepository.PlayerColorRepository;
 import net.minedo.mc.repositories.playerlikerepository.PlayerLikeRepository;
 import net.minedo.mc.repositories.playerprofilerepository.PlayerProfileRepository;
@@ -13,44 +10,31 @@ import org.bukkit.event.player.PlayerJoinEvent;
 
 import java.util.UUID;
 
+/**
+ * Player profile manager.
+ */
 public class PlayerProfileManager implements Listener {
 
-    private void initializePlayerProfile(UUID playerUuid) {
-        PlayerProfile playerProfile = PlayerProfileRepository.getPlayerProfileByUuid(playerUuid);
+    /**
+     * Initialize player that hasn't played before.
+     *
+     * @param player player
+     */
+    private void initializePlayer(Player player) {
+        if (!player.hasPlayedBefore()) {
+            UUID playerUuid = player.getUniqueId();
 
-        if (playerProfile == null) {
             PlayerProfileRepository.insertNewPlayerProfile(playerUuid);
-        }
-
-    }
-
-    private void initializePlayerColor(UUID playerUuid) {
-        PlayerColor playerColor = PlayerColorRepository.getPlayerColorByPlayerUuid(playerUuid);
-
-        if (playerColor == null) {
             PlayerColorRepository.insertNewPlayerColor(playerUuid);
-        }
-    }
-
-    private void initializePlayerLike(UUID playerUuid) {
-        PlayerLike playerLike = PlayerLikeRepository.getPlayerLikeByPlayerUuid(playerUuid);
-
-        if (playerLike == null) {
             PlayerLikeRepository.insertNewPlayerLike(playerUuid);
         }
-    }
-
-    private void initializePlayer(UUID playerUuid) {
-        this.initializePlayerProfile(playerUuid);
-        this.initializePlayerColor(playerUuid);
-        this.initializePlayerLike(playerUuid);
     }
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
 
-        this.initializePlayer(player.getUniqueId());
+        this.initializePlayer(player);
     }
 
 }

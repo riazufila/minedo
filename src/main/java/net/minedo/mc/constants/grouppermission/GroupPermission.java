@@ -1,5 +1,8 @@
 package net.minedo.mc.constants.grouppermission;
 
+/**
+ * Permission.
+ */
 public enum GroupPermission {
 
     GOLD("minedo.group.gold"),
@@ -10,10 +13,20 @@ public enum GroupPermission {
 
     private final String permission;
 
+    /**
+     * Permission.
+     *
+     * @param permission permission
+     */
     GroupPermission(String permission) {
         this.permission = permission;
     }
 
+    /**
+     * Get permission nodes.
+     *
+     * @return permission
+     */
     public String getPermission() {
         return permission;
     }

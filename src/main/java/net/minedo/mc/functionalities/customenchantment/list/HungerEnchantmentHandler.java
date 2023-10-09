@@ -7,8 +7,14 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Inflicts hunger.
+ */
 public class HungerEnchantmentHandler extends CustomEnchantmentHandler {
 
+    /**
+     * Initialize hunger enchantment handler.
+     */
     public HungerEnchantmentHandler() {
         super(CustomEnchantmentType.HUNGER);
     }

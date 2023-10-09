@@ -14,6 +14,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Region teleport scheduler.
+ */
 public class RegionTeleportScheduler extends BukkitRunnable {
 
     private final Player player;
@@ -22,6 +25,14 @@ public class RegionTeleportScheduler extends BukkitRunnable {
     private final HashMap<UUID, Integer> teleportingPlayers;
     private int countdown = 4;
 
+    /**
+     * Initialize region teleport scheduler.
+     *
+     * @param player                   player
+     * @param region                   region where player is being teleported to
+     * @param globalTeleportingPlayers list of globally teleporting players
+     * @param teleportingPlayers       players teleporting to region
+     */
     public RegionTeleportScheduler(
             Player player, Region region, List<UUID> globalTeleportingPlayers,
             HashMap<UUID, Integer> teleportingPlayers
@@ -32,6 +43,12 @@ public class RegionTeleportScheduler extends BukkitRunnable {
         this.teleportingPlayers = teleportingPlayers;
     }
 
+    /**
+     * Get safe location to teleport to.
+     *
+     * @param location location
+     * @return safe location to teleport to
+     */
     private Location getSafeToTeleportLocation(Location location) {
         World world = this.region.worldType();
 

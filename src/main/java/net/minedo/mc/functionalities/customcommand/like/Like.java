@@ -18,8 +18,17 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * Like command.
+ */
 public class Like implements CommandExecutor, TabCompleter {
 
+    /**
+     * Get whether command is valid.
+     *
+     * @param args arguments
+     * @return whether command is valid
+     */
     private boolean isCommandValid(String[] args) {
         return args.length == 1;
     }
@@ -80,7 +89,7 @@ public class Like implements CommandExecutor, TabCompleter {
             PlayerLike updatedOtherPlayerLike = new PlayerLike(
                     otherPlayerLike.likeReceivedCount() + 1,
                     otherPlayerLike.likeSentCount(),
-                    instant
+                    otherPlayerLike.lastLikeSent()
             );
             PlayerLikeRepository.updatePlayerLike(otherPlayer.getUniqueId(), updatedOtherPlayerLike);
 
@@ -100,7 +109,7 @@ public class Like implements CommandExecutor, TabCompleter {
             );
         } else {
             player.sendMessage(Component
-                    .text(LikeMessage.ERROR_REQUEST_PLAYER_IS_NOT_IN_SERVER.getMessage())
+                    .text(LikeMessage.ERROR_UNABLE_TO_FIND_PLAYER.getMessage())
                     .color(NamedTextColor.RED)
             );
         }

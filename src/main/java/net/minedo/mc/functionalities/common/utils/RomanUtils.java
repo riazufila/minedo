@@ -1,7 +1,12 @@
 package net.minedo.mc.functionalities.common.utils;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.TreeMap;
 
+/**
+ * Roman utils.
+ */
 public class RomanUtils {
 
     private final static TreeMap<Integer, String> map = new TreeMap<>();
@@ -22,7 +27,13 @@ public class RomanUtils {
         map.put(1, "I");
     }
 
-    public static String toRoman(int number) {
+    /**
+     * Convert integer to roman.
+     *
+     * @param number number
+     * @return number in roman
+     */
+    public static @NotNull String toRoman(int number) {
         int flooredKey = map.floorKey(number);
         if (number == flooredKey) {
             return map.get(number);

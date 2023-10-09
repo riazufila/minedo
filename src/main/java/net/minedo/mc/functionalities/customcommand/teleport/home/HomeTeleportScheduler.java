@@ -14,6 +14,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Home teleport scheduler.
+ */
 public class HomeTeleportScheduler extends BukkitRunnable {
 
     private final Player player;
@@ -22,6 +25,14 @@ public class HomeTeleportScheduler extends BukkitRunnable {
     private final HashMap<UUID, Integer> teleportingPlayers;
     private int countdown = 4;
 
+    /**
+     * Initialize home teleport.
+     *
+     * @param player                   player
+     * @param home                     player home
+     * @param globalTeleportingPlayers list of globally teleporting players
+     * @param teleportingPlayers       players teleporting to home
+     */
     public HomeTeleportScheduler(
             Player player, PlayerHome home, List<UUID> globalTeleportingPlayers,
             HashMap<UUID, Integer> teleportingPlayers

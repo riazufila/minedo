@@ -1,11 +1,11 @@
 package net.minedo.mc.repositories.playerhomerepository;
 
 import net.minedo.mc.models.playerhome.PlayerHome;
-import net.minedo.mc.models.playerprofile.PlayerProfile;
 import net.minedo.mc.repositories.Database;
-import net.minedo.mc.repositories.playerprofilerepository.PlayerProfileRepository;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
+import org.jetbrains.annotations.Nullable;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -15,15 +15,24 @@ import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
 
+/**
+ * Player home repository.
+ */
 public final class PlayerHomeRepository {
 
     private static final Logger logger = Logger.getLogger(PlayerHomeRepository.class.getName());
 
-    public static PlayerHome getPlayerHome(UUID playerUuid, String name) {
+    /**
+     * Get player home.
+     *
+     * @param playerUuid player UUID
+     * @param name       home name
+     * @return player home
+     */
+    public static @Nullable PlayerHome getPlayerHome(UUID playerUuid, String name) {
         Database database = new Database();
         database.connect();
 
-        PlayerProfile playerProfile = PlayerProfileRepository.getPlayerProfileByUuid(playerUuid);
         PlayerHome playerHome = null;
 
         try {
@@ -38,23 +47,29 @@ public final class PlayerHomeRepository {
                     """;
 
             HashMap<Integer, String> replacements = new HashMap<>();
-            replacements.put(1, String.valueOf(playerProfile.id()));
+            replacements.put(1, String.valueOf(playerUuid));
             replacements.put(2, name);
 
             try (ResultSet resultSet = database.queryWithWhereClause(query, replacements)) {
                 if (resultSet.next()) {
                     String homeName = resultSet.getString("name");
-                    String world = resultSet.getString("world_type");
+                    String worldType = resultSet.getString("world_type");
                     double coordinateX = resultSet.getDouble("coordinate_x");
                     double coordinateY = resultSet.getDouble("coordinate_y");
                     double coordinateZ = resultSet.getDouble("coordinate_z");
 
-                    playerHome = new PlayerHome(homeName, Bukkit.getWorld(world), coordinateX, coordinateY, coordinateZ);
+                    World world = Bukkit.getWorld(worldType);
+
+                    if (world == null) {
+                        throw new RuntimeException("World is invalid.");
+                    }
+
+                    playerHome = new PlayerHome(homeName, world, coordinateX, coordinateY, coordinateZ);
                 }
             }
         } catch (SQLException error) {
             logger.severe(String.format(
-                    "Unable to get player home by player uuid and name: %s", error.getMessage()
+                    "Unable to get player home by player UUID and name: %s", error.getMessage()
             ));
         } finally {
             database.disconnect();
@@ -63,11 +78,17 @@ public final class PlayerHomeRepository {
         return playerHome;
     }
 
-    public static List<PlayerHome> getPlayerHomeList(UUID playerUuid) {
+    /**
+     * Get player home list.
+     *
+     * @param playerUuid player UUID
+     * @return player home list
+     */
+    public static @Nullable List<PlayerHome> getPlayerHomeList(UUID playerUuid) {
         Database database = new Database();
         database.connect();
 
-        List<PlayerHome> playerHomeList = new ArrayList<>();
+        List<PlayerHome> playerHomeList = null;
 
         try {
             String query = """
@@ -84,14 +105,23 @@ public final class PlayerHomeRepository {
 
             try (ResultSet resultSet = database.queryWithWhereClause(query, replacements)) {
                 while (resultSet.next()) {
+                    if (playerHomeList == null) {
+                        playerHomeList = new ArrayList<>();
+                    }
+
                     String homeName = resultSet.getString("name");
-                    String world = resultSet.getString("world_type");
+                    String worldType = resultSet.getString("world_type");
                     double coordinateX = resultSet.getDouble("coordinate_x");
                     double coordinateY = resultSet.getDouble("coordinate_y");
                     double coordinateZ = resultSet.getDouble("coordinate_z");
 
-                    PlayerHome playerHome = new PlayerHome(homeName, Bukkit.getWorld(world),
-                            coordinateX, coordinateY, coordinateZ);
+                    World world = Bukkit.getWorld(worldType);
+
+                    if (world == null) {
+                        throw new RuntimeException("World is invalid");
+                    }
+
+                    PlayerHome playerHome = new PlayerHome(homeName, world, coordinateX, coordinateY, coordinateZ);
                     playerHomeList.add(playerHome);
                 }
             }
@@ -104,6 +134,13 @@ public final class PlayerHomeRepository {
         return playerHomeList;
     }
 
+    /**
+     * Upsert player home.
+     *
+     * @param playerUuid player UUID
+     * @param location   home location
+     * @param homeName   home name
+     */
     public static void upsertHome(UUID playerUuid, Location location, String homeName) {
         Database database = new Database();
         database.connect();
@@ -127,6 +164,12 @@ public final class PlayerHomeRepository {
         database.disconnect();
     }
 
+    /**
+     * Remove home from a player.
+     *
+     * @param playerUuid player UUID
+     * @param homeName   home name
+     */
     public static void removeHome(UUID playerUuid, String homeName) {
         Database database = new Database();
         database.connect();

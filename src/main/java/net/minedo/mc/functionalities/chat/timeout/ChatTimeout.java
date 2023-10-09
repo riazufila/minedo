@@ -12,6 +12,9 @@ import org.bukkit.event.Listener;
 import java.util.HashMap;
 import java.util.UUID;
 
+/**
+ * Chat timeout.
+ */
 public class ChatTimeout implements Listener {
 
     private final HashMap<UUID, Integer> playerChatCount = new HashMap<>();

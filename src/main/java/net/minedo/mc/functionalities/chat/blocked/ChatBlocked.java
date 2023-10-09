@@ -10,6 +10,9 @@ import org.bukkit.event.Listener;
 import java.util.HashSet;
 import java.util.UUID;
 
+/**
+ * Blocked chat.
+ */
 public class ChatBlocked implements Listener {
 
     @EventHandler

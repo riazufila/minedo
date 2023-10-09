@@ -1,5 +1,8 @@
 package net.minedo.mc.constants.command.type.customcommandtype;
 
+/**
+ * Custom command labels.
+ */
 public enum CustomCommandType {
 
     REGION_TELEPORT("warp"),
@@ -14,11 +17,21 @@ public enum CustomCommandType {
 
     private final String type;
 
+    /**
+     * Custom command label.
+     *
+     * @param type command label
+     */
     CustomCommandType(String type) {
         this.type = type;
     }
 
-    public String getMessage() {
+    /**
+     * Get custom command label.
+     *
+     * @return command label
+     */
+    public String getType() {
         return type;
     }
 

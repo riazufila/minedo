@@ -22,8 +22,17 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Color command.
+ */
 public class Color implements CommandExecutor, TabCompleter {
 
+    /**
+     * Get whether HEX is valid.
+     *
+     * @param color color in HEX
+     * @return whether HEX is valid
+     */
     private boolean isHexValid(String color) {
         String HEX_REGEX = "^#([A-Fa-f0-9]{6})$";
         Pattern pattern = Pattern.compile(HEX_REGEX);
@@ -32,6 +41,12 @@ public class Color implements CommandExecutor, TabCompleter {
         return matcher.matches();
     }
 
+    /**
+     * Get whether command is valid.
+     *
+     * @param args arguments
+     * @return whether command is valid
+     */
     private boolean isCommandValid(String[] args) {
         if (args.length != 3) {
             return false;

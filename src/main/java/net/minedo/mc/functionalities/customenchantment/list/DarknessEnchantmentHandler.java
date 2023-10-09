@@ -7,8 +7,14 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Inflicts darkness.
+ */
 public class DarknessEnchantmentHandler extends CustomEnchantmentHandler {
 
+    /**
+     * Initialize darkness enchantment handler.
+     */
     public DarknessEnchantmentHandler() {
         super(CustomEnchantmentType.DARKNESS);
     }

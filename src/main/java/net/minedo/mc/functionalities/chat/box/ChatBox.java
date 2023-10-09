@@ -11,6 +11,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
+/**
+ * Chat box.
+ */
 public class ChatBox implements Listener {
 
     @EventHandler

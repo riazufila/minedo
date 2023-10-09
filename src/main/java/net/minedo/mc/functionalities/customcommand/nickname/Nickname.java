@@ -25,8 +25,17 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
+/**
+ * Nickname command.
+ */
 public class Nickname implements CommandExecutor, TabCompleter, Listener {
 
+    /**
+     * Get whether nickname is valid
+     *
+     * @param nickname nickname
+     * @return whether nickname is valid
+     */
     private boolean isValidNickname(String nickname) {
         if (nickname == null) {
             return false;
@@ -39,6 +48,12 @@ public class Nickname implements CommandExecutor, TabCompleter, Listener {
         return matcher.matches();
     }
 
+    /**
+     * Get whether command is valid.
+     *
+     * @param args arguments
+     * @return whether command is valid
+     */
     private boolean isCommandValid(String[] args) {
         if (args.length == 0) {
             return false;
@@ -102,6 +117,10 @@ public class Nickname implements CommandExecutor, TabCompleter, Listener {
                     .map(Player::getName)
                     .toList();
 
+            if (otherPlayersNickname == null) {
+                otherPlayersNickname = new ArrayList<>();
+            }
+
             List<String> realNamesAndNicknames = Stream
                     .concat(otherPlayersNickname.stream().map(String::toUpperCase),
                             otherPlayersRealName.stream().map(String::toUpperCase))
@@ -137,28 +156,41 @@ public class Nickname implements CommandExecutor, TabCompleter, Listener {
             String nickname = args[1];
             PlayerProfile playerProfile = PlayerProfileRepository.getPlayerProfileByNickname(nickname);
 
-            // Verify player's real name and make sure player is online.
-            if (playerProfile != null) {
-                Player realPlayer = Minedo.getInstance().getServer().getPlayer(playerProfile.uuid());
+            if (playerProfile == null) {
+                player.sendMessage(Component
+                        .text(NicknameMessage.ERROR_NO_SUCH_NICKNAME.getMessage())
+                        .color(NamedTextColor.RED)
+                );
 
-                if (realPlayer != null) {
-                    player.sendMessage(Component
-                            .text(String.format(
-                                    NicknameMessage.SUCCESS_REVEAL_NICKNAME.getMessage(),
-                                    nickname,
-                                    realPlayer.getName()))
-                            .color(NamedTextColor.GREEN)
-                    );
-
-                    return true;
-                }
+                return true;
             }
 
-            // If somehow, the all the verifications above fails, then player will be notified of failure
-            // to reveal nickname.
+            if (playerProfile.uuid().equals(player.getUniqueId())) {
+                player.sendMessage(Component
+                        .text(NicknameMessage.ERROR_REVEAL_SELF.getMessage())
+                        .color(NamedTextColor.RED)
+                );
+
+                return true;
+            }
+
+            Player realPlayer = Minedo.getInstance().getServer().getPlayer(playerProfile.uuid());
+
+            if (realPlayer == null) {
+                player.sendMessage(Component
+                        .text(NicknameMessage.ERROR_UNABLE_TO_PINPOINT.getMessage())
+                        .color(NamedTextColor.RED)
+                );
+
+                return true;
+            }
+
             player.sendMessage(Component
-                    .text(NicknameMessage.ERROR_UNABLE_TO_PINPOINT.getMessage())
-                    .color(NamedTextColor.RED)
+                    .text(String.format(
+                            NicknameMessage.SUCCESS_REVEAL_NICKNAME.getMessage(),
+                            nickname,
+                            realPlayer.getName()))
+                    .color(NamedTextColor.GREEN)
             );
         } else if (nicknameType.equals(NicknameType.REMOVE.getType())) {
             PlayerProfileRepository.updatePlayerNickname(player.getUniqueId(), null);
@@ -172,8 +204,6 @@ public class Nickname implements CommandExecutor, TabCompleter, Listener {
                     .text(NicknameMessage.ERROR_USAGE.getMessage())
                     .color(NamedTextColor.GRAY)
             );
-
-            return true;
         }
 
         return true;
@@ -216,7 +246,9 @@ public class Nickname implements CommandExecutor, TabCompleter, Listener {
                         onlinePlayers.stream().map(Player::getUniqueId).toList()
                 );
 
-                completions.addAll(otherPlayersNickname);
+                if (otherPlayersNickname != null) {
+                    completions.addAll(otherPlayersNickname);
+                }
             }
         }
 

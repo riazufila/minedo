@@ -7,8 +7,14 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Inflict heal.
+ */
 public class HealEnchantmentHandler extends CustomEnchantmentHandler {
 
+    /**
+     * Initialize heal enchantment handler.
+     */
     public HealEnchantmentHandler() {
         super(CustomEnchantmentType.HEAL);
     }

@@ -9,6 +9,9 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.util.HashMap;
 import java.util.UUID;
 
+/**
+ * Player teleport request scheduler.
+ */
 public class PlayerTeleportRequestScheduler extends BukkitRunnable {
 
     private final Player requester;
@@ -16,6 +19,14 @@ public class PlayerTeleportRequestScheduler extends BukkitRunnable {
     private final HashMap<UUID, Integer> teleportRequesters;
     private final HashMap<UUID, Integer> teleportRequestees;
 
+    /**
+     * Initialize player teleport request scheduler.
+     *
+     * @param requester          requester
+     * @param requestee          requestee
+     * @param teleportRequesters teleport requesters
+     * @param teleportRequestees teleport requestees
+     */
     public PlayerTeleportRequestScheduler(
             Player requester, Player requestee,
             HashMap<UUID, Integer> teleportRequesters, HashMap<UUID, Integer> teleportRequestees

@@ -1,6 +1,14 @@
 package net.minedo.mc.functionalities.customitembuilder;
 
 import org.bukkit.enchantments.Enchantment;
+import org.jetbrains.annotations.NotNull;
 
-public record EnchantmentContainer(Enchantment enchantment, int level) {
+/**
+ * Contain information of vanilla enchantments.
+ *
+ * @param enchantment enchantment
+ * @param level       level
+ */
+public record EnchantmentContainer(@NotNull Enchantment enchantment,
+                                   int level) {
 }

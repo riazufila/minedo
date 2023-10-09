@@ -18,6 +18,7 @@ import net.minedo.mc.constants.filetype.FileType;
 import net.minedo.mc.models.region.Region;
 import org.bukkit.*;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -28,6 +29,9 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Region builder runnable.
+ */
 public class RegionRegenerationBuilder extends BukkitRunnable {
 
     private final Chunk chunk;
@@ -35,6 +39,13 @@ public class RegionRegenerationBuilder extends BukkitRunnable {
     private final HashMap<String, Integer> restoringChunks;
     private final Logger logger = Logger.getLogger(this.getClass().getName());
 
+    /**
+     * Initialize region builder runnable.
+     *
+     * @param chunk           chunk
+     * @param region          region
+     * @param restoringChunks chunks that are restoring
+     */
     public RegionRegenerationBuilder(
             Chunk chunk, Region region, HashMap<String, Integer> restoringChunks
     ) {
@@ -43,7 +54,13 @@ public class RegionRegenerationBuilder extends BukkitRunnable {
         this.restoringChunks = restoringChunks;
     }
 
-    private Location getCenterLocationOfChunk(Chunk chunk) {
+    /**
+     * Get center of chunk.
+     *
+     * @param chunk chunk
+     * @return center of chunk
+     */
+    private @NotNull Location getCenterLocationOfChunk(Chunk chunk) {
         World world = this.region.worldType();
         int CHUNK_SIZE = (int) Common.CHUNK_SIZE.getValue();
         int coordinateMinX = chunk.getX() * CHUNK_SIZE;
@@ -63,6 +80,11 @@ public class RegionRegenerationBuilder extends BukkitRunnable {
         );
     }
 
+    /**
+     * Play sound at center of chunk.
+     *
+     * @param chunk chunk
+     */
     private void playSoundAtCenterOfChunk(Chunk chunk) {
         Location location = this.getCenterLocationOfChunk(chunk);
         this.region.worldType().playSound(location, Sound.BLOCK_AZALEA_LEAVES_PLACE, 1, 1);
@@ -81,6 +103,10 @@ public class RegionRegenerationBuilder extends BukkitRunnable {
         File schematicPath = new File(Directory.SCHEMATIC.getDirectory());
         File[] files = schematicPath.listFiles();
 
+        if (files == null) {
+            return;
+        }
+
         String SPAWN_REGION_SCHEMATIC_REGEX = String.format(
                 "%s-region-\\((-?\\d+),(-?\\d+)\\)\\.%s",
                 this.region.name().toLowerCase(),
@@ -89,7 +115,7 @@ public class RegionRegenerationBuilder extends BukkitRunnable {
 
         Pattern pattern = Pattern.compile(SPAWN_REGION_SCHEMATIC_REGEX);
 
-        for (File file : Objects.requireNonNull(files)) {
+        for (File file : files) {
             Matcher matcher = pattern.matcher(file.getName());
 
             if (matcher.matches()) {
@@ -103,7 +129,11 @@ public class RegionRegenerationBuilder extends BukkitRunnable {
             }
         }
 
-        ClipboardFormat clipboardFormat = ClipboardFormats.findByFile(Objects.requireNonNull(schematicFile));
+        if (schematicFile == null) {
+            return;
+        }
+
+        ClipboardFormat clipboardFormat = ClipboardFormats.findByFile(schematicFile);
 
         try (ClipboardReader clipboardReader = Objects
                 .requireNonNull(clipboardFormat)

@@ -1,5 +1,8 @@
 package net.minedo.mc.constants.command.type.ignoretype;
 
+/**
+ * Ignore command arguments.
+ */
 public enum IgnoreType {
 
     ADD("add"),
@@ -7,10 +10,20 @@ public enum IgnoreType {
 
     private final String type;
 
+    /**
+     * Ignore command argument.
+     *
+     * @param type argument
+     */
     IgnoreType(String type) {
         this.type = type;
     }
 
+    /**
+     * Get command argument.
+     *
+     * @return argument
+     */
     public String getType() {
         return type;
     }
