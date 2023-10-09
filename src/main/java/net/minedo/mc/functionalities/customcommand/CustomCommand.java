@@ -31,11 +31,13 @@ public class CustomCommand {
         List<Region> regions = RegionRepository.getAllRegions();
 
         // Region teleport.
-        for (Region region : regions) {
-            RegionTeleport regionTeleport = new RegionTeleport(region, regions, globalTeleportingPlayers);
-            PluginCommand regionTeleportCommand = instance.getCommand(CustomCommandType.REGION_TELEPORT.getMessage());
-            Objects.requireNonNull(regionTeleportCommand).setExecutor(regionTeleport);
-            pluginManager.registerEvents(regionTeleport, instance);
+        if (regions != null) {
+            for (Region region : regions) {
+                RegionTeleport regionTeleport = new RegionTeleport(region, regions, globalTeleportingPlayers);
+                PluginCommand regionTeleportCommand = instance.getCommand(CustomCommandType.REGION_TELEPORT.getMessage());
+                Objects.requireNonNull(regionTeleportCommand).setExecutor(regionTeleport);
+                pluginManager.registerEvents(regionTeleport, instance);
+            }
         }
 
         // Player teleport.

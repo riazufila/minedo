@@ -4,6 +4,7 @@ import net.minedo.mc.models.region.Region;
 import net.minedo.mc.repositories.Database;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
+import org.jetbrains.annotations.Nullable;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -11,15 +12,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+/**
+ * Region repository.
+ */
 public final class RegionRepository {
 
     private static final Logger logger = Logger.getLogger(RegionRepository.class.getName());
 
-    public static List<Region> getAllRegions() {
+    /**
+     * Get all regions.
+     *
+     * @return all regions.
+     */
+    public static @Nullable List<Region> getAllRegions() {
         Database database = new Database();
         database.connect();
 
-        List<Region> regions = new ArrayList<>();
+        List<Region> regions = null;
 
         try {
             String query = """
@@ -28,6 +37,10 @@ public final class RegionRepository {
 
             try (ResultSet resultSet = database.query(query)) {
                 while (resultSet.next()) {
+                    if (regions == null) {
+                        regions = new ArrayList<>();
+                    }
+
                     String name = resultSet.getString("name");
                     String worldType = resultSet.getString("world_type");
                     int minX = resultSet.getInt("minX");

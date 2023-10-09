@@ -55,14 +55,16 @@ public class Minedo extends JavaPlugin {
         // Region regenerations.
         List<Region> regions = RegionRepository.getAllRegions();
 
-        for (Region region : regions) {
-            RegionRegeneration regionRegeneration = new RegionRegeneration(region);
+        if (regions != null) {
+            for (Region region : regions) {
+                RegionRegeneration regionRegeneration = new RegionRegeneration(region);
 
-            if (!regionRegeneration.getRegionSnapshot()) {
-                regionRegeneration.setRegionSnapshot();
+                if (!regionRegeneration.getRegionSnapshot()) {
+                    regionRegeneration.setRegionSnapshot();
+                }
+
+                pluginManager.registerEvents(regionRegeneration, this);
             }
-
-            pluginManager.registerEvents(regionRegeneration, this);
         }
 
         // Chat.
