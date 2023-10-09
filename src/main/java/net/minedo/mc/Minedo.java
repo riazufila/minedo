@@ -12,6 +12,7 @@ import net.minedo.mc.models.region.Region;
 import net.minedo.mc.repositories.regionrepository.RegionRepository;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -19,7 +20,7 @@ public class Minedo extends JavaPlugin {
 
     private static Minedo instance;
 
-    public static Minedo getInstance() {
+    public static @NotNull Minedo getInstance() {
         return instance;
     }
 
