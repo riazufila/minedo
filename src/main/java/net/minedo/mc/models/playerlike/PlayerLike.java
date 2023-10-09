@@ -16,6 +16,11 @@ public record PlayerLike(int likeReceivedCount,
                          int likeSentCount,
                          @Nullable Instant lastLikeSent) {
 
+    /**
+     * Get whether like is sent recently.
+     *
+     * @return whether like is sent recently
+     */
     public boolean isLikeSentRecently() {
         if (this.lastLikeSent == null) {
             return false;
