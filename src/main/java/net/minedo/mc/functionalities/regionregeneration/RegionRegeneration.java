@@ -41,7 +41,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Objects;
 import java.util.logging.Logger;
 
 /**
@@ -358,9 +357,10 @@ public class RegionRegeneration implements Listener {
         Location location = event.getTo();
         Entity entity = event.getEntity();
 
-        if (this.region.isWithinRegion(Objects.requireNonNull(location))
-                && (entity instanceof Monster || entity instanceof Flying)) {
-            event.setCancelled(true);
+        if (location != null) {
+            if (this.region.isWithinRegion(location) && (entity instanceof Monster || entity instanceof Flying)) {
+                event.setCancelled(true);
+            }
         }
     }
 

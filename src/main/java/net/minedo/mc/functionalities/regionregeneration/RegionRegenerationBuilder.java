@@ -103,6 +103,10 @@ public class RegionRegenerationBuilder extends BukkitRunnable {
         File schematicPath = new File(Directory.SCHEMATIC.getDirectory());
         File[] files = schematicPath.listFiles();
 
+        if (files == null) {
+            return;
+        }
+
         String SPAWN_REGION_SCHEMATIC_REGEX = String.format(
                 "%s-region-\\((-?\\d+),(-?\\d+)\\)\\.%s",
                 this.region.name().toLowerCase(),
@@ -111,7 +115,7 @@ public class RegionRegenerationBuilder extends BukkitRunnable {
 
         Pattern pattern = Pattern.compile(SPAWN_REGION_SCHEMATIC_REGEX);
 
-        for (File file : Objects.requireNonNull(files)) {
+        for (File file : files) {
             Matcher matcher = pattern.matcher(file.getName());
 
             if (matcher.matches()) {
@@ -125,7 +129,11 @@ public class RegionRegenerationBuilder extends BukkitRunnable {
             }
         }
 
-        ClipboardFormat clipboardFormat = ClipboardFormats.findByFile(Objects.requireNonNull(schematicFile));
+        if (schematicFile == null) {
+            return;
+        }
+
+        ClipboardFormat clipboardFormat = ClipboardFormats.findByFile(schematicFile);
 
         try (ClipboardReader clipboardReader = Objects
                 .requireNonNull(clipboardFormat)
