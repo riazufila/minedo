@@ -28,7 +28,6 @@ public final class CustomItemRepository {
         try {
             String query = """
                         SELECT
-                            custom_item.id,
                             custom_item.material,
                             custom_item.display_name,
                             custom_item.color AS display_name_color,
@@ -50,26 +49,16 @@ public final class CustomItemRepository {
 
             HashMap<Integer, String> replacements = new HashMap<>();
             replacements.put(1, String.valueOf(customItemId));
-            Integer id;
-            Material material;
-            String displayName;
-            NamedTextColor displayNameColor;
-            TextDecoration displayNameDecoration;
-            CustomItemLore customItemLore;
-            List<CustomItemEnchantment> customItemEnchantments;
+            Material material = null;
+            String displayName = null;
+            NamedTextColor displayNameColor = null;
+            TextDecoration displayNameDecoration = null;
+            CustomItemLore customItemLore = null;
+            List<CustomItemEnchantment> customItemEnchantments = null;
 
             try (ResultSet resultSet = database.queryWithWhereClause(query, replacements)) {
-                id = null;
-                material = null;
-                displayName = null;
-                displayNameColor = null;
-                displayNameDecoration = null;
-                customItemLore = null;
-                customItemEnchantments = null;
-
                 while (resultSet.next()) {
                     if (resultSet.getRow() == 1) {
-                        id = resultSet.getInt("id");
                         material = Material.valueOf(resultSet.getString("material"));
                         displayName = resultSet.getString("display_name");
                         String unconvertedDisplayNameColor = resultSet.getString("display_name_color");
@@ -123,11 +112,12 @@ public final class CustomItemRepository {
                 }
             }
 
-            if (id == null || displayName == null) {
+            // Determine if custom item exists by checking non-nullable value.
+            if (displayName == null) {
                 return null;
             }
 
-            customItem = new CustomItem(id, material, displayName, displayNameColor, displayNameDecoration,
+            customItem = new CustomItem(material, displayName, displayNameColor, displayNameDecoration,
                     customItemLore, customItemEnchantments);
         } catch (SQLException exception) {
             logger.severe(String.format("Unable to get custom item by id: %s", exception.getMessage()));
