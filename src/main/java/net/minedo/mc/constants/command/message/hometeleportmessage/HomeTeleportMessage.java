@@ -8,7 +8,7 @@ import net.minedo.mc.constants.command.type.hometype.HomeType;
  */
 public enum HomeTeleportMessage {
 
-    SUCCESS_TELEPORT("Teleported to %s!"),
+    SUCCESS_TELEPORT("Teleported to %s."),
     SUCCESS_ADD_HOME("Home added."),
     SUCCESS_UPDATE_HOME("Home updated."),
     SUCCESS_REMOVE_HOME("Home removed."),
@@ -22,7 +22,7 @@ public enum HomeTeleportMessage {
             HomeType.UPDATE.getType(),
             HomeType.REMOVE.getType()
     )),
-    ERROR_MAX_HOME("Unable to add more homes."),
+    ERROR_MAX_HOME("Home count exceeded limit."),
     ERROR_INVALID_NAME(
             "Home name must be less than 20 characters, "
                     + "consists of only letters, digits, and dash, "

@@ -97,7 +97,7 @@ public class Ignore implements CommandExecutor, TabCompleter {
                 );
             } else {
                 player.sendMessage(Component
-                        .text(IgnoreMessage.ERROR_PLAYER_IS_NOT_IN_SERVER.getMessage())
+                        .text(IgnoreMessage.ERROR_UNABLE_TO_FIND_PLAYER.getMessage())
                         .color(NamedTextColor.RED)
                 );
             }
@@ -127,7 +127,7 @@ public class Ignore implements CommandExecutor, TabCompleter {
                 );
             } else {
                 player.sendMessage(Component
-                        .text(IgnoreMessage.ERROR_PLAYER_IS_NOT_IN_SERVER.getMessage())
+                        .text(IgnoreMessage.ERROR_UNABLE_TO_FIND_PLAYER.getMessage())
                         .color(NamedTextColor.RED)
                 );
             }

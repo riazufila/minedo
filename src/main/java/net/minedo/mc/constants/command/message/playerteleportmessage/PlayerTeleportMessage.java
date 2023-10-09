@@ -9,9 +9,9 @@ import net.minedo.mc.constants.command.type.playerteleporttype.PlayerTeleportTyp
 public enum PlayerTeleportMessage {
 
     SUCCESS_REQUEST_REQUESTEE("Waiting for %s to respond.."),
-    SUCCESS_REQUEST_REQUESTER("%s is requesting to teleport.."),
-    SUCCESS_TELEPORT_REQUESTER("Teleported to %s!"),
-    SUCCESS_TELEPORT_REQUESTEE("%s teleported to you!"),
+    SUCCESS_REQUEST_REQUESTER("%s requested to teleport.."),
+    SUCCESS_TELEPORT_REQUESTER("Teleported to %s."),
+    SUCCESS_TELEPORT_REQUESTEE("%s teleported to you."),
     INFO_TELEPORTING_REQUESTEE("Stand still while %s is teleporting.."),
     INFO_TELEPORTING_REQUESTER("Teleporting to %s in 5.."),
     INFO_DISCARD_REQUESTEE("%s discarded the teleport request."),
@@ -25,11 +25,10 @@ public enum PlayerTeleportMessage {
             PlayerTeleportType.DISCARD.getType()
     )),
     ERROR_REQUEST_SENT_OUT("You already have a teleport request sent out."),
-    ERROR_REQUEST_TO_SELF("Unable to teleport to yourself."),
-    ERROR_REQUEST_PLAYER_IS_NOT_IN_SERVER("Player is not in the server."),
-    ERROR_NO_TELEPORT_REQUEST_FROM_ANY_PLAYER("You don't have a teleport request from any players."),
-    ERROR_NO_REQUEST_RECEIVED("You don't have a teleport request from any players."),
-    ERROR_NO_REQUEST_SENT("You didn't send teleport request to any players."),
+    ERROR_REQUEST_TO_SELF("Invalid target."),
+    ERROR_REQUEST_PLAYER_NOT_FOUND("Player not found."),
+    ERROR_NO_REQUEST_RECEIVED("No teleport request from any players."),
+    ERROR_NO_REQUEST_SENT("No teleport request sent out."),
     ERROR_DECLINED_REQUESTER("%s declined your teleport request."),
     ERROR_DECLINED_REQUESTEE("You declined %s request to teleport."),
     ERROR_OFFLINE_DECLINED_REQUESTEE("You declined the request to teleport."),

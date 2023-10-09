@@ -17,7 +17,7 @@ public enum ColorMessage {
             ColorType.CUSTOM.getType(),
             ColorType.REMOVE.getType()
     )),
-    ERROR_NO_PERMISSION("Operation not allowed."),
+    ERROR_NO_PERMISSION("Operation denied."),
     SUCCESS_COLOR_UPDATE("Color settings updated.");
 
     private final String message;

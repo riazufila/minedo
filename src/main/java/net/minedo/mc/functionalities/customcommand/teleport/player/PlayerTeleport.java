@@ -201,7 +201,7 @@ public class PlayerTeleport implements CommandExecutor, Listener, TabCompleter {
                 );
             } else {
                 player.sendMessage(Component
-                        .text(PlayerTeleportMessage.ERROR_REQUEST_PLAYER_IS_NOT_IN_SERVER.getMessage())
+                        .text(PlayerTeleportMessage.ERROR_REQUEST_PLAYER_NOT_FOUND.getMessage())
                         .color(NamedTextColor.RED)
                 );
             }
@@ -215,7 +215,7 @@ public class PlayerTeleport implements CommandExecutor, Listener, TabCompleter {
 
             if (existingTeleportRequestTaskId == null) {
                 player.sendMessage(Component
-                        .text(PlayerTeleportMessage.ERROR_NO_TELEPORT_REQUEST_FROM_ANY_PLAYER.getMessage())
+                        .text(PlayerTeleportMessage.ERROR_NO_REQUEST_RECEIVED.getMessage())
                         .color(NamedTextColor.RED)
                 );
 

@@ -16,7 +16,7 @@ public enum NicknameMessage {
             NicknameType.REMOVE.getType()
     )),
     ERROR_NO_PERMISSION("Operation not permitted."),
-    ERROR_NO_SUCH_NICKNAME("Currently, there's no player with that nickname."),
+    ERROR_NO_SUCH_NICKNAME("Player not found."),
     ERROR_UNABLE_TO_PINPOINT("Unable to reveal the real player's name."),
     ERROR_REVEAL_SELF("Invalid target."),
     ERROR_INVALID_NICKNAME(
@@ -26,7 +26,7 @@ public enum NicknameMessage {
     ),
     INFO_NICKNAME_TAKEN("Nickname taken."),
     SUCCESS_SET_NICKNAME("Nickname updated."),
-    SUCCESS_REVEAL_NICKNAME("%s's real name is %s."),
+    SUCCESS_REVEAL_NICKNAME("%s is %s."),
     SUCCESS_REMOVE_NICKNAME("Nickname removed.");
 
     private final String message;

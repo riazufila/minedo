@@ -90,7 +90,7 @@ public class Message implements CommandExecutor, TabCompleter {
             otherPlayer.sendMessage(component);
         } else {
             player.sendMessage(Component
-                    .text(WhisperMessage.ERROR_PLAYER_OFFLINE.getMessage())
+                    .text(WhisperMessage.ERROR_PLAYER_NOT_FOUND.getMessage())
                     .color(NamedTextColor.RED)
             );
         }

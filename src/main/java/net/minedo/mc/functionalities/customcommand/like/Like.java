@@ -109,7 +109,7 @@ public class Like implements CommandExecutor, TabCompleter {
             );
         } else {
             player.sendMessage(Component
-                    .text(LikeMessage.ERROR_REQUEST_PLAYER_IS_NOT_IN_SERVER.getMessage())
+                    .text(LikeMessage.ERROR_UNABLE_TO_FIND_PLAYER.getMessage())
                     .color(NamedTextColor.RED)
             );
         }

@@ -8,13 +8,13 @@ import net.minedo.mc.constants.command.type.customcommandtype.CustomCommandType;
 public enum IgnoreMessage {
 
     ERROR_USAGE(String.format("Usage: /%s <add | remove> <player>", CustomCommandType.IGNORE.getType())),
-    ERROR_ALREADY_BLOCKED("%s has already been blocked."),
+    ERROR_ALREADY_BLOCKED("%s is already blocked."),
     ERROR_NOT_BLOCKED("%s isn't blocked."),
     ERROR_INTERACT("%s has blocked you."),
     ERROR_TARGET("Invalid target."),
-    ERROR_PLAYER_IS_NOT_IN_SERVER("Player is not in the server."),
-    SUCCESS_REMOVE_BLOCK_PLAYER("%s is removed from the block list."),
-    SUCCESS_ADD_BLOCKED_PLAYER("%s is added to the block list.");
+    ERROR_UNABLE_TO_FIND_PLAYER("Player not found."),
+    SUCCESS_REMOVE_BLOCK_PLAYER("Removed %s from the block list."),
+    SUCCESS_ADD_BLOCKED_PLAYER("Added %s to the block list.");
 
     private final String message;
 
