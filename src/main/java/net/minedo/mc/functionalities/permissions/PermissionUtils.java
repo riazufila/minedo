@@ -27,7 +27,7 @@ public final class PermissionUtils {
      * Get whether player permission is valid for preset color.
      *
      * @param player player
-     * @param color color
+     * @param color  color
      * @return whether player permission is valid for preset color
      */
     public static boolean validatePlayerPermissionForPresetColor(Player player, String color) {
@@ -73,9 +73,9 @@ public final class PermissionUtils {
     /**
      * Get whether player permission is valid for color setting.
      *
-     * @param player player
+     * @param player    player
      * @param colorType color type
-     * @param color color
+     * @param color     color
      * @return whether player permission is valid for color setting
      */
     public static boolean validatePlayerPermissionForColorSettingByColorTypeAndColor(
@@ -119,7 +119,7 @@ public final class PermissionUtils {
     /**
      * Get whether player permission is valid for home count.
      *
-     * @param player player
+     * @param player    player
      * @param homeCount home count
      * @return whether player permission is valid for home count
      */
