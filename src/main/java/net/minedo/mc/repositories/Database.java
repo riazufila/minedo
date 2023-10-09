@@ -1,11 +1,15 @@
 package net.minedo.mc.repositories;
 
 import io.github.cdimascio.dotenv.Dotenv;
+import org.jetbrains.annotations.NotNull;
 
 import java.sql.*;
 import java.util.HashMap;
 import java.util.logging.Logger;
 
+/**
+ * Database object for making calls to database.
+ */
 public class Database {
 
     private final String url;
@@ -14,6 +18,9 @@ public class Database {
     private final Logger logger = Logger.getLogger(this.getClass().getName());
     private Connection connection;
 
+    /**
+     * Initialize database caller.
+     */
     public Database() {
         Dotenv dotenv = Dotenv.load();
 
@@ -22,6 +29,9 @@ public class Database {
         this.password = dotenv.get("DB_PASSWORD");
     }
 
+    /**
+     * Connect to database.
+     */
     public void connect() {
         try {
             this.connection = DriverManager.getConnection(this.url, this.user, this.password);
@@ -30,31 +40,51 @@ public class Database {
         }
     }
 
+    /**
+     * Disconnect from the database.
+     */
     public void disconnect() {
-        if (this.connection != null) {
-            try {
-                this.connection.close();
-            } catch (SQLException e) {
-                this.logger.severe(String.format("Unable to disconnect from the database: %s", e.getMessage()));
-            }
+        if (this.connection == null) {
+            return;
+        }
+
+        try {
+            this.connection.close();
+        } catch (SQLException exception) {
+            this.logger.severe(String.format("Unable to disconnect from the database: %s", exception.getMessage()));
+            throw new RuntimeException(exception);
         }
     }
 
-    public ResultSet query(String sqlQuery) {
-        ResultSet resultSet = null;
+    /**
+     * Query without conditions.
+     *
+     * @param sqlQuery sql statement
+     * @return result set
+     */
+    public @NotNull ResultSet query(String sqlQuery) {
+        ResultSet resultSet;
 
         try {
             Statement statement = this.connection.createStatement();
             resultSet = statement.executeQuery(sqlQuery);
-        } catch (SQLException e) {
-            this.logger.severe(String.format("Unable to query the database: %s", e.getMessage()));
+        } catch (SQLException exception) {
+            this.logger.severe(String.format("Unable to query the database: %s", exception.getMessage()));
+            throw new RuntimeException(exception);
         }
 
         return resultSet;
     }
 
-    public ResultSet queryWithWhereClause(String sqlQuery, HashMap<Integer, String> replacements) {
-        ResultSet resultSet = null;
+    /**
+     * Query with conditions.
+     *
+     * @param sqlQuery     sql statement
+     * @param replacements conditions
+     * @return result set
+     */
+    public @NotNull ResultSet queryWithWhereClause(String sqlQuery, HashMap<Integer, String> replacements) {
+        ResultSet resultSet;
 
         try {
             PreparedStatement preparedStatement = this.connection.prepareStatement(sqlQuery);
@@ -64,15 +94,22 @@ public class Database {
             }
 
             resultSet = preparedStatement.executeQuery();
-        } catch (SQLException e) {
+        } catch (SQLException exception) {
             this.logger.severe(
-                    String.format("Unable to query with conditions from the database: %s", e.getMessage())
+                    String.format("Unable to query with conditions from the database: %s", exception.getMessage())
             );
+            throw new RuntimeException(exception);
         }
 
         return resultSet;
     }
 
+    /**
+     * Execute statement with conditions.
+     *
+     * @param sqlQuery     sql statement
+     * @param replacements conditions
+     */
     public void executeStatement(String sqlQuery, HashMap<Integer, ?> replacements) {
         try {
             PreparedStatement preparedStatement = this.connection.prepareStatement(sqlQuery);
@@ -89,10 +126,11 @@ public class Database {
             }
 
             preparedStatement.execute();
-        } catch (SQLException e) {
+        } catch (SQLException exception) {
             this.logger.severe(
-                    String.format("Unable to execute statement in the database: %s", e.getMessage())
+                    String.format("Unable to execute statement in the database: %s", exception.getMessage())
             );
+            throw new RuntimeException(exception);
         }
     }
 

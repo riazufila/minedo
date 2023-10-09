@@ -9,12 +9,12 @@ import java.util.Random;
 /**
  * Region regenerates upon block is broken after a set amount of time.
  *
- * @param name name of region
+ * @param name      name of region
  * @param worldType world where the region is in
- * @param minX minimum x coordinate
- * @param maxX maximum x coordinate
- * @param minZ minimum z coordinate
- * @param maxZ maximum z coordinate
+ * @param minX      minimum x coordinate
+ * @param maxX      maximum x coordinate
+ * @param minZ      minimum z coordinate
+ * @param maxZ      maximum z coordinate
  */
 public record Region(@NotNull String name,
                      @NotNull World worldType,
