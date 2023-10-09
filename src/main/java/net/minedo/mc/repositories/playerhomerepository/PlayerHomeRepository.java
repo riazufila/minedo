@@ -6,6 +6,7 @@ import net.minedo.mc.repositories.Database;
 import net.minedo.mc.repositories.playerprofilerepository.PlayerProfileRepository;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -44,12 +45,18 @@ public final class PlayerHomeRepository {
             try (ResultSet resultSet = database.queryWithWhereClause(query, replacements)) {
                 if (resultSet.next()) {
                     String homeName = resultSet.getString("name");
-                    String world = resultSet.getString("world_type");
+                    String worldType = resultSet.getString("world_type");
                     double coordinateX = resultSet.getDouble("coordinate_x");
                     double coordinateY = resultSet.getDouble("coordinate_y");
                     double coordinateZ = resultSet.getDouble("coordinate_z");
 
-                    playerHome = new PlayerHome(homeName, Bukkit.getWorld(world), coordinateX, coordinateY, coordinateZ);
+                    World world = Bukkit.getWorld(worldType);
+
+                    if (world == null) {
+                        throw new RuntimeException("World is invalid.");
+                    }
+
+                    playerHome = new PlayerHome(homeName, world, coordinateX, coordinateY, coordinateZ);
                 }
             }
         } catch (SQLException error) {
@@ -85,13 +92,18 @@ public final class PlayerHomeRepository {
             try (ResultSet resultSet = database.queryWithWhereClause(query, replacements)) {
                 while (resultSet.next()) {
                     String homeName = resultSet.getString("name");
-                    String world = resultSet.getString("world_type");
+                    String worldType = resultSet.getString("world_type");
                     double coordinateX = resultSet.getDouble("coordinate_x");
                     double coordinateY = resultSet.getDouble("coordinate_y");
                     double coordinateZ = resultSet.getDouble("coordinate_z");
 
-                    PlayerHome playerHome = new PlayerHome(homeName, Bukkit.getWorld(world),
-                            coordinateX, coordinateY, coordinateZ);
+                    World world = Bukkit.getWorld(worldType);
+
+                    if (world == null) {
+                        throw new RuntimeException("World is invalid");
+                    }
+
+                    PlayerHome playerHome = new PlayerHome(homeName, world, coordinateX, coordinateY, coordinateZ);
                     playerHomeList.add(playerHome);
                 }
             }

@@ -1,9 +1,20 @@
 package net.minedo.mc.models.playerlike;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.time.Duration;
 import java.time.Instant;
 
-public record PlayerLike(int likeReceivedCount, int likeSentCount, Instant lastLikeSent) {
+/**
+ * Statistics for player's likes.
+ *
+ * @param likeReceivedCount total likes received
+ * @param likeSentCount     total likes sent
+ * @param lastLikeSent      last like sent
+ */
+public record PlayerLike(int likeReceivedCount,
+                         int likeSentCount,
+                         @Nullable Instant lastLikeSent) {
 
     public boolean isLikeSentRecently() {
         if (this.lastLikeSent == null) {
