@@ -3,6 +3,8 @@ package net.minedo.mc.repositories.playerprofilerepository;
 import net.minedo.mc.models.playerprofile.PlayerProfile;
 import net.minedo.mc.repositories.Database;
 import net.minedo.mc.repositories.DatabaseUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,10 +14,18 @@ import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
 
+/**
+ * Player profile repository.
+ */
 public final class PlayerProfileRepository {
 
     private static final Logger logger = Logger.getLogger(PlayerProfileRepository.class.getName());
 
+    /**
+     * Insert new player profile.
+     *
+     * @param playerUuid player UUID
+     */
     public static void insertNewPlayerProfile(UUID playerUuid) {
         Database database = new Database();
         database.connect();
@@ -31,7 +41,13 @@ public final class PlayerProfileRepository {
         database.disconnect();
     }
 
-    public static PlayerProfile getPlayerProfileByUuid(UUID playerUuid) {
+    /**
+     * Get player profile.
+     *
+     * @param playerUuid player UUID
+     * @return player profile
+     */
+    public static @NotNull PlayerProfile getPlayerProfileByUuid(UUID playerUuid) {
         Database database = new Database();
         database.connect();
 
@@ -60,10 +76,20 @@ public final class PlayerProfileRepository {
             database.disconnect();
         }
 
+        if (playerProfile == null) {
+            throw new IllegalStateException("PlayerProfile cannot be null.");
+        }
+
         return playerProfile;
     }
 
-    public static PlayerProfile getPlayerProfileByNickname(String playerName) {
+    /**
+     * Get player profile.
+     *
+     * @param playerName player nickname
+     * @return player profile
+     */
+    public static @Nullable PlayerProfile getPlayerProfileByNickname(String playerName) {
         Database database = new Database();
         database.connect();
 
@@ -95,6 +121,12 @@ public final class PlayerProfileRepository {
         return playerProfile;
     }
 
+    /**
+     * Update player nickname.
+     *
+     * @param playerUuid player UUID
+     * @param nickname   player nickname
+     */
     public static void updatePlayerNickname(UUID playerUuid, String nickname) {
         Database database = new Database();
         database.connect();
@@ -118,14 +150,14 @@ public final class PlayerProfileRepository {
     /**
      * Get all players' nicknames aside from oneself.
      *
-     * @param playerUuid UUID of player to exclude from results.
-     * @return List of nicknames.
+     * @param playerUuid UUID of player to exclude from results
+     * @return List of nicknames
      */
-    public static List<String> getOtherPlayersNickname(UUID playerUuid) {
+    public static @Nullable List<String> getOtherPlayersNickname(UUID playerUuid) {
         Database database = new Database();
         database.connect();
 
-        List<String> otherPlayersNickname = new ArrayList<>();
+        List<String> otherPlayersNickname = null;
 
         try {
             String query = """
@@ -143,6 +175,10 @@ public final class PlayerProfileRepository {
 
             try (ResultSet resultSet = database.queryWithWhereClause(query, replacements)) {
                 while (resultSet.next()) {
+                    if (otherPlayersNickname == null) {
+                        otherPlayersNickname = new ArrayList<>();
+                    }
+
                     String nickname = resultSet.getString("nickname");
                     otherPlayersNickname.add(nickname);
                 }
@@ -159,15 +195,15 @@ public final class PlayerProfileRepository {
     /**
      * Get all players' nicknames aside from oneself within a pool of players.
      *
-     * @param playerUuid         UUID of player to exclude from results.
-     * @param otherOnlinePlayers List of UUID of players to search within.
-     * @return List of nicknames.
+     * @param playerUuid         UUID of player to exclude from results
+     * @param otherOnlinePlayers List of UUID of players to search within
+     * @return List of nicknames
      */
-    public static List<String> getOtherPlayersNickname(UUID playerUuid, List<UUID> otherOnlinePlayers) {
+    public static @Nullable List<String> getOtherPlayersNickname(UUID playerUuid, List<UUID> otherOnlinePlayers) {
         Database database = new Database();
         database.connect();
 
-        List<String> otherPlayersNickname = new ArrayList<>();
+        List<String> otherPlayersNickname = null;
 
         try {
             String query = String.format("""
@@ -193,6 +229,10 @@ public final class PlayerProfileRepository {
 
             try (ResultSet resultSet = database.queryWithWhereClause(query, replacements)) {
                 while (resultSet.next()) {
+                    if (otherPlayersNickname == null) {
+                        otherPlayersNickname = new ArrayList<>();
+                    }
+
                     String nickname = resultSet.getString("nickname");
                     otherPlayersNickname.add(nickname);
                 }

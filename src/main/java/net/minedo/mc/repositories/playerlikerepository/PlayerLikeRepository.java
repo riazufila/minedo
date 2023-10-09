@@ -2,6 +2,7 @@ package net.minedo.mc.repositories.playerlikerepository;
 
 import net.minedo.mc.models.playerlike.PlayerLike;
 import net.minedo.mc.repositories.Database;
+import org.jetbrains.annotations.NotNull;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -10,10 +11,18 @@ import java.util.HashMap;
 import java.util.UUID;
 import java.util.logging.Logger;
 
+/**
+ * Player like repository.
+ */
 public final class PlayerLikeRepository {
 
     private static final Logger logger = Logger.getLogger(PlayerLikeRepository.class.getName());
 
+    /**
+     * Insert new player like statistics.
+     *
+     * @param playerUuid player UUID
+     */
     public static void insertNewPlayerLike(UUID playerUuid) {
         Database database = new Database();
         database.connect();
@@ -29,6 +38,12 @@ public final class PlayerLikeRepository {
         database.disconnect();
     }
 
+    /**
+     * Update player like statistics.
+     *
+     * @param playerUuid player UUID
+     * @param playerLike player like statistics
+     */
     public static void updatePlayerLike(UUID playerUuid, PlayerLike playerLike) {
         Database database = new Database();
         database.connect();
@@ -57,7 +72,13 @@ public final class PlayerLikeRepository {
         database.disconnect();
     }
 
-    public static PlayerLike getPlayerLikeByPlayerUuid(UUID playerUuid) {
+    /**
+     * Get player like statistics.
+     *
+     * @param playerUuid player UUID
+     * @return player like statistics
+     */
+    public static @NotNull PlayerLike getPlayerLikeByPlayerUuid(UUID playerUuid) {
         Database database = new Database();
         database.connect();
 
@@ -88,6 +109,10 @@ public final class PlayerLikeRepository {
             logger.severe(String.format("Unable to get player color by UUID: %s", error.getMessage()));
         } finally {
             database.disconnect();
+        }
+
+        if (playerLike == null) {
+            throw new IllegalStateException("PlayerLike cannot be null.");
         }
 
         return playerLike;

@@ -2,6 +2,7 @@ package net.minedo.mc.repositories.playercolorrepository;
 
 import net.minedo.mc.models.playercolor.PlayerColor;
 import net.minedo.mc.repositories.Database;
+import org.jetbrains.annotations.NotNull;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -9,10 +10,19 @@ import java.util.HashMap;
 import java.util.UUID;
 import java.util.logging.Logger;
 
+/**
+ * Player color repository.
+ */
 public final class PlayerColorRepository {
 
     private static final Logger logger = Logger.getLogger(PlayerColorRepository.class.getName());
 
+    /**
+     * Update player color settings.
+     *
+     * @param playerUuid  player UUID
+     * @param playerColor color settings
+     */
     public static void updatePlayerColor(UUID playerUuid, PlayerColor playerColor) {
         Database database = new Database();
         database.connect();
@@ -45,6 +55,11 @@ public final class PlayerColorRepository {
         database.disconnect();
     }
 
+    /**
+     * Insert new player color.
+     *
+     * @param playerUuid player UUID
+     */
     public static void insertNewPlayerColor(UUID playerUuid) {
         Database database = new Database();
         database.connect();
@@ -60,7 +75,13 @@ public final class PlayerColorRepository {
         database.disconnect();
     }
 
-    public static PlayerColor getPlayerColorByPlayerUuid(UUID playerUuid) {
+    /**
+     * Get player color settings.
+     *
+     * @param playerUuid player UUID
+     * @return color settings
+     */
+    public static @NotNull PlayerColor getPlayerColorByPlayerUuid(UUID playerUuid) {
         Database database = new Database();
         database.connect();
 
@@ -93,6 +114,10 @@ public final class PlayerColorRepository {
             logger.severe(String.format("Unable to get player color by UUID: %s", error.getMessage()));
         } finally {
             database.disconnect();
+        }
+
+        if (playerColor == null) {
+            throw new IllegalStateException("PlayerColor cannot be null.");
         }
 
         return playerColor;

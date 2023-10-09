@@ -7,7 +7,6 @@ import net.minedo.mc.models.customitemenchantment.CustomItemEnchantment;
 import net.minedo.mc.models.customitemlore.CustomItemLore;
 import net.minedo.mc.repositories.Database;
 import org.bukkit.Material;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.sql.ResultSet;

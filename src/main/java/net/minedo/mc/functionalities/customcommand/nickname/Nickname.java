@@ -102,6 +102,10 @@ public class Nickname implements CommandExecutor, TabCompleter, Listener {
                     .map(Player::getName)
                     .toList();
 
+            if (otherPlayersNickname == null) {
+                otherPlayersNickname = new ArrayList<>();
+            }
+
             List<String> realNamesAndNicknames = Stream
                     .concat(otherPlayersNickname.stream().map(String::toUpperCase),
                             otherPlayersRealName.stream().map(String::toUpperCase))
@@ -216,7 +220,9 @@ public class Nickname implements CommandExecutor, TabCompleter, Listener {
                         onlinePlayers.stream().map(Player::getUniqueId).toList()
                 );
 
-                completions.addAll(otherPlayersNickname);
+                if (otherPlayersNickname != null) {
+                    completions.addAll(otherPlayersNickname);
+                }
             }
         }
 

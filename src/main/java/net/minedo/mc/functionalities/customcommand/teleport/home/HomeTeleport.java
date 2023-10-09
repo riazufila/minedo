@@ -138,6 +138,11 @@ public class HomeTeleport implements CommandExecutor, Listener, TabCompleter {
             );
         } else if (homeType.equals(HomeType.ADD.getType())) {
             List<PlayerHome> homeList = PlayerHomeRepository.getPlayerHomeList(player.getUniqueId());
+
+            if (homeList == null) {
+                homeList = new ArrayList<>();
+            }
+
             int homeCount = homeList.size();
             boolean isAllowed = PermissionUtils.validatePlayerPermissionForHomeCount(player, homeCount);
             boolean isHomeNameUnique = homeList.stream().noneMatch(home -> Objects.equals(home.name(), homeName));
@@ -210,13 +215,16 @@ public class HomeTeleport implements CommandExecutor, Listener, TabCompleter {
                 || homeType.equals(HomeType.REMOVE.getType())
                 || homeType.equals(HomeType.UPDATE.getType()))
         ) {
-            List<String> homes = PlayerHomeRepository
-                    .getPlayerHomeList(player.getUniqueId())
-                    .stream()
-                    .map(PlayerHome::name)
-                    .toList();
+            List<PlayerHome> playerHomeList = PlayerHomeRepository.getPlayerHomeList(player.getUniqueId());
 
-            completions.addAll(homes);
+            if (playerHomeList != null) {
+                List<String> homes = playerHomeList
+                        .stream()
+                        .map(PlayerHome::name)
+                        .toList();
+
+                completions.addAll(homes);
+            }
         }
 
         return completions;
