@@ -3,6 +3,7 @@ package net.minedo.mc.repositories.regionrepository;
 import net.minedo.mc.models.region.Region;
 import net.minedo.mc.repositories.Database;
 import org.bukkit.Bukkit;
+import org.bukkit.World;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -28,13 +29,19 @@ public final class RegionRepository {
             try (ResultSet resultSet = database.query(query)) {
                 while (resultSet.next()) {
                     String name = resultSet.getString("name");
-                    String world = resultSet.getString("world_type");
+                    String worldType = resultSet.getString("world_type");
                     int minX = resultSet.getInt("minX");
                     int maxX = resultSet.getInt("maxX");
                     int minZ = resultSet.getInt("minZ");
                     int maxZ = resultSet.getInt("maxZ");
 
-                    Region region = new Region(name, Bukkit.getWorld(world), minX, maxX, minZ, maxZ);
+                    World world = Bukkit.getWorld(worldType);
+
+                    if (world == null) {
+                        throw new RuntimeException("World is invalid");
+                    }
+
+                    Region region = new Region(name, world, minX, maxX, minZ, maxZ);
                     regions.add(region);
                 }
             }
