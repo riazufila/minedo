@@ -8,6 +8,7 @@ import net.minedo.mc.models.customitemlore.CustomItemLore;
 import net.minedo.mc.repositories.Database;
 import org.bukkit.Material;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -26,10 +27,10 @@ public final class CustomItemRepository {
     /**
      * Get custom item by ID.
      *
-     * @param customItemId Custom item ID
+     * @param customItemId custom item ID
      * @return custom item
      */
-    public static @NotNull CustomItem getCustomItemById(int customItemId) {
+    public static @Nullable CustomItem getCustomItemById(int customItemId) {
         Database database = new Database();
         database.connect();
 
