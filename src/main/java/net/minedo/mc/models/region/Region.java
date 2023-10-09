@@ -56,4 +56,26 @@ public record Region(@NotNull String name,
         return new Location(worldType, coordinateX, coordinateY, coordinateZ);
     }
 
+    /**
+     * Get whether location is within region.
+     *
+     * @param location location
+     * @return whether location is within region
+     */
+    public boolean isWithinRegion(Location location) {
+        World world = this.worldType();
+
+        if (world != location.getWorld()) {
+            return false;
+        }
+
+        int locationBlockX = location.getBlockX();
+        int locationBlockZ = location.getBlockZ();
+
+        return locationBlockX >= this.minX()
+                && locationBlockX <= this.maxX()
+                && locationBlockZ >= this.minZ()
+                && locationBlockZ <= this.maxZ();
+    }
+
 }

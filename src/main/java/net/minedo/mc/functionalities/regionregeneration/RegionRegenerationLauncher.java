@@ -14,12 +14,22 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashMap;
 
+/**
+ * Launch living entities above when region is about to be built.
+ */
 public class RegionRegenerationLauncher extends BukkitRunnable {
 
     private final Chunk chunk;
     private final Region region;
     private final HashMap<String, Integer> restoringChunks;
 
+    /**
+     * Initialize launcher.
+     *
+     * @param chunk           chunk
+     * @param region          region
+     * @param restoringChunks chunks that are restoring
+     */
     public RegionRegenerationLauncher(
             Chunk chunk, Region region, HashMap<String, Integer> restoringChunks
     ) {
@@ -28,6 +38,12 @@ public class RegionRegenerationLauncher extends BukkitRunnable {
         this.restoringChunks = restoringChunks;
     }
 
+    /**
+     * Get whether living entity is within launching ground.
+     *
+     * @param livingEntity living entity
+     * @return whether living entity is within launching ground
+     */
     private boolean isLivingEntityWithinLaunchingGround(LivingEntity livingEntity) {
         Location location = livingEntity.getLocation();
         int LAUNCHING_GROUND_MAX_HEIGHT = 5;
@@ -39,7 +55,10 @@ public class RegionRegenerationLauncher extends BukkitRunnable {
         return location.getBlockY() - highestBlockAtY <= LAUNCHING_GROUND_MAX_HEIGHT;
     }
 
-    private void launchPlayersAbove() {
+    /**
+     * Launch living entities above.
+     */
+    private void launchLivingEntitiesAbove() {
         Entity[] entities = this.chunk.getEntities();
 
         for (Entity entity : entities) {
@@ -75,7 +94,7 @@ public class RegionRegenerationLauncher extends BukkitRunnable {
 
     @Override
     public void run() {
-        this.launchPlayersAbove();
+        this.launchLivingEntitiesAbove();
 
         // Run a scheduler to build region after one second of players being launched.
         RegionRegenerationBuilder builder = new RegionRegenerationBuilder(

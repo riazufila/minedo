@@ -35,6 +35,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.util.BoundingBox;
 import org.bukkit.util.Vector;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -43,17 +44,32 @@ import java.util.HashMap;
 import java.util.Objects;
 import java.util.logging.Logger;
 
+/**
+ * Region chunk regeneration.
+ */
 public class RegionRegeneration implements Listener {
 
     private final Region region;
     private final Logger logger = Logger.getLogger(this.getClass().getName());
     private final HashMap<String, Integer> restoringChunks = new HashMap<>();
 
+    /**
+     * Initialize region regeneration.
+     *
+     * @param region region
+     */
     public RegionRegeneration(Region region) {
         this.region = region;
     }
 
-    private File getFile(int chunkX, int chunkZ) {
+    /**
+     * Get file based on chunk info.
+     *
+     * @param chunkX chunk x
+     * @param chunkZ chunk z
+     * @return file
+     */
+    private @NotNull File getFile(int chunkX, int chunkZ) {
         String chunkCoordinate = String.format("%d,%d", chunkX, chunkZ);
 
         String fileName = String.format(
@@ -66,6 +82,14 @@ public class RegionRegeneration implements Listener {
         return new File(Directory.SCHEMATIC.getDirectory() + fileName);
     }
 
+    /**
+     * Iterates through a minimum and maximum location to get the chunks.
+     *
+     * @param world          world
+     * @param chunkProcessor final process to run through after chunks info is attained
+     * @param isGetter       whether process is for snapshot getter or setter
+     * @return whether process fails or not
+     */
     private boolean processChunks(World world, ChunkProcessor chunkProcessor, boolean isGetter) {
         int CHUNK_SIZE = (int) Common.CHUNK_SIZE.getValue();
         int minX = this.region.minX();
@@ -108,6 +132,12 @@ public class RegionRegeneration implements Listener {
         return true;
     }
 
+    /**
+     * Get whether snapshot file exists.
+     *
+     * @param params params
+     * @return whether snapshot file exists
+     */
     private boolean checkSnapshotFileExists(Object[] params) {
         int chunkX = (int) params[0];
         int chunkZ = (int) params[1];
@@ -125,6 +155,12 @@ public class RegionRegeneration implements Listener {
         return true;
     }
 
+    /**
+     * Create snapshot file.
+     *
+     * @param params params
+     * @return whether snapshot file is created
+     */
     private boolean createSnapshotFile(Object[] params) {
         World world = (World) params[0];
         int chunkMinX = (int) params[1];
@@ -180,17 +216,30 @@ public class RegionRegeneration implements Listener {
         return true;
     }
 
+    /**
+     * Get region snapshot.
+     *
+     * @return whether region has a snapshot
+     */
     public boolean getRegionSnapshot() {
         this.logger.info(String.format("Getting %s region snapshot.", this.region.name()));
 
         return processChunks(this.region.worldType(), this::checkSnapshotFileExists, true);
     }
 
+    /**
+     * Set region snapshot.
+     */
     public void setRegionSnapshot() {
         this.logger.info(String.format("Setting %s region snapshot.", this.region.name()));
         processChunks(this.region.worldType(), this::createSnapshotFile, false);
     }
 
+    /**
+     * Regenerate a region's chunk.
+     *
+     * @param chunk chunk
+     */
     public void restoreRegionChunk(Chunk chunk) {
         String restoringChunkKey = String.format("(%d,%d)", chunk.getX(), chunk.getZ());
 
@@ -212,32 +261,21 @@ public class RegionRegeneration implements Listener {
         restoringChunks.put(restoringChunkKey, restoringTaskId);
     }
 
-    private boolean isWithinRegion(Location location) {
-        World world = this.region.worldType();
-
-        if (world != location.getWorld()) {
-            return false;
-        }
-
-        int locationBlockX = location.getBlockX();
-        int locationBlockZ = location.getBlockZ();
-
-        return locationBlockX >= this.region.minX()
-                && locationBlockX <= this.region.maxX()
-                && locationBlockZ >= this.region.minZ()
-                && locationBlockZ <= this.region.maxZ();
-    }
-
+    /**
+     * Regenerate.
+     *
+     * @param block block
+     */
     private void regenerate(Block block) {
         Chunk chunk = block.getChunk();
 
         // Check if block destroyed is in region.
-        if (!isWithinRegion(block.getLocation())) {
+        if (!this.region.isWithinRegion(block.getLocation())) {
             return;
         }
 
         // Restore chunk.
-        restoreRegionChunk(chunk);
+        this.restoreRegionChunk(chunk);
     }
 
     @EventHandler
@@ -259,7 +297,7 @@ public class RegionRegeneration implements Listener {
     public void onPlayerDeath(PlayerDeathEvent event) {
         Block block = event.getEntity().getLocation().getBlock();
 
-        if (isWithinRegion(block.getLocation())) {
+        if (this.region.isWithinRegion(block.getLocation())) {
             // Keep inventory.
             event.setKeepInventory(true);
             event.getDrops().clear();
@@ -270,7 +308,15 @@ public class RegionRegeneration implements Listener {
         }
     }
 
-    public void spawnParticleOnEntity(Entity entity, Particle particle, double density, int count) {
+    /**
+     * Spawn particles on an entity.
+     *
+     * @param entity   entity
+     * @param particle particle as in {@link Particle#values()}
+     * @param density  particles density
+     * @param count    particles count
+     */
+    private void spawnParticleOnEntity(Entity entity, Particle particle, double density, int count) {
         BoundingBox boundingBox = entity.getBoundingBox();
         World world = entity.getWorld();
 
@@ -295,7 +341,7 @@ public class RegionRegeneration implements Listener {
         Location location = event.getTo();
         LivingEntity entity = event.getEntity();
 
-        if (isWithinRegion(location)
+        if (this.region.isWithinRegion(location)
                 && (entity instanceof Monster || entity instanceof Flying)) {
             Location regionCenter = this.region.getCenter();
             Vector awayFromCenter = location.toVector().subtract(regionCenter.toVector()).normalize();
@@ -312,7 +358,7 @@ public class RegionRegeneration implements Listener {
         Location location = event.getTo();
         Entity entity = event.getEntity();
 
-        if (isWithinRegion(Objects.requireNonNull(location))
+        if (this.region.isWithinRegion(Objects.requireNonNull(location))
                 && (entity instanceof Monster || entity instanceof Flying)) {
             event.setCancelled(true);
         }
@@ -322,7 +368,7 @@ public class RegionRegeneration implements Listener {
     public void onPlayerRespawn(PlayerRespawnEvent event) {
         Location location = event.getPlayer().getLocation();
 
-        if (isWithinRegion(location)) {
+        if (this.region.isWithinRegion(location)) {
             event.setRespawnLocation(this.region.getRandomLocation());
         }
     }
@@ -332,7 +378,7 @@ public class RegionRegeneration implements Listener {
         Location location = event.getLocation();
         Entity entity = event.getEntity();
 
-        if (isWithinRegion(location)
+        if (this.region.isWithinRegion(location)
                 && (entity instanceof Monster || entity instanceof Flying)) {
             event.setCancelled(true);
         }
