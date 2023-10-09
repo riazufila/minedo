@@ -1,5 +1,8 @@
 package net.minedo.mc.constants.customenchantment.type;
 
+/**
+ * Custom enchantment types.
+ */
 public enum CustomEnchantmentType {
 
     LIGHTNING,

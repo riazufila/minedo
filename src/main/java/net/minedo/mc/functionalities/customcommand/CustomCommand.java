@@ -53,7 +53,7 @@ public class CustomCommand {
             for (Region region : regions) {
                 RegionTeleport regionTeleport = new RegionTeleport(region, regions, globalTeleportingPlayers);
                 this.setCommandExecutor(
-                        instance.getCommand(CustomCommandType.REGION_TELEPORT.getMessage()),
+                        instance.getCommand(CustomCommandType.REGION_TELEPORT.getType()),
                         regionTeleport
                 );
                 pluginManager.registerEvents(regionTeleport, instance);
@@ -62,32 +62,32 @@ public class CustomCommand {
 
         // Player teleport.
         PlayerTeleport playerTeleport = new PlayerTeleport(globalTeleportingPlayers);
-        this.setCommandExecutor(instance.getCommand(CustomCommandType.PLAYER_TELEPORT.getMessage()), playerTeleport);
+        this.setCommandExecutor(instance.getCommand(CustomCommandType.PLAYER_TELEPORT.getType()), playerTeleport);
         pluginManager.registerEvents(playerTeleport, instance);
 
         // Home teleport.
         HomeTeleport homeTeleport = new HomeTeleport(globalTeleportingPlayers);
-        this.setCommandExecutor(instance.getCommand(CustomCommandType.HOME_TELEPORT.getMessage()), homeTeleport);
+        this.setCommandExecutor(instance.getCommand(CustomCommandType.HOME_TELEPORT.getType()), homeTeleport);
         pluginManager.registerEvents(homeTeleport, instance);
 
         // Narrate.
-        this.setCommandExecutor(instance.getCommand(CustomCommandType.NARRATE.getMessage()), new Narrate());
+        this.setCommandExecutor(instance.getCommand(CustomCommandType.NARRATE.getType()), new Narrate());
 
         // Like.
-        this.setCommandExecutor(instance.getCommand(CustomCommandType.LIKE.getMessage()), new Like());
+        this.setCommandExecutor(instance.getCommand(CustomCommandType.LIKE.getType()), new Like());
 
         // Ignore.
-        this.setCommandExecutor(instance.getCommand(CustomCommandType.IGNORE.getMessage()), new Ignore());
+        this.setCommandExecutor(instance.getCommand(CustomCommandType.IGNORE.getType()), new Ignore());
 
         // Message.
-        this.setCommandExecutor(instance.getCommand(CustomCommandType.MESSAGE.getMessage()), new Message());
+        this.setCommandExecutor(instance.getCommand(CustomCommandType.MESSAGE.getType()), new Message());
 
         // Color.
-        this.setCommandExecutor(instance.getCommand(CustomCommandType.COLOR.getMessage()), new Color());
+        this.setCommandExecutor(instance.getCommand(CustomCommandType.COLOR.getType()), new Color());
 
         // Nickname.
         Nickname nickname = new Nickname();
-        this.setCommandExecutor(instance.getCommand(CustomCommandType.NICKNAME.getMessage()), nickname);
+        this.setCommandExecutor(instance.getCommand(CustomCommandType.NICKNAME.getType()), nickname);
         pluginManager.registerEvents(nickname, instance);
     }
 

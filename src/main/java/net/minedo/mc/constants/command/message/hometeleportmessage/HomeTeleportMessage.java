@@ -3,6 +3,9 @@ package net.minedo.mc.constants.command.message.hometeleportmessage;
 import net.minedo.mc.constants.command.type.customcommandtype.CustomCommandType;
 import net.minedo.mc.constants.command.type.hometype.HomeType;
 
+/**
+ * Home teleport texts.
+ */
 public enum HomeTeleportMessage {
 
     SUCCESS_TELEPORT("Teleported to %s!"),
@@ -13,7 +16,7 @@ public enum HomeTeleportMessage {
     INFO_COUNTDOWN("%s.."),
     ERROR_USAGE(String.format(
             "/%s <%s | %s | %s | %s> <home>",
-            CustomCommandType.HOME_TELEPORT.getMessage(),
+            CustomCommandType.HOME_TELEPORT.getType(),
             HomeType.TELEPORT.getType(),
             HomeType.ADD.getType(),
             HomeType.UPDATE.getType(),
@@ -31,10 +34,20 @@ public enum HomeTeleportMessage {
 
     private final String message;
 
+    /**
+     * Home teleport text.
+     *
+     * @param message text
+     */
     HomeTeleportMessage(String message) {
         this.message = message;
     }
 
+    /**
+     * Get text.
+     *
+     * @return text
+     */
     public String getMessage() {
         return message;
     }

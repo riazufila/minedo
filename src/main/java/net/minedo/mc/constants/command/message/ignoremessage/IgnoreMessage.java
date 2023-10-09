@@ -2,9 +2,12 @@ package net.minedo.mc.constants.command.message.ignoremessage;
 
 import net.minedo.mc.constants.command.type.customcommandtype.CustomCommandType;
 
+/**
+ * Ignore command texts.
+ */
 public enum IgnoreMessage {
 
-    ERROR_USAGE(String.format("Usage: /%s <add | remove> <player>", CustomCommandType.IGNORE.getMessage())),
+    ERROR_USAGE(String.format("Usage: /%s <add | remove> <player>", CustomCommandType.IGNORE.getType())),
     ERROR_ALREADY_BLOCKED("%s has already been blocked."),
     ERROR_NOT_BLOCKED("%s isn't blocked."),
     ERROR_INTERACT("%s has blocked you."),
@@ -15,10 +18,20 @@ public enum IgnoreMessage {
 
     private final String message;
 
+    /**
+     * Ignore command text.
+     *
+     * @param message text
+     */
     IgnoreMessage(String message) {
         this.message = message;
     }
 
+    /**
+     * Get text.
+     *
+     * @return text
+     */
     public String getMessage() {
         return message;
     }

@@ -3,11 +3,14 @@ package net.minedo.mc.constants.command.message.nicknamemessage;
 import net.minedo.mc.constants.command.type.customcommandtype.CustomCommandType;
 import net.minedo.mc.constants.command.type.nicknametype.NicknameType;
 
+/**
+ * Nickname command texts.
+ */
 public enum NicknameMessage {
 
     ERROR_USAGE(String.format(
             "Usage: /%s <%s <nickname> | %s <nickname> | %s>",
-            CustomCommandType.NICKNAME.getMessage(),
+            CustomCommandType.NICKNAME.getType(),
             NicknameType.SET.getType(),
             NicknameType.REVEAL.getType(),
             NicknameType.REMOVE.getType()
@@ -26,10 +29,20 @@ public enum NicknameMessage {
 
     private final String message;
 
+    /**
+     * Nickname command text.
+     *
+     * @param message text
+     */
     NicknameMessage(String message) {
         this.message = message;
     }
 
+    /**
+     * Get text.
+     *
+     * @return text
+     */
     public String getMessage() {
         return message;
     }

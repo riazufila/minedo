@@ -3,6 +3,9 @@ package net.minedo.mc.constants.command.message.playerteleportmessage;
 import net.minedo.mc.constants.command.type.customcommandtype.CustomCommandType;
 import net.minedo.mc.constants.command.type.playerteleporttype.PlayerTeleportType;
 
+/**
+ * Player teleport command texts.
+ */
 public enum PlayerTeleportMessage {
 
     SUCCESS_REQUEST_REQUESTEE("Waiting for %s to respond.."),
@@ -15,7 +18,7 @@ public enum PlayerTeleportMessage {
     INFO_DISCARD_REQUESTER("You discarded the teleport request."),
     INFO_COUNTDOWN("%s.."),
     ERROR_USAGE(String.format("Usage: /%s <%s <player> | %s | %s | %s>",
-            CustomCommandType.PLAYER_TELEPORT.getMessage(),
+            CustomCommandType.PLAYER_TELEPORT.getType(),
             PlayerTeleportType.REQUEST.getType(),
             PlayerTeleportType.ACCEPT.getType(),
             PlayerTeleportType.DECLINE.getType(),
@@ -37,10 +40,20 @@ public enum PlayerTeleportMessage {
 
     private final String message;
 
+    /**
+     * Player teleport command text.
+     *
+     * @param message text
+     */
     PlayerTeleportMessage(String message) {
         this.message = message;
     }
 
+    /**
+     * Get text.
+     *
+     * @return text
+     */
     public String getMessage() {
         return message;
     }

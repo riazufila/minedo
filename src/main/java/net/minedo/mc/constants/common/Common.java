@@ -1,5 +1,8 @@
 package net.minedo.mc.constants.common;
 
+/**
+ * Common values.
+ */
 public enum Common {
 
     CHUNK_SIZE(16),
@@ -8,10 +11,20 @@ public enum Common {
 
     private final Object value;
 
+    /**
+     * Common.
+     *
+     * @param value common value
+     */
     Common(Object value) {
         this.value = value;
     }
 
+    /**
+     * Get common value.
+     *
+     * @return common value
+     */
     public Object getValue() {
         return value;
     }
