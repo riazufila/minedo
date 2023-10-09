@@ -16,7 +16,9 @@ public enum NicknameMessage {
             NicknameType.REMOVE.getType()
     )),
     ERROR_NO_PERMISSION("Operation not permitted."),
+    ERROR_NO_SUCH_NICKNAME("Currently, there's no player with that nickname."),
     ERROR_UNABLE_TO_PINPOINT("Unable to reveal the real player's name."),
+    ERROR_REVEAL_SELF("Invalid target."),
     ERROR_INVALID_NICKNAME(
             "Nickname must be less than 20 characters, "
                     + "consists of only letters and digits, "

@@ -156,28 +156,41 @@ public class Nickname implements CommandExecutor, TabCompleter, Listener {
             String nickname = args[1];
             PlayerProfile playerProfile = PlayerProfileRepository.getPlayerProfileByNickname(nickname);
 
-            // Verify player's real name and make sure player is online.
-            if (playerProfile != null) {
-                Player realPlayer = Minedo.getInstance().getServer().getPlayer(playerProfile.uuid());
+            if (playerProfile == null) {
+                player.sendMessage(Component
+                        .text(NicknameMessage.ERROR_NO_SUCH_NICKNAME.getMessage())
+                        .color(NamedTextColor.RED)
+                );
 
-                if (realPlayer != null) {
-                    player.sendMessage(Component
-                            .text(String.format(
-                                    NicknameMessage.SUCCESS_REVEAL_NICKNAME.getMessage(),
-                                    nickname,
-                                    realPlayer.getName()))
-                            .color(NamedTextColor.GREEN)
-                    );
-
-                    return true;
-                }
+                return true;
             }
 
-            // If somehow, the all the verifications above fails, then player will be notified of failure
-            // to reveal nickname.
+            if (playerProfile.uuid().equals(player.getUniqueId())) {
+                player.sendMessage(Component
+                        .text(NicknameMessage.ERROR_REVEAL_SELF.getMessage())
+                        .color(NamedTextColor.RED)
+                );
+
+                return true;
+            }
+
+            Player realPlayer = Minedo.getInstance().getServer().getPlayer(playerProfile.uuid());
+
+            if (realPlayer == null) {
+                player.sendMessage(Component
+                        .text(NicknameMessage.ERROR_UNABLE_TO_PINPOINT.getMessage())
+                        .color(NamedTextColor.RED)
+                );
+
+                return true;
+            }
+
             player.sendMessage(Component
-                    .text(NicknameMessage.ERROR_UNABLE_TO_PINPOINT.getMessage())
-                    .color(NamedTextColor.RED)
+                    .text(String.format(
+                            NicknameMessage.SUCCESS_REVEAL_NICKNAME.getMessage(),
+                            nickname,
+                            realPlayer.getName()))
+                    .color(NamedTextColor.GREEN)
             );
         } else if (nicknameType.equals(NicknameType.REMOVE.getType())) {
             PlayerProfileRepository.updatePlayerNickname(player.getUniqueId(), null);
@@ -191,8 +204,6 @@ public class Nickname implements CommandExecutor, TabCompleter, Listener {
                     .text(NicknameMessage.ERROR_USAGE.getMessage())
                     .color(NamedTextColor.GRAY)
             );
-
-            return true;
         }
 
         return true;
