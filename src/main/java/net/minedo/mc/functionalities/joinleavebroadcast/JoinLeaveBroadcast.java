@@ -7,6 +7,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+/**
+ * Join and leave broadcast override.
+ */
 public class JoinLeaveBroadcast implements Listener {
 
     @EventHandler
