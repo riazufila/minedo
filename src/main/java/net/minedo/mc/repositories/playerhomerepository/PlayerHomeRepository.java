@@ -61,7 +61,7 @@ public final class PlayerHomeRepository {
             }
         } catch (SQLException error) {
             logger.severe(String.format(
-                    "Unable to get player home by player uuid and name: %s", error.getMessage()
+                    "Unable to get player home by player UUID and name: %s", error.getMessage()
             ));
         } finally {
             database.disconnect();

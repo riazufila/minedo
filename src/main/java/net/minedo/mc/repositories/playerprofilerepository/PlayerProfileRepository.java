@@ -55,7 +55,7 @@ public final class PlayerProfileRepository {
                 }
             }
         } catch (SQLException error) {
-            logger.severe(String.format("Unable to get player profile by uuid: %s", error.getMessage()));
+            logger.severe(String.format("Unable to get player profile by UUID: %s", error.getMessage()));
         } finally {
             database.disconnect();
         }

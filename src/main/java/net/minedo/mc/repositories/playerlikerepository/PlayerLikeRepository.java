@@ -85,7 +85,7 @@ public final class PlayerLikeRepository {
                 }
             }
         } catch (SQLException error) {
-            logger.severe(String.format("Unable to get player color by uuid: %s", error.getMessage()));
+            logger.severe(String.format("Unable to get player color by UUID: %s", error.getMessage()));
         } finally {
             database.disconnect();
         }

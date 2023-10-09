@@ -8,8 +8,8 @@ import java.util.UUID;
 /**
  * Player profile details.
  *
- * @param id       player id
- * @param uuid     player uuid
+ * @param id       player ID
+ * @param uuid     player UUID
  * @param nickname player nickname
  */
 public record PlayerProfile(int id,

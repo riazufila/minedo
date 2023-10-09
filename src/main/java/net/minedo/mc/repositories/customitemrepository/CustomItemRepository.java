@@ -7,6 +7,7 @@ import net.minedo.mc.models.customitemenchantment.CustomItemEnchantment;
 import net.minedo.mc.models.customitemlore.CustomItemLore;
 import net.minedo.mc.repositories.Database;
 import org.bukkit.Material;
+import org.jetbrains.annotations.NotNull;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -15,11 +16,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Logger;
 
+/**
+ * Custom item repository.
+ */
 public final class CustomItemRepository {
 
     private static final Logger logger = Logger.getLogger(CustomItemRepository.class.getName());
 
-    public static CustomItem getCustomItemById(int customItemId) {
+    /**
+     * Get custom item by ID.
+     *
+     * @param customItemId Custom item ID
+     * @return custom item
+     */
+    public static @NotNull CustomItem getCustomItemById(int customItemId) {
         Database database = new Database();
         database.connect();
 
@@ -120,7 +130,7 @@ public final class CustomItemRepository {
             customItem = new CustomItem(material, displayName, displayNameColor, displayNameDecoration,
                     customItemLore, customItemEnchantments);
         } catch (SQLException exception) {
-            logger.severe(String.format("Unable to get custom item by id: %s", exception.getMessage()));
+            logger.severe(String.format("Unable to get custom item by ID: %s", exception.getMessage()));
         } finally {
             database.disconnect();
         }

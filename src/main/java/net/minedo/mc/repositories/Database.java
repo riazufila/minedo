@@ -59,7 +59,7 @@ public class Database {
     /**
      * Query without conditions.
      *
-     * @param sqlQuery sql statement
+     * @param sqlQuery SQL statement
      * @return result set
      */
     public @NotNull ResultSet query(String sqlQuery) {
@@ -79,7 +79,7 @@ public class Database {
     /**
      * Query with conditions.
      *
-     * @param sqlQuery     sql statement
+     * @param sqlQuery     SQL statement
      * @param replacements conditions
      * @return result set
      */
@@ -107,7 +107,7 @@ public class Database {
     /**
      * Execute statement with conditions.
      *
-     * @param sqlQuery     sql statement
+     * @param sqlQuery     SQL statement
      * @param replacements conditions
      */
     public void executeStatement(String sqlQuery, HashMap<Integer, ?> replacements) {

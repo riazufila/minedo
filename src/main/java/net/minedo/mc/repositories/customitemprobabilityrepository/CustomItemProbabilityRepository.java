@@ -2,6 +2,7 @@ package net.minedo.mc.repositories.customitemprobabilityrepository;
 
 import net.minedo.mc.models.customitemprobability.CustomItemProbability;
 import net.minedo.mc.repositories.Database;
+import org.jetbrains.annotations.NotNull;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -9,11 +10,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+/**
+ * Custom item probability repository.
+ */
 public final class CustomItemProbabilityRepository {
 
     private static final Logger logger = Logger.getLogger(CustomItemProbabilityRepository.class.getName());
 
-    public static List<CustomItemProbability> getAllCustomItemsProbabilities() {
+    /**
+     * Get all custom item probabilities.
+     *
+     * @return all custom item probabilities
+     */
+    public static @NotNull List<CustomItemProbability> getAllCustomItemsProbabilities() {
         Database database = new Database();
         database.connect();
 
