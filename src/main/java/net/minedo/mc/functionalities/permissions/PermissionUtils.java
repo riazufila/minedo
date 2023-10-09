@@ -41,9 +41,7 @@ public final class PermissionUtils {
             return player.hasPermission(GroupPermission.EMERALD.getPermission());
         } else if (ChatUtils.isGroupColorTheSame(color, GroupColor.GOLD)) {
             return player.hasPermission(GroupPermission.GOLD.getPermission());
-        }
-
-        return false;
+        } else return ChatUtils.isGroupColorTheSame(color, GroupColor.DEFAULT);
     }
 
     /**
