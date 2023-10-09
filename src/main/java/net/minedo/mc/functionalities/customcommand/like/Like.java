@@ -89,7 +89,7 @@ public class Like implements CommandExecutor, TabCompleter {
             PlayerLike updatedOtherPlayerLike = new PlayerLike(
                     otherPlayerLike.likeReceivedCount() + 1,
                     otherPlayerLike.likeSentCount(),
-                    instant
+                    otherPlayerLike.lastLikeSent()
             );
             PlayerLikeRepository.updatePlayerLike(otherPlayer.getUniqueId(), updatedOtherPlayerLike);
 
