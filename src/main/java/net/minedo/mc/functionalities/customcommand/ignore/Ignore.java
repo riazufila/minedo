@@ -20,12 +20,6 @@ import java.util.Objects;
 
 public class Ignore implements CommandExecutor, TabCompleter {
 
-    private final Minedo pluginInstance;
-
-    public Ignore(Minedo pluginInstance) {
-        this.pluginInstance = pluginInstance;
-    }
-
     private boolean isCommandValid(String[] args) {
         if (args.length != 2) {
             return false;
@@ -55,7 +49,7 @@ public class Ignore implements CommandExecutor, TabCompleter {
 
         String ignoreType = args[0];
         String ignoreTarget = args[1];
-        Player otherPlayer = this.pluginInstance.getServer().getPlayer(ignoreTarget);
+        Player otherPlayer = Minedo.getInstance().getServer().getPlayer(ignoreTarget);
 
         if (otherPlayer != null) {
             if (otherPlayer.equals(player)) {
@@ -70,9 +64,7 @@ public class Ignore implements CommandExecutor, TabCompleter {
 
         if (Objects.equals(ignoreType, IgnoreType.ADD.getType())) {
             if (otherPlayer != null && otherPlayer.isOnline()) {
-                PlayerBlockedRepository playerBlockedRepository = new PlayerBlockedRepository();
-
-                if (playerBlockedRepository.isPlayerBlockedByPlayer(
+                if (PlayerBlockedRepository.isPlayerBlockedByPlayer(
                         otherPlayer.getUniqueId(), player.getUniqueId())) {
                     player.sendMessage(Component
                             .text(String.format(
@@ -85,7 +77,7 @@ public class Ignore implements CommandExecutor, TabCompleter {
                     return true;
                 }
 
-                playerBlockedRepository.addBlockedPlayer(player.getUniqueId(), otherPlayer.getUniqueId());
+                PlayerBlockedRepository.addBlockedPlayer(player.getUniqueId(), otherPlayer.getUniqueId());
 
                 player.sendMessage(Component
                         .text(String.format(
@@ -102,9 +94,7 @@ public class Ignore implements CommandExecutor, TabCompleter {
             }
         } else if (Objects.equals(ignoreType, IgnoreType.REMOVE.getType())) {
             if (otherPlayer != null && otherPlayer.isOnline()) {
-                PlayerBlockedRepository playerBlockedRepository = new PlayerBlockedRepository();
-
-                if (!(playerBlockedRepository.isPlayerBlockedByPlayer(
+                if (!(PlayerBlockedRepository.isPlayerBlockedByPlayer(
                         otherPlayer.getUniqueId(), player.getUniqueId()))) {
                     player.sendMessage(Component
                             .text(String.format(
@@ -117,7 +107,7 @@ public class Ignore implements CommandExecutor, TabCompleter {
                     return true;
                 }
 
-                playerBlockedRepository.removeBlockedPlayer(player.getUniqueId(), otherPlayer.getUniqueId());
+                PlayerBlockedRepository.removeBlockedPlayer(player.getUniqueId(), otherPlayer.getUniqueId());
 
                 player.sendMessage(Component
                         .text(String.format(
@@ -160,7 +150,7 @@ public class Ignore implements CommandExecutor, TabCompleter {
         if (args.length == 1) {
             completions.addAll(ignoreTypes);
         } else if (args.length == 2 && ignoreTypes.contains(args[0])) {
-            Collection<? extends Player> onlinePlayers = this.pluginInstance.getServer().getOnlinePlayers();
+            Collection<? extends Player> onlinePlayers = Minedo.getInstance().getServer().getOnlinePlayers();
 
             completions.addAll(onlinePlayers.stream()
                     .filter(onlinePlayer -> onlinePlayer != player)

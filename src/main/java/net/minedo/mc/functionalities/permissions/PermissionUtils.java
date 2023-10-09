@@ -7,7 +7,7 @@ import net.minedo.mc.constants.grouppermission.GroupPermission;
 import net.minedo.mc.functionalities.chat.ChatUtils;
 import org.bukkit.entity.Player;
 
-public class PermissionUtils {
+public final class PermissionUtils {
 
     public static boolean validatePlayerPermissionForCustomColor(Player player) {
         return player.hasPermission(GroupPermission.OBSIDIAN.getPermission());

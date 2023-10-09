@@ -13,7 +13,8 @@ import net.minedo.mc.functionalities.customcommand.teleport.player.PlayerTelepor
 import net.minedo.mc.functionalities.customcommand.teleport.region.RegionTeleport;
 import net.minedo.mc.models.region.Region;
 import net.minedo.mc.repositories.regionrepository.RegionRepository;
-import org.bukkit.Server;
+import org.bukkit.command.PluginCommand;
+import org.bukkit.plugin.PluginManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,76 +23,52 @@ import java.util.UUID;
 
 public class CustomCommand {
 
-    private final Minedo pluginInstance;
     private final List<UUID> globalTeleportingPlayers = new ArrayList<>();
 
-    public CustomCommand(Minedo pluginInstance) {
-        this.pluginInstance = pluginInstance;
-    }
-
     public void setupCustomCommands() {
-        Server server = this.pluginInstance.getServer();
-        RegionRepository regionRepository = new RegionRepository(this.pluginInstance);
-        List<Region> regions = regionRepository.getAllRegions();
+        Minedo instance = Minedo.getInstance();
+        PluginManager pluginManager = instance.getServer().getPluginManager();
+        List<Region> regions = RegionRepository.getAllRegions();
 
         // Region teleport.
         for (Region region : regions) {
-            RegionTeleport regionTeleport = new RegionTeleport(
-                    region, regions, globalTeleportingPlayers, this.pluginInstance
-            );
-
-            server.getPluginManager().registerEvents(regionTeleport, this.pluginInstance);
-
-            Objects.requireNonNull(this.pluginInstance.getCommand(
-                    CustomCommandType.REGION_TELEPORT.getMessage()
-            )).setExecutor(regionTeleport);
+            RegionTeleport regionTeleport = new RegionTeleport(region, regions, globalTeleportingPlayers);
+            PluginCommand regionTeleportCommand = instance.getCommand(CustomCommandType.REGION_TELEPORT.getMessage());
+            Objects.requireNonNull(regionTeleportCommand).setExecutor(regionTeleport);
+            pluginManager.registerEvents(regionTeleport, instance);
         }
 
         // Player teleport.
-        PlayerTeleport playerTeleport = new PlayerTeleport(globalTeleportingPlayers, this.pluginInstance);
-        server.getPluginManager().registerEvents(playerTeleport, this.pluginInstance);
-        Objects.requireNonNull(this.pluginInstance.getCommand(
-                CustomCommandType.PLAYER_TELEPORT.getMessage()
-        )).setExecutor(playerTeleport);
+        PlayerTeleport playerTeleport = new PlayerTeleport(globalTeleportingPlayers);
+        PluginCommand playerTeleportCommand = instance.getCommand(CustomCommandType.PLAYER_TELEPORT.getMessage());
+        Objects.requireNonNull(playerTeleportCommand).setExecutor(playerTeleport);
+        pluginManager.registerEvents(playerTeleport, instance);
 
         // Home teleport.
-        HomeTeleport homeTeleport = new HomeTeleport(globalTeleportingPlayers, this.pluginInstance);
-        server.getPluginManager().registerEvents(homeTeleport, this.pluginInstance);
-        Objects.requireNonNull(this.pluginInstance.getCommand(
-                CustomCommandType.HOME_TELEPORT.getMessage()
-        )).setExecutor(homeTeleport);
+        HomeTeleport homeTeleport = new HomeTeleport(globalTeleportingPlayers);
+        PluginCommand homeTeleportCommand = instance.getCommand(CustomCommandType.HOME_TELEPORT.getMessage());
+        Objects.requireNonNull(homeTeleportCommand).setExecutor(homeTeleport);
+        pluginManager.registerEvents(homeTeleport, instance);
 
         // Narrate.
-        Objects.requireNonNull(this.pluginInstance.getCommand(
-                CustomCommandType.NARRATE.getMessage()
-        )).setExecutor(new Narrate(this.pluginInstance));
+        Objects.requireNonNull(instance.getCommand(CustomCommandType.NARRATE.getMessage())).setExecutor(new Narrate());
 
         // Like.
-        Objects.requireNonNull(this.pluginInstance.getCommand(
-                CustomCommandType.LIKE.getMessage()
-        )).setExecutor(new Like(this.pluginInstance));
+        Objects.requireNonNull(instance.getCommand(CustomCommandType.LIKE.getMessage())).setExecutor(new Like());
 
         // Ignore.
-        Objects.requireNonNull(this.pluginInstance.getCommand(
-                CustomCommandType.IGNORE.getMessage()
-        )).setExecutor(new Ignore(this.pluginInstance));
+        Objects.requireNonNull(instance.getCommand(CustomCommandType.IGNORE.getMessage())).setExecutor(new Ignore());
 
         // Message.
-        Objects.requireNonNull(this.pluginInstance.getCommand(
-                CustomCommandType.MESSAGE.getMessage()
-        )).setExecutor(new Message(this.pluginInstance));
+        Objects.requireNonNull(instance.getCommand(CustomCommandType.MESSAGE.getMessage())).setExecutor(new Message());
 
         // Color.
-        Objects.requireNonNull(this.pluginInstance.getCommand(
-                CustomCommandType.COLOR.getMessage()
-        )).setExecutor(new Color());
+        Objects.requireNonNull(instance.getCommand(CustomCommandType.COLOR.getMessage())).setExecutor(new Color());
 
         // Nickname.
-        Nickname nickname = new Nickname(this.pluginInstance);
-        this.pluginInstance.getServer().getPluginManager().registerEvents(nickname, this.pluginInstance);
-        Objects.requireNonNull(this.pluginInstance.getCommand(
-                CustomCommandType.NICKNAME.getMessage()
-        )).setExecutor(nickname);
+        Nickname nickname = new Nickname();
+        Objects.requireNonNull(instance.getCommand(CustomCommandType.NICKNAME.getMessage())).setExecutor(nickname);
+        pluginManager.registerEvents(nickname, instance);
     }
 
 }

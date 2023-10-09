@@ -2,15 +2,17 @@ package net.minedo.mc.constants.common;
 
 public enum Common {
 
-    CHUNK_SIZE(16);
+    CHUNK_SIZE(16),
+    ATTACK_COOL_DOWN(1.0f),
+    TICK_PER_SECOND(20);
 
-    private final int value;
+    private final Object value;
 
-    Common(int value) {
+    Common(Object value) {
         this.value = value;
     }
 
-    public int getValue() {
+    public Object getValue() {
         return value;
     }
 

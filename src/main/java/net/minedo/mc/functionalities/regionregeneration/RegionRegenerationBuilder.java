@@ -12,7 +12,6 @@ import com.sk89q.worldedit.function.operation.Operation;
 import com.sk89q.worldedit.function.operation.Operations;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.session.ClipboardHolder;
-import net.minedo.mc.Minedo;
 import net.minedo.mc.constants.common.Common;
 import net.minedo.mc.constants.directory.Directory;
 import net.minedo.mc.constants.filetype.FileType;
@@ -34,21 +33,19 @@ public class RegionRegenerationBuilder extends BukkitRunnable {
     private final Chunk chunk;
     private final Region region;
     private final HashMap<String, Integer> restoringChunks;
-    private final Minedo pluginInstance;
     private final Logger logger = Logger.getLogger(this.getClass().getName());
 
     public RegionRegenerationBuilder(
-            Chunk chunk, Region region, HashMap<String, Integer> restoringChunks, Minedo pluginInstance
+            Chunk chunk, Region region, HashMap<String, Integer> restoringChunks
     ) {
         this.chunk = chunk;
         this.region = region;
         this.restoringChunks = restoringChunks;
-        this.pluginInstance = pluginInstance;
     }
 
     private Location getCenterLocationOfChunk(Chunk chunk) {
-        World world = this.region.getWorldType();
-        int CHUNK_SIZE = Common.CHUNK_SIZE.getValue();
+        World world = this.region.worldType();
+        int CHUNK_SIZE = (int) Common.CHUNK_SIZE.getValue();
         int coordinateMinX = chunk.getX() * CHUNK_SIZE;
         int coordinateMinZ = chunk.getZ() * CHUNK_SIZE;
         // Skip subtracting 1 from max coordinates, as we're looking to
@@ -68,7 +65,7 @@ public class RegionRegenerationBuilder extends BukkitRunnable {
 
     private void playSoundAtCenterOfChunk(Chunk chunk) {
         Location location = this.getCenterLocationOfChunk(chunk);
-        this.region.getWorldType().playSound(location, Sound.BLOCK_AZALEA_LEAVES_PLACE, 1, 1);
+        this.region.worldType().playSound(location, Sound.BLOCK_AZALEA_LEAVES_PLACE, 1, 1);
     }
 
     @Override
@@ -77,7 +74,7 @@ public class RegionRegenerationBuilder extends BukkitRunnable {
                 "Restoring chunk (%d, %d) in %s region.",
                 chunk.getX(),
                 chunk.getZ(),
-                this.region.getName())
+                this.region.name())
         );
 
         File schematicFile = null;
@@ -86,7 +83,7 @@ public class RegionRegenerationBuilder extends BukkitRunnable {
 
         String SPAWN_REGION_SCHEMATIC_REGEX = String.format(
                 "%s-region-\\((-?\\d+),(-?\\d+)\\)\\.%s",
-                this.region.getName().toLowerCase(),
+                this.region.name().toLowerCase(),
                 FileType.SCHEMATIC.getType()
         );
 
@@ -115,8 +112,8 @@ public class RegionRegenerationBuilder extends BukkitRunnable {
                 )
         ) {
             Clipboard clipboard = clipboardReader.read();
-            WorldEdit worldEdit = this.pluginInstance.getWorldEdit();
-            World world = this.region.getWorldType();
+            WorldEdit worldEdit = WorldEdit.getInstance();
+            World world = this.region.worldType();
 
             try (EditSession editSession = worldEdit.newEditSession(BukkitAdapter.adapt(world))) {
                 Operation operation = new ClipboardHolder(clipboard)
@@ -155,7 +152,7 @@ public class RegionRegenerationBuilder extends BukkitRunnable {
                     "Unable to restore chunk (%d, %d) in %s region.",
                     chunk.getX(),
                     chunk.getZ(),
-                    this.region.getName())
+                    this.region.name())
             );
             throw new RuntimeException(e);
         } finally {

@@ -12,11 +12,11 @@ import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
 
-public class PlayerProfileRepository {
+public final class PlayerProfileRepository {
 
-    private final Logger logger = Logger.getLogger(this.getClass().getName());
+    private static final Logger logger = Logger.getLogger(PlayerProfileRepository.class.getName());
 
-    public void insertNewPlayerProfile(UUID playerUuid) {
+    public static void insertNewPlayerProfile(UUID playerUuid) {
         Database database = new Database();
         database.connect();
 
@@ -31,7 +31,7 @@ public class PlayerProfileRepository {
         database.disconnect();
     }
 
-    public PlayerProfile getPlayerProfileByUuid(UUID playerUuid) {
+    public static PlayerProfile getPlayerProfileByUuid(UUID playerUuid) {
         Database database = new Database();
         database.connect();
 
@@ -39,25 +39,23 @@ public class PlayerProfileRepository {
 
         try {
             String query = """
-                        SELECT * FROM player_profile WHERE uuid = ?;
+                        SELECT id, uuid, nickname FROM player_profile WHERE uuid = ?;
                     """;
 
             HashMap<Integer, String> replacements = new HashMap<>();
             replacements.put(1, playerUuid.toString());
-            ResultSet resultSet = database.queryWithWhereClause(query, replacements);
 
-            if (resultSet.next()) {
-                int id = resultSet.getInt("id");
-                UUID uuid = UUID.fromString(resultSet.getString("uuid"));
-                String nickname = resultSet.getString("nickname");
+            try (ResultSet resultSet = database.queryWithWhereClause(query, replacements)) {
+                if (resultSet.next()) {
+                    int id = resultSet.getInt("id");
+                    UUID uuid = UUID.fromString(resultSet.getString("uuid"));
+                    String nickname = resultSet.getString("nickname");
 
-                playerProfile = new PlayerProfile();
-                playerProfile.setId(id);
-                playerProfile.setUuid(uuid);
-                playerProfile.setNickname(nickname);
+                    playerProfile = new PlayerProfile(id, uuid, nickname);
+                }
             }
         } catch (SQLException error) {
-            this.logger.severe(String.format("Unable to get player profile by uuid: %s", error.getMessage()));
+            logger.severe(String.format("Unable to get player profile by uuid: %s", error.getMessage()));
         } finally {
             database.disconnect();
         }
@@ -65,7 +63,7 @@ public class PlayerProfileRepository {
         return playerProfile;
     }
 
-    public PlayerProfile getPlayerProfileByNickname(String playerName) {
+    public static PlayerProfile getPlayerProfileByNickname(String playerName) {
         Database database = new Database();
         database.connect();
 
@@ -73,25 +71,23 @@ public class PlayerProfileRepository {
 
         try {
             String query = """
-                        SELECT * FROM player_profile WHERE UPPER(nickname) = ?;
+                        SELECT id, uuid, nickname FROM player_profile WHERE UPPER(nickname) = ?;
                     """;
 
             HashMap<Integer, String> replacements = new HashMap<>();
             replacements.put(1, playerName.toUpperCase());
-            ResultSet resultSet = database.queryWithWhereClause(query, replacements);
 
-            if (resultSet.next()) {
-                int id = resultSet.getInt("id");
-                UUID uuid = UUID.fromString(resultSet.getString("uuid"));
-                String nickname = resultSet.getString("nickname");
+            try (ResultSet resultSet = database.queryWithWhereClause(query, replacements)) {
+                if (resultSet.next()) {
+                    int id = resultSet.getInt("id");
+                    UUID uuid = UUID.fromString(resultSet.getString("uuid"));
+                    String nickname = resultSet.getString("nickname");
 
-                playerProfile = new PlayerProfile();
-                playerProfile.setId(id);
-                playerProfile.setUuid(uuid);
-                playerProfile.setNickname(nickname);
+                    playerProfile = new PlayerProfile(id, uuid, nickname);
+                }
             }
         } catch (SQLException error) {
-            this.logger.severe(String.format("Unable to get player profile by nickname: %s", error.getMessage()));
+            logger.severe(String.format("Unable to get player profile by nickname: %s", error.getMessage()));
         } finally {
             database.disconnect();
         }
@@ -99,7 +95,7 @@ public class PlayerProfileRepository {
         return playerProfile;
     }
 
-    public void updatePlayerNickname(UUID playerUuid, String nickname) {
+    public static void updatePlayerNickname(UUID playerUuid, String nickname) {
         Database database = new Database();
         database.connect();
 
@@ -125,7 +121,7 @@ public class PlayerProfileRepository {
      * @param playerUuid UUID of player to exclude from results.
      * @return List of nicknames.
      */
-    public List<String> getOtherPlayersNickname(UUID playerUuid) {
+    public static List<String> getOtherPlayersNickname(UUID playerUuid) {
         Database database = new Database();
         database.connect();
 
@@ -144,14 +140,15 @@ public class PlayerProfileRepository {
 
             HashMap<Integer, String> replacements = new HashMap<>();
             replacements.put(1, String.valueOf(playerUuid));
-            ResultSet resultSet = database.queryWithWhereClause(query, replacements);
 
-            while (resultSet.next()) {
-                String nickname = resultSet.getString("nickname");
-                otherPlayersNickname.add(nickname);
+            try (ResultSet resultSet = database.queryWithWhereClause(query, replacements)) {
+                while (resultSet.next()) {
+                    String nickname = resultSet.getString("nickname");
+                    otherPlayersNickname.add(nickname);
+                }
             }
         } catch (SQLException error) {
-            this.logger.severe(String.format("Unable to get other player nicknames: %s", error.getMessage()));
+            logger.severe(String.format("Unable to get other player nicknames: %s", error.getMessage()));
         } finally {
             database.disconnect();
         }
@@ -166,7 +163,7 @@ public class PlayerProfileRepository {
      * @param otherOnlinePlayers List of UUID of players to search within.
      * @return List of nicknames.
      */
-    public List<String> getOtherPlayersNickname(UUID playerUuid, List<UUID> otherOnlinePlayers) {
+    public static List<String> getOtherPlayersNickname(UUID playerUuid, List<UUID> otherOnlinePlayers) {
         Database database = new Database();
         database.connect();
 
@@ -194,14 +191,14 @@ public class PlayerProfileRepository {
                 replacements.put(queryIndex + i, String.valueOf(otherOnlinePlayers.get(i)));
             }
 
-            ResultSet resultSet = database.queryWithWhereClause(query, replacements);
-
-            while (resultSet.next()) {
-                String nickname = resultSet.getString("nickname");
-                otherPlayersNickname.add(nickname);
+            try (ResultSet resultSet = database.queryWithWhereClause(query, replacements)) {
+                while (resultSet.next()) {
+                    String nickname = resultSet.getString("nickname");
+                    otherPlayersNickname.add(nickname);
+                }
             }
         } catch (SQLException error) {
-            this.logger.severe(String.format("Unable to get other player nicknames: %s", error.getMessage()));
+            logger.severe(String.format("Unable to get other player nicknames: %s", error.getMessage()));
         } finally {
             database.disconnect();
         }

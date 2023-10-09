@@ -16,11 +16,10 @@ public class ChatBox implements Listener {
     @EventHandler
     public void onAsyncChat(AsyncChatEvent event) {
         Player player = event.getPlayer();
-        PlayerProfileRepository playerProfileRepository = new PlayerProfileRepository();
-        PlayerProfile playerProfile = playerProfileRepository.getPlayerProfileByUuid(player.getUniqueId());
+        PlayerProfile playerProfile = PlayerProfileRepository.getPlayerProfileByUuid(player.getUniqueId());
 
         event.renderer(((source, sourceDisplayName, message, viewer) -> {
-            String nickname = playerProfile.getNickname();
+            String nickname = playerProfile.nickname();
             Component nameComponent = sourceDisplayName;
 
             if (PermissionUtils.validatePlayerPermissionForNicknameDisplay(player) && nickname != null) {

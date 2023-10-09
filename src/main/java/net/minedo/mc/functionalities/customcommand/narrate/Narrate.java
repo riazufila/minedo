@@ -21,12 +21,6 @@ import java.util.List;
 
 public class Narrate implements CommandExecutor, TabCompleter {
 
-    private final Minedo pluginInstance;
-
-    public Narrate(Minedo pluginInstance) {
-        this.pluginInstance = pluginInstance;
-    }
-
     private boolean isCommandValid(String[] args) {
         return args.length != 0;
     }
@@ -48,12 +42,10 @@ public class Narrate implements CommandExecutor, TabCompleter {
             return true;
         }
 
-        Collection<? extends Player> onlinePlayers = this.pluginInstance.getServer().getOnlinePlayers();
+        Collection<? extends Player> onlinePlayers = Minedo.getInstance().getServer().getOnlinePlayers();
 
         for (Player onlinePlayer : onlinePlayers) {
-            PlayerBlockedRepository playerBlockedRepository = new PlayerBlockedRepository();
-
-            if (!(playerBlockedRepository.isPlayerBlockedByPlayer(
+            if (!(PlayerBlockedRepository.isPlayerBlockedByPlayer(
                     player.getUniqueId(), onlinePlayer.getUniqueId()))) {
                 Component playerNameComponent = Component.text(player.getName());
                 Component contentComponent = Component.text(String.join(StringUtils.SPACE, args));

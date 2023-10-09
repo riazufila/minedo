@@ -1,26 +1,20 @@
 package net.minedo.mc.repositories.regionrepository;
 
-import net.minedo.mc.Minedo;
 import net.minedo.mc.models.region.Region;
 import net.minedo.mc.repositories.Database;
+import org.bukkit.Bukkit;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Logger;
 
-public class RegionRepository {
+public final class RegionRepository {
 
-    private final Logger logger = Logger.getLogger(this.getClass().getName());
-    private final Minedo pluginInstance;
+    private static final Logger logger = Logger.getLogger(RegionRepository.class.getName());
 
-    public RegionRepository(Minedo pluginInstance) {
-        this.pluginInstance = pluginInstance;
-    }
-
-    public List<Region> getAllRegions() {
+    public static List<Region> getAllRegions() {
         Database database = new Database();
         database.connect();
 
@@ -28,127 +22,29 @@ public class RegionRepository {
 
         try {
             String query = """
-                        SELECT * FROM region;
+                        SELECT name, world_type, minX, maxX, minZ, maxZ FROM region;
                     """;
-            ResultSet resultSet = database.query(query);
 
-            while (resultSet.next()) {
-                // Retrieve Region.
-                int id = resultSet.getInt("id");
-                String name = resultSet.getString("name");
-                String world = resultSet.getString("world_type");
-                int minX = resultSet.getInt("minX");
-                int maxX = resultSet.getInt("maxX");
-                int minZ = resultSet.getInt("minZ");
-                int maxZ = resultSet.getInt("maxZ");
+            try (ResultSet resultSet = database.query(query)) {
+                while (resultSet.next()) {
+                    String name = resultSet.getString("name");
+                    String world = resultSet.getString("world_type");
+                    int minX = resultSet.getInt("minX");
+                    int maxX = resultSet.getInt("maxX");
+                    int minZ = resultSet.getInt("minZ");
+                    int maxZ = resultSet.getInt("maxZ");
 
-                // Set Region object and push to Array.
-                Region region = new Region();
-                region.setId(id);
-                region.setName(name);
-                region.setWorldType(this.pluginInstance.getWorldBasedOnName(world));
-                region.setMinX(minX);
-                region.setMaxX(maxX);
-                region.setMinZ(minZ);
-                region.setMaxZ(maxZ);
-
-                regions.add(region);
+                    Region region = new Region(name, Bukkit.getWorld(world), minX, maxX, minZ, maxZ);
+                    regions.add(region);
+                }
             }
         } catch (SQLException error) {
-            this.logger.severe(String.format("Unable to get regions: %s", error.getMessage()));
+            logger.severe(String.format("Unable to get regions: %s", error.getMessage()));
         } finally {
             database.disconnect();
         }
 
         return regions;
-    }
-
-
-    public Region getRegionById(int id) {
-        Database database = new Database();
-        database.connect();
-
-        Region region = null;
-
-        try {
-            String query = """
-                        SELECT * FROM region WHERE id = ?;
-                    """;
-
-            HashMap<Integer, String> replacements = new HashMap<>();
-            replacements.put(1, Integer.toString(id));
-            ResultSet resultSet = database.queryWithWhereClause(query, replacements);
-
-            if (resultSet.next()) {
-                // Retrieve Region.
-                String name = resultSet.getString("name");
-                String world = resultSet.getString("world_type");
-                int minX = resultSet.getInt("minX");
-                int maxX = resultSet.getInt("maxX");
-                int minZ = resultSet.getInt("minZ");
-                int maxZ = resultSet.getInt("maxZ");
-
-                // Set Region object return.
-                region = new Region();
-                region.setId(id);
-                region.setName(name);
-                region.setWorldType(this.pluginInstance.getWorldBasedOnName(world));
-                region.setMinX(minX);
-                region.setMaxX(maxX);
-                region.setMinZ(minZ);
-                region.setMaxZ(maxZ);
-            }
-        } catch (SQLException error) {
-            this.logger.severe(String.format("Unable to get region by id: %s", error.getMessage()));
-        } finally {
-            database.disconnect();
-        }
-
-        return region;
-    }
-
-    public Region getRegionByName(String value) {
-        Database database = new Database();
-        database.connect();
-
-        Region region = null;
-
-        try {
-            String query = """
-                        SELECT * FROM region WHERE name = ?;
-                    """;
-
-            HashMap<Integer, String> replacements = new HashMap<>();
-            replacements.put(1, value);
-            ResultSet resultSet = database.queryWithWhereClause(query, replacements);
-
-            if (resultSet.next()) {
-                // Retrieve Region.
-                int id = resultSet.getInt("id");
-                String name = resultSet.getString("name");
-                String world = resultSet.getString("world_type");
-                int minX = resultSet.getInt("minX");
-                int maxX = resultSet.getInt("maxX");
-                int minZ = resultSet.getInt("minZ");
-                int maxZ = resultSet.getInt("maxZ");
-
-                // Set Region object and push to Array.
-                region = new Region();
-                region.setId(id);
-                region.setName(name);
-                region.setWorldType(this.pluginInstance.getWorldBasedOnName(world));
-                region.setMinX(minX);
-                region.setMaxX(maxX);
-                region.setMinZ(minZ);
-                region.setMaxZ(maxZ);
-            }
-        } catch (SQLException error) {
-            this.logger.severe(String.format("Unable to get region by name: %s", error.getMessage()));
-        } finally {
-            database.disconnect();
-        }
-
-        return region;
     }
 
 }

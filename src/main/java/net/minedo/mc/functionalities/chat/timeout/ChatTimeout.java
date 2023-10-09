@@ -15,11 +15,6 @@ import java.util.UUID;
 public class ChatTimeout implements Listener {
 
     private final HashMap<UUID, Integer> playerChatCount = new HashMap<>();
-    private final Minedo pluginInstance;
-
-    public ChatTimeout(Minedo pluginInstance) {
-        this.pluginInstance = pluginInstance;
-    }
 
     @EventHandler
     public void onAsyncChat(AsyncChatEvent event) {
@@ -28,7 +23,7 @@ public class ChatTimeout implements Listener {
         int CHAT_LIMIT = 15;
 
         if (chatCount == null) {
-            new ChatTimeoutRelease(player, playerChatCount, CHAT_LIMIT).runTaskLater(this.pluginInstance, 600);
+            new ChatTimeoutRelease(player, playerChatCount, CHAT_LIMIT).runTaskLater(Minedo.getInstance(), 600);
         } else if (chatCount >= CHAT_LIMIT) {
             player.sendMessage(Component
                     .text(ChatTimeoutMessage.ERROR_CHAT_TIMEOUT.getMessage())

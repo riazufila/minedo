@@ -15,8 +15,8 @@ public final class ChatUtils {
 
     public static Component updateComponentColor(Player player, Component component, boolean isContent) {
         ChatInfo chatInfo = getChatInfo(player, isContent);
-        String selectedColor = chatInfo.getSelectedColor();
-        boolean isCustom = chatInfo.isCustom();
+        String selectedColor = chatInfo.selectedColor();
+        boolean isCustom = chatInfo.custom();
 
         if (selectedColor != null) {
             if (!PermissionUtils.validatePlayerPermissionForColorSettingByColorTypeAndColor(player, isCustom
@@ -37,7 +37,7 @@ public final class ChatUtils {
     }
 
     private static ChatInfo selectColor(PlayerColor playerColor, Player player, boolean isContent) {
-        String selectedColor = isContent ? playerColor.getContentCustom() : playerColor.getPrefixCustom();
+        String selectedColor = isContent ? playerColor.contentCustom() : playerColor.prefixCustom();
         boolean isCustom = false;
 
         if (selectedColor != null
@@ -46,7 +46,7 @@ public final class ChatUtils {
         )) {
             isCustom = true;
         } else {
-            selectedColor = isContent ? playerColor.getContentPreset() : playerColor.getPrefixPreset();
+            selectedColor = isContent ? playerColor.contentPreset() : playerColor.prefixPreset();
         }
 
         return new ChatInfo(isCustom, selectedColor);
@@ -54,8 +54,7 @@ public final class ChatUtils {
 
     private static ChatInfo getChatInfo(Player player, boolean isContent) {
         UUID playerUuid = player.getUniqueId();
-        PlayerColorRepository playerColorRepository = new PlayerColorRepository();
-        PlayerColor playerColor = playerColorRepository.getPlayerColorByPlayerUuid(playerUuid);
+        PlayerColor playerColor = PlayerColorRepository.getPlayerColorByPlayerUuid(playerUuid);
 
         if (isContent) {
             return selectColor(playerColor, player, true);

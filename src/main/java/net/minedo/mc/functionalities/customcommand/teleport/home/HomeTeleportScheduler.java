@@ -35,11 +35,11 @@ public class HomeTeleportScheduler extends BukkitRunnable {
     @Override
     public void run() {
         Location location = new Location(
-                home.getWorldType(), home.getCoordinateX(), home.getCoordinateY(), home.getCoordinateZ()
+                home.worldType(), home.coordinateX(), home.coordinateY(), home.coordinateZ()
         );
 
         World sourceWorld = player.getWorld();
-        World destinationWorld = home.getWorldType();
+        World destinationWorld = home.worldType();
 
         if (countdown > 0) {
             player.sendMessage(Component
@@ -58,7 +58,7 @@ public class HomeTeleportScheduler extends BukkitRunnable {
                 player.sendMessage(Component
                         .text(String.format(
                                 HomeTeleportMessage.SUCCESS_TELEPORT.getMessage(),
-                                home.getName()
+                                home.name()
                         ))
                         .color(NamedTextColor.GREEN)
                 );

@@ -46,13 +46,11 @@ import java.util.logging.Logger;
 public class RegionRegeneration implements Listener {
 
     private final Region region;
-    private final Minedo pluginInstance;
     private final Logger logger = Logger.getLogger(this.getClass().getName());
     private final HashMap<String, Integer> restoringChunks = new HashMap<>();
 
-    public RegionRegeneration(Region region, Minedo pluginInstance) {
+    public RegionRegeneration(Region region) {
         this.region = region;
-        this.pluginInstance = pluginInstance;
     }
 
     private File getFile(int chunkX, int chunkZ) {
@@ -60,7 +58,7 @@ public class RegionRegeneration implements Listener {
 
         String fileName = String.format(
                 "%s-region-(%s).%s",
-                this.region.getName().toLowerCase(),
+                this.region.name().toLowerCase(),
                 chunkCoordinate,
                 FileType.SCHEMATIC.getType()
         );
@@ -69,11 +67,11 @@ public class RegionRegeneration implements Listener {
     }
 
     private boolean processChunks(World world, ChunkProcessor chunkProcessor, boolean isGetter) {
-        int CHUNK_SIZE = Common.CHUNK_SIZE.getValue();
-        int minX = this.region.getMinX();
-        int maxX = this.region.getMaxX();
-        int minZ = this.region.getMinZ();
-        int maxZ = this.region.getMaxZ();
+        int CHUNK_SIZE = (int) Common.CHUNK_SIZE.getValue();
+        int minX = this.region.minX();
+        int maxX = this.region.maxX();
+        int minZ = this.region.minZ();
+        int maxZ = this.region.maxZ();
 
         // Iterate through chunks and check if a schematic for each chunk has been created.
         for (
@@ -118,7 +116,7 @@ public class RegionRegeneration implements Listener {
 
         if (!file.exists()) {
             this.logger.severe(String.format(
-                    "Unable to get %s region snapshot.", this.region.getName()
+                    "Unable to get %s region snapshot.", this.region.name()
             ));
 
             return false;
@@ -143,7 +141,7 @@ public class RegionRegeneration implements Listener {
         );
 
         BlockArrayClipboard blockArrayClipboard = new BlockArrayClipboard(cuboidRegion);
-        WorldEdit worldEdit = this.pluginInstance.getWorldEdit();
+        WorldEdit worldEdit = WorldEdit.getInstance();
         EditSession editSession = worldEdit.newEditSession(BukkitAdapter.adapt(world));
 
         ForwardExtentCopy forwardExtentCopy = new ForwardExtentCopy(
@@ -156,7 +154,12 @@ public class RegionRegeneration implements Listener {
         try {
             Operations.complete(forwardExtentCopy);
         } catch (WorldEditException e) {
-            throw new RuntimeException(e);
+            this.logger.severe(String.format(
+                    "Unable to copy %s region snapshot into memory: %s",
+                    this.region.name(),
+                    e.getMessage()
+            ));
+            return false;
         }
 
         File file = this.getFile(chunkX, chunkZ);
@@ -166,28 +169,26 @@ public class RegionRegeneration implements Listener {
         )) {
             clipboardWriter.write(blockArrayClipboard);
         } catch (IOException e) {
-            this.logger.severe(
-                    String.format(
-                            "Unable to set %s region snapshot: %s",
-                            this.region.getName(),
-                            e.getMessage()
-                    )
-            );
-            throw new RuntimeException(e);
+            this.logger.severe(String.format(
+                    "Unable to write %s region snapshot into disk: %s",
+                    this.region.name(),
+                    e.getMessage()
+            ));
+            return false;
         }
 
         return true;
     }
 
     public boolean getRegionSnapshot() {
-        this.logger.info(String.format("Getting %s region snapshot.", this.region.getName()));
+        this.logger.info(String.format("Getting %s region snapshot.", this.region.name()));
 
-        return processChunks(this.region.getWorldType(), this::checkSnapshotFileExists, true);
+        return processChunks(this.region.worldType(), this::checkSnapshotFileExists, true);
     }
 
     public void setRegionSnapshot() {
-        this.logger.info(String.format("Setting %s region snapshot.", this.region.getName()));
-        processChunks(this.region.getWorldType(), this::createSnapshotFile, false);
+        this.logger.info(String.format("Setting %s region snapshot.", this.region.name()));
+        processChunks(this.region.worldType(), this::createSnapshotFile, false);
     }
 
     public void restoreRegionChunk(Chunk chunk) {
@@ -199,11 +200,12 @@ public class RegionRegeneration implements Listener {
 
         // Run region regeneration scheduler after 30 seconds.
         RegionRegenerationLauncher regionRegenerationLauncher = new RegionRegenerationLauncher(
-                chunk, this.region, this.restoringChunks, this.pluginInstance
+                chunk, this.region, this.restoringChunks
         );
 
+        long DELAY = 30;
         int restoringTaskId = regionRegenerationLauncher
-                .runTaskLater(this.pluginInstance, 600)
+                .runTaskLater(Minedo.getInstance(), DELAY * (int) Common.TICK_PER_SECOND.getValue())
                 .getTaskId();
 
         // Place task ID and update restoring chunk details.
@@ -211,7 +213,7 @@ public class RegionRegeneration implements Listener {
     }
 
     private boolean isWithinRegion(Location location) {
-        World world = this.region.getWorldType();
+        World world = this.region.worldType();
 
         if (world != location.getWorld()) {
             return false;
@@ -220,10 +222,10 @@ public class RegionRegeneration implements Listener {
         int locationBlockX = location.getBlockX();
         int locationBlockZ = location.getBlockZ();
 
-        return locationBlockX >= this.region.getMinX()
-                && locationBlockX <= this.region.getMaxX()
-                && locationBlockZ >= this.region.getMinZ()
-                && locationBlockZ <= this.region.getMaxZ();
+        return locationBlockX >= this.region.minX()
+                && locationBlockX <= this.region.maxX()
+                && locationBlockZ >= this.region.minZ()
+                && locationBlockZ <= this.region.maxZ();
     }
 
     private void regenerate(Block block) {

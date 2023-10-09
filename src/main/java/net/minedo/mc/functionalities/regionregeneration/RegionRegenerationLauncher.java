@@ -1,6 +1,7 @@
 package net.minedo.mc.functionalities.regionregeneration;
 
 import net.minedo.mc.Minedo;
+import net.minedo.mc.constants.common.Common;
 import net.minedo.mc.models.region.Region;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
@@ -18,22 +19,20 @@ public class RegionRegenerationLauncher extends BukkitRunnable {
     private final Chunk chunk;
     private final Region region;
     private final HashMap<String, Integer> restoringChunks;
-    private final Minedo pluginInstance;
 
     public RegionRegenerationLauncher(
-            Chunk chunk, Region region, HashMap<String, Integer> restoringChunks, Minedo pluginInstance
+            Chunk chunk, Region region, HashMap<String, Integer> restoringChunks
     ) {
         this.chunk = chunk;
         this.region = region;
         this.restoringChunks = restoringChunks;
-        this.pluginInstance = pluginInstance;
     }
 
     private boolean isLivingEntityWithinLaunchingGround(LivingEntity livingEntity) {
         Location location = livingEntity.getLocation();
         int LAUNCHING_GROUND_MAX_HEIGHT = 5;
 
-        int highestBlockAtY = this.region.getWorldType().getHighestBlockYAt(
+        int highestBlockAtY = this.region.worldType().getHighestBlockYAt(
                 location.getBlockX(), location.getBlockZ()
         );
 
@@ -47,7 +46,7 @@ public class RegionRegenerationLauncher extends BukkitRunnable {
             if (entity instanceof LivingEntity livingEntity
                     && this.isLivingEntityWithinLaunchingGround(livingEntity)
             ) {
-                this.region.getWorldType().playSound(
+                this.region.worldType().playSound(
                         livingEntity.getLocation(), Sound.BLOCK_AZALEA_LEAVES_STEP, 1, 1
                 );
 
@@ -80,10 +79,11 @@ public class RegionRegenerationLauncher extends BukkitRunnable {
 
         // Run a scheduler to build region after one second of players being launched.
         RegionRegenerationBuilder builder = new RegionRegenerationBuilder(
-                this.chunk, this.region, this.restoringChunks, this.pluginInstance
+                this.chunk, this.region, this.restoringChunks
         );
 
-        builder.runTaskLater(this.pluginInstance, 20);
+        long DELAY = 1;
+        builder.runTaskLater(Minedo.getInstance(), DELAY * (int) Common.TICK_PER_SECOND.getValue());
     }
 
 }
