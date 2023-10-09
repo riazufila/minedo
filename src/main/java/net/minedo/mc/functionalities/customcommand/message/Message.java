@@ -21,8 +21,17 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * Message command.
+ */
 public class Message implements CommandExecutor, TabCompleter {
 
+    /**
+     * Get whether command is valid.
+     *
+     * @param args arguments
+     * @return whether command is valid
+     */
     private boolean isCommandValid(String[] args) {
         return args.length >= 2;
     }

@@ -25,8 +25,17 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
+/**
+ * Nickname command.
+ */
 public class Nickname implements CommandExecutor, TabCompleter, Listener {
 
+    /**
+     * Get whether nickname is valid
+     *
+     * @param nickname nickname
+     * @return whether nickname is valid
+     */
     private boolean isValidNickname(String nickname) {
         if (nickname == null) {
             return false;
@@ -39,6 +48,12 @@ public class Nickname implements CommandExecutor, TabCompleter, Listener {
         return matcher.matches();
     }
 
+    /**
+     * Get whether command is valid.
+     *
+     * @param args arguments
+     * @return whether command is valid
+     */
     private boolean isCommandValid(String[] args) {
         if (args.length == 0) {
             return false;

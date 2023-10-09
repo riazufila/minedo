@@ -18,8 +18,17 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Ignore command.
+ */
 public class Ignore implements CommandExecutor, TabCompleter {
 
+    /**
+     * Get whether command is valid.
+     *
+     * @param args arguments
+     * @return whether command is valid
+     */
     private boolean isCommandValid(String[] args) {
         if (args.length != 2) {
             return false;

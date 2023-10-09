@@ -18,8 +18,17 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * Like command.
+ */
 public class Like implements CommandExecutor, TabCompleter {
 
+    /**
+     * Get whether command is valid.
+     *
+     * @param args arguments
+     * @return whether command is valid
+     */
     private boolean isCommandValid(String[] args) {
         return args.length == 1;
     }
