@@ -1,9 +1,7 @@
 package net.minedo.mc.repositories.playerhomerepository;
 
 import net.minedo.mc.models.playerhome.PlayerHome;
-import net.minedo.mc.models.playerprofile.PlayerProfile;
 import net.minedo.mc.repositories.Database;
-import net.minedo.mc.repositories.playerprofilerepository.PlayerProfileRepository;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -35,7 +33,6 @@ public final class PlayerHomeRepository {
         Database database = new Database();
         database.connect();
 
-        PlayerProfile playerProfile = PlayerProfileRepository.getPlayerProfileByUuid(playerUuid);
         PlayerHome playerHome = null;
 
         try {
@@ -50,7 +47,7 @@ public final class PlayerHomeRepository {
                     """;
 
             HashMap<Integer, String> replacements = new HashMap<>();
-            replacements.put(1, String.valueOf(playerProfile.id()));
+            replacements.put(1, String.valueOf(playerUuid));
             replacements.put(2, name);
 
             try (ResultSet resultSet = database.queryWithWhereClause(query, replacements)) {
