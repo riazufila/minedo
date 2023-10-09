@@ -13,8 +13,14 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
+/**
+ * Spawn lightning upon hit.
+ */
 public class LightningEnchantmentHandler extends CustomEnchantmentHandler {
 
+    /**
+     * Initialize lighting enchantment handler.
+     */
     public LightningEnchantmentHandler() {
         super(CustomEnchantmentType.LIGHTNING);
     }

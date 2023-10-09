@@ -7,8 +7,14 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Inflicts poison.
+ */
 public class PoisonEnchantmentHandler extends CustomEnchantmentHandler {
 
+    /**
+     * Initialize poison enchantment handler.
+     */
     public PoisonEnchantmentHandler() {
         super(CustomEnchantmentType.POISON);
     }

@@ -5,14 +5,25 @@ import net.minedo.mc.constants.customenchantment.type.CustomEnchantmentType;
 import net.minedo.mc.functionalities.customenchantment.list.*;
 import net.minedo.mc.functionalities.dataembedder.DataEmbedder;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Custom enchantment wrapper. Handles custom enchantment handler initializer.
+ */
 public class CustomEnchantmentWrapper {
 
-    public static Optional<CustomEnchantment> getCustomEnchantment(
+    /**
+     * Get custom enchantment.
+     *
+     * @param item                  item
+     * @param customEnchantmentType custom enchantment type as in {@link CustomEnchantmentType#values()}
+     * @return custom enchantment
+     */
+    public static @NotNull Optional<CustomEnchantment> getCustomEnchantment(
             ItemStack item, CustomEnchantmentType customEnchantmentType
     ) {
         List<CustomEnchantment> customEnchantments = DataEmbedder.getCustomEnchantments(item);
@@ -29,7 +40,13 @@ public class CustomEnchantmentWrapper {
         return Optional.empty();
     }
 
-    public static String formatCustomEnchantmentName(String enchantmentName) {
+    /**
+     * Format custom enchantment name.
+     *
+     * @param enchantmentName enchantment name based on {@link CustomEnchantmentType#values()}
+     * @return formatted custom enchantment name
+     */
+    public static @NotNull String formatCustomEnchantmentName(String enchantmentName) {
         String[] words = enchantmentName.split("_");
 
         StringBuilder formattedName = new StringBuilder();

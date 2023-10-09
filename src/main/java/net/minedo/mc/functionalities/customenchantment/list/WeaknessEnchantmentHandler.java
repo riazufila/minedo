@@ -7,8 +7,14 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Inflicts weakness.
+ */
 public class WeaknessEnchantmentHandler extends CustomEnchantmentHandler {
 
+    /**
+     * Initialize weakness enchantment handler.
+     */
     public WeaknessEnchantmentHandler() {
         super(CustomEnchantmentType.WEAKNESS);
     }

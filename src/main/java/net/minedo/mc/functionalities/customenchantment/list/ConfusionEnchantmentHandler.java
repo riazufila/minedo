@@ -7,8 +7,14 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Inflicts confusion.
+ */
 public class ConfusionEnchantmentHandler extends CustomEnchantmentHandler {
 
+    /**
+     * Initialize confusion enchantment handler.
+     */
     public ConfusionEnchantmentHandler() {
         super(CustomEnchantmentType.CONFUSION);
     }

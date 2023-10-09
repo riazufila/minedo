@@ -7,8 +7,14 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Inflicts glow.
+ */
 public class GlowingEnchantmentHandler extends CustomEnchantmentHandler {
 
+    /**
+     * Initialize glowing enchantment handler.
+     */
     public GlowingEnchantmentHandler() {
         super(CustomEnchantmentType.GLOWING);
     }

@@ -7,8 +7,14 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Inflicts slowness.
+ */
 public class SlowEnchantmentHandler extends CustomEnchantmentHandler {
 
+    /**
+     * Initialize slow enchantment handler.
+     */
     public SlowEnchantmentHandler() {
         super(CustomEnchantmentType.SLOW);
     }

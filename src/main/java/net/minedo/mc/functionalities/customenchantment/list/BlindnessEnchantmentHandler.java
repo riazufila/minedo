@@ -7,8 +7,14 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Inflicts blindness.
+ */
 public class BlindnessEnchantmentHandler extends CustomEnchantmentHandler {
 
+    /**
+     * Initialize blindness enchantment handler.
+     */
     public BlindnessEnchantmentHandler() {
         super(CustomEnchantmentType.BLINDNESS);
     }

@@ -7,8 +7,14 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Inflicts wither.
+ */
 public class WitherEnchantmentHandler extends CustomEnchantmentHandler {
 
+    /**
+     * Initialize wither enchantment handler.
+     */
     public WitherEnchantmentHandler() {
         super(CustomEnchantmentType.WITHER);
     }

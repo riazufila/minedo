@@ -6,8 +6,14 @@ import net.minedo.mc.functionalities.customenchantment.CustomEnchantmentHandler;
 import org.bukkit.event.EventHandler;
 import org.bukkit.potion.PotionEffectType;
 
+/**
+ * Grants health boost.
+ */
 public class HealthBoostEnchantmentHandler extends CustomEnchantmentHandler {
 
+    /**
+     * Initialize health boost enchantment handler.
+     */
     public HealthBoostEnchantmentHandler() {
         super(CustomEnchantmentType.HEALTH_BOOST);
     }

@@ -7,8 +7,14 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Inflicts harm.
+ */
 public class HarmEnchantmentHandler extends CustomEnchantmentHandler {
 
+    /**
+     * Initialize harm enchantment handler.
+     */
     public HarmEnchantmentHandler() {
         super(CustomEnchantmentType.HARM);
     }
