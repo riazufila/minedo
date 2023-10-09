@@ -25,27 +25,47 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Home teleport.
+ */
 public class HomeTeleport implements CommandExecutor, Listener, TabCompleter {
 
     private final List<UUID> globalTeleportingPlayers;
     private final HashMap<UUID, Integer> teleportingPlayers = new HashMap<>();
 
+    /**
+     * Initialize home teleport.
+     *
+     * @param globalTeleportingPlayers list of globally teleporting players
+     */
     public HomeTeleport(List<UUID> globalTeleportingPlayers) {
         this.globalTeleportingPlayers = globalTeleportingPlayers;
     }
 
-    private boolean isValidHomeName(String nickname) {
-        if (nickname == null) {
+    /**
+     * Get whether home name is valid.
+     *
+     * @param homeName home name
+     * @return whether home name is valid
+     */
+    private boolean isValidHomeName(String homeName) {
+        if (homeName == null) {
             return false;
         }
 
         String NAME_REGEX = "^[a-zA-Z][a-zA-Z0-9-]{0,19}$";
         Pattern pattern = Pattern.compile(NAME_REGEX);
-        Matcher matcher = pattern.matcher(nickname);
+        Matcher matcher = pattern.matcher(homeName);
 
         return matcher.matches();
     }
 
+    /**
+     * Get whether command is valid.
+     *
+     * @param args arguments
+     * @return whether command is valid
+     */
     private boolean isCommandValid(String[] args) {
         if (args.length != 2) {
             return false;

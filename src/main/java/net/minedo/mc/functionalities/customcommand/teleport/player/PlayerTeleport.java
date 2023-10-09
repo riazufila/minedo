@@ -19,9 +19,13 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
+/**
+ * Player teleport.
+ */
 public class PlayerTeleport implements CommandExecutor, Listener, TabCompleter {
 
     private final List<UUID> globalTeleportingPlayers;
@@ -30,9 +34,21 @@ public class PlayerTeleport implements CommandExecutor, Listener, TabCompleter {
     private final HashMap<UUID, Integer> teleportingRequesters = new HashMap<>();
     private final HashMap<UUID, Integer> standingStillRequestees = new HashMap<>();
 
+    /**
+     * Initialize player teleport.
+     *
+     * @param globalTeleportingPlayers List of globally teleporting players.
+     */
     public PlayerTeleport(List<UUID> globalTeleportingPlayers) {
         this.globalTeleportingPlayers = globalTeleportingPlayers;
     }
+
+    /**
+     * Get whether command is valid.
+     *
+     * @param args arguments
+     * @return whether command is valid
+     */
 
     private boolean isCommandValid(String[] args) {
         if (args.length == 0) {
@@ -56,7 +72,14 @@ public class PlayerTeleport implements CommandExecutor, Listener, TabCompleter {
         return false;
     }
 
-    private UUID getPlayerUuidFromTaskId(Integer teleportTaskId, HashMap<UUID, Integer> teleportTasks) {
+    /**
+     * Get player UUID from a map of teleporting players.
+     *
+     * @param teleportTaskId runnable ID for teleportation process
+     * @param teleportTasks  teleporting players
+     * @return player UUID
+     */
+    private @Nullable UUID getPlayerUuidFromTaskId(Integer teleportTaskId, HashMap<UUID, Integer> teleportTasks) {
         UUID playerUuid = null;
 
         for (Map.Entry<UUID, Integer> entry : teleportTasks.entrySet()) {
@@ -68,6 +91,15 @@ public class PlayerTeleport implements CommandExecutor, Listener, TabCompleter {
         return playerUuid;
     }
 
+    /**
+     * Remove players from teleport queue and cancel the runnable.
+     *
+     * @param requesteeUuid  requestee UUID
+     * @param requesterUuid  requester UUID
+     * @param requesteeQueue requestee queue
+     * @param requesterQueue requester queue
+     * @param taskId         task ID
+     */
     private void removePlayersFromQueueAndCancelRunnable(
             UUID requesteeUuid, UUID requesterUuid,
             HashMap<UUID, Integer> requesteeQueue, HashMap<UUID, Integer> requesterQueue,
@@ -200,9 +232,20 @@ public class PlayerTeleport implements CommandExecutor, Listener, TabCompleter {
             }
 
             UUID otherPlayerUuid = this.getPlayerUuidFromTaskId(
-                    existingTeleportRequestTaskId, teleportRequestRequesters
+                    existingTeleportRequestTaskId,
+                    teleportRequestRequesters
             );
-            Player otherPlayer = instance.getServer().getPlayer(Objects.requireNonNull(otherPlayerUuid));
+
+            if (otherPlayerUuid == null) {
+                player.sendMessage(Component
+                        .text(PlayerTeleportMessage.ERROR_TELEPORTATION_PROCESS_NOT_FOUND.getMessage())
+                        .color(NamedTextColor.RED)
+                );
+
+                return true;
+            }
+
+            Player otherPlayer = instance.getServer().getPlayer(otherPlayerUuid);
 
             this.removePlayersFromQueueAndCancelRunnable(
                     player.getUniqueId(), otherPlayerUuid,
@@ -261,7 +304,17 @@ public class PlayerTeleport implements CommandExecutor, Listener, TabCompleter {
             UUID otherPlayerUuid = this.getPlayerUuidFromTaskId(
                     existingTeleportRequestTaskId, teleportRequestRequesters
             );
-            Player otherPlayer = Minedo.getInstance().getServer().getPlayer(Objects.requireNonNull(otherPlayerUuid));
+
+            if (otherPlayerUuid == null) {
+                player.sendMessage(Component
+                        .text(PlayerTeleportMessage.ERROR_TELEPORTATION_PROCESS_NOT_FOUND.getMessage())
+                        .color(NamedTextColor.RED)
+                );
+
+                return true;
+            }
+
+            Player otherPlayer = Minedo.getInstance().getServer().getPlayer(otherPlayerUuid);
 
             this.removePlayersFromQueueAndCancelRunnable(
                     player.getUniqueId(), otherPlayerUuid,
@@ -308,7 +361,17 @@ public class PlayerTeleport implements CommandExecutor, Listener, TabCompleter {
             UUID otherPlayerUuid = this.getPlayerUuidFromTaskId(
                     existingTeleportRequestTaskId, teleportRequestRequestees
             );
-            Player otherPlayer = Minedo.getInstance().getServer().getPlayer(Objects.requireNonNull(otherPlayerUuid));
+
+            if (otherPlayerUuid == null) {
+                player.sendMessage(Component
+                        .text(PlayerTeleportMessage.ERROR_TELEPORTATION_PROCESS_NOT_FOUND.getMessage())
+                        .color(NamedTextColor.RED)
+                );
+
+                return true;
+            }
+
+            Player otherPlayer = Minedo.getInstance().getServer().getPlayer(otherPlayerUuid);
 
             this.removePlayersFromQueueAndCancelRunnable(
                     otherPlayerUuid, player.getUniqueId(),
@@ -378,6 +441,14 @@ public class PlayerTeleport implements CommandExecutor, Listener, TabCompleter {
         return completions;
     }
 
+    /**
+     * Cancel teleport.
+     *
+     * @param player            player
+     * @param teleportTaskId    teleport task ID
+     * @param teleportingPlayer teleporting players
+     * @param isRequester       whether a requester or not
+     */
     private void handleTeleportCancellation(
             Player player, Integer teleportTaskId, HashMap<UUID, Integer> teleportingPlayer, Boolean isRequester
     ) {
@@ -413,6 +484,11 @@ public class PlayerTeleport implements CommandExecutor, Listener, TabCompleter {
         this.sendTeleportationCancelled(otherPlayer);
     }
 
+    /**
+     * Send player message on teleportation cancel.
+     *
+     * @param player player
+     */
     private void sendTeleportationCancelled(Player player) {
         if (player != null && player.isOnline()) {
             player.sendMessage(Component

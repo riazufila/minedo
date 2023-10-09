@@ -23,6 +23,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Region teleport.
+ */
 public class RegionTeleport implements CommandExecutor, Listener, TabCompleter {
 
     private final Region region;
@@ -30,6 +33,13 @@ public class RegionTeleport implements CommandExecutor, Listener, TabCompleter {
     private final List<UUID> globalTeleportingPlayers;
     private final HashMap<UUID, Integer> teleportingPlayers = new HashMap<>();
 
+    /**
+     * Initialize region teleport.
+     *
+     * @param region                   region
+     * @param regions                  list of all regions
+     * @param globalTeleportingPlayers list of globally teleporting players
+     */
     public RegionTeleport(
             Region region, List<Region> regions, List<UUID> globalTeleportingPlayers
     ) {
@@ -37,6 +47,13 @@ public class RegionTeleport implements CommandExecutor, Listener, TabCompleter {
         this.regions = regions;
         this.globalTeleportingPlayers = globalTeleportingPlayers;
     }
+
+    /**
+     * Get whether command is valid.
+     *
+     * @param args arguments
+     * @return whether command is valid
+     */
 
     private boolean isCommandValid(String[] args) {
         if (args.length != 1) {

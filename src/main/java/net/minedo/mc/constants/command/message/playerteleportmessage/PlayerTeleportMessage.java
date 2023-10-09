@@ -32,7 +32,8 @@ public enum PlayerTeleportMessage {
     ERROR_OFFLINE_DECLINED_REQUESTEE("You declined the request to teleport."),
     ERROR_TELEPORTATION_CANCELLED("Teleportation cancelled."),
     ERROR_REQUEST_TIMEOUT("Teleport request timeout."),
-    ERROR_TELEPORT_TARGET_OFFLINE("%s is offline.");
+    ERROR_TELEPORT_TARGET_OFFLINE("%s is offline."),
+    ERROR_TELEPORTATION_PROCESS_NOT_FOUND("Teleportation process isn't found.");
 
     private final String message;
 
