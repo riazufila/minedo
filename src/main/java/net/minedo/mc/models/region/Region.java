@@ -28,7 +28,7 @@ public record Region(@NotNull String name,
      *
      * @return center of region
      */
-    public Location getCenter() {
+    public @NotNull Location getCenter() {
         // Add 1 to max coordinate to conform with chunk size.
         int centerCoordinateX = (this.minX + (this.maxX + 1)) / 2;
         int centerCoordinateZ = (this.minZ + (this.maxZ + 1)) / 2;
@@ -46,7 +46,7 @@ public record Region(@NotNull String name,
      *
      * @return random location in region
      */
-    public Location getRandomLocation() {
+    public @NotNull Location getRandomLocation() {
         Random random = new Random();
 
         int coordinateX = random.nextInt((this.maxX - this.minX + 1) + this.minX);
