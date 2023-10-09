@@ -24,12 +24,16 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.world.ChunkPopulateEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.logging.Logger;
 
+/**
+ * Custom item builder.
+ */
 public class CustomItemBuilder implements Listener {
 
     private final Logger logger = Logger.getLogger(this.getClass().getName());
@@ -50,12 +54,24 @@ public class CustomItemBuilder implements Listener {
         }
     }
 
+    /**
+     * Apply vanilla enchantments.
+     *
+     * @param meta                  item meta
+     * @param enchantmentContainers enchantments
+     */
     private void applyVanillaEnchantments(ItemMeta meta, List<EnchantmentContainer> enchantmentContainers) {
         for (EnchantmentContainer enchantmentContainer : enchantmentContainers) {
             meta.addEnchant(enchantmentContainer.enchantment(), enchantmentContainer.level(), true);
         }
     }
 
+    /**
+     * Build display name.
+     *
+     * @param meta       item meta
+     * @param customItem custom item
+     */
     private void buildDisplayName(ItemMeta meta, CustomItem customItem) {
         Component displayNameComponent = Component
                 .text(customItem.displayName())
@@ -73,6 +89,12 @@ public class CustomItemBuilder implements Listener {
         meta.displayName(displayNameComponent);
     }
 
+    /**
+     * Build unknown enchantments.
+     *
+     * @param meta       item meta
+     * @param customItem custom item
+     */
     private void buildEnchantments(ItemMeta meta, CustomItem customItem) {
         List<CustomItemEnchantment> customItemEnchantments = customItem.enchantments();
 
@@ -106,6 +128,12 @@ public class CustomItemBuilder implements Listener {
         DataEmbedder.applyCustomEnchantments(meta, customEnchantments);
     }
 
+    /**
+     * Build item lore.
+     *
+     * @param meta       item meta
+     * @param customItem custom item
+     */
     private void buildLore(ItemMeta meta, CustomItem customItem) {
         CustomItemLore customItemLore = customItem.lore();
 
@@ -118,7 +146,13 @@ public class CustomItemBuilder implements Listener {
         LoreUtils.updateLore(meta, list, true);
     }
 
-    private ItemStack buildItem(CustomItem customItem) {
+    /**
+     * Build item.
+     *
+     * @param customItem custom item
+     * @return item
+     */
+    private @NotNull ItemStack buildItem(CustomItem customItem) {
         ItemStack item = new ItemStack(customItem.material());
         ItemMeta meta = item.getItemMeta();
 
@@ -130,6 +164,11 @@ public class CustomItemBuilder implements Listener {
         return item;
     }
 
+    /**
+     * Get custom item.
+     *
+     * @return custom item
+     */
     public ItemStack getCustomItem() {
         try {
             Random random = new Random();
