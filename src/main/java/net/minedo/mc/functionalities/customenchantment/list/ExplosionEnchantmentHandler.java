@@ -9,10 +9,7 @@ import net.minedo.mc.functionalities.customenchantment.CombatEvent;
 import net.minedo.mc.functionalities.customenchantment.CustomEnchantment;
 import net.minedo.mc.functionalities.customenchantment.CustomEnchantmentHandler;
 import net.minedo.mc.functionalities.customenchantment.CustomEnchantmentWrapper;
-import org.bukkit.Bukkit;
-import org.bukkit.Color;
-import org.bukkit.Location;
-import org.bukkit.Particle;
+import org.bukkit.*;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -91,8 +88,11 @@ public class ExplosionEnchantmentHandler extends CustomEnchantmentHandler {
             return;
         }
 
+        Minedo instance = Minedo.getInstance();
         long DELAY = 3;
-        int taskId = new BukkitRunnable() {
+
+        // Explosion runnable.
+        int explosionTaskId = new BukkitRunnable() {
 
             @Override
             public void run() {
@@ -106,30 +106,50 @@ public class ExplosionEnchantmentHandler extends CustomEnchantmentHandler {
                 playersExploding.remove(playerUuid);
             }
 
-        }.runTaskLater(Minedo.getInstance(), DELAY * (int) Common.TICK_PER_SECOND.getValue()).getTaskId();
+        }.runTaskLater(instance, DELAY * (int) Common.TICK_PER_SECOND.getValue()).getTaskId();
 
-        ParticleUtils.spawnParticleOnEntity(
-                player,
-                Particle.REDSTONE,
-                5,
-                1,
-                new Particle.DustOptions(Color.GRAY, 1.5f),
-                0.2
-        );
-        playersExploding.put(playerUuid, taskId);
+        // Particles runnable.
+        new BukkitRunnable() {
+
+            int countDown = 0;
+
+            @Override
+            public void run() {
+                if (countDown >= DELAY) {
+                    this.cancel();
+                }
+
+                if (player.isOnline()) {
+                    ParticleUtils.spawnParticleOnEntity(
+                            player,
+                            Particle.REDSTONE,
+                            5,
+                            1,
+                            new Particle.DustOptions(Color.GRAY, 1.5f),
+                            0.2
+                    );
+                }
+
+                countDown++;
+            }
+
+        }.runTaskTimer(instance, 0, (int) Common.TICK_PER_SECOND.getValue() / 2);
+
+        player.getWorld().playSound(player.getLocation(), Sound.ENTITY_CREEPER_PRIMED, 1, 1);
+        playersExploding.put(playerUuid, explosionTaskId);
     }
 
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
         UUID playerUuid = event.getPlayer().getUniqueId();
-        Integer taskId = playersExploding.get(playerUuid);
+        Integer explosionTaskId = playersExploding.get(playerUuid);
 
-        if (taskId == null) {
+        if (explosionTaskId == null) {
             return;
         }
 
         playersExploding.remove(playerUuid);
-        Bukkit.getScheduler().cancelTask(taskId);
+        Bukkit.getScheduler().cancelTask(explosionTaskId);
     }
 
     @EventHandler

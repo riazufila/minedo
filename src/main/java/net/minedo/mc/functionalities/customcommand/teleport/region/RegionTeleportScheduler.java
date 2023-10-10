@@ -23,7 +23,7 @@ public class RegionTeleportScheduler extends BukkitRunnable {
     private final Region region;
     private final List<UUID> globalTeleportingPlayers;
     private final HashMap<UUID, Integer> teleportingPlayers;
-    private int countdown = 4;
+    private int countDown = 4;
 
     /**
      * Initialize region teleport scheduler.
@@ -63,13 +63,13 @@ public class RegionTeleportScheduler extends BukkitRunnable {
         World sourceWorld = player.getWorld();
         World destinationWorld = this.region.worldType();
 
-        if (countdown > 0) {
+        if (countDown > 0) {
             player.sendMessage(Component
-                    .text(String.format(RegionTeleportMessage.INFO_COUNTDOWN.getMessage(), countdown))
+                    .text(String.format(RegionTeleportMessage.INFO_COUNTDOWN.getMessage(), countDown))
                     .color(NamedTextColor.YELLOW)
             );
 
-            countdown--;
+            countDown--;
         } else {
             if (player.isOnline()) {
                 sourceWorld.playSound(player.getLocation(), FeedbackSound.TELEPORT.getSound(), 1, 1);

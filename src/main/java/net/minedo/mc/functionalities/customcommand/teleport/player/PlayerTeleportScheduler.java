@@ -22,7 +22,7 @@ public class PlayerTeleportScheduler extends BukkitRunnable {
     private final HashMap<UUID, Integer> teleportingRequesters;
     private final HashMap<UUID, Integer> standingStillRequestees;
     private final List<UUID> globalTeleportingPlayers;
-    private int countdown;
+    private int countDown;
 
     /**
      * Initialize player teleport scheduler.
@@ -38,7 +38,7 @@ public class PlayerTeleportScheduler extends BukkitRunnable {
             HashMap<UUID, Integer> teleportingRequesters, HashMap<UUID, Integer> standingStillRequestees,
             List<UUID> globalTeleportingPlayers
     ) {
-        this.countdown = 4;
+        this.countDown = 4;
         this.teleportingPlayer = teleportingPlayer;
         this.stillPlayer = stillPlayer;
         this.teleportingRequesters = teleportingRequesters;
@@ -51,13 +51,13 @@ public class PlayerTeleportScheduler extends BukkitRunnable {
         World sourceWorld = teleportingPlayer.getWorld();
         World destinationWorld = stillPlayer.getWorld();
 
-        if (countdown > 0) {
+        if (countDown > 0) {
             teleportingPlayer.sendMessage(Component
-                    .text(String.format(PlayerTeleportMessage.INFO_COUNTDOWN.getMessage(), countdown))
+                    .text(String.format(PlayerTeleportMessage.INFO_COUNTDOWN.getMessage(), countDown))
                     .color(NamedTextColor.YELLOW)
             );
 
-            countdown--;
+            countDown--;
         } else {
             if (teleportingPlayer.isOnline() && stillPlayer.isOnline()) {
                 sourceWorld.playSound(
