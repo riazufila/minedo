@@ -16,6 +16,7 @@ import net.minedo.mc.Minedo;
 import net.minedo.mc.constants.common.Common;
 import net.minedo.mc.constants.directory.Directory;
 import net.minedo.mc.constants.filetype.FileType;
+import net.minedo.mc.functionalities.common.utils.ParticleUtils;
 import net.minedo.mc.interfaces.chunkprocessor.ChunkProcessor;
 import net.minedo.mc.models.region.Region;
 import org.bukkit.*;
@@ -33,7 +34,6 @@ import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.entity.EntityTeleportEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
-import org.bukkit.util.BoundingBox;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
@@ -307,34 +307,6 @@ public class RegionRegeneration implements Listener {
         }
     }
 
-    /**
-     * Spawn particles on an entity.
-     *
-     * @param entity   entity
-     * @param particle particle as in {@link Particle#values()}
-     * @param density  particles density
-     * @param count    particles count
-     */
-    private void spawnParticleOnEntity(Entity entity, Particle particle, double density, int count) {
-        BoundingBox boundingBox = entity.getBoundingBox();
-        World world = entity.getWorld();
-
-        // Calculate the step size based on the density
-        double stepX = boundingBox.getWidthX() / density;
-        double stepY = boundingBox.getHeight() / density;
-        double stepZ = boundingBox.getWidthZ() / density;
-
-        // Iterate over the bounding box and spawn particles
-        for (double x = boundingBox.getMinX(); x <= boundingBox.getMaxX(); x += stepX) {
-            for (double y = boundingBox.getMinY(); y <= boundingBox.getMaxY(); y += stepY) {
-                for (double z = boundingBox.getMinZ(); z <= boundingBox.getMaxZ(); z += stepZ) {
-                    Location particleLocation = new Location(world, x, y, z);
-                    world.spawnParticle(particle, particleLocation, count);
-                }
-            }
-        }
-    }
-
     @EventHandler
     public void onEntityMove(EntityMoveEvent event) {
         Location location = event.getTo();
@@ -347,7 +319,7 @@ public class RegionRegeneration implements Listener {
             double MULTIPLIER = 1.0;
 
             entity.getWorld().playSound(location, Sound.BLOCK_AMETHYST_BLOCK_HIT, 1, 1);
-            this.spawnParticleOnEntity(entity, Particle.CRIT_MAGIC, 1, 5);
+            ParticleUtils.spawnParticleOnEntity(entity, Particle.CRIT_MAGIC, 1, 5, null);
             entity.setVelocity(awayFromCenter.multiply(MULTIPLIER));
         }
     }

@@ -3,12 +3,17 @@ package net.minedo.mc.functionalities.customenchantment.list;
 import net.minedo.mc.Minedo;
 import net.minedo.mc.constants.common.Common;
 import net.minedo.mc.constants.customenchantment.type.CustomEnchantmentType;
+import net.minedo.mc.functionalities.common.utils.ParticleUtils;
 import net.minedo.mc.functionalities.common.utils.PlayerUtils;
 import net.minedo.mc.functionalities.customenchantment.CombatEvent;
 import net.minedo.mc.functionalities.customenchantment.CustomEnchantment;
 import net.minedo.mc.functionalities.customenchantment.CustomEnchantmentHandler;
 import net.minedo.mc.functionalities.customenchantment.CustomEnchantmentWrapper;
 import org.bukkit.Bukkit;
+import org.bukkit.Color;
+import org.bukkit.Location;
+import org.bukkit.Particle;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -92,9 +97,10 @@ public class ExplosionEnchantmentHandler extends CustomEnchantmentHandler {
             @Override
             public void run() {
                 float EXPLOSION_POWER = 10.0f;
+                Location location = player.getLocation().getBlock().getRelative(BlockFace.UP).getLocation();
 
                 if (player.isOnline()) {
-                    player.getWorld().createExplosion(player.getLocation(), EXPLOSION_POWER);
+                    player.getWorld().createExplosion(location, EXPLOSION_POWER);
                 }
 
                 playersExploding.remove(playerUuid);
@@ -102,6 +108,14 @@ public class ExplosionEnchantmentHandler extends CustomEnchantmentHandler {
 
         }.runTaskLater(Minedo.getInstance(), DELAY * (int) Common.TICK_PER_SECOND.getValue()).getTaskId();
 
+        ParticleUtils.spawnParticleOnEntity(
+                player,
+                Particle.REDSTONE,
+                5,
+                1,
+                new Particle.DustOptions(Color.GRAY, 1.5f),
+                0.2
+        );
         playersExploding.put(playerUuid, taskId);
     }
 
