@@ -46,9 +46,10 @@ public class ExplosionEnchantmentHandler extends CustomEnchantmentHandler {
 
         LivingEntity defendingEntity = combatEvent.defendingEntity();
 
+        float EXPLOSION_POWER = 1.0f;
         defendingEntity
                 .getWorld()
-                .createExplosion(defendingEntity.getLocation(), 1.0f);
+                .createExplosion(defendingEntity.getLocation(), EXPLOSION_POWER);
     }
 
     @Override
