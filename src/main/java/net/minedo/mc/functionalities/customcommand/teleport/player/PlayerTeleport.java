@@ -9,6 +9,7 @@ import net.minedo.mc.constants.command.message.ignoremessage.IgnoreMessage;
 import net.minedo.mc.constants.command.message.playerteleportmessage.PlayerTeleportMessage;
 import net.minedo.mc.constants.command.type.playerteleporttype.PlayerTeleportType;
 import net.minedo.mc.constants.common.Common;
+import net.minedo.mc.functionalities.common.utils.PlayerUtils;
 import net.minedo.mc.repositories.playerblockedlistrepository.PlayerBlockedRepository;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -510,25 +511,23 @@ public class PlayerTeleport implements CommandExecutor, Listener, TabCompleter {
 
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent event) {
-        if (
-                event.getFrom().getBlockX() != event.getTo().getBlockX() ||
-                        event.getFrom().getBlockY() != event.getTo().getBlockY() ||
-                        event.getFrom().getBlockZ() != event.getTo().getBlockZ()
-        ) {
-            Player player = event.getPlayer();
-            UUID playerUuid = player.getUniqueId();
-            Integer requesterTeleportTaskId = this.teleportingRequesters.get(playerUuid);
-            Integer requesteeTeleportTaskId = this.standingStillRequestees.get(playerUuid);
+        if (!PlayerUtils.isPlayerMoving(event)) {
+            return;
+        }
 
-            if (requesterTeleportTaskId != null) {
-                this.handleTeleportCancellation(
-                        player, requesterTeleportTaskId, standingStillRequestees, true
-                );
-            } else if (requesteeTeleportTaskId != null) {
-                this.handleTeleportCancellation(
-                        player, requesteeTeleportTaskId, teleportingRequesters, false
-                );
-            }
+        Player player = event.getPlayer();
+        UUID playerUuid = player.getUniqueId();
+        Integer requesterTeleportTaskId = this.teleportingRequesters.get(playerUuid);
+        Integer requesteeTeleportTaskId = this.standingStillRequestees.get(playerUuid);
+
+        if (requesterTeleportTaskId != null) {
+            this.handleTeleportCancellation(
+                    player, requesterTeleportTaskId, standingStillRequestees, true
+            );
+        } else if (requesteeTeleportTaskId != null) {
+            this.handleTeleportCancellation(
+                    player, requesteeTeleportTaskId, teleportingRequesters, false
+            );
         }
     }
 

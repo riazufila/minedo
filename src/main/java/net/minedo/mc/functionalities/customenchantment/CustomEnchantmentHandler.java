@@ -15,6 +15,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
@@ -43,8 +44,11 @@ public abstract class CustomEnchantmentHandler extends SimpleCustomEnchantment i
         super(customEnchantmentType);
     }
 
-    public boolean isInteractValid(Action action, ItemStack item) {
-        if (action != Action.RIGHT_CLICK_AIR) {
+    public boolean isInteractValid(PlayerInteractEvent event, ItemStack item) {
+        Action action = event.getAction();
+        EquipmentSlot hand = event.getHand();
+
+        if (!action.isRightClick() && hand != EquipmentSlot.OFF_HAND) {
             return false;
         }
 

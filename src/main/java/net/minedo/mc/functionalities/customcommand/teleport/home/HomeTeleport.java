@@ -8,6 +8,7 @@ import net.minedo.mc.constants.command.message.globalteleportmessage.GlobalTelep
 import net.minedo.mc.constants.command.message.hometeleportmessage.HomeTeleportMessage;
 import net.minedo.mc.constants.command.type.hometype.HomeType;
 import net.minedo.mc.constants.common.Common;
+import net.minedo.mc.functionalities.common.utils.PlayerUtils;
 import net.minedo.mc.functionalities.permissions.PermissionUtils;
 import net.minedo.mc.models.playerhome.PlayerHome;
 import net.minedo.mc.repositories.playerhomerepository.PlayerHomeRepository;
@@ -253,29 +254,27 @@ public class HomeTeleport implements CommandExecutor, Listener, TabCompleter {
 
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent event) {
-        if (
-                event.getFrom().getBlockX() != event.getTo().getBlockX() ||
-                        event.getFrom().getBlockY() != event.getTo().getBlockY() ||
-                        event.getFrom().getBlockZ() != event.getTo().getBlockZ()
-        ) {
-            Player player = event.getPlayer();
-            UUID playerUuid = player.getUniqueId();
-            Integer teleportTaskId = this.teleportingPlayers.get(playerUuid);
+        if (!PlayerUtils.isPlayerMoving(event)) {
+            return;
+        }
 
-            if (teleportTaskId != null) {
-                // Remove from global teleporting list.
-                this.globalTeleportingPlayers.remove(player.getUniqueId());
-                // Remove from Map.
-                this.teleportingPlayers.remove(playerUuid);
-                // Cancel Bukkit Runnable.
-                Bukkit.getScheduler().cancelTask(teleportTaskId);
+        Player player = event.getPlayer();
+        UUID playerUuid = player.getUniqueId();
+        Integer teleportTaskId = this.teleportingPlayers.get(playerUuid);
 
-                player.playSound(player.getLocation(), FeedbackSound.ERROR.getSound(), 1, 1);
-                player.sendMessage(Component
-                        .text(HomeTeleportMessage.ERROR_TELEPORTATION_CANCELLED.getMessage())
-                        .color(NamedTextColor.RED)
-                );
-            }
+        if (teleportTaskId != null) {
+            // Remove from global teleporting list.
+            this.globalTeleportingPlayers.remove(player.getUniqueId());
+            // Remove from Map.
+            this.teleportingPlayers.remove(playerUuid);
+            // Cancel Bukkit Runnable.
+            Bukkit.getScheduler().cancelTask(teleportTaskId);
+
+            player.playSound(player.getLocation(), FeedbackSound.ERROR.getSound(), 1, 1);
+            player.sendMessage(Component
+                    .text(HomeTeleportMessage.ERROR_TELEPORTATION_CANCELLED.getMessage())
+                    .color(NamedTextColor.RED)
+            );
         }
     }
 

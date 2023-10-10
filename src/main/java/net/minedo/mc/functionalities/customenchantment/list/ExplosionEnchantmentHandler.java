@@ -1,24 +1,35 @@
 package net.minedo.mc.functionalities.customenchantment.list;
 
+import net.minedo.mc.Minedo;
+import net.minedo.mc.constants.common.Common;
 import net.minedo.mc.constants.customenchantment.type.CustomEnchantmentType;
+import net.minedo.mc.functionalities.common.utils.PlayerUtils;
 import net.minedo.mc.functionalities.customenchantment.CombatEvent;
 import net.minedo.mc.functionalities.customenchantment.CustomEnchantment;
 import net.minedo.mc.functionalities.customenchantment.CustomEnchantmentHandler;
 import net.minedo.mc.functionalities.customenchantment.CustomEnchantmentWrapper;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.HashMap;
 import java.util.Optional;
+import java.util.UUID;
 
 /**
  * Grants explosion.
  */
 public class ExplosionEnchantmentHandler extends CustomEnchantmentHandler {
+
+    private final HashMap<UUID, Integer> playersExploding = new HashMap<>();
 
     /**
      * Initialize explosion enchantment handler.
@@ -56,14 +67,15 @@ public class ExplosionEnchantmentHandler extends CustomEnchantmentHandler {
     @EventHandler
     public void onInteract(PlayerInteractEvent event) {
         Player player = event.getPlayer();
-        ItemStack item = player.getEquipment().getItemInOffHand();
+        UUID playerUuid = player.getUniqueId();
 
-        if (item.isEmpty()) {
-            item = player.getEquipment().getItemInMainHand();
+        if (playersExploding.get(playerUuid) != null) {
+            return;
         }
 
+        ItemStack item = player.getEquipment().getItemInOffHand();
 
-        if (!super.isInteractValid(event.getAction(), item)) {
+        if (!super.isInteractValid(event, item)) {
             return;
         }
 
@@ -74,8 +86,56 @@ public class ExplosionEnchantmentHandler extends CustomEnchantmentHandler {
             return;
         }
 
-        float EXPLOSION_POWER = 10.0f;
-        player.getWorld().createExplosion(player.getLocation(), EXPLOSION_POWER);
+        long DELAY = 3;
+        int taskId = new BukkitRunnable() {
+
+            @Override
+            public void run() {
+                float EXPLOSION_POWER = 10.0f;
+
+                if (player.isOnline()) {
+                    player.getWorld().createExplosion(player.getLocation(), EXPLOSION_POWER);
+                }
+
+                playersExploding.remove(playerUuid);
+            }
+
+        }.runTaskLater(Minedo.getInstance(), DELAY * (int) Common.TICK_PER_SECOND.getValue()).getTaskId();
+
+        playersExploding.put(playerUuid, taskId);
+    }
+
+    @EventHandler
+    public void onPlayerDeath(PlayerDeathEvent event) {
+        UUID playerUuid = event.getPlayer().getUniqueId();
+        Integer taskId = playersExploding.get(playerUuid);
+
+        if (taskId == null) {
+            return;
+        }
+
+        playersExploding.remove(playerUuid);
+        Bukkit.getScheduler().cancelTask(taskId);
+    }
+
+    @EventHandler
+    public void onPlayerMove(PlayerMoveEvent event) {
+        if (!PlayerUtils.isPlayerMoving(event)) {
+            return;
+        }
+
+        UUID playerUuid = event.getPlayer().getUniqueId();
+        Integer taskId = playersExploding.get(playerUuid);
+
+        if (taskId == null) {
+            return;
+        }
+
+        if (PlayerUtils.isPlayerFalling(event)) {
+            return;
+        }
+
+        event.setCancelled(true);
     }
 
 }
