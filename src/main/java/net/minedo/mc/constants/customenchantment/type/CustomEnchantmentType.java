@@ -26,6 +26,7 @@ public enum CustomEnchantmentType {
     HASTE,
     INVISIBILITY,
     WATER_BREATHING,
-    JUMP
+    JUMP,
+    STRENGTH
 
 }

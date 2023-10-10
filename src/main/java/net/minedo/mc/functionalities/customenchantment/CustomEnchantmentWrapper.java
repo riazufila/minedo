@@ -91,6 +91,7 @@ public class CustomEnchantmentWrapper {
             add(new ResistanceEnchantmentHandler());
             add(new SlowEnchantmentHandler());
             add(new SpeedEnchantmentHandler());
+            add(new StrengthEnchantmentHandler());
             add(new WaterBreathingEnchantmentHandler());
             add(new WeaknessEnchantmentHandler());
             add(new WitherEnchantmentHandler());
