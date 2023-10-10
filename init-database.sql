@@ -72,6 +72,7 @@ CREATE TABLE custom_item_lore (
 CREATE TABLE custom_item_enchantment (
     custom_item_id INT NOT NULL,
     enchantment varchar(50) NOT NULL,
+    is_custom TINYINT(1) NOT NULL,
     level INT NOT NULL,
     FOREIGN KEY (custom_item_id) REFERENCES custom_item (id)
 );

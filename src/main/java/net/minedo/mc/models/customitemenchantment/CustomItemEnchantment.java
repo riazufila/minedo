@@ -9,8 +9,10 @@ import org.jetbrains.annotations.NotNull;
  *
  * @param enchantment enchantment can either be values from {@link Enchantment#values()}
  *                    or {@link CustomEnchantmentType#values()}
+ * @param isCustom    whether enchantment is custom
  * @param level       level for the enchantment
  */
 public record CustomItemEnchantment(@NotNull String enchantment,
+                                    boolean isCustom,
                                     int level) {
 }

@@ -113,9 +113,14 @@ public class CustomItemBuilder implements Listener {
         for (CustomItemEnchantment enchantment : customItemEnchantments) {
             String unknownEnchantment = enchantment.enchantment();
 
-            Enchantment vanillaEnchantment = Enchantment
-                    .getByKey(NamespacedKey.minecraft(unknownEnchantment.toLowerCase()));
-            if (vanillaEnchantment != null) {
+            if (!enchantment.isCustom()) {
+                NamespacedKey vanillaEnchantmentKey = NamespacedKey.minecraft(unknownEnchantment.toLowerCase());
+                Enchantment vanillaEnchantment = Enchantment.getByKey(vanillaEnchantmentKey);
+
+                if (vanillaEnchantment == null) {
+                    throw new IllegalStateException("Vanilla enchantment cannot be null.");
+                }
+
                 vanillaEnchantments.add(new EnchantmentContainer(vanillaEnchantment, enchantment.level()));
             } else {
                 CustomEnchantmentType customEnchantment = CustomEnchantmentType.valueOf(unknownEnchantment);
