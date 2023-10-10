@@ -4,11 +4,11 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.minedo.mc.Minedo;
+import net.minedo.mc.constants.command.feedbacksound.FeedbackSound;
 import net.minedo.mc.constants.command.message.ignoremessage.IgnoreMessage;
 import net.minedo.mc.constants.command.message.whispermessage.WhisperMessage;
 import net.minedo.mc.repositories.playerblockedlistrepository.PlayerBlockedRepository;
 import org.apache.commons.lang3.StringUtils;
-import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -68,6 +68,7 @@ public class Message implements CommandExecutor, TabCompleter {
 
             if (PlayerBlockedRepository.isPlayerBlockedByPlayer(
                     player.getUniqueId(), otherPlayer.getUniqueId())) {
+                player.playSound(player.getLocation(), FeedbackSound.ERROR.getSound(), 1, 1);
                 player.sendMessage(Component
                         .text(String.format(
                                 IgnoreMessage.ERROR_INTERACT.getMessage(),
@@ -86,7 +87,7 @@ public class Message implements CommandExecutor, TabCompleter {
                     .decoration(TextDecoration.ITALIC, true);
 
             player.sendMessage(component);
-            otherPlayer.playSound(otherPlayer.getLocation(), Sound.BLOCK_NOTE_BLOCK_BELL, 1, 1);
+            otherPlayer.playSound(otherPlayer.getLocation(), FeedbackSound.INFO.getSound(), 1, 1);
             otherPlayer.sendMessage(component);
         } else {
             player.sendMessage(Component

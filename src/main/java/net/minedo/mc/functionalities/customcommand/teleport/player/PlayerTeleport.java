@@ -3,6 +3,7 @@ package net.minedo.mc.functionalities.customcommand.teleport.player;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.minedo.mc.Minedo;
+import net.minedo.mc.constants.command.feedbacksound.FeedbackSound;
 import net.minedo.mc.constants.command.message.globalteleportmessage.GlobalTeleportMessage;
 import net.minedo.mc.constants.command.message.ignoremessage.IgnoreMessage;
 import net.minedo.mc.constants.command.message.playerteleportmessage.PlayerTeleportMessage;
@@ -192,6 +193,8 @@ public class PlayerTeleport implements CommandExecutor, Listener, TabCompleter {
                         ))
                         .color(NamedTextColor.YELLOW)
                 );
+
+                otherPlayer.playSound(otherPlayer.getLocation(), FeedbackSound.INFO.getSound(), 1, 1);
                 otherPlayer.sendMessage(Component
                         .text(String.format(
                                 PlayerTeleportMessage.SUCCESS_REQUEST_REQUESTER.getMessage(),
@@ -279,6 +282,8 @@ public class PlayerTeleport implements CommandExecutor, Listener, TabCompleter {
                         ))
                         .color(NamedTextColor.YELLOW)
                 );
+
+                otherPlayer.playSound(otherPlayer.getLocation(), FeedbackSound.INFO.getSound(), 1, 1);
                 otherPlayer.sendMessage(Component
                         .text(String.format(
                                 PlayerTeleportMessage.INFO_TELEPORTING_REQUESTER.getMessage(),
@@ -324,6 +329,7 @@ public class PlayerTeleport implements CommandExecutor, Listener, TabCompleter {
             );
 
             if (otherPlayer != null && otherPlayer.isOnline()) {
+                otherPlayer.playSound(otherPlayer.getLocation(), FeedbackSound.ERROR.getSound(), 1, 1);
                 otherPlayer.sendMessage(Component
                         .text(String.format(
                                 PlayerTeleportMessage.ERROR_DECLINED_REQUESTER.getMessage(),
@@ -331,6 +337,7 @@ public class PlayerTeleport implements CommandExecutor, Listener, TabCompleter {
                         ))
                         .color(NamedTextColor.RED)
                 );
+
                 player.sendMessage(Component
                         .text(String.format(
                                 PlayerTeleportMessage.ERROR_DECLINED_REQUESTEE.getMessage(),
@@ -381,6 +388,7 @@ public class PlayerTeleport implements CommandExecutor, Listener, TabCompleter {
             );
 
             if (otherPlayer != null && otherPlayer.isOnline()) {
+                otherPlayer.playSound(otherPlayer.getLocation(), FeedbackSound.ERROR.getSound(), 1, 1);
                 otherPlayer.sendMessage(Component
                         .text(String.format(
                                 PlayerTeleportMessage.INFO_DISCARD_REQUESTEE.getMessage(),
@@ -388,6 +396,7 @@ public class PlayerTeleport implements CommandExecutor, Listener, TabCompleter {
                         ))
                         .color(NamedTextColor.RED)
                 );
+
                 player.sendMessage(Component
                         .text(PlayerTeleportMessage.INFO_DISCARD_REQUESTER.getMessage())
                         .color(NamedTextColor.RED)
@@ -491,6 +500,7 @@ public class PlayerTeleport implements CommandExecutor, Listener, TabCompleter {
      */
     private void sendTeleportationCancelled(Player player) {
         if (player != null && player.isOnline()) {
+            player.playSound(player.getLocation(), FeedbackSound.ERROR.getSound(), 1, 1);
             player.sendMessage(Component
                     .text(PlayerTeleportMessage.ERROR_TELEPORTATION_CANCELLED.getMessage())
                     .color(NamedTextColor.RED)

@@ -3,6 +3,7 @@ package net.minedo.mc.functionalities.customcommand.teleport.region;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.minedo.mc.Minedo;
+import net.minedo.mc.constants.command.feedbacksound.FeedbackSound;
 import net.minedo.mc.constants.command.message.globalteleportmessage.GlobalTeleportMessage;
 import net.minedo.mc.constants.command.message.regionteleportmessage.RegionTeleportMessage;
 import net.minedo.mc.constants.common.Common;
@@ -152,6 +153,7 @@ public class RegionTeleport implements CommandExecutor, Listener, TabCompleter {
                 // Cancel Bukkit Runnable.
                 Bukkit.getScheduler().cancelTask(teleportTaskId);
 
+                player.playSound(player.getLocation(), FeedbackSound.ERROR.getSound(), 1, 1);
                 player.sendMessage(Component
                         .text(RegionTeleportMessage.ERROR_TELEPORTATION_CANCELLED.getMessage())
                         .color(NamedTextColor.RED)
