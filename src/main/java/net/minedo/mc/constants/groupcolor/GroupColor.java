@@ -1,6 +1,7 @@
 package net.minedo.mc.constants.groupcolor;
 
 import net.kyori.adventure.text.format.NamedTextColor;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Color based on permission.
@@ -21,7 +22,7 @@ public enum GroupColor {
      *
      * @param color color values as in {@link NamedTextColor#NAMES}
      */
-    GroupColor(NamedTextColor color) {
+    GroupColor(@Nullable NamedTextColor color) {
         this.color = color;
     }
 
@@ -30,7 +31,7 @@ public enum GroupColor {
      *
      * @return color
      */
-    public NamedTextColor getColor() {
+    public @Nullable NamedTextColor getColor() {
         return color;
     }
 

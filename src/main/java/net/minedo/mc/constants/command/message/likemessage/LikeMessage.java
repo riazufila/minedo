@@ -1,6 +1,7 @@
 package net.minedo.mc.constants.command.message.likemessage;
 
 import net.minedo.mc.constants.command.type.customcommandtype.CustomCommandType;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Like command texts.
@@ -21,7 +22,7 @@ public enum LikeMessage {
      *
      * @param message text
      */
-    LikeMessage(String message) {
+    LikeMessage(@NotNull String message) {
         this.message = message;
     }
 
@@ -30,7 +31,7 @@ public enum LikeMessage {
      *
      * @return text
      */
-    public String getMessage() {
+    public @NotNull String getMessage() {
         return message;
     }
 

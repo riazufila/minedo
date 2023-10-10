@@ -1,6 +1,7 @@
 package net.minedo.mc.constants.command.feedbacksound;
 
 import org.bukkit.Sound;
+import org.jetbrains.annotations.NotNull;
 
 public enum FeedbackSound {
 
@@ -15,7 +16,7 @@ public enum FeedbackSound {
      *
      * @param sound sound
      */
-    FeedbackSound(Sound sound) {
+    FeedbackSound(@NotNull Sound sound) {
         this.sound = sound;
     }
 
@@ -24,9 +25,8 @@ public enum FeedbackSound {
      *
      * @return sound
      */
-    public Sound getSound() {
+    public @NotNull Sound getSound() {
         return sound;
     }
-
 
 }

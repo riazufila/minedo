@@ -1,5 +1,7 @@
 package net.minedo.mc.constants.command.type.nicknametype;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Nickname command arguments.
  */
@@ -16,7 +18,7 @@ public enum NicknameType {
      *
      * @param type command argument.
      */
-    NicknameType(String type) {
+    NicknameType(@NotNull String type) {
         this.type = type;
     }
 
@@ -25,7 +27,7 @@ public enum NicknameType {
      *
      * @return command argument
      */
-    public String getType() {
+    public @NotNull String getType() {
         return type;
     }
 

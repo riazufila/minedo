@@ -1,5 +1,7 @@
 package net.minedo.mc.constants.command.type.ignoretype;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Ignore command arguments.
  */
@@ -15,7 +17,7 @@ public enum IgnoreType {
      *
      * @param type argument
      */
-    IgnoreType(String type) {
+    IgnoreType(@NotNull String type) {
         this.type = type;
     }
 
@@ -24,7 +26,7 @@ public enum IgnoreType {
      *
      * @return argument
      */
-    public String getType() {
+    public @NotNull String getType() {
         return type;
     }
 

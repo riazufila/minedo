@@ -1,5 +1,7 @@
 package net.minedo.mc.constants.filetype;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * File type.
  */
@@ -14,7 +16,7 @@ public enum FileType {
      *
      * @param type type
      */
-    FileType(String type) {
+    FileType(@NotNull String type) {
         this.type = type;
     }
 
@@ -23,7 +25,7 @@ public enum FileType {
      *
      * @return file type
      */
-    public String getType() {
+    public @NotNull String getType() {
         return type;
     }
 

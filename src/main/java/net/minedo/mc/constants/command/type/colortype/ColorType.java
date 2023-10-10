@@ -1,5 +1,7 @@
 package net.minedo.mc.constants.command.type.colortype;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Color command arguments.
  */
@@ -18,7 +20,7 @@ public enum ColorType {
      *
      * @param type command argument
      */
-    ColorType(String type) {
+    ColorType(@NotNull String type) {
         this.type = type;
     }
 
@@ -27,7 +29,7 @@ public enum ColorType {
      *
      * @return command argument
      */
-    public String getType() {
+    public @NotNull String getType() {
         return type;
     }
 

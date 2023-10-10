@@ -1,5 +1,7 @@
 package net.minedo.mc.constants.grouppermission;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Permission.
  */
@@ -18,7 +20,7 @@ public enum GroupPermission {
      *
      * @param permission permission
      */
-    GroupPermission(String permission) {
+    GroupPermission(@NotNull String permission) {
         this.permission = permission;
     }
 
@@ -27,7 +29,7 @@ public enum GroupPermission {
      *
      * @return permission
      */
-    public String getPermission() {
+    public @NotNull String getPermission() {
         return permission;
     }
 

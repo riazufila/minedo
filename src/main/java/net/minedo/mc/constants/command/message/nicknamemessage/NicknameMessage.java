@@ -2,6 +2,7 @@ package net.minedo.mc.constants.command.message.nicknamemessage;
 
 import net.minedo.mc.constants.command.type.customcommandtype.CustomCommandType;
 import net.minedo.mc.constants.command.type.nicknametype.NicknameType;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Nickname command texts.
@@ -36,7 +37,7 @@ public enum NicknameMessage {
      *
      * @param message text
      */
-    NicknameMessage(String message) {
+    NicknameMessage(@NotNull String message) {
         this.message = message;
     }
 
@@ -45,7 +46,7 @@ public enum NicknameMessage {
      *
      * @return text
      */
-    public String getMessage() {
+    public @NotNull String getMessage() {
         return message;
     }
 

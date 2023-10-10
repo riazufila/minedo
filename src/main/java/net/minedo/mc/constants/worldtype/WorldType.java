@@ -1,5 +1,7 @@
 package net.minedo.mc.constants.worldtype;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * World type.
  */
@@ -16,7 +18,7 @@ public enum WorldType {
      *
      * @param type type
      */
-    WorldType(String type) {
+    WorldType(@NotNull String type) {
         this.type = type;
     }
 
@@ -25,7 +27,7 @@ public enum WorldType {
      *
      * @return world type
      */
-    public String getType() {
+    public @NotNull String getType() {
         return type;
     }
 

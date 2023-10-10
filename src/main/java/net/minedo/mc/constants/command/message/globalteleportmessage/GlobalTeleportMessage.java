@@ -1,5 +1,7 @@
 package net.minedo.mc.constants.command.message.globalteleportmessage;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Global teleport texts.
  */
@@ -14,7 +16,7 @@ public enum GlobalTeleportMessage {
      *
      * @param message text
      */
-    GlobalTeleportMessage(String message) {
+    GlobalTeleportMessage(@NotNull String message) {
         this.message = message;
     }
 
@@ -23,7 +25,7 @@ public enum GlobalTeleportMessage {
      *
      * @return text
      */
-    public String getMessage() {
+    public @NotNull String getMessage() {
         return message;
     }
 

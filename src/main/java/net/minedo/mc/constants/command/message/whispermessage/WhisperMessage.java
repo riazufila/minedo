@@ -1,6 +1,7 @@
 package net.minedo.mc.constants.command.message.whispermessage;
 
 import net.minedo.mc.constants.command.type.customcommandtype.CustomCommandType;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Whisper command texts.
@@ -18,7 +19,7 @@ public enum WhisperMessage {
      *
      * @param message text
      */
-    WhisperMessage(String message) {
+    WhisperMessage(@NotNull String message) {
         this.message = message;
     }
 
@@ -27,7 +28,7 @@ public enum WhisperMessage {
      *
      * @return text
      */
-    public String getMessage() {
+    public @NotNull String getMessage() {
         return message;
     }
 

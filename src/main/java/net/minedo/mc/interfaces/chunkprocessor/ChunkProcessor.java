@@ -1,5 +1,7 @@
 package net.minedo.mc.interfaces.chunkprocessor;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Chunk processor interface.
  */
@@ -11,6 +13,6 @@ public interface ChunkProcessor {
      * @param params params
      * @return whether process fails or not
      */
-    boolean process(Object[] params);
+    boolean process(@NotNull Object[] params);
 
 }

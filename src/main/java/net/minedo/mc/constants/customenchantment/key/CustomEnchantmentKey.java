@@ -1,5 +1,7 @@
 package net.minedo.mc.constants.customenchantment.key;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Custom enchantment keys.
  */
@@ -16,7 +18,7 @@ public enum CustomEnchantmentKey {
      *
      * @param key key
      */
-    CustomEnchantmentKey(String key) {
+    CustomEnchantmentKey(@NotNull String key) {
         this.key = key;
     }
 
@@ -25,7 +27,7 @@ public enum CustomEnchantmentKey {
      *
      * @return key
      */
-    public String getKey() {
+    public @NotNull String getKey() {
         return key;
     }
 
