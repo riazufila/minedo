@@ -72,10 +72,10 @@ public class RegionTeleportScheduler extends BukkitRunnable {
             countdown--;
         } else {
             if (player.isOnline()) {
-                player.teleport(location);
-
                 sourceWorld.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1, 1);
-                destinationWorld.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1, 1);
+
+                player.teleport(location);
+                destinationWorld.playSound(location, Sound.ENTITY_ENDERMAN_TELEPORT, 1, 1);
 
                 player.sendMessage(Component
                         .text(String.format(

@@ -60,13 +60,13 @@ public class PlayerTeleportScheduler extends BukkitRunnable {
             countdown--;
         } else {
             if (teleportingPlayer.isOnline() && stillPlayer.isOnline()) {
-                teleportingPlayer.teleport(this.stillPlayer);
-
                 sourceWorld.playSound(
                         teleportingPlayer.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1, 1
                 );
+
+                teleportingPlayer.teleport(this.stillPlayer);
                 destinationWorld.playSound(
-                        teleportingPlayer.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1, 1
+                        this.stillPlayer.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1, 1
                 );
 
                 teleportingPlayer.sendMessage(Component
