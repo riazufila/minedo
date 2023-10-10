@@ -7,6 +7,7 @@ import net.minedo.mc.functionalities.customenchantment.CustomEnchantmentHandler;
 import net.minedo.mc.functionalities.customenchantment.CustomEnchantmentWrapper;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.jetbrains.annotations.NotNull;
@@ -49,10 +50,11 @@ public class LightningEnchantmentHandler extends CustomEnchantmentHandler {
             return;
         }
 
-        combatEvent
-                .defendingEntity()
+        LivingEntity defendingEntity = combatEvent.defendingEntity();
+
+        defendingEntity
                 .getWorld()
-                .strikeLightning(event.getEntity().getLocation());
+                .strikeLightning(defendingEntity.getLocation());
     }
 
 }
