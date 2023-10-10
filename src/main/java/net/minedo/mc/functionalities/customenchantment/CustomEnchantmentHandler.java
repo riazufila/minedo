@@ -16,6 +16,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -75,6 +76,32 @@ public abstract class CustomEnchantmentHandler extends SimpleCustomEnchantment i
     }
 
     /**
+     * Get potion effect for on hit events.
+     *
+     * @param potionEffectType  potion effect type
+     * @param isAmplified       whether potion effect can be amplified
+     * @param customEnchantment custom enchantment
+     * @return potion effect
+     */
+    private @NotNull PotionEffect getPotionEffect(
+            PotionEffectType potionEffectType, boolean isAmplified, CustomEnchantment customEnchantment
+    ) {
+        int DEFAULT_DURATION = 3;
+        double INCREMENT_DURATION = 0.2;
+        int enchantmentLevel = customEnchantment.getLevel();
+        int duration = isAmplified
+                ? (int) (DEFAULT_DURATION + (enchantmentLevel * INCREMENT_DURATION))
+                : DEFAULT_DURATION * customEnchantment.getLevel();
+        int amplifier = isAmplified ? enchantmentLevel : 0;
+
+        return new PotionEffect(
+                potionEffectType,
+                duration * (int) Common.TICK_PER_SECOND.getValue(),
+                Math.min(amplifier, this.AMPLIFIER_LIMIT) // Limit maximum potion effect amplifier.
+        );
+    }
+
+    /**
      * Trigger custom effects on hit.
      *
      * @param event            event
@@ -98,20 +125,7 @@ public abstract class CustomEnchantmentHandler extends SimpleCustomEnchantment i
         }
 
         CustomEnchantment customEnchantment = customEnchantmentOptional.get();
-        int DEFAULT_DURATION = 3;
-        double INCREMENT_DURATION = 0.2;
-        int enchantmentLevel = customEnchantment.getLevel();
-        int duration = isAmplified
-                ? (int) (DEFAULT_DURATION + (enchantmentLevel * INCREMENT_DURATION))
-                : DEFAULT_DURATION * customEnchantment.getLevel();
-        int amplifier = isAmplified ? enchantmentLevel : 0;
-
-        PotionEffect potionEffect = new PotionEffect(
-                potionEffectType,
-                duration * (int) Common.TICK_PER_SECOND.getValue(),
-                Math.min(amplifier, this.AMPLIFIER_LIMIT) // Limit maximum potion effect amplifier.
-        );
-
+        PotionEffect potionEffect = this.getPotionEffect(potionEffectType, isAmplified, customEnchantment);
         combatEvent.defendingEntity().addPotionEffect(potionEffect);
     }
 
