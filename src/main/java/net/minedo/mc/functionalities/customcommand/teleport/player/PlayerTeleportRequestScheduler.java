@@ -2,6 +2,7 @@ package net.minedo.mc.functionalities.customcommand.teleport.player;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.minedo.mc.constants.command.feedbacksound.FeedbackSound;
 import net.minedo.mc.constants.command.message.playerteleportmessage.PlayerTeleportMessage;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -48,7 +49,10 @@ public class PlayerTeleportRequestScheduler extends BukkitRunnable {
                 .text(PlayerTeleportMessage.ERROR_REQUEST_TIMEOUT.getMessage())
                 .color(NamedTextColor.RED);
 
+        requester.playSound(requester.getLocation(), FeedbackSound.ERROR.getSound(), 1, 1);
         requester.sendMessage(timeoutMessage);
+
+        requestee.playSound(requestee.getLocation(), FeedbackSound.ERROR.getSound(), 1, 1);
         requestee.sendMessage(timeoutMessage);
     }
 

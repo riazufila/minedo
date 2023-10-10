@@ -2,8 +2,8 @@ package net.minedo.mc.functionalities.customcommand.teleport.player;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.minedo.mc.constants.command.feedbacksound.FeedbackSound;
 import net.minedo.mc.constants.command.message.playerteleportmessage.PlayerTeleportMessage;
-import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -60,13 +60,13 @@ public class PlayerTeleportScheduler extends BukkitRunnable {
             countdown--;
         } else {
             if (teleportingPlayer.isOnline() && stillPlayer.isOnline()) {
-                teleportingPlayer.teleport(this.stillPlayer);
-
                 sourceWorld.playSound(
-                        teleportingPlayer.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1, 1
+                        teleportingPlayer.getLocation(), FeedbackSound.TELEPORT.getSound(), 1, 1
                 );
+
+                teleportingPlayer.teleport(this.stillPlayer);
                 destinationWorld.playSound(
-                        teleportingPlayer.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1, 1
+                        this.stillPlayer.getLocation(), FeedbackSound.TELEPORT.getSound(), 1, 1
                 );
 
                 teleportingPlayer.sendMessage(Component

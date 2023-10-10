@@ -3,6 +3,7 @@ package net.minedo.mc.functionalities.customcommand.like;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.minedo.mc.Minedo;
+import net.minedo.mc.constants.command.feedbacksound.FeedbackSound;
 import net.minedo.mc.constants.command.message.likemessage.LikeMessage;
 import net.minedo.mc.models.playerlike.PlayerLike;
 import net.minedo.mc.repositories.playerlikerepository.PlayerLikeRepository;
@@ -100,6 +101,8 @@ public class Like implements CommandExecutor, TabCompleter {
                     ))
                     .color(NamedTextColor.GREEN)
             );
+
+            otherPlayer.playSound(otherPlayer.getLocation(), FeedbackSound.INFO.getSound(), 1, 1);
             otherPlayer.sendMessage(Component
                     .text(String.format(
                             LikeMessage.SUCCESS_LIKE_RECEIVED.getMessage(),
