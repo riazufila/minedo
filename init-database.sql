@@ -105,12 +105,14 @@ INSERT INTO custom_item VALUES
 (6, 'IRON_LEGGINGS', 'Iron Leggings', NULL, 'OBFUSCATED'),
 (7, 'IRON_BOOTS', 'Iron Boots', NULL, 'OBFUSCATED'),
 (8, 'IRON_SWORD', 'Iron Sword', NULL, 'OBFUSCATED'),
-(9, 'SHIELD', 'Shield', NULL, 'OBFUSCATED');
+(9, 'SHIELD', 'Shield', NULL, 'OBFUSCATED'),
+(10, 'MAGMA_CREAM', 'Bomberman', 'DARK_PURPLE', NULL);
 
 INSERT INTO custom_item_lore VALUES
 (1, 'Boots infused with the agility of a rabbit.', 'GREEN', NULL),
 (2, 'The legendary weapon of the thunder God.', 'DARK_PURPLE', NULL),
-(3, 'A weapon by Death, itself.', 'DARK_PURPLE', NULL);
+(3, 'A weapon by Death, itself.', 'DARK_PURPLE', NULL),
+(10, 'Suicidal attack for the greater good.', 'DARK_PURPLE', NULL);
 
 INSERT INTO custom_item_enchantment VALUES
 (1, 'PROTECTION', false, 5),
@@ -127,10 +129,11 @@ INSERT INTO custom_item_enchantment VALUES
 (3, 'MENDING', false, 1),
 (3, 'UNBREAKING', false, 10),
 (3, 'POISON', true, 5),
-(3, 'BLINDNESS', true, 5);
+(3, 'BLINDNESS', true, 5),
+(10, 'EXPLOSION', true, 1);
 
 INSERT INTO custom_item_probability VALUES
-(1, 10),
+(1, 20),
 (2, 10),
 (3, 10),
 (4, 100),
@@ -138,7 +141,8 @@ INSERT INTO custom_item_probability VALUES
 (6, 100),
 (7, 100),
 (8, 100),
-(9, 100);
+(9, 100),
+(10, 15);
 
 INSERT INTO region VALUES
 (1, 'Spawn', 'world', -128, 127, -128, 127);
