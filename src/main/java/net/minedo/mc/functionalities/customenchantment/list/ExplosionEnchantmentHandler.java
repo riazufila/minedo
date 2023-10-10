@@ -40,6 +40,65 @@ public class ExplosionEnchantmentHandler extends CustomEnchantmentHandler {
         super(CustomEnchantmentType.EXPLOSION);
     }
 
+    /**
+     * Runs explosion runnable.
+     *
+     * @param player player
+     * @param delay  delay
+     * @return explosion runnable task ID
+     */
+    private int explosionRunnable(Player player, long delay) {
+        return new BukkitRunnable() {
+
+            @Override
+            public void run() {
+                float EXPLOSION_POWER = 10.0f;
+                Location location = player.getLocation().getBlock().getRelative(BlockFace.UP).getLocation();
+
+                if (player.isOnline()) {
+                    player.getWorld().createExplosion(location, EXPLOSION_POWER);
+                }
+
+                playersExploding.remove(player.getUniqueId());
+            }
+
+        }.runTaskLater(Minedo.getInstance(), delay * (int) Common.TICK_PER_SECOND.getValue()).getTaskId();
+    }
+
+    /**
+     * Runs explosion particles runnable.
+     *
+     * @param player player
+     * @param delay  delay
+     */
+    private void explosionParticlesRunnable(Player player, long delay) {
+        new BukkitRunnable() {
+
+            int countDown = 0;
+
+            @Override
+            public void run() {
+                if (countDown >= delay) {
+                    this.cancel();
+                }
+
+                if (player.isOnline()) {
+                    ParticleUtils.spawnParticleOnEntity(
+                            player,
+                            Particle.REDSTONE,
+                            5,
+                            1,
+                            new Particle.DustOptions(Color.GRAY, 1.5f),
+                            0.2
+                    );
+                }
+
+                countDown++;
+            }
+
+        }.runTaskTimer(Minedo.getInstance(), 0, (int) Common.TICK_PER_SECOND.getValue() / 2);
+    }
+
     @Override
     @EventHandler
     public void onHit(@NotNull EntityDamageByEntityEvent event) {
@@ -88,52 +147,9 @@ public class ExplosionEnchantmentHandler extends CustomEnchantmentHandler {
             return;
         }
 
-        Minedo instance = Minedo.getInstance();
         long DELAY = 3;
-
-        // Explosion runnable.
-        int explosionTaskId = new BukkitRunnable() {
-
-            @Override
-            public void run() {
-                float EXPLOSION_POWER = 10.0f;
-                Location location = player.getLocation().getBlock().getRelative(BlockFace.UP).getLocation();
-
-                if (player.isOnline()) {
-                    player.getWorld().createExplosion(location, EXPLOSION_POWER);
-                }
-
-                playersExploding.remove(playerUuid);
-            }
-
-        }.runTaskLater(instance, DELAY * (int) Common.TICK_PER_SECOND.getValue()).getTaskId();
-
-        // Particles runnable.
-        new BukkitRunnable() {
-
-            int countDown = 0;
-
-            @Override
-            public void run() {
-                if (countDown >= DELAY) {
-                    this.cancel();
-                }
-
-                if (player.isOnline()) {
-                    ParticleUtils.spawnParticleOnEntity(
-                            player,
-                            Particle.REDSTONE,
-                            5,
-                            1,
-                            new Particle.DustOptions(Color.GRAY, 1.5f),
-                            0.2
-                    );
-                }
-
-                countDown++;
-            }
-
-        }.runTaskTimer(instance, 0, (int) Common.TICK_PER_SECOND.getValue() / 2);
+        int explosionTaskId = this.explosionRunnable(player, DELAY);
+        this.explosionParticlesRunnable(player, DELAY);
 
         player.getWorld().playSound(player.getLocation(), Sound.ENTITY_CREEPER_PRIMED, 1, 1);
         playersExploding.put(playerUuid, explosionTaskId);
