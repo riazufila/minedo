@@ -86,17 +86,17 @@ public class ExplosionEnchantmentHandler extends CustomEnchantmentHandler {
                     ParticleUtils.spawnParticleOnEntity(
                             player,
                             Particle.REDSTONE,
-                            5,
+                            3,
                             1,
-                            new Particle.DustOptions(Color.GRAY, 1.5f),
-                            0.2
+                            new Particle.DustOptions(Color.GRAY, 2f),
+                            0.3
                     );
                 }
 
                 countDown++;
             }
 
-        }.runTaskTimer(Minedo.getInstance(), 0, (int) Common.TICK_PER_SECOND.getValue() / 2);
+        }.runTaskTimer(Minedo.getInstance(), 0, (int) Common.TICK_PER_SECOND.getValue());
     }
 
     @Override
