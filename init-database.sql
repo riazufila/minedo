@@ -72,6 +72,7 @@ CREATE TABLE custom_item_lore (
 CREATE TABLE custom_item_enchantment (
     custom_item_id INT NOT NULL,
     enchantment varchar(50) NOT NULL,
+    is_custom TINYINT(1) NOT NULL,
     level INT NOT NULL,
     FOREIGN KEY (custom_item_id) REFERENCES custom_item (id)
 );
@@ -112,21 +113,21 @@ INSERT INTO custom_item_lore VALUES
 (3, 'A weapon by Death, itself.', 'DARK_PURPLE', NULL);
 
 INSERT INTO custom_item_enchantment VALUES
-(1, 'PROTECTION', 5),
-(1, 'MENDING', 1),
-(1, 'UNBREAKING', 10),
-(1, 'HEALTH_BOOST', 2),
-(1, 'SPEED', 1),
-(2, 'SHARPNESS', 7),
-(2, 'MENDING', 1),
-(2, 'UNBREAKING', 10),
-(2, 'LIGHTNING', 1),
-(2, 'WEAKNESS', 3),
-(3, 'SHARPNESS', 9),
-(3, 'MENDING', 1),
-(3, 'UNBREAKING', 10),
-(3, 'POISON', 5),
-(3, 'BLINDNESS', 5);
+(1, 'PROTECTION', false, 5),
+(1, 'MENDING', false, 1),
+(1, 'UNBREAKING', false, 10),
+(1, 'HEALTH_BOOST', true, 2),
+(1, 'SPEED', true, 1),
+(2, 'SHARPNESS', false, 7),
+(2, 'MENDING', false, 1),
+(2, 'UNBREAKING', false, 10),
+(2, 'LIGHTNING', true, 1),
+(2, 'WEAKNESS', true, 3),
+(3, 'SHARPNESS', false, 9),
+(3, 'MENDING', false, 1),
+(3, 'UNBREAKING', false, 10),
+(3, 'POISON', true, 5),
+(3, 'BLINDNESS', true, 5);
 
 INSERT INTO custom_item_probability VALUES
 (1, 10),

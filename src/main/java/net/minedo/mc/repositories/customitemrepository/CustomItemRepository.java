@@ -45,7 +45,8 @@ public final class CustomItemRepository {
                             custom_item_lore.text AS lore,
                             custom_item_lore.color AS lore_color,
                             custom_item_lore.decoration AS lore_decoration,
-                            custom_item_enchantment.enchantment AS enchantment,
+                            custom_item_enchantment.enchantment,
+                            custom_item_enchantment.is_custom AS is_enchantment_custom,
                             custom_item_enchantment.level AS enchantment_level
                         FROM
                             custom_item
@@ -72,7 +73,8 @@ public final class CustomItemRepository {
                         material = Material.valueOf(resultSet.getString("material"));
                         displayName = resultSet.getString("display_name");
                         String unconvertedDisplayNameColor = resultSet.getString("display_name_color");
-                        String unconvertedDisplayNameDecoration = resultSet.getString("display_name_decoration");
+                        String unconvertedDisplayNameDecoration = resultSet
+                                .getString("display_name_decoration");
 
 
                         if (unconvertedDisplayNameColor != null) {
@@ -106,13 +108,16 @@ public final class CustomItemRepository {
                     }
 
                     String enchantment = resultSet.getString("enchantment");
+                    boolean isEnchantmentCustom = resultSet.getBoolean("is_enchantment_custom");
                     int enchantmentLevel = resultSet.getInt("enchantment_level");
 
                     if (enchantment == null) {
                         continue;
                     }
 
-                    CustomItemEnchantment customItemEnchantment = new CustomItemEnchantment(enchantment, enchantmentLevel);
+                    CustomItemEnchantment customItemEnchantment = new CustomItemEnchantment(
+                            enchantment, isEnchantmentCustom, enchantmentLevel
+                    );
 
                     if (customItemEnchantments == null) {
                         customItemEnchantments = new ArrayList<>();
