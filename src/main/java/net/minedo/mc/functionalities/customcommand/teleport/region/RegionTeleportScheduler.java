@@ -9,6 +9,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.List;
@@ -34,8 +35,10 @@ public class RegionTeleportScheduler extends BukkitRunnable {
      * @param teleportingPlayers       players teleporting to region
      */
     public RegionTeleportScheduler(
-            Player player, Region region, List<UUID> globalTeleportingPlayers,
-            HashMap<UUID, Integer> teleportingPlayers
+            @NotNull Player player,
+            @NotNull Region region,
+            @NotNull List<UUID> globalTeleportingPlayers,
+            @NotNull HashMap<UUID, Integer> teleportingPlayers
     ) {
         this.player = player;
         this.region = region;
@@ -49,7 +52,7 @@ public class RegionTeleportScheduler extends BukkitRunnable {
      * @param location location
      * @return safe location to teleport to
      */
-    private Location getSafeToTeleportLocation(Location location) {
+    private @NotNull Location getSafeToTeleportLocation(@NotNull Location location) {
         World world = this.region.worldType();
 
         return new Location(

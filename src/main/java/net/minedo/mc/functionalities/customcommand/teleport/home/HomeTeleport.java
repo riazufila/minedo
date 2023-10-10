@@ -22,6 +22,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -40,7 +41,7 @@ public class HomeTeleport implements CommandExecutor, Listener, TabCompleter {
      *
      * @param globalTeleportingPlayers list of globally teleporting players
      */
-    public HomeTeleport(List<UUID> globalTeleportingPlayers) {
+    public HomeTeleport(@NotNull List<UUID> globalTeleportingPlayers) {
         this.globalTeleportingPlayers = globalTeleportingPlayers;
     }
 
@@ -50,7 +51,7 @@ public class HomeTeleport implements CommandExecutor, Listener, TabCompleter {
      * @param homeName home name
      * @return whether home name is valid
      */
-    private boolean isValidHomeName(String homeName) {
+    private boolean isValidHomeName(@Nullable String homeName) {
         if (homeName == null) {
             return false;
         }
@@ -68,7 +69,7 @@ public class HomeTeleport implements CommandExecutor, Listener, TabCompleter {
      * @param args arguments
      * @return whether command is valid
      */
-    private boolean isCommandValid(String[] args) {
+    private boolean isCommandValid(@NotNull String[] args) {
         if (args.length != 2) {
             return false;
         }
@@ -83,7 +84,7 @@ public class HomeTeleport implements CommandExecutor, Listener, TabCompleter {
 
     @Override
     public boolean onCommand(
-            @NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args
+            @NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args
     ) {
         if (!(sender instanceof Player player)) {
             return true;
@@ -140,6 +141,16 @@ public class HomeTeleport implements CommandExecutor, Listener, TabCompleter {
             }
 
             PlayerHome playerHome = PlayerHomeRepository.getPlayerHome(player.getUniqueId(), homeName);
+
+            if (playerHome == null) {
+                player.sendMessage(Component
+                        .text(HomeTeleportMessage.ERROR_HOME_DOES_NOT_EXISTS.getMessage())
+                        .color(NamedTextColor.RED)
+                );
+
+                return true;
+            }
+
             long DURATION = 1;
             long DELAY = 1;
             int teleportTaskId = new HomeTeleportScheduler(
@@ -213,7 +224,7 @@ public class HomeTeleport implements CommandExecutor, Listener, TabCompleter {
 
     @Override
     public List<String> onTabComplete(
-            @NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args
+            @NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args
     ) {
         List<String> completions = new ArrayList<>();
 
@@ -253,7 +264,7 @@ public class HomeTeleport implements CommandExecutor, Listener, TabCompleter {
     }
 
     @EventHandler
-    public void onPlayerMove(PlayerMoveEvent event) {
+    public void onPlayerMove(@NotNull PlayerMoveEvent event) {
         if (!PlayerUtils.isPlayerMoving(event)) {
             return;
         }

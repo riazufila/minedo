@@ -7,6 +7,7 @@ import net.minedo.mc.constants.command.message.playerteleportmessage.PlayerTelep
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.List;
@@ -34,9 +35,11 @@ public class PlayerTeleportScheduler extends BukkitRunnable {
      * @param globalTeleportingPlayers list of globally teleporting players
      */
     public PlayerTeleportScheduler(
-            Player teleportingPlayer, Player stillPlayer,
-            HashMap<UUID, Integer> teleportingRequesters, HashMap<UUID, Integer> standingStillRequestees,
-            List<UUID> globalTeleportingPlayers
+            @NotNull Player teleportingPlayer,
+            @NotNull Player stillPlayer,
+            @NotNull HashMap<UUID, Integer> teleportingRequesters,
+            @NotNull HashMap<UUID, Integer> standingStillRequestees,
+            @NotNull List<UUID> globalTeleportingPlayers
     ) {
         this.countDown = 4;
         this.teleportingPlayer = teleportingPlayer;

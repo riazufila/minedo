@@ -29,7 +29,7 @@ public class Ignore implements CommandExecutor, TabCompleter {
      * @param args arguments
      * @return whether command is valid
      */
-    private boolean isCommandValid(String[] args) {
+    private boolean isCommandValid(@NotNull String[] args) {
         if (args.length != 2) {
             return false;
         }
@@ -41,7 +41,7 @@ public class Ignore implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(
-            @NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args
+            @NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args
     ) {
         if (!(sender instanceof Player player)) {
             return true;
@@ -143,7 +143,7 @@ public class Ignore implements CommandExecutor, TabCompleter {
 
     @Override
     public List<String> onTabComplete(
-            @NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args
+            @NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args
     ) {
         List<String> completions = new ArrayList<>();
 

@@ -47,7 +47,7 @@ public class RegionRegenerationBuilder extends BukkitRunnable {
      * @param restoringChunks chunks that are restoring
      */
     public RegionRegenerationBuilder(
-            Chunk chunk, Region region, HashMap<String, Integer> restoringChunks
+            @NotNull Chunk chunk, @NotNull Region region, @NotNull HashMap<String, Integer> restoringChunks
     ) {
         this.chunk = chunk;
         this.region = region;
@@ -60,7 +60,7 @@ public class RegionRegenerationBuilder extends BukkitRunnable {
      * @param chunk chunk
      * @return center of chunk
      */
-    private @NotNull Location getCenterLocationOfChunk(Chunk chunk) {
+    private @NotNull Location getCenterLocationOfChunk(@NotNull Chunk chunk) {
         World world = this.region.worldType();
         int CHUNK_SIZE = (int) Common.CHUNK_SIZE.getValue();
         int coordinateMinX = chunk.getX() * CHUNK_SIZE;
@@ -85,7 +85,7 @@ public class RegionRegenerationBuilder extends BukkitRunnable {
      *
      * @param chunk chunk
      */
-    private void playSoundAtCenterOfChunk(Chunk chunk) {
+    private void playSoundAtCenterOfChunk(@NotNull Chunk chunk) {
         Location location = this.getCenterLocationOfChunk(chunk);
         this.region.worldType().playSound(location, Sound.BLOCK_AZALEA_LEAVES_PLACE, 1, 1);
     }

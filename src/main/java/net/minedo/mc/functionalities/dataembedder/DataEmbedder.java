@@ -32,7 +32,7 @@ public final class DataEmbedder {
      * @param key used as an identifier when setting and getting a value
      * @return key object
      */
-    public static @NotNull NamespacedKey createKey(String key) {
+    public static @NotNull NamespacedKey createKey(@NotNull String key) {
         return new NamespacedKey(Minedo.getInstance(), key);
     }
 
@@ -43,7 +43,7 @@ public final class DataEmbedder {
      * @param customEnchantments simplified custom enchantment list
      */
     public static void applyCustomEnchantments(
-            ItemMeta meta, List<CustomEnchantment> customEnchantments
+            @NotNull ItemMeta meta, @NotNull List<CustomEnchantment> customEnchantments
     ) {
         PersistentDataContainer parentContainer = meta.getPersistentDataContainer();
         List<PersistentDataContainer> childContainers = new ArrayList<>();
@@ -90,7 +90,7 @@ public final class DataEmbedder {
      * @param item item to get custom enchantments from
      * @return custom enchantments list
      */
-    public static @Nullable List<CustomEnchantment> getCustomEnchantments(ItemStack item) {
+    public static @Nullable List<CustomEnchantment> getCustomEnchantments(@NotNull ItemStack item) {
         ItemMeta meta = item.getItemMeta();
         PersistentDataContainer container = meta.getPersistentDataContainer();
         NamespacedKey customEnchantmentKey = createKey(CustomEnchantmentKey.CUSTOM_ENCHANTMENT.getKey());

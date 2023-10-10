@@ -28,7 +28,7 @@ public class BlindnessEnchantmentHandler extends CustomEnchantmentHandler {
 
     @Override
     @EventHandler
-    public void onPlayerArmorChange(PlayerArmorChangeEvent event) {
+    public void onPlayerArmorChange(@NotNull PlayerArmorChangeEvent event) {
         super.updateCustomEffectsOnArmorChange(event, PotionEffectType.BLINDNESS);
     }
 

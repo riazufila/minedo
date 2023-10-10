@@ -6,6 +6,7 @@ import net.minedo.mc.constants.command.feedbacksound.FeedbackSound;
 import net.minedo.mc.constants.command.message.playerteleportmessage.PlayerTeleportMessage;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.UUID;
@@ -29,8 +30,8 @@ public class PlayerTeleportRequestScheduler extends BukkitRunnable {
      * @param teleportRequestees teleport requestees
      */
     public PlayerTeleportRequestScheduler(
-            Player requester, Player requestee,
-            HashMap<UUID, Integer> teleportRequesters, HashMap<UUID, Integer> teleportRequestees
+            @NotNull Player requester, @NotNull Player requestee,
+            @NotNull HashMap<UUID, Integer> teleportRequesters, @NotNull HashMap<UUID, Integer> teleportRequestees
     ) {
         this.requester = requester;
         this.requestee = requestee;

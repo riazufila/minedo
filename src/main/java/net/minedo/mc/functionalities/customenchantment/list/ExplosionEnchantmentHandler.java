@@ -47,7 +47,7 @@ public class ExplosionEnchantmentHandler extends CustomEnchantmentHandler {
      * @param delay  delay
      * @return explosion runnable task ID
      */
-    private int explosionRunnable(Player player, long delay) {
+    private int explosionRunnable(@NotNull Player player, long delay) {
         return new BukkitRunnable() {
 
             @Override
@@ -71,7 +71,7 @@ public class ExplosionEnchantmentHandler extends CustomEnchantmentHandler {
      * @param player player
      * @param delay  delay
      */
-    private void explosionParticlesRunnable(Player player, long delay) {
+    private void explosionParticlesRunnable(@NotNull Player player, long delay) {
         new BukkitRunnable() {
 
             int countDown = 0;
@@ -126,7 +126,7 @@ public class ExplosionEnchantmentHandler extends CustomEnchantmentHandler {
 
     @Override
     @EventHandler
-    public void onInteract(PlayerInteractEvent event) {
+    public void onInteract(@NotNull PlayerInteractEvent event) {
         Player player = event.getPlayer();
         UUID playerUuid = player.getUniqueId();
 
@@ -157,7 +157,7 @@ public class ExplosionEnchantmentHandler extends CustomEnchantmentHandler {
     }
 
     @EventHandler
-    public void onPlayerDeath(PlayerDeathEvent event) {
+    public void onPlayerDeath(@NotNull PlayerDeathEvent event) {
         UUID playerUuid = event.getPlayer().getUniqueId();
         Integer explosionTaskId = playersExploding.get(playerUuid);
 
@@ -170,7 +170,7 @@ public class ExplosionEnchantmentHandler extends CustomEnchantmentHandler {
     }
 
     @EventHandler
-    public void onPlayerMove(PlayerMoveEvent event) {
+    public void onPlayerMove(@NotNull PlayerMoveEvent event) {
         if (!PlayerUtils.isPlayerMoving(event)) {
             return;
         }

@@ -24,7 +24,7 @@ public class CustomEnchantmentWrapper {
      * @return custom enchantment
      */
     public static @NotNull Optional<CustomEnchantment> getCustomEnchantment(
-            ItemStack item, CustomEnchantmentType customEnchantmentType
+            @NotNull ItemStack item, @NotNull CustomEnchantmentType customEnchantmentType
     ) {
         List<CustomEnchantment> customEnchantments = DataEmbedder.getCustomEnchantments(item);
 
@@ -46,7 +46,7 @@ public class CustomEnchantmentWrapper {
      * @param enchantmentName enchantment name based on {@link CustomEnchantmentType#values()}
      * @return formatted custom enchantment name
      */
-    public static @NotNull String formatCustomEnchantmentName(String enchantmentName) {
+    public static @NotNull String formatCustomEnchantmentName(@NotNull String enchantmentName) {
         String[] words = enchantmentName.split("_");
 
         StringBuilder formattedName = new StringBuilder();

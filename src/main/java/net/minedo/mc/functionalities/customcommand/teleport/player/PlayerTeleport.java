@@ -41,7 +41,7 @@ public class PlayerTeleport implements CommandExecutor, Listener, TabCompleter {
      *
      * @param globalTeleportingPlayers List of globally teleporting players.
      */
-    public PlayerTeleport(List<UUID> globalTeleportingPlayers) {
+    public PlayerTeleport(@NotNull List<UUID> globalTeleportingPlayers) {
         this.globalTeleportingPlayers = globalTeleportingPlayers;
     }
 
@@ -52,7 +52,7 @@ public class PlayerTeleport implements CommandExecutor, Listener, TabCompleter {
      * @return whether command is valid
      */
 
-    private boolean isCommandValid(String[] args) {
+    private boolean isCommandValid(@NotNull String[] args) {
         if (args.length == 0) {
             return false;
         }
@@ -81,7 +81,9 @@ public class PlayerTeleport implements CommandExecutor, Listener, TabCompleter {
      * @param teleportTasks  teleporting players
      * @return player UUID
      */
-    private @Nullable UUID getPlayerUuidFromTaskId(Integer teleportTaskId, HashMap<UUID, Integer> teleportTasks) {
+    private @Nullable UUID getPlayerUuidFromTaskId(
+            @NotNull Integer teleportTaskId, @NotNull HashMap<UUID, Integer> teleportTasks
+    ) {
         UUID playerUuid = null;
 
         for (Map.Entry<UUID, Integer> entry : teleportTasks.entrySet()) {
@@ -103,9 +105,9 @@ public class PlayerTeleport implements CommandExecutor, Listener, TabCompleter {
      * @param taskId         task ID
      */
     private void removePlayersFromQueueAndCancelRunnable(
-            UUID requesteeUuid, UUID requesterUuid,
-            HashMap<UUID, Integer> requesteeQueue, HashMap<UUID, Integer> requesterQueue,
-            Integer taskId
+            @NotNull UUID requesteeUuid, @NotNull UUID requesterUuid,
+            @NotNull HashMap<UUID, Integer> requesteeQueue, @NotNull HashMap<UUID, Integer> requesterQueue,
+            @NotNull Integer taskId
     ) {
         requesteeQueue.remove(requesteeUuid);
         requesterQueue.remove(requesterUuid);
@@ -115,7 +117,7 @@ public class PlayerTeleport implements CommandExecutor, Listener, TabCompleter {
 
     @Override
     public boolean onCommand(
-            @NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args
+            @NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args
     ) {
         if (!(sender instanceof Player player)) {
             return true;
@@ -422,7 +424,7 @@ public class PlayerTeleport implements CommandExecutor, Listener, TabCompleter {
 
     @Override
     public List<String> onTabComplete(
-            @NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args
+            @NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args
     ) {
         List<String> completions = new ArrayList<>();
 
@@ -460,7 +462,8 @@ public class PlayerTeleport implements CommandExecutor, Listener, TabCompleter {
      * @param isRequester       whether a requester or not
      */
     private void handleTeleportCancellation(
-            Player player, Integer teleportTaskId, HashMap<UUID, Integer> teleportingPlayer, Boolean isRequester
+            @NotNull Player player, @NotNull Integer teleportTaskId,
+            @NotNull HashMap<UUID, Integer> teleportingPlayer, @NotNull Boolean isRequester
     ) {
         Player otherPlayer = null;
         UUID playerUuid = player.getUniqueId();
@@ -499,7 +502,7 @@ public class PlayerTeleport implements CommandExecutor, Listener, TabCompleter {
      *
      * @param player player
      */
-    private void sendTeleportationCancelled(Player player) {
+    private void sendTeleportationCancelled(@Nullable Player player) {
         if (player != null && player.isOnline()) {
             player.playSound(player.getLocation(), FeedbackSound.ERROR.getSound(), 1, 1);
             player.sendMessage(Component
@@ -510,7 +513,7 @@ public class PlayerTeleport implements CommandExecutor, Listener, TabCompleter {
     }
 
     @EventHandler
-    public void onPlayerMove(PlayerMoveEvent event) {
+    public void onPlayerMove(@NotNull PlayerMoveEvent event) {
         if (!PlayerUtils.isPlayerMoving(event)) {
             return;
         }

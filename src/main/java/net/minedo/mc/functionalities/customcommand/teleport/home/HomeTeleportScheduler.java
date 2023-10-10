@@ -9,6 +9,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.List;
@@ -34,8 +35,8 @@ public class HomeTeleportScheduler extends BukkitRunnable {
      * @param teleportingPlayers       players teleporting to home
      */
     public HomeTeleportScheduler(
-            Player player, PlayerHome home, List<UUID> globalTeleportingPlayers,
-            HashMap<UUID, Integer> teleportingPlayers
+            @NotNull Player player, @NotNull PlayerHome home, @NotNull List<UUID> globalTeleportingPlayers,
+            @NotNull HashMap<UUID, Integer> teleportingPlayers
     ) {
         this.player = player;
         this.home = home;

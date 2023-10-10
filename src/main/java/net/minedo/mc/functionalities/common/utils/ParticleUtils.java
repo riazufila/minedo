@@ -5,6 +5,8 @@ import org.bukkit.Particle;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.util.BoundingBox;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Particle utils.
@@ -22,8 +24,8 @@ public final class ParticleUtils {
      * @param offset      offset
      */
     private static void spawnParticleOnBoundingBox(
-            Entity entity, Particle particle, double density,
-            int count, Particle.DustOptions dustOptions, Double offset
+            @NotNull Entity entity, @NotNull Particle particle, double density,
+            int count, @Nullable Particle.DustOptions dustOptions, @Nullable Double offset
     ) {
         BoundingBox boundingBox = entity.getBoundingBox();
         World world = entity.getWorld();
@@ -62,7 +64,8 @@ public final class ParticleUtils {
      * @param dustOptions dust options
      */
     public static void spawnParticleOnEntity(
-            Entity entity, Particle particle, double density, int count, Particle.DustOptions dustOptions
+            @NotNull Entity entity, @NotNull Particle particle, double density,
+            int count, @Nullable Particle.DustOptions dustOptions
     ) {
         spawnParticleOnBoundingBox(entity, particle, density, count, dustOptions, null);
     }
@@ -78,8 +81,8 @@ public final class ParticleUtils {
      * @param offset      offset
      */
     public static void spawnParticleOnEntity(
-            Entity entity, Particle particle, double density,
-            int count, Particle.DustOptions dustOptions, double offset
+            @NotNull Entity entity, @NotNull Particle particle, double density,
+            int count, @NotNull Particle.DustOptions dustOptions, double offset
     ) {
         spawnParticleOnBoundingBox(entity, particle, density, count, dustOptions, offset);
     }

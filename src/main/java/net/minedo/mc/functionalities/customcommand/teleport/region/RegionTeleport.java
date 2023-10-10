@@ -43,7 +43,7 @@ public class RegionTeleport implements CommandExecutor, Listener, TabCompleter {
      * @param globalTeleportingPlayers list of globally teleporting players
      */
     public RegionTeleport(
-            Region region, List<Region> regions, List<UUID> globalTeleportingPlayers
+            @NotNull Region region, @NotNull List<Region> regions, @NotNull List<UUID> globalTeleportingPlayers
     ) {
         this.region = region;
         this.regions = regions;
@@ -57,7 +57,7 @@ public class RegionTeleport implements CommandExecutor, Listener, TabCompleter {
      * @return whether command is valid
      */
 
-    private boolean isCommandValid(String[] args) {
+    private boolean isCommandValid(@NotNull String[] args) {
         if (args.length != 1) {
             return false;
         }
@@ -69,7 +69,7 @@ public class RegionTeleport implements CommandExecutor, Listener, TabCompleter {
 
     @Override
     public boolean onCommand(
-            @NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args
+            @NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args
     ) {
         if (!(sender instanceof Player player)) {
             return true;
@@ -120,7 +120,7 @@ public class RegionTeleport implements CommandExecutor, Listener, TabCompleter {
 
     @Override
     public List<String> onTabComplete(
-            @NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args
+            @NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args
     ) {
         List<String> completions = new ArrayList<>();
 
@@ -136,7 +136,7 @@ public class RegionTeleport implements CommandExecutor, Listener, TabCompleter {
     }
 
     @EventHandler
-    public void onPlayerMove(PlayerMoveEvent event) {
+    public void onPlayerMove(@NotNull PlayerMoveEvent event) {
         if (!PlayerUtils.isPlayerMoving(event)) {
             return;
         }

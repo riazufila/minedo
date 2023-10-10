@@ -8,6 +8,7 @@ import net.minedo.mc.constants.command.message.chattimeoutmessage.ChatTimeoutMes
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.UUID;
@@ -20,7 +21,7 @@ public class ChatTimeout implements Listener {
     private final HashMap<UUID, Integer> playerChatCount = new HashMap<>();
 
     @EventHandler
-    public void onAsyncChat(AsyncChatEvent event) {
+    public void onAsyncChat(@NotNull AsyncChatEvent event) {
         Player player = event.getPlayer();
         Integer chatCount = playerChatCount.get(player.getUniqueId());
         int CHAT_LIMIT = 15;

@@ -57,7 +57,7 @@ public class RegionRegeneration implements Listener {
      *
      * @param region region
      */
-    public RegionRegeneration(Region region) {
+    public RegionRegeneration(@NotNull Region region) {
         this.region = region;
     }
 
@@ -89,7 +89,7 @@ public class RegionRegeneration implements Listener {
      * @param isGetter       whether process is for snapshot getter or setter
      * @return whether process fails or not
      */
-    private boolean processChunks(World world, ChunkProcessor chunkProcessor, boolean isGetter) {
+    private boolean processChunks(@NotNull World world, @NotNull ChunkProcessor chunkProcessor, boolean isGetter) {
         int CHUNK_SIZE = (int) Common.CHUNK_SIZE.getValue();
         int minX = this.region.minX();
         int maxX = this.region.maxX();
@@ -137,7 +137,7 @@ public class RegionRegeneration implements Listener {
      * @param params params
      * @return whether snapshot file exists
      */
-    private boolean checkSnapshotFileExists(Object[] params) {
+    private boolean checkSnapshotFileExists(@NotNull Object[] params) {
         int chunkX = (int) params[0];
         int chunkZ = (int) params[1];
 
@@ -160,7 +160,7 @@ public class RegionRegeneration implements Listener {
      * @param params params
      * @return whether snapshot file is created
      */
-    private boolean createSnapshotFile(Object[] params) {
+    private boolean createSnapshotFile(@NotNull Object[] params) {
         World world = (World) params[0];
         int chunkMinX = (int) params[1];
         int chunkMaxX = (int) params[2];
@@ -239,7 +239,7 @@ public class RegionRegeneration implements Listener {
      *
      * @param chunk chunk
      */
-    public void restoreRegionChunk(Chunk chunk) {
+    public void restoreRegionChunk(@NotNull Chunk chunk) {
         String restoringChunkKey = String.format("(%d,%d)", chunk.getX(), chunk.getZ());
 
         if (restoringChunks.containsKey(restoringChunkKey)) {
@@ -265,7 +265,7 @@ public class RegionRegeneration implements Listener {
      *
      * @param block block
      */
-    private void regenerate(Block block) {
+    private void regenerate(@NotNull Block block) {
         Chunk chunk = block.getChunk();
 
         // Check if block destroyed is in region.

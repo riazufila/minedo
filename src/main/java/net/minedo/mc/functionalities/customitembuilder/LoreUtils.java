@@ -5,6 +5,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -21,7 +22,7 @@ public final class LoreUtils {
      * @param input text
      * @return sliced text
      */
-    public static @NotNull List<String> sliceString(String input) {
+    public static @NotNull List<String> sliceString(@NotNull String input) {
         List<String> result = new ArrayList<>();
 
         // Split the input string by whitespace.
@@ -55,7 +56,9 @@ public final class LoreUtils {
      * @param decoration decoration value as in {@link TextDecoration#NAMES}
      * @return built lore
      */
-    private static @NotNull List<Component> buildLore(String lore, NamedTextColor color, TextDecoration decoration) {
+    private static @NotNull List<Component> buildLore(
+            @NotNull String lore, @Nullable NamedTextColor color, @Nullable TextDecoration decoration
+    ) {
         List<Component> components = new ArrayList<>();
 
         for (String slicedLoreText : LoreUtils.sliceString(lore)) {
@@ -87,7 +90,7 @@ public final class LoreUtils {
      * @return lore components
      */
     public static @NotNull List<Component> getLoreComponents(
-            String lore, NamedTextColor color, TextDecoration decoration
+            @NotNull String lore, @Nullable NamedTextColor color, @Nullable TextDecoration decoration
     ) {
         return buildLore(lore, color, decoration);
     }
@@ -99,7 +102,7 @@ public final class LoreUtils {
      * @param component  component
      * @param addNewLine whether to add a new line before the lore
      */
-    public static void updateLore(ItemMeta meta, Component component, boolean addNewLine) {
+    public static void updateLore(@NotNull ItemMeta meta, @NotNull Component component, boolean addNewLine) {
         if (meta.hasLore()) {
             List<Component> existingComponents = meta.lore();
             List<Component> newComponents = new ArrayList<>();
@@ -124,7 +127,7 @@ public final class LoreUtils {
      * @param components components
      * @param addNewLine whether to add a new line before the lore
      */
-    public static void updateLore(ItemMeta meta, List<Component> components, boolean addNewLine) {
+    public static void updateLore(@NotNull ItemMeta meta, @NotNull List<Component> components, boolean addNewLine) {
         if (meta.hasLore()) {
             List<Component> existingComponents = meta.lore();
             List<Component> newComponents = new ArrayList<>();

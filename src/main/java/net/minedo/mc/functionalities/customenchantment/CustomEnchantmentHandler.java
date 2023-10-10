@@ -38,7 +38,7 @@ public abstract class CustomEnchantmentHandler extends SimpleCustomEnchantment i
      *
      * @param customEnchantmentType custom enchantment type as in {@link CustomEnchantmentType#values()}
      */
-    public CustomEnchantmentHandler(CustomEnchantmentType customEnchantmentType) {
+    public CustomEnchantmentHandler(@NotNull CustomEnchantmentType customEnchantmentType) {
         super(customEnchantmentType);
     }
 
@@ -48,7 +48,7 @@ public abstract class CustomEnchantmentHandler extends SimpleCustomEnchantment i
      * @param event event
      * @return item used for the interaction
      */
-    public @Nullable ItemStack isInteractValid(PlayerInteractEvent event) {
+    public @Nullable ItemStack isInteractValid(@NotNull PlayerInteractEvent event) {
         if (!event.getAction().isRightClick()) {
             return null;
         }
@@ -76,7 +76,7 @@ public abstract class CustomEnchantmentHandler extends SimpleCustomEnchantment i
      * @param event event
      * @return whether hit is valid
      */
-    public @Nullable CombatEvent isOnHitValid(EntityDamageByEntityEvent event) {
+    public @Nullable CombatEvent isOnHitValid(@NotNull EntityDamageByEntityEvent event) {
         if (!(event.getEntity() instanceof LivingEntity defendingEntity)) {
             return null;
         }
@@ -114,7 +114,9 @@ public abstract class CustomEnchantmentHandler extends SimpleCustomEnchantment i
      * @return potion effect
      */
     private @NotNull PotionEffect getPotionEffect(
-            PotionEffectType potionEffectType, boolean isAmplified, CustomEnchantment customEnchantment
+            @NotNull PotionEffectType potionEffectType,
+            boolean isAmplified,
+            @NotNull CustomEnchantment customEnchantment
     ) {
         int DEFAULT_DURATION = 3;
         double INCREMENT_DURATION = 0.2;
@@ -139,7 +141,7 @@ public abstract class CustomEnchantmentHandler extends SimpleCustomEnchantment i
      * @param isAmplified      whether potion effect can be amplified
      */
     public void triggerCustomEffectsOnHit(
-            EntityDamageByEntityEvent event, PotionEffectType potionEffectType, boolean isAmplified
+            @NotNull EntityDamageByEntityEvent event, @NotNull PotionEffectType potionEffectType, boolean isAmplified
     ) {
         CombatEvent combatEvent = this.isOnHitValid(event);
 
@@ -167,7 +169,8 @@ public abstract class CustomEnchantmentHandler extends SimpleCustomEnchantment i
      * @param potionEffectType potion effect type as in {@link PotionEffectType#values()}
      */
     private void updatePotionEffectsBasedOnItem(
-            HashMap<PotionEffectType, PotionEffect> potionEffects, ItemStack item, PotionEffectType potionEffectType
+            @NotNull HashMap<PotionEffectType, @NotNull PotionEffect> potionEffects,
+            @Nullable ItemStack item, @NotNull PotionEffectType potionEffectType
     ) {
         if (item == null || item.isEmpty()) {
             return;
@@ -203,7 +206,10 @@ public abstract class CustomEnchantmentHandler extends SimpleCustomEnchantment i
      * @param event            event
      * @param potionEffectType potion effect type as in {@link PotionEffectType#values()}
      */
-    public void updateCustomEffectsOnArmorChange(PlayerArmorChangeEvent event, PotionEffectType potionEffectType) {
+    public void updateCustomEffectsOnArmorChange(
+            @NotNull PlayerArmorChangeEvent event,
+            @NotNull PotionEffectType potionEffectType
+    ) {
         Inventory inventory = event.getPlayer().getInventory();
         int HEAD_SLOT = 39;
         int CHEST_SLOT = 38;
@@ -229,23 +235,23 @@ public abstract class CustomEnchantmentHandler extends SimpleCustomEnchantment i
     }
 
     @EventHandler
-    public void onHit(EntityDamageByEntityEvent event) {
+    public void onHit(@NotNull EntityDamageByEntityEvent event) {
     }
 
     @EventHandler
-    public void onDamaged(EntityDamageEvent event) {
+    public void onDamaged(@NotNull EntityDamageEvent event) {
     }
 
     @EventHandler
-    public void onInteract(PlayerInteractEvent event) {
+    public void onInteract(@NotNull PlayerInteractEvent event) {
     }
 
     @EventHandler
-    public void onPlayerArmorChange(PlayerArmorChangeEvent event) {
+    public void onPlayerArmorChange(@NotNull PlayerArmorChangeEvent event) {
     }
 
     @EventHandler
-    public void onEntityPickupItem(EntityPickupItemEvent event) {
+    public void onEntityPickupItem(@NotNull EntityPickupItemEvent event) {
     }
 
 }

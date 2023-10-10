@@ -16,6 +16,8 @@ import net.minedo.mc.repositories.regionrepository.RegionRepository;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.PluginManager;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,9 +36,11 @@ public class CustomCommand {
      * @param pluginCommand plugin command
      * @param command       command
      */
-    private void setCommandExecutor(PluginCommand pluginCommand, Object command) {
+    private void setCommandExecutor(@Nullable PluginCommand pluginCommand, @NotNull Object command) {
         if (command instanceof CommandExecutor commandExecutor) {
-            pluginCommand.setExecutor(commandExecutor);
+            if (pluginCommand != null) {
+                pluginCommand.setExecutor(commandExecutor);
+            }
         }
     }
 

@@ -11,6 +11,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 
@@ -31,7 +32,7 @@ public class RegionRegenerationLauncher extends BukkitRunnable {
      * @param restoringChunks chunks that are restoring
      */
     public RegionRegenerationLauncher(
-            Chunk chunk, Region region, HashMap<String, Integer> restoringChunks
+            @NotNull Chunk chunk, @NotNull Region region, @NotNull HashMap<String, Integer> restoringChunks
     ) {
         this.chunk = chunk;
         this.region = region;
@@ -44,7 +45,7 @@ public class RegionRegenerationLauncher extends BukkitRunnable {
      * @param livingEntity living entity
      * @return whether living entity is within launching ground
      */
-    private boolean isLivingEntityWithinLaunchingGround(LivingEntity livingEntity) {
+    private boolean isLivingEntityWithinLaunchingGround(@NotNull LivingEntity livingEntity) {
         Location location = livingEntity.getLocation();
         int LAUNCHING_GROUND_MAX_HEIGHT = 5;
 

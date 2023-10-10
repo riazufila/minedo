@@ -3,6 +3,7 @@ package net.minedo.mc.functionalities.common.utils;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Player utils.
@@ -15,7 +16,7 @@ public final class PlayerUtils {
      * @param event event
      * @return whether player is moving
      */
-    public static boolean isPlayerMoving(PlayerMoveEvent event) {
+    public static boolean isPlayerMoving(@NotNull PlayerMoveEvent event) {
         return event.getFrom().getBlockX() != event.getTo().getBlockX() ||
                 event.getFrom().getBlockY() != event.getTo().getBlockY() ||
                 event.getFrom().getBlockZ() != event.getTo().getBlockZ();
@@ -27,7 +28,7 @@ public final class PlayerUtils {
      * @param block block
      * @return whether player can fall through block
      */
-    private static boolean canPlayerFallThroughBlock(Block block) {
+    private static boolean canPlayerFallThroughBlock(@NotNull Block block) {
         return block.isPassable()
                 || block.isLiquid()
                 || block.isEmpty();
@@ -39,7 +40,7 @@ public final class PlayerUtils {
      * @param event event
      * @return whether player is falling
      */
-    public static boolean isPlayerFalling(PlayerMoveEvent event) {
+    public static boolean isPlayerFalling(@NotNull PlayerMoveEvent event) {
         Block block = event.getPlayer().getLocation().getBlock().getRelative(BlockFace.DOWN);
 
         return canPlayerFallThroughBlock(block);

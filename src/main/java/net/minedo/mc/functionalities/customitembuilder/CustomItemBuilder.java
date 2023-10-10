@@ -60,7 +60,9 @@ public class CustomItemBuilder implements Listener {
      * @param meta                  item meta
      * @param enchantmentContainers enchantments
      */
-    private void applyVanillaEnchantments(ItemMeta meta, List<EnchantmentContainer> enchantmentContainers) {
+    private void applyVanillaEnchantments(
+            @NotNull ItemMeta meta, @NotNull List<EnchantmentContainer> enchantmentContainers
+    ) {
         for (EnchantmentContainer enchantmentContainer : enchantmentContainers) {
             meta.addEnchant(enchantmentContainer.enchantment(), enchantmentContainer.level(), true);
         }
@@ -72,7 +74,7 @@ public class CustomItemBuilder implements Listener {
      * @param meta       item meta
      * @param customItem custom item
      */
-    private void buildDisplayName(ItemMeta meta, CustomItem customItem) {
+    private void buildDisplayName(@NotNull ItemMeta meta, @NotNull CustomItem customItem) {
         Component displayNameComponent = Component
                 .text(customItem.displayName())
                 .decoration(TextDecoration.ITALIC, false);
@@ -95,7 +97,7 @@ public class CustomItemBuilder implements Listener {
      * @param meta       item meta
      * @param customItem custom item
      */
-    private void buildEnchantments(ItemMeta meta, CustomItem customItem) {
+    private void buildEnchantments(@NotNull ItemMeta meta, @NotNull CustomItem customItem) {
         List<CustomItemEnchantment> customItemEnchantments = customItem.enchantments();
 
         if (customItemEnchantments == null) {
@@ -139,7 +141,7 @@ public class CustomItemBuilder implements Listener {
      * @param meta       item meta
      * @param customItem custom item
      */
-    private void buildLore(ItemMeta meta, CustomItem customItem) {
+    private void buildLore(@NotNull ItemMeta meta, @NotNull CustomItem customItem) {
         CustomItemLore customItemLore = customItem.lore();
 
         if (customItemLore == null) {
@@ -157,7 +159,7 @@ public class CustomItemBuilder implements Listener {
      * @param customItem custom item
      * @return item
      */
-    private @NotNull ItemStack buildItem(CustomItem customItem) {
+    private @NotNull ItemStack buildItem(@NotNull CustomItem customItem) {
         ItemStack item = new ItemStack(customItem.material());
         ItemMeta meta = item.getItemMeta();
 

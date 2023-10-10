@@ -6,6 +6,7 @@ import net.minedo.mc.repositories.playerblockedlistrepository.PlayerBlockedRepos
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
 import java.util.UUID;
@@ -16,7 +17,7 @@ import java.util.UUID;
 public class ChatBlocked implements Listener {
 
     @EventHandler
-    public void onAsyncChat(AsyncChatEvent event) {
+    public void onAsyncChat(@NotNull AsyncChatEvent event) {
         HashSet<Audience> audiences = new HashSet<>(event.viewers());
 
         for (Audience audience : audiences) {

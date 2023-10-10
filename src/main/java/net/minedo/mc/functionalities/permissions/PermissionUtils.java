@@ -6,6 +6,7 @@ import net.minedo.mc.constants.groupcolor.GroupColor;
 import net.minedo.mc.constants.grouppermission.GroupPermission;
 import net.minedo.mc.functionalities.chat.ChatUtils;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -19,7 +20,7 @@ public final class PermissionUtils {
      * @param player player
      * @return whether player permission is valid for custom color.
      */
-    public static boolean validatePlayerPermissionForCustomColor(Player player) {
+    public static boolean validatePlayerPermissionForCustomColor(@NotNull Player player) {
         return player.hasPermission(GroupPermission.OBSIDIAN.getPermission());
     }
 
@@ -30,7 +31,7 @@ public final class PermissionUtils {
      * @param color  color
      * @return whether player permission is valid for preset color
      */
-    public static boolean validatePlayerPermissionForPresetColor(Player player, String color) {
+    public static boolean validatePlayerPermissionForPresetColor(@NotNull Player player, @NotNull String color) {
         if (ChatUtils.isGroupColorTheSame(color, GroupColor.OBSIDIAN)) {
             return player.hasPermission(GroupPermission.OBSIDIAN.getPermission());
         } else if (ChatUtils.isGroupColorTheSame(color, GroupColor.REDSTONE)) {
@@ -50,7 +51,7 @@ public final class PermissionUtils {
      * @param player player
      * @return color by permission
      */
-    public static @Nullable NamedTextColor getColorByPermission(Player player) {
+    public static @Nullable NamedTextColor getColorByPermission(@NotNull Player player) {
         NamedTextColor color = null;
 
         if (player.hasPermission(GroupPermission.OBSIDIAN.getPermission())) {
@@ -77,7 +78,7 @@ public final class PermissionUtils {
      * @return whether player permission is valid for color setting
      */
     public static boolean validatePlayerPermissionForColorSettingByColorTypeAndColor(
-            Player player, String colorType, String color
+            @NotNull Player player, @NotNull String colorType, @NotNull String color
     ) {
         if (color.equals(ColorType.REMOVE.getType())) {
             if (player.hasPermission(GroupPermission.GOLD.getPermission())) {
@@ -100,7 +101,7 @@ public final class PermissionUtils {
      * @param player player
      * @return whether player permission is valid for nickname display
      */
-    public static boolean validatePlayerPermissionForNicknameDisplay(Player player) {
+    public static boolean validatePlayerPermissionForNicknameDisplay(@NotNull Player player) {
         return player.hasPermission(GroupPermission.REDSTONE.getPermission());
     }
 
@@ -110,7 +111,7 @@ public final class PermissionUtils {
      * @param player player
      * @return whether player permission is valid for nickname reveal
      */
-    public static boolean validatePlayerPermissionForNicknameReveal(Player player) {
+    public static boolean validatePlayerPermissionForNicknameReveal(@NotNull Player player) {
         return player.hasPermission(GroupPermission.OBSIDIAN.getPermission());
     }
 
@@ -121,7 +122,7 @@ public final class PermissionUtils {
      * @param homeCount home count
      * @return whether player permission is valid for home count
      */
-    public static boolean validatePlayerPermissionForHomeCount(Player player, int homeCount) {
+    public static boolean validatePlayerPermissionForHomeCount(@NotNull Player player, int homeCount) {
         boolean isAllowed = false;
         int EMERALD_HOME_COUNT = 30;
         int GOLD_HOME_COUNT = 15;
