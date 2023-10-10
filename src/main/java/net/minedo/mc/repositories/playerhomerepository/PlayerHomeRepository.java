@@ -5,6 +5,7 @@ import net.minedo.mc.repositories.Database;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.sql.ResultSet;
@@ -29,7 +30,7 @@ public final class PlayerHomeRepository {
      * @param name       home name
      * @return player home
      */
-    public static @Nullable PlayerHome getPlayerHome(UUID playerUuid, String name) {
+    public static @Nullable PlayerHome getPlayerHome(@NotNull UUID playerUuid, @NotNull String name) {
         Database database = new Database();
         database.connect();
 
@@ -84,7 +85,7 @@ public final class PlayerHomeRepository {
      * @param playerUuid player UUID
      * @return player home list
      */
-    public static @Nullable List<PlayerHome> getPlayerHomeList(UUID playerUuid) {
+    public static @Nullable List<PlayerHome> getPlayerHomeList(@NotNull UUID playerUuid) {
         Database database = new Database();
         database.connect();
 
@@ -141,7 +142,7 @@ public final class PlayerHomeRepository {
      * @param location   home location
      * @param homeName   home name
      */
-    public static void upsertHome(UUID playerUuid, Location location, String homeName) {
+    public static void upsertHome(@NotNull UUID playerUuid, @NotNull Location location, @NotNull String homeName) {
         Database database = new Database();
         database.connect();
 
@@ -170,7 +171,7 @@ public final class PlayerHomeRepository {
      * @param playerUuid player UUID
      * @param homeName   home name
      */
-    public static void removeHome(UUID playerUuid, String homeName) {
+    public static void removeHome(@NotNull UUID playerUuid, @NotNull String homeName) {
         Database database = new Database();
         database.connect();
 

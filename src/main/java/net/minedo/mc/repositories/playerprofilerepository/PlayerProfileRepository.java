@@ -26,7 +26,7 @@ public final class PlayerProfileRepository {
      *
      * @param playerUuid player UUID
      */
-    public static void insertNewPlayerProfile(UUID playerUuid) {
+    public static void insertNewPlayerProfile(@NotNull UUID playerUuid) {
         Database database = new Database();
         database.connect();
 
@@ -47,7 +47,7 @@ public final class PlayerProfileRepository {
      * @param playerUuid player UUID
      * @return player profile
      */
-    public static @NotNull PlayerProfile getPlayerProfileByUuid(UUID playerUuid) {
+    public static @NotNull PlayerProfile getPlayerProfileByUuid(@NotNull UUID playerUuid) {
         Database database = new Database();
         database.connect();
 
@@ -89,7 +89,7 @@ public final class PlayerProfileRepository {
      * @param playerName player nickname
      * @return player profile
      */
-    public static @Nullable PlayerProfile getPlayerProfileByNickname(String playerName) {
+    public static @Nullable PlayerProfile getPlayerProfileByNickname(@NotNull String playerName) {
         Database database = new Database();
         database.connect();
 
@@ -127,7 +127,7 @@ public final class PlayerProfileRepository {
      * @param playerUuid player UUID
      * @param nickname   player nickname
      */
-    public static void updatePlayerNickname(UUID playerUuid, String nickname) {
+    public static void updatePlayerNickname(@NotNull UUID playerUuid, @Nullable String nickname) {
         Database database = new Database();
         database.connect();
 
@@ -153,7 +153,7 @@ public final class PlayerProfileRepository {
      * @param playerUuid UUID of player to exclude from results
      * @return List of nicknames
      */
-    public static @Nullable List<String> getOtherPlayersNickname(UUID playerUuid) {
+    public static @Nullable List<String> getOtherPlayersNickname(@NotNull UUID playerUuid) {
         Database database = new Database();
         database.connect();
 
@@ -199,7 +199,9 @@ public final class PlayerProfileRepository {
      * @param otherOnlinePlayers List of UUID of players to search within
      * @return List of nicknames
      */
-    public static @Nullable List<String> getOtherPlayersNickname(UUID playerUuid, List<UUID> otherOnlinePlayers) {
+    public static @Nullable List<String> getOtherPlayersNickname(
+            @NotNull UUID playerUuid, @NotNull List<UUID> otherOnlinePlayers
+    ) {
         Database database = new Database();
         database.connect();
 

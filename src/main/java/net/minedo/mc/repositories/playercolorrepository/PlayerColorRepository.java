@@ -23,7 +23,7 @@ public final class PlayerColorRepository {
      * @param playerUuid  player UUID
      * @param playerColor color settings
      */
-    public static void updatePlayerColor(UUID playerUuid, PlayerColor playerColor) {
+    public static void updatePlayerColor(@NotNull UUID playerUuid, @NotNull PlayerColor playerColor) {
         Database database = new Database();
         database.connect();
 
@@ -60,7 +60,7 @@ public final class PlayerColorRepository {
      *
      * @param playerUuid player UUID
      */
-    public static void insertNewPlayerColor(UUID playerUuid) {
+    public static void insertNewPlayerColor(@NotNull UUID playerUuid) {
         Database database = new Database();
         database.connect();
 
@@ -81,7 +81,7 @@ public final class PlayerColorRepository {
      * @param playerUuid player UUID
      * @return color settings
      */
-    public static @NotNull PlayerColor getPlayerColorByPlayerUuid(UUID playerUuid) {
+    public static @NotNull PlayerColor getPlayerColorByPlayerUuid(@NotNull UUID playerUuid) {
         Database database = new Database();
         database.connect();
 
