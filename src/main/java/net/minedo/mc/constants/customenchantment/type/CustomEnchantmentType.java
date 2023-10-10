@@ -19,6 +19,13 @@ public enum CustomEnchantmentType {
     WITHER,
     HEALTH_BOOST,
     REGENERATION,
-    SPEED
+    SPEED,
+    DAMAGE_RESISTANCE,
+    FIRE_RESISTANCE,
+    ABSORPTION,
+    HASTE,
+    INVISIBILITY,
+    WATER_BREATHING,
+    JUMP
 
 }

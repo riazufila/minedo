@@ -72,19 +72,26 @@ public class CustomEnchantmentWrapper {
     public void registerCustomEnchantments() {
         Minedo instance = Minedo.getInstance();
         List<CustomEnchantmentHandler> customEnchantmentHandlers = new ArrayList<>() {{
+            add(new AbsorptionEnchantmentHandler());
             add(new BlindnessEnchantmentHandler());
             add(new ConfusionEnchantmentHandler());
             add(new DarknessEnchantmentHandler());
+            add(new FireResistanceEnchantmentHandler());
             add(new GlowingEnchantmentHandler());
             add(new HarmEnchantmentHandler());
+            add(new HasteEnchantmentHandler());
             add(new HealEnchantmentHandler());
             add(new HealthBoostEnchantmentHandler());
             add(new HungerEnchantmentHandler());
+            add(new InvisibilityEnchantmentHandler());
+            add(new JumpEnchantmentHandler());
             add(new LightningEnchantmentHandler());
             add(new PoisonEnchantmentHandler());
             add(new RegenerationEnchantmentHandler());
+            add(new ResistanceEnchantmentHandler());
             add(new SlowEnchantmentHandler());
             add(new SpeedEnchantmentHandler());
+            add(new WaterBreathingEnchantmentHandler());
             add(new WeaknessEnchantmentHandler());
             add(new WitherEnchantmentHandler());
         }};
