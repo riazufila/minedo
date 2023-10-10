@@ -2,10 +2,10 @@ package net.minedo.mc.functionalities.customcommand.teleport.region;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.minedo.mc.constants.command.feedbacksound.FeedbackSound;
 import net.minedo.mc.constants.command.message.regionteleportmessage.RegionTeleportMessage;
 import net.minedo.mc.models.region.Region;
 import org.bukkit.Location;
-import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -72,10 +72,10 @@ public class RegionTeleportScheduler extends BukkitRunnable {
             countdown--;
         } else {
             if (player.isOnline()) {
-                sourceWorld.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1, 1);
+                sourceWorld.playSound(player.getLocation(), FeedbackSound.TELEPORT.getSound(), 1, 1);
 
                 player.teleport(location);
-                destinationWorld.playSound(location, Sound.ENTITY_ENDERMAN_TELEPORT, 1, 1);
+                destinationWorld.playSound(location, FeedbackSound.TELEPORT.getSound(), 1, 1);
 
                 player.sendMessage(Component
                         .text(String.format(
