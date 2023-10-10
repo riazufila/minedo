@@ -134,14 +134,15 @@ public class ExplosionEnchantmentHandler extends CustomEnchantmentHandler {
             return;
         }
 
-        ItemStack item = player.getEquipment().getItemInOffHand();
+        ItemStack item = super.isInteractValid(event);
 
-        if (!super.isInteractValid(event, item)) {
+        if (item == null) {
             return;
         }
 
         Optional<CustomEnchantment> customEnchantmentOptional = CustomEnchantmentWrapper
                 .getCustomEnchantment(item, this.getCustomEnchantmentType());
+
 
         if (customEnchantmentOptional.isEmpty()) {
             return;

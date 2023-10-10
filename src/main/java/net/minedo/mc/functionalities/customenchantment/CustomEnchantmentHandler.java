@@ -1,21 +1,19 @@
 package net.minedo.mc.functionalities.customenchantment;
 
+import com.destroystokyo.paper.MaterialTags;
 import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent;
 import net.minedo.mc.constants.common.Common;
 import net.minedo.mc.constants.customenchantment.type.CustomEnchantmentType;
-import org.bukkit.Material;
 import org.bukkit.Tag;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
@@ -44,21 +42,32 @@ public abstract class CustomEnchantmentHandler extends SimpleCustomEnchantment i
         super(customEnchantmentType);
     }
 
-    public boolean isInteractValid(PlayerInteractEvent event, ItemStack item) {
-        Action action = event.getAction();
-        EquipmentSlot hand = event.getHand();
-
-        if (!action.isRightClick() && hand != EquipmentSlot.OFF_HAND) {
-            return false;
+    /**
+     * Get item used for the interaction.
+     *
+     * @param event event
+     * @return item used for the interaction
+     */
+    public @Nullable ItemStack isInteractValid(PlayerInteractEvent event) {
+        if (!event.getAction().isRightClick()) {
+            return null;
         }
 
-        if (item.isEmpty()) {
-            return false;
+        ItemStack item = event.getItem();
+
+        if (item == null) {
+            item = event.getPlayer().getEquipment().getItemInOffHand();
         }
 
-        Material material = item.getType();
+        if (item.isEmpty()
+                || (MaterialTags.ARMOR.isTagged(item.getType())
+                || MaterialTags.SWORDS.isTagged(item.getType())
+                || Tag.ITEMS_TOOLS.isTagged(item.getType()))
+        ) {
+            return null;
+        }
 
-        return !Tag.ITEMS_TOOLS.isTagged(material) && !Tag.ITEMS_SWORDS.isTagged(material);
+        return item;
     }
 
     /**
