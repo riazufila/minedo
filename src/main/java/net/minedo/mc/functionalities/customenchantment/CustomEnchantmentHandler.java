@@ -3,11 +3,14 @@ package net.minedo.mc.functionalities.customenchantment;
 import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent;
 import net.minedo.mc.constants.common.Common;
 import net.minedo.mc.constants.customenchantment.type.CustomEnchantmentType;
+import org.bukkit.Material;
+import org.bukkit.Tag;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
@@ -40,6 +43,20 @@ public abstract class CustomEnchantmentHandler extends SimpleCustomEnchantment i
         super(customEnchantmentType);
     }
 
+    public boolean isInteractValid(Action action, ItemStack item) {
+        if (action != Action.RIGHT_CLICK_AIR) {
+            return false;
+        }
+
+        if (item.isEmpty()) {
+            return false;
+        }
+
+        Material material = item.getType();
+
+        return !Tag.ITEMS_TOOLS.isTagged(material) && !Tag.ITEMS_SWORDS.isTagged(material);
+    }
+
     /**
      * Get whether hit is valid.
      *
@@ -60,9 +77,9 @@ public abstract class CustomEnchantmentHandler extends SimpleCustomEnchantment i
             return null;
         }
 
-        ItemStack itemAtHand = attackingEntity.getEquipment().getItemInMainHand();
+        ItemStack itemInMainHand = attackingEntity.getEquipment().getItemInMainHand();
 
-        if (itemAtHand.isEmpty()) {
+        if (itemInMainHand.isEmpty()) {
             return null;
         }
 
@@ -72,7 +89,7 @@ public abstract class CustomEnchantmentHandler extends SimpleCustomEnchantment i
             }
         }
 
-        return new CombatEvent(itemAtHand, attackingEntity, defendingEntity);
+        return new CombatEvent(itemInMainHand, attackingEntity, defendingEntity);
     }
 
     /**

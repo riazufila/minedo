@@ -76,6 +76,7 @@ public class CustomEnchantmentWrapper {
             add(new BlindnessEnchantmentHandler());
             add(new ConfusionEnchantmentHandler());
             add(new DarknessEnchantmentHandler());
+            add(new ExplosionEnchantmentHandler());
             add(new FireResistanceEnchantmentHandler());
             add(new GlowingEnchantmentHandler());
             add(new HarmEnchantmentHandler());
