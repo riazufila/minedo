@@ -65,6 +65,7 @@ public class ExplosionEnchantmentHandler extends CustomEnchantmentHandler {
                     playersExploding.remove(player.getUniqueId());
 
                     this.cancel();
+                    return;
                 }
 
                 if (player.isOnline()) {
@@ -95,6 +96,7 @@ public class ExplosionEnchantmentHandler extends CustomEnchantmentHandler {
             public void run() {
                 if (countDown >= delay * DENSITY) {
                     this.cancel();
+                    return;
                 }
 
                 if (player.isOnline()) {

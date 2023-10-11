@@ -1,5 +1,7 @@
 package net.minedo.mc.functionalities.customenchantment.list;
 
+import net.minedo.mc.Minedo;
+import net.minedo.mc.constants.common.Common;
 import net.minedo.mc.constants.customenchantment.type.CustomEnchantmentType;
 import net.minedo.mc.functionalities.customenchantment.CombatEvent;
 import net.minedo.mc.functionalities.customenchantment.CustomEnchantment;
@@ -15,6 +17,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
@@ -38,36 +41,56 @@ public class LightningEnchantmentHandler extends CustomEnchantmentHandler {
     }
 
     /**
-     * Strike lightning in one line.
+     * Run a scheduler to strike lightnings.
      *
      * @param world         world
      * @param startLocation start location
-     * @param strikeCount   strike count
+     * @param delay         delay
      */
-    private void strikeLightningInOneLine(World world, Location startLocation, int strikeCount) {
+    private void straightLightningRunnable(
+            @NotNull World world, @NotNull Location startLocation, long delay
+    ) {
         Location originLocation = startLocation.clone();
+        new BukkitRunnable() {
 
-        for (int i = 0; i < strikeCount; i++) {
-            Vector direction = startLocation.getDirection().clone().multiply(3);
+            final int FIRST_COUNT = 1;
+            int countDown = FIRST_COUNT;
 
-            if (i == 0) {
-                startLocation.add(direction);
-            } else {
-                startLocation.add(direction).add(Vector.getRandom());
-            }
-
-            Location strikeLocation = startLocation.clone();
-
-            if (i == 0) {
-                if (strikeLocation.getBlockY() < world.getHighestBlockYAt(strikeLocation)) {
-                    world.playSound(originLocation, Sound.ENTITY_GUARDIAN_ATTACK, 1, 1);
-                    break;
+            @Override
+            public void run() {
+                if (countDown > delay) {
+                    this.cancel();
                 }
+
+                Vector direction = startLocation.getDirection().clone().multiply(3);
+
+                if (countDown == FIRST_COUNT) {
+                    startLocation.add(direction);
+                } else {
+                    startLocation.add(direction).add(Vector.getRandom());
+                }
+
+                Location strikeLocation = startLocation.clone();
+
+                if (countDown == FIRST_COUNT) {
+                    if (strikeLocation.getBlockY() < world.getHighestBlockYAt(strikeLocation)) {
+                        world.playSound(originLocation, Sound.ENTITY_GUARDIAN_ATTACK, 0.7f, 2);
+                        this.cancel();
+                        return;
+                    }
+                }
+
+                strikeLocation.setY(world.getHighestBlockYAt(strikeLocation));
+                world.strikeLightning(strikeLocation);
+
+                countDown++;
             }
 
-            strikeLocation.setY(world.getHighestBlockYAt(strikeLocation));
-            world.strikeLightning(strikeLocation);
-        }
+        }.runTaskTimer(
+                Minedo.getInstance(),
+                0,
+                (int) Common.TICK_PER_SECOND.getValue() / 4
+        );
     }
 
     @Override
@@ -122,7 +145,8 @@ public class LightningEnchantmentHandler extends CustomEnchantmentHandler {
             return;
         }
 
-        this.strikeLightningInOneLine(player.getWorld(), player.getLocation(), 5);
+        final long DELAY = 5;
+        this.straightLightningRunnable(player.getWorld(), player.getLocation(), DELAY);
     }
 
 }
