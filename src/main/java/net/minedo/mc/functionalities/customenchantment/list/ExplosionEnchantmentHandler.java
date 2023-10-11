@@ -4,7 +4,6 @@ import net.minedo.mc.Minedo;
 import net.minedo.mc.constants.common.Common;
 import net.minedo.mc.constants.customenchantment.type.CustomEnchantmentType;
 import net.minedo.mc.functionalities.common.utils.ParticleUtils;
-import net.minedo.mc.functionalities.common.utils.PlayerUtils;
 import net.minedo.mc.functionalities.customenchantment.CombatEvent;
 import net.minedo.mc.functionalities.customenchantment.CustomEnchantment;
 import net.minedo.mc.functionalities.customenchantment.CustomEnchantmentHandler;
@@ -17,8 +16,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
@@ -50,19 +50,30 @@ public class ExplosionEnchantmentHandler extends CustomEnchantmentHandler {
     private int explosionRunnable(@NotNull Player player, long delay) {
         return new BukkitRunnable() {
 
+            int countDown = 1;
+
             @Override
             public void run() {
                 float EXPLOSION_POWER = 10.0f;
                 Location location = player.getLocation().getBlock().getRelative(BlockFace.UP).getLocation();
 
-                if (player.isOnline()) {
+                if (player.isOnline() && countDown > delay) {
                     player.getWorld().createExplosion(location, EXPLOSION_POWER);
+                    playersExploding.remove(player.getUniqueId());
+
+                    this.cancel();
                 }
 
-                playersExploding.remove(player.getUniqueId());
+                if (player.isOnline()) {
+                    countDown++;
+                }
             }
 
-        }.runTaskLater(Minedo.getInstance(), delay * (int) Common.TICK_PER_SECOND.getValue()).getTaskId();
+        }.runTaskTimer(
+                Minedo.getInstance(),
+                0,
+                (int) Common.TICK_PER_SECOND.getValue()
+        ).getTaskId();
     }
 
     /**
@@ -72,13 +83,14 @@ public class ExplosionEnchantmentHandler extends CustomEnchantmentHandler {
      * @param delay  delay
      */
     private void explosionParticlesRunnable(@NotNull Player player, long delay) {
+        final int DENSITY = 2;
         new BukkitRunnable() {
 
-            int countDown = 0;
+            int countDown = 1;
 
             @Override
             public void run() {
-                if (countDown >= delay) {
+                if (countDown >= delay * DENSITY) {
                     this.cancel();
                 }
 
@@ -91,12 +103,12 @@ public class ExplosionEnchantmentHandler extends CustomEnchantmentHandler {
                             new Particle.DustOptions(Color.GRAY, 2f),
                             0.3
                     );
-                }
 
-                countDown++;
+                    countDown++;
+                }
             }
 
-        }.runTaskTimer(Minedo.getInstance(), 0, (int) Common.TICK_PER_SECOND.getValue());
+        }.runTaskTimer(Minedo.getInstance(), 0, (int) Common.TICK_PER_SECOND.getValue() / DENSITY);
     }
 
     @Override
@@ -118,7 +130,7 @@ public class ExplosionEnchantmentHandler extends CustomEnchantmentHandler {
 
         LivingEntity defendingEntity = combatEvent.defendingEntity();
 
-        float EXPLOSION_POWER = 1.0f;
+        final float EXPLOSION_POWER = 1.0f;
         defendingEntity
                 .getWorld()
                 .createExplosion(defendingEntity.getLocation(), EXPLOSION_POWER);
@@ -148,17 +160,26 @@ public class ExplosionEnchantmentHandler extends CustomEnchantmentHandler {
             return;
         }
 
-        long DELAY = 3;
+        final long DELAY = 3;
+        final int POTION_AMPLIFIER = 9;
         int explosionTaskId = this.explosionRunnable(player, DELAY);
         this.explosionParticlesRunnable(player, DELAY);
 
+        PotionEffect potionEffect = new PotionEffect(
+                PotionEffectType.SLOW,
+                (int) (DELAY * (int) Common.TICK_PER_SECOND.getValue()),
+                POTION_AMPLIFIER
+        );
+
+        player.addPotionEffect(potionEffect);
         player.getWorld().playSound(player.getLocation(), Sound.ENTITY_CREEPER_PRIMED, 1, 1);
         playersExploding.put(playerUuid, explosionTaskId);
     }
 
     @EventHandler
     public void onPlayerDeath(@NotNull PlayerDeathEvent event) {
-        UUID playerUuid = event.getPlayer().getUniqueId();
+        Player player = event.getPlayer();
+        UUID playerUuid = player.getUniqueId();
         Integer explosionTaskId = playersExploding.get(playerUuid);
 
         if (explosionTaskId == null) {
@@ -167,26 +188,6 @@ public class ExplosionEnchantmentHandler extends CustomEnchantmentHandler {
 
         playersExploding.remove(playerUuid);
         Bukkit.getScheduler().cancelTask(explosionTaskId);
-    }
-
-    @EventHandler
-    public void onPlayerMove(@NotNull PlayerMoveEvent event) {
-        if (!PlayerUtils.isPlayerMoving(event)) {
-            return;
-        }
-
-        UUID playerUuid = event.getPlayer().getUniqueId();
-        Integer taskId = playersExploding.get(playerUuid);
-
-        if (taskId == null) {
-            return;
-        }
-
-        if (PlayerUtils.isPlayerFalling(event)) {
-            return;
-        }
-
-        event.setCancelled(true);
     }
 
 }
