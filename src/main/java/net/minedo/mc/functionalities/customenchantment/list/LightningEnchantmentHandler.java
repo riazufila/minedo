@@ -7,6 +7,7 @@ import net.minedo.mc.functionalities.customenchantment.CustomEnchantmentHandler;
 import net.minedo.mc.functionalities.customenchantment.CustomEnchantmentWrapper;
 import net.minedo.mc.functionalities.skills.SkillUtils;
 import org.bukkit.Location;
+import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -44,6 +45,8 @@ public class LightningEnchantmentHandler extends CustomEnchantmentHandler {
      * @param strikeCount   strike count
      */
     private void strikeLightningInOneLine(World world, Location startLocation, int strikeCount) {
+        Location originLocation = startLocation.clone();
+
         for (int i = 0; i < strikeCount; i++) {
             Vector direction = startLocation.getDirection().clone().multiply(3);
 
@@ -57,6 +60,7 @@ public class LightningEnchantmentHandler extends CustomEnchantmentHandler {
 
             if (i == 0) {
                 if (strikeLocation.getBlockY() < world.getHighestBlockYAt(strikeLocation)) {
+                    world.playSound(originLocation, Sound.ENTITY_GUARDIAN_ATTACK, 1, 1);
                     break;
                 }
             }
