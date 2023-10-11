@@ -19,7 +19,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Optional;
-import java.util.Random;
 import java.util.UUID;
 
 /**
@@ -40,22 +39,30 @@ public class LightningEnchantmentHandler extends CustomEnchantmentHandler {
     /**
      * Strike lightning in one line.
      *
-     * @param world world
+     * @param world         world
      * @param startLocation start location
-     * @param strikeCount strike count
+     * @param strikeCount   strike count
      */
     private void strikeLightningInOneLine(World world, Location startLocation, int strikeCount) {
-        Vector direction = startLocation.getDirection().multiply(2);
         for (int i = 0; i < strikeCount; i++) {
-            Random random = new Random();
+            Vector direction = startLocation.getDirection().clone().multiply(3);
 
-            final int OFF_SET = 3;
-            int xOffSet = random.nextInt(OFF_SET);
-            int yOffSet = random.nextInt(OFF_SET);
+            if (i == 0) {
+                startLocation.add(direction);
+            } else {
+                startLocation.add(direction).add(Vector.getRandom());
+            }
 
-            Vector randomVector = new Vector(xOffSet, 0, yOffSet);
-            startLocation.add(direction).add(randomVector);
-            world.strikeLightning(startLocation);
+            Location strikeLocation = startLocation.clone();
+
+            if (i == 0) {
+                if (strikeLocation.getBlockY() < world.getHighestBlockYAt(strikeLocation)) {
+                    break;
+                }
+            }
+
+            strikeLocation.setY(world.getHighestBlockYAt(strikeLocation));
+            world.strikeLightning(strikeLocation);
         }
     }
 
