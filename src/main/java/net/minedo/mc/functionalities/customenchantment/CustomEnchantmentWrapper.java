@@ -1,20 +1,29 @@
 package net.minedo.mc.functionalities.customenchantment;
 
 import net.minedo.mc.Minedo;
+import net.minedo.mc.constants.common.Common;
 import net.minedo.mc.constants.customenchantment.type.CustomEnchantmentType;
 import net.minedo.mc.functionalities.customenchantment.list.*;
 import net.minedo.mc.functionalities.dataembedder.DataEmbedder;
+import net.minedo.mc.functionalities.skills.SkillPointGranter;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Custom enchantment wrapper. Handles custom enchantment handler initializer.
  */
-public class CustomEnchantmentWrapper {
+public class CustomEnchantmentWrapper implements Listener {
+
+    private final HashMap<UUID, Integer> skillPointGranters = new HashMap<>();
+    private final HashMap<UUID, Integer> playerSkillPoints = new HashMap<>();
 
     /**
      * Get custom enchantment.
@@ -101,6 +110,34 @@ public class CustomEnchantmentWrapper {
         for (CustomEnchantmentHandler customEnchantmentHandler : customEnchantmentHandlers) {
             instance.getServer().getPluginManager().registerEvents(customEnchantmentHandler, instance);
         }
+    }
+
+    @EventHandler
+    public void onPlayerJoin(PlayerJoinEvent event) {
+        Player player = event.getPlayer();
+        UUID playerUuid = player.getUniqueId();
+
+        // Keep track of player skill points.
+        final long PERIOD = 10;
+        Integer skillPoint = playerSkillPoints.get(playerUuid);
+        playerSkillPoints.put(playerUuid, skillPoint != null ? skillPoint : 0);
+        int skillPointGranterTaskId = new SkillPointGranter(player, playerSkillPoints)
+                .runTaskTimer(Minedo.getInstance(), 0, PERIOD * (int) Common.TICK_PER_SECOND.getValue())
+                .getTaskId();
+
+        // Keep track of the runnable executed per player.
+        skillPointGranters.put(playerUuid, skillPointGranterTaskId);
+    }
+
+    @EventHandler
+    public void onPlayerQuit(PlayerQuitEvent event) {
+        Player player = event.getPlayer();
+        UUID playerUuid = player.getUniqueId();
+
+        // Cancel runnable and remove from HashMap when player quits.
+        int skillPointGranterTaskId = skillPointGranters.get(playerUuid);
+        Bukkit.getScheduler().cancelTask(skillPointGranterTaskId);
+        skillPointGranters.remove(playerUuid);
     }
 
 }

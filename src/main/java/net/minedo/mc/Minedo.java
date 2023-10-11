@@ -47,6 +47,7 @@ public class Minedo extends JavaPlugin {
         // Custom enchantments.
         CustomEnchantmentWrapper customEnchantmentWrapper = new CustomEnchantmentWrapper();
         customEnchantmentWrapper.registerCustomEnchantments();
+        pluginManager.registerEvents(customEnchantmentWrapper, this);
 
         // Custom commands.
         CustomCommand customCommand = new CustomCommand();
