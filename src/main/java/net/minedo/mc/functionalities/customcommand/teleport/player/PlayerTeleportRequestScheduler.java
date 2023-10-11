@@ -44,8 +44,6 @@ public class PlayerTeleportRequestScheduler extends BukkitRunnable {
         teleportRequesters.remove(this.requester.getUniqueId());
         teleportRequestees.remove(this.requestee.getUniqueId());
 
-        this.cancel();
-
         Component timeoutMessage = Component
                 .text(PlayerTeleportMessage.ERROR_REQUEST_TIMEOUT.getMessage())
                 .color(NamedTextColor.RED);
