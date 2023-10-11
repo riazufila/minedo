@@ -31,13 +31,15 @@ import java.util.UUID;
  */
 public class ExplosionEnchantmentHandler extends CustomEnchantmentHandler {
 
+    private final HashMap<UUID, Integer> playerSkillPoints;
     private final HashMap<UUID, Integer> playersExploding = new HashMap<>();
 
     /**
      * Initialize explosion enchantment handler.
      */
-    public ExplosionEnchantmentHandler() {
+    public ExplosionEnchantmentHandler(HashMap<UUID, Integer> playerSkillPoints) {
         super(CustomEnchantmentType.EXPLOSION);
+        this.playerSkillPoints = playerSkillPoints;
     }
 
     /**
@@ -146,7 +148,7 @@ public class ExplosionEnchantmentHandler extends CustomEnchantmentHandler {
             return;
         }
 
-        ItemStack item = super.isInteractValid(event);
+        ItemStack item = super.isInteractValid(event, this.playerSkillPoints);
 
         if (item == null) {
             return;

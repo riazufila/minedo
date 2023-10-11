@@ -80,32 +80,32 @@ public class CustomEnchantmentWrapper implements Listener {
      */
     public void registerCustomEnchantments() {
         Minedo instance = Minedo.getInstance();
-        List<CustomEnchantmentHandler> customEnchantmentHandlers = new ArrayList<>() {{
-            add(new AbsorptionEnchantmentHandler());
-            add(new BlindnessEnchantmentHandler());
-            add(new ConfusionEnchantmentHandler());
-            add(new DarknessEnchantmentHandler());
-            add(new ExplosionEnchantmentHandler());
-            add(new FireResistanceEnchantmentHandler());
-            add(new GlowingEnchantmentHandler());
-            add(new HarmEnchantmentHandler());
-            add(new HasteEnchantmentHandler());
-            add(new HealEnchantmentHandler());
-            add(new HealthBoostEnchantmentHandler());
-            add(new HungerEnchantmentHandler());
-            add(new InvisibilityEnchantmentHandler());
-            add(new JumpEnchantmentHandler());
-            add(new LightningEnchantmentHandler());
-            add(new PoisonEnchantmentHandler());
-            add(new RegenerationEnchantmentHandler());
-            add(new ResistanceEnchantmentHandler());
-            add(new SlowEnchantmentHandler());
-            add(new SpeedEnchantmentHandler());
-            add(new StrengthEnchantmentHandler());
-            add(new WaterBreathingEnchantmentHandler());
-            add(new WeaknessEnchantmentHandler());
-            add(new WitherEnchantmentHandler());
-        }};
+        List<CustomEnchantmentHandler> customEnchantmentHandlers = new ArrayList<>();
+
+        customEnchantmentHandlers.add(new AbsorptionEnchantmentHandler());
+        customEnchantmentHandlers.add(new BlindnessEnchantmentHandler());
+        customEnchantmentHandlers.add(new ConfusionEnchantmentHandler());
+        customEnchantmentHandlers.add(new DarknessEnchantmentHandler());
+        customEnchantmentHandlers.add(new ExplosionEnchantmentHandler(this.playerSkillPoints));
+        customEnchantmentHandlers.add(new FireResistanceEnchantmentHandler());
+        customEnchantmentHandlers.add(new GlowingEnchantmentHandler());
+        customEnchantmentHandlers.add(new HarmEnchantmentHandler());
+        customEnchantmentHandlers.add(new HasteEnchantmentHandler());
+        customEnchantmentHandlers.add(new HealEnchantmentHandler());
+        customEnchantmentHandlers.add(new HealthBoostEnchantmentHandler());
+        customEnchantmentHandlers.add(new HungerEnchantmentHandler());
+        customEnchantmentHandlers.add(new InvisibilityEnchantmentHandler());
+        customEnchantmentHandlers.add(new JumpEnchantmentHandler());
+        customEnchantmentHandlers.add(new LightningEnchantmentHandler());
+        customEnchantmentHandlers.add(new PoisonEnchantmentHandler());
+        customEnchantmentHandlers.add(new RegenerationEnchantmentHandler());
+        customEnchantmentHandlers.add(new ResistanceEnchantmentHandler());
+        customEnchantmentHandlers.add(new SlowEnchantmentHandler());
+        customEnchantmentHandlers.add(new SpeedEnchantmentHandler());
+        customEnchantmentHandlers.add(new StrengthEnchantmentHandler());
+        customEnchantmentHandlers.add(new WaterBreathingEnchantmentHandler());
+        customEnchantmentHandlers.add(new WeaknessEnchantmentHandler());
+        customEnchantmentHandlers.add(new WitherEnchantmentHandler());
 
         for (CustomEnchantmentHandler customEnchantmentHandler : customEnchantmentHandlers) {
             instance.getServer().getPluginManager().registerEvents(customEnchantmentHandler, instance);
@@ -118,11 +118,14 @@ public class CustomEnchantmentWrapper implements Listener {
         UUID playerUuid = player.getUniqueId();
 
         // Keep track of player skill points.
-        final long PERIOD = 10;
+        final long DURATION = 10;
         Integer skillPoint = playerSkillPoints.get(playerUuid);
         playerSkillPoints.put(playerUuid, skillPoint != null ? skillPoint : 0);
         int skillPointGranterTaskId = new SkillPointGranter(player, playerSkillPoints)
-                .runTaskTimer(Minedo.getInstance(), 0, PERIOD * (int) Common.TICK_PER_SECOND.getValue())
+                .runTaskTimer(
+                        Minedo.getInstance(),
+                        DURATION * (int) Common.TICK_PER_SECOND.getValue(),
+                        DURATION * (int) Common.TICK_PER_SECOND.getValue())
                 .getTaskId();
 
         // Keep track of the runnable executed per player.

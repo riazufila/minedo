@@ -1,7 +1,6 @@
 package net.minedo.mc.functionalities.skills;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
+import net.minedo.mc.constants.skillvalue.SkillValue;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
@@ -30,19 +29,15 @@ public class SkillPointGranter extends BukkitRunnable {
 
     @Override
     public void run() {
-        final int MAX_SKILL_POINTS = 5;
+        final int maxSkillPoints = SkillValue.MAX_SKILL_POINTS.getValue();
         UUID playerUuid = player.getUniqueId();
-        int skillPoint = this.skillPoints.get(playerUuid);
+        Integer skillPoint = this.skillPoints.get(playerUuid);
+        skillPoint = skillPoint == null ? 0 : skillPoint;
 
-        if (skillPoint < MAX_SKILL_POINTS) {
-            String SKILL_POINT_ICON = "\u25A0";
+        if (skillPoint < maxSkillPoints) {
             int updatedSkillPoint = skillPoint + 1;
-            Component component = Component
-                    .text(SKILL_POINT_ICON.repeat(updatedSkillPoint))
-                    .color(NamedTextColor.GRAY);
-
             skillPoints.put(playerUuid, updatedSkillPoint);
-            player.sendActionBar(component);
+            SkillUtils.displaySkillPoints(player, updatedSkillPoint, maxSkillPoints, false);
         }
     }
 
