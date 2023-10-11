@@ -130,7 +130,7 @@ INSERT INTO custom_item_enchantment VALUES
 (3, 'UNBREAKING', false, 10),
 (3, 'POISON', true, 5),
 (3, 'BLINDNESS', true, 5),
-(10, 'ARROW_FIRE', false, 1),
+(10, 'FLAME', false, 1),
 (10, 'EXPLOSION', true, 1);
 
 INSERT INTO custom_item_probability VALUES
