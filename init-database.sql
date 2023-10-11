@@ -112,7 +112,7 @@ INSERT INTO custom_item_lore VALUES
 (1, 'Boots infused with the agility of a rabbit.', 'GREEN', NULL),
 (2, 'The legendary weapon of the thunder God.', 'DARK_PURPLE', NULL),
 (3, 'A weapon by Death, itself.', 'DARK_PURPLE', NULL),
-(10, 'Suicidal attack for the greater good.', 'DARK_PURPLE', NULL);
+(10, 'Suicidal attack.', 'DARK_PURPLE', NULL);
 
 INSERT INTO custom_item_enchantment VALUES
 (1, 'PROTECTION', false, 5),
