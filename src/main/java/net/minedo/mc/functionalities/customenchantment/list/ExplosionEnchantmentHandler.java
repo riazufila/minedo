@@ -8,6 +8,7 @@ import net.minedo.mc.functionalities.customenchantment.CombatEvent;
 import net.minedo.mc.functionalities.customenchantment.CustomEnchantment;
 import net.minedo.mc.functionalities.customenchantment.CustomEnchantmentHandler;
 import net.minedo.mc.functionalities.customenchantment.CustomEnchantmentWrapper;
+import net.minedo.mc.functionalities.skills.SkillUtils;
 import org.bukkit.*;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.LivingEntity;
@@ -148,7 +149,7 @@ public class ExplosionEnchantmentHandler extends CustomEnchantmentHandler {
             return;
         }
 
-        ItemStack item = super.isInteractValid(event, this.playerSkillPoints);
+        ItemStack item = super.isInteractValid(event);
 
         if (item == null) {
             return;
@@ -159,6 +160,10 @@ public class ExplosionEnchantmentHandler extends CustomEnchantmentHandler {
 
 
         if (customEnchantmentOptional.isEmpty()) {
+            return;
+        }
+
+        if (!SkillUtils.canSkill(player, this.playerSkillPoints)) {
             return;
         }
 

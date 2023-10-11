@@ -4,8 +4,6 @@ import com.destroystokyo.paper.MaterialTags;
 import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent;
 import net.minedo.mc.constants.common.Common;
 import net.minedo.mc.constants.customenchantment.type.CustomEnchantmentType;
-import net.minedo.mc.constants.skillvalue.SkillValue;
-import net.minedo.mc.functionalities.skills.SkillUtils;
 import org.bukkit.Tag;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.LivingEntity;
@@ -23,7 +21,10 @@ import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Custom enchantment handler abstract class. Custom enchantments should all extends from this.
@@ -44,14 +45,10 @@ public abstract class CustomEnchantmentHandler extends SimpleCustomEnchantment i
     /**
      * Get item used for the interaction.
      *
-     * @param event             event
-     * @param playerSkillPoints player skill points
+     * @param event event
      * @return item used for the interaction
      */
-    public @Nullable ItemStack isInteractValid(
-            @NotNull PlayerInteractEvent event,
-            @NotNull HashMap<UUID, Integer> playerSkillPoints
-    ) {
+    public @Nullable ItemStack isInteractValid(@NotNull PlayerInteractEvent event) {
         if (!event.getAction().isRightClick()) {
             return null;
         }
@@ -70,21 +67,6 @@ public abstract class CustomEnchantmentHandler extends SimpleCustomEnchantment i
         ) {
             return null;
         }
-
-        UUID playerUuid = player.getUniqueId();
-        int MAX_SKILL_POINTS = SkillValue.MAX_SKILL_POINTS.getValue();
-        Integer skillPoint = playerSkillPoints.get(playerUuid);
-        skillPoint = skillPoint == null ? 0 : skillPoint;
-
-        if (skillPoint == 0) {
-            SkillUtils.displaySkillPoints(player, 0, MAX_SKILL_POINTS, true);
-            return null;
-        }
-
-        // Remove a skill point.
-        int updatedSkillPoint = skillPoint - 1;
-        playerSkillPoints.put(playerUuid, updatedSkillPoint);
-        SkillUtils.displaySkillPoints(player, updatedSkillPoint, MAX_SKILL_POINTS, false);
 
         return item;
     }

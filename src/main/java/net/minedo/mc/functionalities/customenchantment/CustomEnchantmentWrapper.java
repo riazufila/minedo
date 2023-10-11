@@ -96,7 +96,7 @@ public class CustomEnchantmentWrapper implements Listener {
         customEnchantmentHandlers.add(new HungerEnchantmentHandler());
         customEnchantmentHandlers.add(new InvisibilityEnchantmentHandler());
         customEnchantmentHandlers.add(new JumpEnchantmentHandler());
-        customEnchantmentHandlers.add(new LightningEnchantmentHandler());
+        customEnchantmentHandlers.add(new LightningEnchantmentHandler(this.playerSkillPoints));
         customEnchantmentHandlers.add(new PoisonEnchantmentHandler());
         customEnchantmentHandlers.add(new RegenerationEnchantmentHandler());
         customEnchantmentHandlers.add(new ResistanceEnchantmentHandler());
@@ -138,9 +138,11 @@ public class CustomEnchantmentWrapper implements Listener {
         UUID playerUuid = player.getUniqueId();
 
         // Cancel runnable and remove from HashMap when player quits.
-        int skillPointGranterTaskId = skillPointGranters.get(playerUuid);
-        Bukkit.getScheduler().cancelTask(skillPointGranterTaskId);
-        skillPointGranters.remove(playerUuid);
+        Integer skillPointGranterTaskId = skillPointGranters.get(playerUuid);
+        if (skillPointGranterTaskId != null) {
+            Bukkit.getScheduler().cancelTask(skillPointGranterTaskId);
+            skillPointGranters.remove(playerUuid);
+        }
     }
 
 }
