@@ -4,6 +4,7 @@ import com.destroystokyo.paper.MaterialTags;
 import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent;
 import net.minedo.mc.constants.common.Common;
 import net.minedo.mc.constants.customenchantment.type.CustomEnchantmentType;
+import org.bukkit.Material;
 import org.bukkit.Tag;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.LivingEntity;
@@ -92,8 +93,11 @@ public abstract class CustomEnchantmentHandler extends SimpleCustomEnchantment i
         }
 
         ItemStack itemInMainHand = attackingEntity.getEquipment().getItemInMainHand();
+        Material material = itemInMainHand.getType();
 
-        if (itemInMainHand.isEmpty()) {
+        if (itemInMainHand.isEmpty()
+                || (!MaterialTags.SWORDS.isTagged(material) || !Tag.ITEMS_TOOLS.isTagged(material))
+        ) {
             return null;
         }
 
