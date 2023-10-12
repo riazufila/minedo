@@ -96,7 +96,7 @@ public abstract class CustomEnchantmentHandler extends SimpleCustomEnchantment i
         Material material = itemInMainHand.getType();
 
         if (itemInMainHand.isEmpty()
-                || (!MaterialTags.SWORDS.isTagged(material) || !Tag.ITEMS_TOOLS.isTagged(material))
+                && (MaterialTags.SWORDS.isTagged(material) || Tag.ITEMS_TOOLS.isTagged(material))
         ) {
             return null;
         }
