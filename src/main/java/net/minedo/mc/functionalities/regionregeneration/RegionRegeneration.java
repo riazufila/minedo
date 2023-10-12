@@ -318,6 +318,10 @@ public class RegionRegeneration implements Listener {
             Vector awayFromCenter = location.toVector().subtract(regionCenter.toVector()).normalize();
             double MULTIPLIER = 1.0;
 
+            if (entity.isInsideVehicle()) {
+                entity.leaveVehicle();
+            }
+
             entity.getWorld().playSound(location, Sound.BLOCK_AMETHYST_BLOCK_HIT, 1, 1);
             ParticleUtils.spawnParticleOnEntity(entity, Particle.CRIT_MAGIC, 1, 5, null);
             entity.setVelocity(awayFromCenter.multiply(MULTIPLIER));
