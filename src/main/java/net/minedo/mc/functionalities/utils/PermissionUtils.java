@@ -1,4 +1,4 @@
-package net.minedo.mc.functionalities.permissions;
+package net.minedo.mc.functionalities.utils;
 
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.minedo.mc.constants.command.type.colortype.ColorType;

@@ -8,8 +8,8 @@ import net.minedo.mc.constants.command.message.hometeleportmessage.HomeTeleportM
 import net.minedo.mc.constants.command.type.hometype.HomeType;
 import net.minedo.mc.constants.common.Common;
 import net.minedo.mc.constants.feedbacksound.FeedbackSound;
-import net.minedo.mc.functionalities.common.utils.PlayerUtils;
-import net.minedo.mc.functionalities.permissions.PermissionUtils;
+import net.minedo.mc.functionalities.utils.PermissionUtils;
+import net.minedo.mc.functionalities.utils.PlayerUtils;
 import net.minedo.mc.models.playerhome.PlayerHome;
 import net.minedo.mc.repositories.playerhomerepository.PlayerHomeRepository;
 import org.bukkit.Bukkit;

@@ -5,7 +5,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.minedo.mc.constants.command.message.colormessage.ColorMessage;
 import net.minedo.mc.constants.command.type.colortype.ColorType;
 import net.minedo.mc.constants.groupcolor.GroupColor;
-import net.minedo.mc.functionalities.permissions.PermissionUtils;
+import net.minedo.mc.functionalities.utils.PermissionUtils;
 import net.minedo.mc.models.playercolor.PlayerColor;
 import net.minedo.mc.repositories.playercolorrepository.PlayerColorRepository;
 import org.bukkit.command.Command;

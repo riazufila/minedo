@@ -5,7 +5,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.minedo.mc.Minedo;
 import net.minedo.mc.constants.command.message.nicknamemessage.NicknameMessage;
 import net.minedo.mc.constants.command.type.nicknametype.NicknameType;
-import net.minedo.mc.functionalities.permissions.PermissionUtils;
+import net.minedo.mc.functionalities.utils.PermissionUtils;
 import net.minedo.mc.models.playerprofile.PlayerProfile;
 import net.minedo.mc.repositories.playerprofilerepository.PlayerProfileRepository;
 import org.bukkit.command.Command;

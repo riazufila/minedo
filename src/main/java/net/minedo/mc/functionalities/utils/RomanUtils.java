@@ -1,4 +1,4 @@
-package net.minedo.mc.functionalities.common.utils;
+package net.minedo.mc.functionalities.utils;
 
 import org.jetbrains.annotations.NotNull;
 

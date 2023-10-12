@@ -1,4 +1,4 @@
-package net.minedo.mc.functionalities.common.utils;
+package net.minedo.mc.functionalities.utils;
 
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;

@@ -9,7 +9,7 @@ import net.minedo.mc.constants.command.message.playerteleportmessage.PlayerTelep
 import net.minedo.mc.constants.command.type.playerteleporttype.PlayerTeleportType;
 import net.minedo.mc.constants.common.Common;
 import net.minedo.mc.constants.feedbacksound.FeedbackSound;
-import net.minedo.mc.functionalities.common.utils.PlayerUtils;
+import net.minedo.mc.functionalities.utils.PlayerUtils;
 import net.minedo.mc.repositories.playerblockedlistrepository.PlayerBlockedRepository;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;

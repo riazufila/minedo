@@ -7,7 +7,7 @@ import net.minedo.mc.constants.command.message.globalteleportmessage.GlobalTelep
 import net.minedo.mc.constants.command.message.regionteleportmessage.RegionTeleportMessage;
 import net.minedo.mc.constants.common.Common;
 import net.minedo.mc.constants.feedbacksound.FeedbackSound;
-import net.minedo.mc.functionalities.common.utils.PlayerUtils;
+import net.minedo.mc.functionalities.utils.PlayerUtils;
 import net.minedo.mc.models.region.Region;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;

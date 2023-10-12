@@ -28,6 +28,7 @@ public enum CustomEnchantmentType {
     WATER_BREATHING,
     JUMP,
     STRENGTH,
-    EXPLOSION
+    EXPLOSION,
+    ICE
 
 }

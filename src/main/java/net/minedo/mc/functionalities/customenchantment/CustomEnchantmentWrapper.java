@@ -94,6 +94,7 @@ public class CustomEnchantmentWrapper implements Listener {
         customEnchantmentHandlers.add(new HealEnchantmentHandler());
         customEnchantmentHandlers.add(new HealthBoostEnchantmentHandler());
         customEnchantmentHandlers.add(new HungerEnchantmentHandler());
+        customEnchantmentHandlers.add(new IceEnchantmentHandler(this.playerSkillPoints));
         customEnchantmentHandlers.add(new InvisibilityEnchantmentHandler());
         customEnchantmentHandlers.add(new JumpEnchantmentHandler());
         customEnchantmentHandlers.add(new LightningEnchantmentHandler(this.playerSkillPoints));

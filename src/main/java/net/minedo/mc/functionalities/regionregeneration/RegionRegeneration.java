@@ -17,7 +17,7 @@ import net.minedo.mc.constants.common.Common;
 import net.minedo.mc.constants.directory.Directory;
 import net.minedo.mc.constants.feedbacksound.FeedbackSound;
 import net.minedo.mc.constants.filetype.FileType;
-import net.minedo.mc.functionalities.common.utils.ParticleUtils;
+import net.minedo.mc.functionalities.utils.ParticleUtils;
 import net.minedo.mc.interfaces.chunkprocessor.ChunkProcessor;
 import net.minedo.mc.models.region.Region;
 import org.bukkit.*;
