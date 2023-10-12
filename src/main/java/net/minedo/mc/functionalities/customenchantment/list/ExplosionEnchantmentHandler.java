@@ -18,6 +18,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -34,7 +35,7 @@ import java.util.UUID;
 /**
  * Grants explosion.
  */
-public class ExplosionEnchantmentHandler extends CustomEnchantmentHandler {
+public class ExplosionEnchantmentHandler extends CustomEnchantmentHandler implements Listener {
 
     private final HashMap<UUID, Integer> playerSkillPoints;
     private final HashMap<UUID, Integer> playersExploding = new HashMap<>();
@@ -120,7 +121,6 @@ public class ExplosionEnchantmentHandler extends CustomEnchantmentHandler {
         }.runTaskTimer(Minedo.getInstance(), 0, (int) Common.TICK_PER_SECOND.getValue() / DENSITY);
     }
 
-    @Override
     @EventHandler
     public void onHit(@NotNull EntityDamageByEntityEvent event) {
         CombatEvent combatEvent = super.isOnHitValid(event);
@@ -145,7 +145,6 @@ public class ExplosionEnchantmentHandler extends CustomEnchantmentHandler {
                 .createExplosion(defendingEntity.getLocation(), EXPLOSION_POWER);
     }
 
-    @Override
     @EventHandler
     public void onInteract(@NotNull PlayerInteractEvent event) {
         Player player = event.getPlayer();
@@ -191,7 +190,6 @@ public class ExplosionEnchantmentHandler extends CustomEnchantmentHandler {
         playersExploding.put(playerUuid, explosionTaskId);
     }
 
-    @EventHandler
     public void onPlayerDeath(@NotNull PlayerDeathEvent event) {
         Player player = event.getPlayer();
         UUID playerUuid = player.getUniqueId();

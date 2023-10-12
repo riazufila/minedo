@@ -4,6 +4,7 @@ import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent;
 import net.minedo.mc.constants.customenchantment.type.CustomEnchantmentType;
 import net.minedo.mc.functionalities.customenchantment.CustomEnchantmentHandler;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
@@ -11,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Inflicts wither.
  */
-public class WitherEnchantmentHandler extends CustomEnchantmentHandler {
+public class WitherEnchantmentHandler extends CustomEnchantmentHandler implements Listener {
 
     /**
      * Initialize wither enchantment handler.
@@ -20,13 +21,11 @@ public class WitherEnchantmentHandler extends CustomEnchantmentHandler {
         super(CustomEnchantmentType.WITHER);
     }
 
-    @Override
     @EventHandler
     public void onHit(@NotNull EntityDamageByEntityEvent event) {
         super.triggerCustomEffectsOnHit(event, PotionEffectType.WITHER, true);
     }
 
-    @Override
     @EventHandler
     public void onPlayerArmorChange(@NotNull PlayerArmorChangeEvent event) {
         super.updateCustomEffectsOnArmorChange(event, PotionEffectType.WITHER);

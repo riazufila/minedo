@@ -109,7 +109,9 @@ public class CustomEnchantmentWrapper implements Listener {
         customEnchantmentHandlers.add(new WitherEnchantmentHandler());
 
         for (CustomEnchantmentHandler customEnchantmentHandler : customEnchantmentHandlers) {
-            instance.getServer().getPluginManager().registerEvents(customEnchantmentHandler, instance);
+            if (customEnchantmentHandler instanceof Listener listener) {
+                instance.getServer().getPluginManager().registerEvents(listener, instance);
+            }
         }
     }
 

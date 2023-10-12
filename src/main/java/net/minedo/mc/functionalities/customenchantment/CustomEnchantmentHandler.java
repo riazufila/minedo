@@ -9,11 +9,7 @@ import org.bukkit.Tag;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -30,7 +26,7 @@ import java.util.Optional;
 /**
  * Custom enchantment handler abstract class. Custom enchantments should all extends from this.
  */
-public abstract class CustomEnchantmentHandler extends SimpleCustomEnchantment implements Listener {
+public abstract class CustomEnchantmentHandler extends SimpleCustomEnchantment {
 
     private final int AMPLIFIER_LIMIT = 9;
 
@@ -238,26 +234,6 @@ public abstract class CustomEnchantmentHandler extends SimpleCustomEnchantment i
 
         player.removePotionEffect(potionEffectType);
         player.addPotionEffects(potionEffects.values());
-    }
-
-    @EventHandler
-    public void onHit(@NotNull EntityDamageByEntityEvent event) {
-    }
-
-    @EventHandler
-    public void onDamaged(@NotNull EntityDamageEvent event) {
-    }
-
-    @EventHandler
-    public void onInteract(@NotNull PlayerInteractEvent event) {
-    }
-
-    @EventHandler
-    public void onPlayerArmorChange(@NotNull PlayerArmorChangeEvent event) {
-    }
-
-    @EventHandler
-    public void onEntityPickupItem(@NotNull EntityPickupItemEvent event) {
     }
 
 }

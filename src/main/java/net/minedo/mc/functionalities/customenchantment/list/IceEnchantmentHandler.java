@@ -12,6 +12,7 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -21,7 +22,7 @@ import java.util.*;
 /**
  * Ice enchantment.
  */
-public class IceEnchantmentHandler extends CustomEnchantmentHandler {
+public class IceEnchantmentHandler extends CustomEnchantmentHandler implements Listener {
 
     private final HashMap<UUID, Integer> playerSkillPoints;
 
@@ -33,7 +34,6 @@ public class IceEnchantmentHandler extends CustomEnchantmentHandler {
         this.playerSkillPoints = playerSkillPoints;
     }
 
-    @Override
     @EventHandler
     public void onInteract(@NotNull PlayerInteractEvent event) {
         Player player = event.getPlayer();

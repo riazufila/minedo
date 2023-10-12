@@ -4,6 +4,7 @@ import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent;
 import net.minedo.mc.constants.customenchantment.type.CustomEnchantmentType;
 import net.minedo.mc.functionalities.customenchantment.CustomEnchantmentHandler;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
@@ -11,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Grants strength.
  */
-public class StrengthEnchantmentHandler extends CustomEnchantmentHandler {
+public class StrengthEnchantmentHandler extends CustomEnchantmentHandler implements Listener {
 
     /**
      * Initialize strength enchantment handler.
@@ -20,13 +21,11 @@ public class StrengthEnchantmentHandler extends CustomEnchantmentHandler {
         super(CustomEnchantmentType.STRENGTH);
     }
 
-    @Override
     @EventHandler
     public void onHit(@NotNull EntityDamageByEntityEvent event) {
         super.triggerCustomEffectsOnHit(event, PotionEffectType.INCREASE_DAMAGE, true);
     }
 
-    @Override
     @EventHandler
     public void onPlayerArmorChange(@NotNull PlayerArmorChangeEvent event) {
         super.updateCustomEffectsOnArmorChange(event, PotionEffectType.INCREASE_DAMAGE);

@@ -14,6 +14,7 @@ import org.bukkit.World;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
@@ -28,7 +29,7 @@ import java.util.UUID;
 /**
  * Spawn lightning upon hit.
  */
-public class LightningEnchantmentHandler extends CustomEnchantmentHandler {
+public class LightningEnchantmentHandler extends CustomEnchantmentHandler implements Listener {
 
     private final HashMap<UUID, Integer> playerSkillPoints;
 
@@ -97,7 +98,6 @@ public class LightningEnchantmentHandler extends CustomEnchantmentHandler {
         );
     }
 
-    @Override
     @EventHandler
     public void onHit(@NotNull EntityDamageByEntityEvent event) {
         CombatEvent combatEvent = super.isOnHitValid(event);
@@ -128,7 +128,6 @@ public class LightningEnchantmentHandler extends CustomEnchantmentHandler {
                 .strikeLightning(defendingEntity.getLocation());
     }
 
-    @Override
     @EventHandler
     public void onInteract(@NotNull PlayerInteractEvent event) {
         Player player = event.getPlayer();
