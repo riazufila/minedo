@@ -2,10 +2,10 @@ package net.minedo.mc.functionalities.regionregeneration;
 
 import net.minedo.mc.Minedo;
 import net.minedo.mc.constants.common.Common;
+import net.minedo.mc.constants.feedbacksound.FeedbackSound;
 import net.minedo.mc.models.region.Region;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
-import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.potion.PotionEffect;
@@ -66,8 +66,11 @@ public class RegionRegenerationLauncher extends BukkitRunnable {
             if (entity instanceof LivingEntity livingEntity
                     && this.isLivingEntityWithinLaunchingGround(livingEntity)
             ) {
+                FeedbackSound feedbackSound = FeedbackSound.REGION_LAUNCH_ENTITIES_ABOVE;
+
                 this.region.worldType().playSound(
-                        livingEntity.getLocation(), Sound.BLOCK_AZALEA_LEAVES_STEP, 1, 1
+                        livingEntity.getLocation(), feedbackSound.getSound(),
+                        feedbackSound.getVolume(), feedbackSound.getPitch()
                 );
 
                 livingEntity.setVelocity(

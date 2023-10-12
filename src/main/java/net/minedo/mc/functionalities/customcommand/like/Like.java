@@ -102,7 +102,10 @@ public class Like implements CommandExecutor, TabCompleter {
                     .color(NamedTextColor.GREEN)
             );
 
-            otherPlayer.playSound(otherPlayer.getLocation(), FeedbackSound.INFO.getSound(), 1, 1);
+            FeedbackSound feedbackSound = FeedbackSound.INFO;
+
+            otherPlayer.playSound(otherPlayer.getLocation(), feedbackSound.getSound(),
+                    feedbackSound.getVolume(), feedbackSound.getPitch());
             otherPlayer.sendMessage(Component
                     .text(String.format(
                             LikeMessage.SUCCESS_LIKE_RECEIVED.getMessage(),

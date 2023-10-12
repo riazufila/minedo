@@ -3,13 +3,13 @@ package net.minedo.mc.functionalities.customenchantment.list;
 import net.minedo.mc.Minedo;
 import net.minedo.mc.constants.common.Common;
 import net.minedo.mc.constants.customenchantment.type.CustomEnchantmentType;
+import net.minedo.mc.constants.feedbacksound.FeedbackSound;
 import net.minedo.mc.functionalities.customenchantment.CombatEvent;
 import net.minedo.mc.functionalities.customenchantment.CustomEnchantment;
 import net.minedo.mc.functionalities.customenchantment.CustomEnchantmentHandler;
 import net.minedo.mc.functionalities.customenchantment.CustomEnchantmentWrapper;
 import net.minedo.mc.functionalities.skills.SkillUtils;
 import org.bukkit.Location;
-import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -74,7 +74,11 @@ public class LightningEnchantmentHandler extends CustomEnchantmentHandler {
 
                 if (countDown == FIRST_COUNT) {
                     if (strikeLocation.getBlockY() < world.getHighestBlockYAt(strikeLocation)) {
-                        world.playSound(originLocation, Sound.ENTITY_GUARDIAN_ATTACK, 0.7f, 2);
+                        FeedbackSound feedbackSound = FeedbackSound.LIGHTNING_SKILL_FAIL;
+
+                        world.playSound(originLocation, feedbackSound.getSound(),
+                                feedbackSound.getVolume(), feedbackSound.getPitch());
+
                         this.cancel();
                         return;
                     }

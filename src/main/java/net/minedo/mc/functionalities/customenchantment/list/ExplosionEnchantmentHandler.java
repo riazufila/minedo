@@ -3,13 +3,17 @@ package net.minedo.mc.functionalities.customenchantment.list;
 import net.minedo.mc.Minedo;
 import net.minedo.mc.constants.common.Common;
 import net.minedo.mc.constants.customenchantment.type.CustomEnchantmentType;
+import net.minedo.mc.constants.feedbacksound.FeedbackSound;
 import net.minedo.mc.functionalities.common.utils.ParticleUtils;
 import net.minedo.mc.functionalities.customenchantment.CombatEvent;
 import net.minedo.mc.functionalities.customenchantment.CustomEnchantment;
 import net.minedo.mc.functionalities.customenchantment.CustomEnchantmentHandler;
 import net.minedo.mc.functionalities.customenchantment.CustomEnchantmentWrapper;
 import net.minedo.mc.functionalities.skills.SkillUtils;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.Color;
+import org.bukkit.Location;
+import org.bukkit.Particle;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -173,6 +177,7 @@ public class ExplosionEnchantmentHandler extends CustomEnchantmentHandler {
         final int POTION_AMPLIFIER = 9;
         int explosionTaskId = this.explosionRunnable(player, DELAY);
         this.explosionParticlesRunnable(player, DELAY);
+        FeedbackSound feedbackSound = FeedbackSound.EXPLOSION_SKILL;
 
         PotionEffect potionEffect = new PotionEffect(
                 PotionEffectType.SLOW,
@@ -181,7 +186,8 @@ public class ExplosionEnchantmentHandler extends CustomEnchantmentHandler {
         );
 
         player.addPotionEffect(potionEffect);
-        player.getWorld().playSound(player.getLocation(), Sound.ENTITY_CREEPER_PRIMED, 1, 1);
+        player.getWorld().playSound(player.getLocation(), feedbackSound.getSound(),
+                feedbackSound.getVolume(), feedbackSound.getPitch());
         playersExploding.put(playerUuid, explosionTaskId);
     }
 

@@ -153,7 +153,10 @@ public class RegionTeleport implements CommandExecutor, Listener, TabCompleter {
             // Cancel Bukkit Runnable.
             Bukkit.getScheduler().cancelTask(teleportTaskId);
 
-            player.playSound(player.getLocation(), FeedbackSound.ERROR.getSound(), 1, 1);
+            FeedbackSound feedbackSound = FeedbackSound.ERROR;
+
+            player.playSound(player.getLocation(), feedbackSound.getSound(),
+                    feedbackSound.getVolume(), feedbackSound.getPitch());
             player.sendMessage(Component
                     .text(RegionTeleportMessage.ERROR_TELEPORTATION_CANCELLED.getMessage())
                     .color(NamedTextColor.RED)

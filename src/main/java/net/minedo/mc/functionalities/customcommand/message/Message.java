@@ -68,7 +68,10 @@ public class Message implements CommandExecutor, TabCompleter {
 
             if (PlayerBlockedRepository.isPlayerBlockedByPlayer(
                     player.getUniqueId(), otherPlayer.getUniqueId())) {
-                player.playSound(player.getLocation(), FeedbackSound.ERROR.getSound(), 1, 1);
+                FeedbackSound feedbackSound = FeedbackSound.ERROR;
+
+                player.playSound(player.getLocation(), feedbackSound.getSound(),
+                        feedbackSound.getVolume(), feedbackSound.getPitch());
                 player.sendMessage(Component
                         .text(String.format(
                                 IgnoreMessage.ERROR_INTERACT.getMessage(),
@@ -87,7 +90,11 @@ public class Message implements CommandExecutor, TabCompleter {
                     .decoration(TextDecoration.ITALIC, true);
 
             player.sendMessage(component);
-            otherPlayer.playSound(otherPlayer.getLocation(), FeedbackSound.INFO.getSound(), 1, 1);
+
+            FeedbackSound feedbackSound = FeedbackSound.INFO;
+
+            otherPlayer.playSound(otherPlayer.getLocation(), feedbackSound.getSound(),
+                    feedbackSound.getVolume(), feedbackSound.getPitch());
             otherPlayer.sendMessage(component);
         } else {
             player.sendMessage(Component

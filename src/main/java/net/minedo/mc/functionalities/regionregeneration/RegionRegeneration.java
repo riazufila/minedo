@@ -15,6 +15,7 @@ import io.papermc.paper.event.entity.EntityMoveEvent;
 import net.minedo.mc.Minedo;
 import net.minedo.mc.constants.common.Common;
 import net.minedo.mc.constants.directory.Directory;
+import net.minedo.mc.constants.feedbacksound.FeedbackSound;
 import net.minedo.mc.constants.filetype.FileType;
 import net.minedo.mc.functionalities.common.utils.ParticleUtils;
 import net.minedo.mc.interfaces.chunkprocessor.ChunkProcessor;
@@ -317,12 +318,14 @@ public class RegionRegeneration implements Listener {
             Location regionCenter = this.region.getCenter();
             Vector awayFromCenter = location.toVector().subtract(regionCenter.toVector()).normalize();
             double MULTIPLIER = 1.0;
+            FeedbackSound feedbackSound = FeedbackSound.HOSTILE_MOB_ENTERING_REGION;
 
             if (entity.isInsideVehicle()) {
                 entity.leaveVehicle();
             }
 
-            entity.getWorld().playSound(location, Sound.BLOCK_AMETHYST_BLOCK_HIT, 1, 1);
+            entity.getWorld().playSound(location, feedbackSound.getSound(),
+                    feedbackSound.getVolume(), feedbackSound.getPitch());
             ParticleUtils.spawnParticleOnEntity(entity, Particle.CRIT_MAGIC, 1, 5, null);
             entity.setVelocity(awayFromCenter.multiply(MULTIPLIER));
         }

@@ -4,6 +4,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.minedo.mc.constants.command.message.playerteleportmessage.PlayerTeleportMessage;
 import net.minedo.mc.constants.feedbacksound.FeedbackSound;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
@@ -48,10 +49,15 @@ public class PlayerTeleportRequestScheduler extends BukkitRunnable {
                 .text(PlayerTeleportMessage.ERROR_REQUEST_TIMEOUT.getMessage())
                 .color(NamedTextColor.RED);
 
-        requester.playSound(requester.getLocation(), FeedbackSound.ERROR.getSound(), 1, 1);
+        FeedbackSound feedbackSound = FeedbackSound.ERROR;
+        Sound sound = feedbackSound.getSound();
+        float volume = feedbackSound.getVolume();
+        float pitch = feedbackSound.getPitch();
+
+        requester.playSound(requester.getLocation(), sound, volume, pitch);
         requester.sendMessage(timeoutMessage);
 
-        requestee.playSound(requestee.getLocation(), FeedbackSound.ERROR.getSound(), 1, 1);
+        requestee.playSound(requestee.getLocation(), sound, volume, pitch);
         requestee.sendMessage(timeoutMessage);
     }
 

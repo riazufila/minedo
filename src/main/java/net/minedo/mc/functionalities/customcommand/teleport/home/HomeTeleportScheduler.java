@@ -6,6 +6,7 @@ import net.minedo.mc.constants.command.message.hometeleportmessage.HomeTeleportM
 import net.minedo.mc.constants.feedbacksound.FeedbackSound;
 import net.minedo.mc.models.playerhome.PlayerHome;
 import org.bukkit.Location;
+import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -62,10 +63,15 @@ public class HomeTeleportScheduler extends BukkitRunnable {
             countDown--;
         } else {
             if (player.isOnline()) {
-                sourceWorld.playSound(player.getLocation(), FeedbackSound.TELEPORT.getSound(), 1, 1);
+                FeedbackSound feedbackSound = FeedbackSound.TELEPORT;
+                Sound sound = feedbackSound.getSound();
+                float volume = feedbackSound.getVolume();
+                float pitch = feedbackSound.getPitch();
+
+                sourceWorld.playSound(player.getLocation(), sound, volume, pitch);
 
                 player.teleport(location);
-                destinationWorld.playSound(location, FeedbackSound.TELEPORT.getSound(), 1, 1);
+                destinationWorld.playSound(location, sound, volume, pitch);
 
                 player.sendMessage(Component
                         .text(String.format(

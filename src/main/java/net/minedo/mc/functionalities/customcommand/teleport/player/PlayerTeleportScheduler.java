@@ -4,6 +4,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.minedo.mc.constants.command.message.playerteleportmessage.PlayerTeleportMessage;
 import net.minedo.mc.constants.feedbacksound.FeedbackSound;
+import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -63,13 +64,18 @@ public class PlayerTeleportScheduler extends BukkitRunnable {
             countDown--;
         } else {
             if (teleportingPlayer.isOnline() && stillPlayer.isOnline()) {
+                FeedbackSound feedbackSound = FeedbackSound.TELEPORT;
+                Sound sound = feedbackSound.getSound();
+                float volume = feedbackSound.getVolume();
+                float pitch = feedbackSound.getPitch();
+
                 sourceWorld.playSound(
-                        teleportingPlayer.getLocation(), FeedbackSound.TELEPORT.getSound(), 1, 1
+                        teleportingPlayer.getLocation(), sound, volume, pitch
                 );
 
                 teleportingPlayer.teleport(this.stillPlayer);
                 destinationWorld.playSound(
-                        this.stillPlayer.getLocation(), FeedbackSound.TELEPORT.getSound(), 1, 1
+                        this.stillPlayer.getLocation(), sound, volume, pitch
                 );
 
                 teleportingPlayer.sendMessage(Component

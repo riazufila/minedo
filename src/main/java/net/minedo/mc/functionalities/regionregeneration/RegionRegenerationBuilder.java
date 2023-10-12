@@ -14,9 +14,13 @@ import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.session.ClipboardHolder;
 import net.minedo.mc.constants.common.Common;
 import net.minedo.mc.constants.directory.Directory;
+import net.minedo.mc.constants.feedbacksound.FeedbackSound;
 import net.minedo.mc.constants.filetype.FileType;
 import net.minedo.mc.models.region.Region;
-import org.bukkit.*;
+import org.bukkit.Chunk;
+import org.bukkit.Location;
+import org.bukkit.Particle;
+import org.bukkit.World;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
@@ -87,7 +91,10 @@ public class RegionRegenerationBuilder extends BukkitRunnable {
      */
     private void playSoundAtCenterOfChunk(@NotNull Chunk chunk) {
         Location location = this.getCenterLocationOfChunk(chunk);
-        this.region.worldType().playSound(location, Sound.BLOCK_AZALEA_LEAVES_PLACE, 1, 1);
+        FeedbackSound feedbackSound = FeedbackSound.REGION_REGENERATING;
+
+        this.region.worldType().playSound(location, feedbackSound.getSound(),
+                feedbackSound.getVolume(), feedbackSound.getPitch());
     }
 
     @Override

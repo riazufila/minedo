@@ -30,7 +30,10 @@ public final class SkillUtils {
             @NotNull Player player, int skillPoint, int maxSkillPoints, boolean depleted
     ) {
         if (skillPoint == 0 && depleted) {
-            player.getWorld().playSound(player, FeedbackSound.SKILL_NO_POINTS.getSound(), 0.7f, 2.0f);
+            FeedbackSound feedbackSound = FeedbackSound.SKILL_NO_POINTS;
+
+            player.getWorld().playSound(player, feedbackSound.getSound(),
+                    feedbackSound.getVolume(), feedbackSound.getPitch());
         }
 
         Component component = Component
