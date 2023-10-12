@@ -93,11 +93,12 @@ public abstract class CustomEnchantmentHandler extends SimpleCustomEnchantment i
         }
 
         ItemStack itemInMainHand = attackingEntity.getEquipment().getItemInMainHand();
-        Material material = itemInMainHand.getType();
+        if (itemInMainHand.isEmpty()) {
+            return null;
+        }
 
-        if (itemInMainHand.isEmpty()
-                && (MaterialTags.SWORDS.isTagged(material) || Tag.ITEMS_TOOLS.isTagged(material))
-        ) {
+        Material material = itemInMainHand.getType();
+        if (MaterialTags.SWORDS.isTagged(material) || Tag.ITEMS_TOOLS.isTagged(material)) {
             return null;
         }
 
