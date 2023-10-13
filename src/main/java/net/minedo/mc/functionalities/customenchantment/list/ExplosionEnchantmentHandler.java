@@ -124,8 +124,12 @@ public class ExplosionEnchantmentHandler extends CustomEnchantmentHandler implem
     @EventHandler
     public void onHit(@NotNull EntityDamageByEntityEvent event) {
         CombatEvent combatEvent = super.isAbleToInflictCustomEnchantmentHits(event);
-        LivingEntity defendingEntity = combatEvent.getDefendingEntity();
 
+        if (combatEvent == null || combatEvent.getCustomEnchantment() == null) {
+            return;
+        }
+
+        LivingEntity defendingEntity = combatEvent.getDefendingEntity();
         final float EXPLOSION_POWER = 1.0f;
         defendingEntity
                 .getWorld()
@@ -141,7 +145,7 @@ public class ExplosionEnchantmentHandler extends CustomEnchantmentHandler implem
             return;
         }
 
-        ItemStack item = super.isInteractValid(event);
+        ItemStack item = super.getValidItemForSkill(event);
 
         if (item == null) {
             return;

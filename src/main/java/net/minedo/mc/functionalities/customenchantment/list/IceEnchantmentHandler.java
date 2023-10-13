@@ -37,7 +37,7 @@ public class IceEnchantmentHandler extends CustomEnchantmentHandler implements L
     @EventHandler
     public void onInteract(@NotNull PlayerNonBlockInteractEvent event) {
         Player player = event.getPlayer();
-        ItemStack item = super.isInteractValid(event);
+        ItemStack item = super.getValidItemForSkill(event);
 
         if (item == null) {
             return;

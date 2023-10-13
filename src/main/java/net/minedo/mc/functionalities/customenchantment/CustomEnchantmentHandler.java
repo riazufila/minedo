@@ -40,16 +40,12 @@ public abstract class CustomEnchantmentHandler extends SimpleCustomEnchantment {
     }
 
     /**
-     * Get item used for the interaction.
+     * Get item used for the skill.
      *
      * @param event event
-     * @return item used for the interaction
+     * @return item used for the skill
      */
-    public @Nullable ItemStack isInteractValid(@NotNull PlayerNonBlockInteractEvent event) {
-        if (!event.getAction().isRightClick()) {
-            return null;
-        }
-
+    public @Nullable ItemStack getValidItemForSkill(@NotNull PlayerNonBlockInteractEvent event) {
         Player player = event.getPlayer();
         ItemStack item = event.getItem();
 
@@ -171,12 +167,12 @@ public abstract class CustomEnchantmentHandler extends SimpleCustomEnchantment {
             @NotNull EntityDamageByEntityEvent event, @NotNull PotionEffectType potionEffectType, boolean isAmplified
     ) {
         CombatEvent combatEvent = this.isAbleToInflictCustomEnchantmentHits(event);
-        CustomEnchantment customEnchantment = combatEvent.getCustomEnchantment();
 
-        if (customEnchantment == null) {
+        if (combatEvent == null || combatEvent.getCustomEnchantment() == null) {
             return;
         }
 
+        CustomEnchantment customEnchantment = combatEvent.getCustomEnchantment();
         PotionEffect potionEffect = this.getPotionEffect(potionEffectType, isAmplified, customEnchantment);
         combatEvent.getDefendingEntity().addPotionEffect(potionEffect);
     }
