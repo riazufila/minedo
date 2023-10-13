@@ -74,7 +74,7 @@ public abstract class CustomEnchantmentHandler extends SimpleCustomEnchantment {
      * @param event event
      * @return whether hit is valid
      */
-    public @Nullable CombatEvent isOnHitValid(@NotNull EntityDamageByEntityEvent event) {
+    private @Nullable CombatEvent isOnHitValid(@NotNull EntityDamageByEntityEvent event) {
         if (!(event.getEntity() instanceof LivingEntity defendingEntity)) {
             return null;
         }
@@ -104,7 +104,7 @@ public abstract class CustomEnchantmentHandler extends SimpleCustomEnchantment {
             }
         }
 
-        return new CombatEvent(itemInMainHand, attackingEntity, defendingEntity);
+        return new CombatEvent(itemInMainHand, attackingEntity, defendingEntity, null);
     }
 
     /**
@@ -136,6 +136,31 @@ public abstract class CustomEnchantmentHandler extends SimpleCustomEnchantment {
     }
 
     /**
+     * Check whether player is able to inflict custom enchantment on hit.
+     *
+     * @param event event
+     * @return whether player is able to inflict custom enchantment on hit
+     */
+    public CombatEvent isAbleToInflictCustomEnchantmentHits(@NotNull EntityDamageByEntityEvent event) {
+        CombatEvent combatEvent = this.isOnHitValid(event);
+
+        if (combatEvent == null) {
+            return null;
+        }
+
+        Optional<CustomEnchantment> customEnchantmentOptional = CustomEnchantmentWrapper
+                .getCustomEnchantment(combatEvent.getItem(), this.getCustomEnchantmentType());
+
+        if (customEnchantmentOptional.isEmpty()) {
+            return null;
+        }
+
+        combatEvent.setCustomEnchantment(customEnchantmentOptional.get());
+
+        return combatEvent;
+    }
+
+    /**
      * Trigger custom effects on hit.
      *
      * @param event            event
@@ -145,22 +170,15 @@ public abstract class CustomEnchantmentHandler extends SimpleCustomEnchantment {
     public void triggerCustomEffectsOnHit(
             @NotNull EntityDamageByEntityEvent event, @NotNull PotionEffectType potionEffectType, boolean isAmplified
     ) {
-        CombatEvent combatEvent = this.isOnHitValid(event);
+        CombatEvent combatEvent = this.isAbleToInflictCustomEnchantmentHits(event);
+        CustomEnchantment customEnchantment = combatEvent.getCustomEnchantment();
 
-        if (combatEvent == null) {
+        if (customEnchantment == null) {
             return;
         }
 
-        Optional<CustomEnchantment> customEnchantmentOptional = CustomEnchantmentWrapper
-                .getCustomEnchantment(combatEvent.item(), this.getCustomEnchantmentType());
-
-        if (customEnchantmentOptional.isEmpty()) {
-            return;
-        }
-
-        CustomEnchantment customEnchantment = customEnchantmentOptional.get();
         PotionEffect potionEffect = this.getPotionEffect(potionEffectType, isAmplified, customEnchantment);
-        combatEvent.defendingEntity().addPotionEffect(potionEffect);
+        combatEvent.getDefendingEntity().addPotionEffect(potionEffect);
     }
 
     /**

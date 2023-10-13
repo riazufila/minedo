@@ -123,21 +123,8 @@ public class ExplosionEnchantmentHandler extends CustomEnchantmentHandler implem
 
     @EventHandler
     public void onHit(@NotNull EntityDamageByEntityEvent event) {
-        CombatEvent combatEvent = super.isOnHitValid(event);
-
-        if (combatEvent == null) {
-            return;
-        }
-
-        Optional<CustomEnchantment> customEnchantmentOptional = CustomEnchantmentWrapper
-                .getCustomEnchantment(combatEvent.item(), this.getCustomEnchantmentType());
-
-
-        if (customEnchantmentOptional.isEmpty()) {
-            return;
-        }
-
-        LivingEntity defendingEntity = combatEvent.defendingEntity();
+        CombatEvent combatEvent = super.isAbleToInflictCustomEnchantmentHits(event);
+        LivingEntity defendingEntity = combatEvent.getDefendingEntity();
 
         final float EXPLOSION_POWER = 1.0f;
         defendingEntity

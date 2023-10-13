@@ -100,28 +100,14 @@ public class LightningEnchantmentHandler extends CustomEnchantmentHandler implem
 
     @EventHandler
     public void onHit(@NotNull EntityDamageByEntityEvent event) {
-        CombatEvent combatEvent = super.isOnHitValid(event);
-
-        if (combatEvent == null) {
-            return;
-        }
-
-        Optional<CustomEnchantment> customEnchantmentOptional = CustomEnchantmentWrapper
-                .getCustomEnchantment(combatEvent.item(), this.getCustomEnchantmentType());
-
-
-        if (customEnchantmentOptional.isEmpty()) {
-            return;
-        }
-
+        CombatEvent combatEvent = super.isAbleToInflictCustomEnchantmentHits(event);
         Location location = event.getEntity().getLocation();
-        World world = combatEvent.defendingEntity().getWorld();
+        LivingEntity defendingEntity = combatEvent.getDefendingEntity();
+        World world = defendingEntity.getWorld();
 
         if (location.getBlockY() < world.getHighestBlockYAt(location)) {
             return;
         }
-
-        LivingEntity defendingEntity = combatEvent.defendingEntity();
 
         defendingEntity
                 .getWorld()
