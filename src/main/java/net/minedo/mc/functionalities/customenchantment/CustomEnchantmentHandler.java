@@ -4,13 +4,13 @@ import com.destroystokyo.paper.MaterialTags;
 import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent;
 import net.minedo.mc.constants.common.Common;
 import net.minedo.mc.constants.customenchantment.type.CustomEnchantmentType;
+import net.minedo.mc.customevents.PlayerNonBlockInteractEvent;
 import org.bukkit.Material;
 import org.bukkit.Tag;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
@@ -45,7 +45,7 @@ public abstract class CustomEnchantmentHandler extends SimpleCustomEnchantment {
      * @param event event
      * @return item used for the interaction
      */
-    public @Nullable ItemStack isInteractValid(@NotNull PlayerInteractEvent event) {
+    public @Nullable ItemStack isInteractValid(@NotNull PlayerNonBlockInteractEvent event) {
         if (!event.getAction().isRightClick()) {
             return null;
         }

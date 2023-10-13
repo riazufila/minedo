@@ -2,6 +2,7 @@ package net.minedo.mc.functionalities.customenchantment.list;
 
 import net.minedo.mc.constants.customenchantment.type.CustomEnchantmentType;
 import net.minedo.mc.constants.feedbacksound.FeedbackSound;
+import net.minedo.mc.customevents.PlayerNonBlockInteractEvent;
 import net.minedo.mc.functionalities.customenchantment.CustomEnchantment;
 import net.minedo.mc.functionalities.customenchantment.CustomEnchantmentHandler;
 import net.minedo.mc.functionalities.customenchantment.CustomEnchantmentWrapper;
@@ -13,7 +14,6 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
@@ -35,7 +35,7 @@ public class IceEnchantmentHandler extends CustomEnchantmentHandler implements L
     }
 
     @EventHandler
-    public void onInteract(@NotNull PlayerInteractEvent event) {
+    public void onInteract(@NotNull PlayerNonBlockInteractEvent event) {
         Player player = event.getPlayer();
         ItemStack item = super.isInteractValid(event);
 
