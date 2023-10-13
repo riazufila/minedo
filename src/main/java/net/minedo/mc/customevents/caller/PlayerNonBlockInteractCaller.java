@@ -44,16 +44,12 @@ public class PlayerNonBlockInteractCaller implements Listener {
                     BlockState currentBlockState = CLICKED_BLOCK.getState();
 
                     if (previousBlockState.equals(currentBlockState)) {
-                        System.out.println("block state unchanged");
-                        System.out.println("calling custom event");
                         blockUnchangedEvent.callEvent();
                     }
                 }
 
             }.runTaskLater(Minedo.getInstance(), (int) Common.TICK_PER_SECOND.getValue() / 20);
         } else {
-            System.out.println("no block clicked");
-            System.out.println("calling custom event");
             blockUnchangedEvent.callEvent();
         }
     }
