@@ -226,12 +226,12 @@ public class RegionRegeneration implements Listener {
         }
 
         // Run region regeneration scheduler after 30 seconds.
-        RegionRegenerationLauncher regionRegenerationLauncher = new RegionRegenerationLauncher(
+        RegionRegenerationPreparation regionRegenerationPreparation = new RegionRegenerationPreparation(
                 chunk, this.region, this.restoringChunks
         );
 
         long DELAY = 30;
-        int restoringTaskId = regionRegenerationLauncher
+        int restoringTaskId = regionRegenerationPreparation
                 .runTaskLater(Minedo.getInstance(), DELAY * (int) Common.TICK_PER_SECOND.getValue())
                 .getTaskId();
 

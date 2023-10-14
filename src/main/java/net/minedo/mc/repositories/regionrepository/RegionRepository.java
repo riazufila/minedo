@@ -32,7 +32,7 @@ public final class RegionRepository {
 
         try {
             String query = """
-                        SELECT name, world_type, minX, maxX, minZ, maxZ FROM region;
+                        SELECT name, world_type, min_x, max_x, min_z, max_z, destruction_threshold FROM region;
                     """;
 
             try (ResultSet resultSet = database.query(query)) {
@@ -43,10 +43,11 @@ public final class RegionRepository {
 
                     String name = resultSet.getString("name");
                     String worldType = resultSet.getString("world_type");
-                    int minX = resultSet.getInt("minX");
-                    int maxX = resultSet.getInt("maxX");
-                    int minZ = resultSet.getInt("minZ");
-                    int maxZ = resultSet.getInt("maxZ");
+                    int minX = resultSet.getInt("min_x");
+                    int maxX = resultSet.getInt("max_x");
+                    int minZ = resultSet.getInt("min_z");
+                    int maxZ = resultSet.getInt("max_z");
+                    double destructionThreshold = resultSet.getDouble("destruction_threshold");
 
                     World world = Bukkit.getWorld(worldType);
 
@@ -54,7 +55,7 @@ public final class RegionRepository {
                         throw new RuntimeException("World is invalid");
                     }
 
-                    Region region = new Region(name, world, minX, maxX, minZ, maxZ);
+                    Region region = new Region(name, world, minX, maxX, minZ, maxZ, destructionThreshold);
                     regions.add(region);
                 }
             }

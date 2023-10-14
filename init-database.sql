@@ -88,10 +88,11 @@ CREATE TABLE region (
     id INT NOT NULL AUTO_INCREMENT,
     name VARCHAR(20) NOT NULL,
     world_type VARCHAR(20) NOT NULL,
-    minX INT NOT NULL,
-    maxX INT NOT NULL,
-    minZ INT NOT NULL,
-    maxZ INT NOT NULL,
+    min_x INT NOT NULL,
+    max_x INT NOT NULL,
+    min_z INT NOT NULL,
+    max_z INT NOT NULL,
+    destruction_threshold DOUBLE NOT NULL,
     PRIMARY KEY (id)
 );
 
@@ -158,4 +159,4 @@ INSERT INTO custom_item_probability VALUES
 (12, 5);
 
 INSERT INTO region VALUES
-(1, 'Spawn', 'world', -128, 127, -128, 127);
+(1, 'Spawn', 'world', -128, 127, -128, 127, 0.1);
