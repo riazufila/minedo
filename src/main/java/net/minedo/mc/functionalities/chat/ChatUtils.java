@@ -4,7 +4,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import net.minedo.mc.constants.command.type.colortype.ColorType;
 import net.minedo.mc.constants.groupcolor.GroupColor;
-import net.minedo.mc.functionalities.permissions.PermissionUtils;
+import net.minedo.mc.functionalities.utils.PermissionUtils;
 import net.minedo.mc.models.playercolor.PlayerColor;
 import net.minedo.mc.repositories.playercolorrepository.PlayerColorRepository;
 import org.bukkit.entity.Player;
@@ -25,7 +25,9 @@ public final class ChatUtils {
      * @param isContent whether is content
      * @return updated component color
      */
-    public static @NotNull Component updateComponentColor(Player player, Component component, boolean isContent) {
+    public static @NotNull Component updateComponentColor(
+            @NotNull Player player, @NotNull Component component, boolean isContent
+    ) {
         ChatInfo chatInfo = getChatInfo(player, isContent);
         String selectedColor = chatInfo.selectedColor();
         boolean isCustom = chatInfo.custom();
@@ -56,7 +58,9 @@ public final class ChatUtils {
      * @param isContent   whether is content
      * @return selected color
      */
-    private static @NotNull ChatInfo selectColor(PlayerColor playerColor, Player player, boolean isContent) {
+    private static @NotNull ChatInfo selectColor(
+            @NotNull PlayerColor playerColor, @NotNull Player player, boolean isContent
+    ) {
         String selectedColor = isContent ? playerColor.contentCustom() : playerColor.prefixCustom();
         boolean isCustom = false;
 
@@ -79,7 +83,7 @@ public final class ChatUtils {
      * @param isContent whether is content
      * @return chat info
      */
-    private static @NotNull ChatInfo getChatInfo(Player player, boolean isContent) {
+    private static @NotNull ChatInfo getChatInfo(@NotNull Player player, boolean isContent) {
         UUID playerUuid = player.getUniqueId();
         PlayerColor playerColor = PlayerColorRepository.getPlayerColorByPlayerUuid(playerUuid);
 
@@ -97,7 +101,7 @@ public final class ChatUtils {
      * @param groupColor group color values as in {@link GroupColor#values()}
      * @return whether group color is same
      */
-    public static boolean isGroupColorTheSame(String color, GroupColor groupColor) {
+    public static boolean isGroupColorTheSame(@NotNull String color, @NotNull GroupColor groupColor) {
         return GroupColor.valueOf(color.toUpperCase()).equals(groupColor);
     }
 

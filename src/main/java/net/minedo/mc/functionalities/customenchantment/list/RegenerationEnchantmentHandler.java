@@ -4,12 +4,15 @@ import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent;
 import net.minedo.mc.constants.customenchantment.type.CustomEnchantmentType;
 import net.minedo.mc.functionalities.customenchantment.CustomEnchantmentHandler;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.potion.PotionEffectType;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Grants regeneration.
  */
-public class RegenerationEnchantmentHandler extends CustomEnchantmentHandler {
+public class RegenerationEnchantmentHandler extends CustomEnchantmentHandler implements Listener {
 
     /**
      * Initialize regeneration enchantment handler.
@@ -18,9 +21,13 @@ public class RegenerationEnchantmentHandler extends CustomEnchantmentHandler {
         super(CustomEnchantmentType.REGENERATION);
     }
 
-    @Override
     @EventHandler
-    public void onPlayerArmorChange(PlayerArmorChangeEvent event) {
+    public void onHit(@NotNull EntityDamageByEntityEvent event) {
+        super.triggerCustomEffectsOnHit(event, PotionEffectType.REGENERATION, true);
+    }
+
+    @EventHandler
+    public void onPlayerArmorChange(@NotNull PlayerArmorChangeEvent event) {
         super.updateCustomEffectsOnArmorChange(event, PotionEffectType.REGENERATION);
     }
 

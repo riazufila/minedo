@@ -2,11 +2,13 @@ package net.minedo.mc.functionalities.customcommand.teleport.player;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.minedo.mc.constants.command.feedbacksound.FeedbackSound;
 import net.minedo.mc.constants.command.message.playerteleportmessage.PlayerTeleportMessage;
+import net.minedo.mc.constants.feedbacksound.FeedbackSound;
+import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.List;
@@ -22,7 +24,7 @@ public class PlayerTeleportScheduler extends BukkitRunnable {
     private final HashMap<UUID, Integer> teleportingRequesters;
     private final HashMap<UUID, Integer> standingStillRequestees;
     private final List<UUID> globalTeleportingPlayers;
-    private int countdown;
+    private int countDown;
 
     /**
      * Initialize player teleport scheduler.
@@ -34,11 +36,13 @@ public class PlayerTeleportScheduler extends BukkitRunnable {
      * @param globalTeleportingPlayers list of globally teleporting players
      */
     public PlayerTeleportScheduler(
-            Player teleportingPlayer, Player stillPlayer,
-            HashMap<UUID, Integer> teleportingRequesters, HashMap<UUID, Integer> standingStillRequestees,
-            List<UUID> globalTeleportingPlayers
+            @NotNull Player teleportingPlayer,
+            @NotNull Player stillPlayer,
+            @NotNull HashMap<UUID, Integer> teleportingRequesters,
+            @NotNull HashMap<UUID, Integer> standingStillRequestees,
+            @NotNull List<UUID> globalTeleportingPlayers
     ) {
-        this.countdown = 4;
+        this.countDown = 4;
         this.teleportingPlayer = teleportingPlayer;
         this.stillPlayer = stillPlayer;
         this.teleportingRequesters = teleportingRequesters;
@@ -51,22 +55,27 @@ public class PlayerTeleportScheduler extends BukkitRunnable {
         World sourceWorld = teleportingPlayer.getWorld();
         World destinationWorld = stillPlayer.getWorld();
 
-        if (countdown > 0) {
+        if (countDown > 0) {
             teleportingPlayer.sendMessage(Component
-                    .text(String.format(PlayerTeleportMessage.INFO_COUNTDOWN.getMessage(), countdown))
+                    .text(String.format(PlayerTeleportMessage.INFO_COUNTDOWN.getMessage(), countDown))
                     .color(NamedTextColor.YELLOW)
             );
 
-            countdown--;
+            countDown--;
         } else {
             if (teleportingPlayer.isOnline() && stillPlayer.isOnline()) {
+                FeedbackSound feedbackSound = FeedbackSound.TELEPORT;
+                Sound sound = feedbackSound.getSound();
+                float volume = feedbackSound.getVolume();
+                float pitch = feedbackSound.getPitch();
+
                 sourceWorld.playSound(
-                        teleportingPlayer.getLocation(), FeedbackSound.TELEPORT.getSound(), 1, 1
+                        teleportingPlayer.getLocation(), sound, volume, pitch
                 );
 
                 teleportingPlayer.teleport(this.stillPlayer);
                 destinationWorld.playSound(
-                        this.stillPlayer.getLocation(), FeedbackSound.TELEPORT.getSound(), 1, 1
+                        this.stillPlayer.getLocation(), sound, volume, pitch
                 );
 
                 teleportingPlayer.sendMessage(Component

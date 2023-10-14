@@ -4,6 +4,7 @@ import net.minedo.mc.models.playerblockedlist.PlayerBlocked;
 import net.minedo.mc.models.playerprofile.PlayerProfile;
 import net.minedo.mc.repositories.Database;
 import net.minedo.mc.repositories.playerprofilerepository.PlayerProfileRepository;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.sql.ResultSet;
@@ -27,7 +28,7 @@ public final class PlayerBlockedRepository {
      * @param playerUuid player UUID
      * @return player block list
      */
-    public static @Nullable List<PlayerBlocked> getPlayerBlockedList(UUID playerUuid) {
+    public static @Nullable List<PlayerBlocked> getPlayerBlockedList(@NotNull UUID playerUuid) {
         Database database = new Database();
         database.connect();
 
@@ -73,7 +74,7 @@ public final class PlayerBlockedRepository {
      * @param requesterUuid         player UUID requesting to block
      * @param playerUuidToBeBlocked player UUID to be blocked
      */
-    public static void addBlockedPlayer(UUID requesterUuid, UUID playerUuidToBeBlocked) {
+    public static void addBlockedPlayer(@NotNull UUID requesterUuid, @NotNull UUID playerUuidToBeBlocked) {
         Database database = new Database();
         database.connect();
 
@@ -98,7 +99,7 @@ public final class PlayerBlockedRepository {
      * @param requesterUuid         player UUID requesting to block
      * @param playerUuidToBeBlocked player UUID to be blocked
      */
-    public static void removeBlockedPlayer(UUID requesterUuid, UUID playerUuidToBeBlocked) {
+    public static void removeBlockedPlayer(@NotNull UUID requesterUuid, @NotNull UUID playerUuidToBeBlocked) {
         Database database = new Database();
         database.connect();
 
@@ -124,7 +125,7 @@ public final class PlayerBlockedRepository {
      * @param potentialBlockerUuid player UUID of a potential blocker
      * @return whether player is blocked by another player
      */
-    public static boolean isPlayerBlockedByPlayer(UUID requesterUuid, UUID potentialBlockerUuid) {
+    public static boolean isPlayerBlockedByPlayer(@NotNull UUID requesterUuid, @NotNull UUID potentialBlockerUuid) {
         List<PlayerBlocked> playerBlockedList = PlayerBlockedRepository
                 .getPlayerBlockedList(potentialBlockerUuid);
 

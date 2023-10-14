@@ -15,7 +15,9 @@ import io.papermc.paper.event.entity.EntityMoveEvent;
 import net.minedo.mc.Minedo;
 import net.minedo.mc.constants.common.Common;
 import net.minedo.mc.constants.directory.Directory;
+import net.minedo.mc.constants.feedbacksound.FeedbackSound;
 import net.minedo.mc.constants.filetype.FileType;
+import net.minedo.mc.functionalities.utils.ParticleUtils;
 import net.minedo.mc.interfaces.chunkprocessor.ChunkProcessor;
 import net.minedo.mc.models.region.Region;
 import org.bukkit.*;
@@ -33,7 +35,6 @@ import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.entity.EntityTeleportEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
-import org.bukkit.util.BoundingBox;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
@@ -57,7 +58,7 @@ public class RegionRegeneration implements Listener {
      *
      * @param region region
      */
-    public RegionRegeneration(Region region) {
+    public RegionRegeneration(@NotNull Region region) {
         this.region = region;
     }
 
@@ -89,7 +90,7 @@ public class RegionRegeneration implements Listener {
      * @param isGetter       whether process is for snapshot getter or setter
      * @return whether process fails or not
      */
-    private boolean processChunks(World world, ChunkProcessor chunkProcessor, boolean isGetter) {
+    private boolean processChunks(@NotNull World world, @NotNull ChunkProcessor chunkProcessor, boolean isGetter) {
         int CHUNK_SIZE = (int) Common.CHUNK_SIZE.getValue();
         int minX = this.region.minX();
         int maxX = this.region.maxX();
@@ -137,7 +138,7 @@ public class RegionRegeneration implements Listener {
      * @param params params
      * @return whether snapshot file exists
      */
-    private boolean checkSnapshotFileExists(Object[] params) {
+    private boolean checkSnapshotFileExists(@NotNull Object[] params) {
         int chunkX = (int) params[0];
         int chunkZ = (int) params[1];
 
@@ -160,7 +161,7 @@ public class RegionRegeneration implements Listener {
      * @param params params
      * @return whether snapshot file is created
      */
-    private boolean createSnapshotFile(Object[] params) {
+    private boolean createSnapshotFile(@NotNull Object[] params) {
         World world = (World) params[0];
         int chunkMinX = (int) params[1];
         int chunkMaxX = (int) params[2];
@@ -239,7 +240,7 @@ public class RegionRegeneration implements Listener {
      *
      * @param chunk chunk
      */
-    public void restoreRegionChunk(Chunk chunk) {
+    public void restoreRegionChunk(@NotNull Chunk chunk) {
         String restoringChunkKey = String.format("(%d,%d)", chunk.getX(), chunk.getZ());
 
         if (restoringChunks.containsKey(restoringChunkKey)) {
@@ -265,7 +266,7 @@ public class RegionRegeneration implements Listener {
      *
      * @param block block
      */
-    private void regenerate(Block block) {
+    private void regenerate(@NotNull Block block) {
         Chunk chunk = block.getChunk();
 
         // Check if block destroyed is in region.
@@ -307,34 +308,6 @@ public class RegionRegeneration implements Listener {
         }
     }
 
-    /**
-     * Spawn particles on an entity.
-     *
-     * @param entity   entity
-     * @param particle particle as in {@link Particle#values()}
-     * @param density  particles density
-     * @param count    particles count
-     */
-    private void spawnParticleOnEntity(Entity entity, Particle particle, double density, int count) {
-        BoundingBox boundingBox = entity.getBoundingBox();
-        World world = entity.getWorld();
-
-        // Calculate the step size based on the density
-        double stepX = boundingBox.getWidthX() / density;
-        double stepY = boundingBox.getHeight() / density;
-        double stepZ = boundingBox.getWidthZ() / density;
-
-        // Iterate over the bounding box and spawn particles
-        for (double x = boundingBox.getMinX(); x <= boundingBox.getMaxX(); x += stepX) {
-            for (double y = boundingBox.getMinY(); y <= boundingBox.getMaxY(); y += stepY) {
-                for (double z = boundingBox.getMinZ(); z <= boundingBox.getMaxZ(); z += stepZ) {
-                    Location particleLocation = new Location(world, x, y, z);
-                    world.spawnParticle(particle, particleLocation, count);
-                }
-            }
-        }
-    }
-
     @EventHandler
     public void onEntityMove(EntityMoveEvent event) {
         Location location = event.getTo();
@@ -345,9 +318,15 @@ public class RegionRegeneration implements Listener {
             Location regionCenter = this.region.getCenter();
             Vector awayFromCenter = location.toVector().subtract(regionCenter.toVector()).normalize();
             double MULTIPLIER = 1.0;
+            FeedbackSound feedbackSound = FeedbackSound.HOSTILE_MOB_ENTERING_REGION;
 
-            entity.getWorld().playSound(location, Sound.BLOCK_AMETHYST_BLOCK_HIT, 1, 1);
-            this.spawnParticleOnEntity(entity, Particle.CRIT_MAGIC, 1, 5);
+            if (entity.isInsideVehicle()) {
+                entity.leaveVehicle();
+            }
+
+            entity.getWorld().playSound(location, feedbackSound.getSound(),
+                    feedbackSound.getVolume(), feedbackSound.getPitch());
+            ParticleUtils.spawnParticleOnEntity(entity, Particle.CRIT_MAGIC, 1, 5, null);
             entity.setVelocity(awayFromCenter.multiply(MULTIPLIER));
         }
     }

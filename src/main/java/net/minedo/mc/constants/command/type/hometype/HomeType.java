@@ -1,5 +1,7 @@
 package net.minedo.mc.constants.command.type.hometype;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Home command arguments.
  */
@@ -17,7 +19,7 @@ public enum HomeType {
      *
      * @param type command argument
      */
-    HomeType(String type) {
+    HomeType(@NotNull String type) {
         this.type = type;
     }
 
@@ -26,7 +28,7 @@ public enum HomeType {
      *
      * @return command argument
      */
-    public String getType() {
+    public @NotNull String getType() {
         return type;
     }
 

@@ -5,7 +5,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.minedo.mc.Minedo;
 import net.minedo.mc.constants.command.message.nicknamemessage.NicknameMessage;
 import net.minedo.mc.constants.command.type.nicknametype.NicknameType;
-import net.minedo.mc.functionalities.permissions.PermissionUtils;
+import net.minedo.mc.functionalities.utils.PermissionUtils;
 import net.minedo.mc.models.playerprofile.PlayerProfile;
 import net.minedo.mc.repositories.playerprofilerepository.PlayerProfileRepository;
 import org.bukkit.command.Command;
@@ -17,6 +17,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -36,7 +37,7 @@ public class Nickname implements CommandExecutor, TabCompleter, Listener {
      * @param nickname nickname
      * @return whether nickname is valid
      */
-    private boolean isValidNickname(String nickname) {
+    private boolean isValidNickname(@Nullable String nickname) {
         if (nickname == null) {
             return false;
         }
@@ -54,7 +55,7 @@ public class Nickname implements CommandExecutor, TabCompleter, Listener {
      * @param args arguments
      * @return whether command is valid
      */
-    private boolean isCommandValid(String[] args) {
+    private boolean isCommandValid(@NotNull String[] args) {
         if (args.length == 0) {
             return false;
         }
@@ -75,7 +76,7 @@ public class Nickname implements CommandExecutor, TabCompleter, Listener {
 
     @Override
     public boolean onCommand(
-            @NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args
+            @NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args
     ) {
         if (!(sender instanceof Player player)) {
             return true;
@@ -211,7 +212,7 @@ public class Nickname implements CommandExecutor, TabCompleter, Listener {
 
     @Override
     public List<String> onTabComplete(
-            @NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args
+            @NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args
     ) {
         List<String> completions = new ArrayList<>();
 
@@ -256,7 +257,7 @@ public class Nickname implements CommandExecutor, TabCompleter, Listener {
     }
 
     @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event) {
+    public void onPlayerJoin(@NotNull PlayerJoinEvent event) {
         Player newPlayer = event.getPlayer();
         PlayerProfile existingPlayerProfile = PlayerProfileRepository.getPlayerProfileByNickname(newPlayer.getName());
 

@@ -1,5 +1,7 @@
 package net.minedo.mc.constants.common;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Common values.
  */
@@ -16,7 +18,7 @@ public enum Common {
      *
      * @param value common value
      */
-    Common(Object value) {
+    Common(@NotNull Object value) {
         this.value = value;
     }
 
@@ -25,7 +27,7 @@ public enum Common {
      *
      * @return common value
      */
-    public Object getValue() {
+    public @NotNull Object getValue() {
         return value;
     }
 

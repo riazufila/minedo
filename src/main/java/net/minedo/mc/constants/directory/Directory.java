@@ -1,5 +1,7 @@
 package net.minedo.mc.constants.directory;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Directories.
  */
@@ -14,7 +16,7 @@ public enum Directory {
      *
      * @param path directory path
      */
-    Directory(String path) {
+    Directory(@NotNull String path) {
         this.path = path;
     }
 
@@ -23,7 +25,7 @@ public enum Directory {
      *
      * @return directory path
      */
-    public String getDirectory() {
+    public @NotNull String getDirectory() {
         return path;
     }
 

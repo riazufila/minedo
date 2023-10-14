@@ -62,7 +62,7 @@ public class Database {
      * @param sqlQuery SQL statement
      * @return result set
      */
-    public @NotNull ResultSet query(String sqlQuery) {
+    public @NotNull ResultSet query(@NotNull String sqlQuery) {
         ResultSet resultSet;
 
         try {
@@ -83,7 +83,9 @@ public class Database {
      * @param replacements conditions
      * @return result set
      */
-    public @NotNull ResultSet queryWithWhereClause(String sqlQuery, HashMap<Integer, String> replacements) {
+    public @NotNull ResultSet queryWithWhereClause(
+            @NotNull String sqlQuery, @NotNull HashMap<Integer, String> replacements
+    ) {
         ResultSet resultSet;
 
         try {
@@ -110,7 +112,7 @@ public class Database {
      * @param sqlQuery     SQL statement
      * @param replacements conditions
      */
-    public void executeStatement(String sqlQuery, HashMap<Integer, ?> replacements) {
+    public void executeStatement(@NotNull String sqlQuery, @NotNull HashMap<Integer, ?> replacements) {
         try {
             PreparedStatement preparedStatement = this.connection.prepareStatement(sqlQuery);
 

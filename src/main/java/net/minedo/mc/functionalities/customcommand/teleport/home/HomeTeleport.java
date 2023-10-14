@@ -3,12 +3,13 @@ package net.minedo.mc.functionalities.customcommand.teleport.home;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.minedo.mc.Minedo;
-import net.minedo.mc.constants.command.feedbacksound.FeedbackSound;
 import net.minedo.mc.constants.command.message.globalteleportmessage.GlobalTeleportMessage;
 import net.minedo.mc.constants.command.message.hometeleportmessage.HomeTeleportMessage;
 import net.minedo.mc.constants.command.type.hometype.HomeType;
 import net.minedo.mc.constants.common.Common;
-import net.minedo.mc.functionalities.permissions.PermissionUtils;
+import net.minedo.mc.constants.feedbacksound.FeedbackSound;
+import net.minedo.mc.functionalities.utils.PermissionUtils;
+import net.minedo.mc.functionalities.utils.PlayerUtils;
 import net.minedo.mc.models.playerhome.PlayerHome;
 import net.minedo.mc.repositories.playerhomerepository.PlayerHomeRepository;
 import org.bukkit.Bukkit;
@@ -21,6 +22,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -39,7 +41,7 @@ public class HomeTeleport implements CommandExecutor, Listener, TabCompleter {
      *
      * @param globalTeleportingPlayers list of globally teleporting players
      */
-    public HomeTeleport(List<UUID> globalTeleportingPlayers) {
+    public HomeTeleport(@NotNull List<UUID> globalTeleportingPlayers) {
         this.globalTeleportingPlayers = globalTeleportingPlayers;
     }
 
@@ -49,7 +51,7 @@ public class HomeTeleport implements CommandExecutor, Listener, TabCompleter {
      * @param homeName home name
      * @return whether home name is valid
      */
-    private boolean isValidHomeName(String homeName) {
+    private boolean isValidHomeName(@Nullable String homeName) {
         if (homeName == null) {
             return false;
         }
@@ -67,7 +69,7 @@ public class HomeTeleport implements CommandExecutor, Listener, TabCompleter {
      * @param args arguments
      * @return whether command is valid
      */
-    private boolean isCommandValid(String[] args) {
+    private boolean isCommandValid(@NotNull String[] args) {
         if (args.length != 2) {
             return false;
         }
@@ -82,7 +84,7 @@ public class HomeTeleport implements CommandExecutor, Listener, TabCompleter {
 
     @Override
     public boolean onCommand(
-            @NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args
+            @NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args
     ) {
         if (!(sender instanceof Player player)) {
             return true;
@@ -139,6 +141,16 @@ public class HomeTeleport implements CommandExecutor, Listener, TabCompleter {
             }
 
             PlayerHome playerHome = PlayerHomeRepository.getPlayerHome(player.getUniqueId(), homeName);
+
+            if (playerHome == null) {
+                player.sendMessage(Component
+                        .text(HomeTeleportMessage.ERROR_HOME_DOES_NOT_EXISTS.getMessage())
+                        .color(NamedTextColor.RED)
+                );
+
+                return true;
+            }
+
             long DURATION = 1;
             long DELAY = 1;
             int teleportTaskId = new HomeTeleportScheduler(
@@ -212,7 +224,7 @@ public class HomeTeleport implements CommandExecutor, Listener, TabCompleter {
 
     @Override
     public List<String> onTabComplete(
-            @NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args
+            @NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args
     ) {
         List<String> completions = new ArrayList<>();
 
@@ -252,30 +264,31 @@ public class HomeTeleport implements CommandExecutor, Listener, TabCompleter {
     }
 
     @EventHandler
-    public void onPlayerMove(PlayerMoveEvent event) {
-        if (
-                event.getFrom().getBlockX() != event.getTo().getBlockX() ||
-                        event.getFrom().getBlockY() != event.getTo().getBlockY() ||
-                        event.getFrom().getBlockZ() != event.getTo().getBlockZ()
-        ) {
-            Player player = event.getPlayer();
-            UUID playerUuid = player.getUniqueId();
-            Integer teleportTaskId = this.teleportingPlayers.get(playerUuid);
+    public void onPlayerMove(@NotNull PlayerMoveEvent event) {
+        if (!PlayerUtils.isPlayerMoving(event)) {
+            return;
+        }
 
-            if (teleportTaskId != null) {
-                // Remove from global teleporting list.
-                this.globalTeleportingPlayers.remove(player.getUniqueId());
-                // Remove from Map.
-                this.teleportingPlayers.remove(playerUuid);
-                // Cancel Bukkit Runnable.
-                Bukkit.getScheduler().cancelTask(teleportTaskId);
+        Player player = event.getPlayer();
+        UUID playerUuid = player.getUniqueId();
+        Integer teleportTaskId = this.teleportingPlayers.get(playerUuid);
 
-                player.playSound(player.getLocation(), FeedbackSound.ERROR.getSound(), 1, 1);
-                player.sendMessage(Component
-                        .text(HomeTeleportMessage.ERROR_TELEPORTATION_CANCELLED.getMessage())
-                        .color(NamedTextColor.RED)
-                );
-            }
+        if (teleportTaskId != null) {
+            // Remove from global teleporting list.
+            this.globalTeleportingPlayers.remove(player.getUniqueId());
+            // Remove from Map.
+            this.teleportingPlayers.remove(playerUuid);
+            // Cancel Bukkit Runnable.
+            Bukkit.getScheduler().cancelTask(teleportTaskId);
+
+            FeedbackSound feedbackSound = FeedbackSound.ERROR;
+
+            player.playSound(player.getLocation(), feedbackSound.getSound(),
+                    feedbackSound.getVolume(), feedbackSound.getPitch());
+            player.sendMessage(Component
+                    .text(HomeTeleportMessage.ERROR_TELEPORTATION_CANCELLED.getMessage())
+                    .color(NamedTextColor.RED)
+            );
         }
     }
 

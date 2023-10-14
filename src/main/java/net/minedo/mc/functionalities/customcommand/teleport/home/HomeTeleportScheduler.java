@@ -2,13 +2,15 @@ package net.minedo.mc.functionalities.customcommand.teleport.home;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.minedo.mc.constants.command.feedbacksound.FeedbackSound;
 import net.minedo.mc.constants.command.message.hometeleportmessage.HomeTeleportMessage;
+import net.minedo.mc.constants.feedbacksound.FeedbackSound;
 import net.minedo.mc.models.playerhome.PlayerHome;
 import org.bukkit.Location;
+import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.List;
@@ -23,7 +25,7 @@ public class HomeTeleportScheduler extends BukkitRunnable {
     private final PlayerHome home;
     private final List<UUID> globalTeleportingPlayers;
     private final HashMap<UUID, Integer> teleportingPlayers;
-    private int countdown = 4;
+    private int countDown = 4;
 
     /**
      * Initialize home teleport.
@@ -34,8 +36,8 @@ public class HomeTeleportScheduler extends BukkitRunnable {
      * @param teleportingPlayers       players teleporting to home
      */
     public HomeTeleportScheduler(
-            Player player, PlayerHome home, List<UUID> globalTeleportingPlayers,
-            HashMap<UUID, Integer> teleportingPlayers
+            @NotNull Player player, @NotNull PlayerHome home, @NotNull List<UUID> globalTeleportingPlayers,
+            @NotNull HashMap<UUID, Integer> teleportingPlayers
     ) {
         this.player = player;
         this.home = home;
@@ -52,19 +54,24 @@ public class HomeTeleportScheduler extends BukkitRunnable {
         World sourceWorld = player.getWorld();
         World destinationWorld = home.worldType();
 
-        if (countdown > 0) {
+        if (countDown > 0) {
             player.sendMessage(Component
-                    .text(String.format(HomeTeleportMessage.INFO_COUNTDOWN.getMessage(), countdown))
+                    .text(String.format(HomeTeleportMessage.INFO_COUNTDOWN.getMessage(), countDown))
                     .color(NamedTextColor.YELLOW)
             );
 
-            countdown--;
+            countDown--;
         } else {
             if (player.isOnline()) {
-                sourceWorld.playSound(player.getLocation(), FeedbackSound.TELEPORT.getSound(), 1, 1);
+                FeedbackSound feedbackSound = FeedbackSound.TELEPORT;
+                Sound sound = feedbackSound.getSound();
+                float volume = feedbackSound.getVolume();
+                float pitch = feedbackSound.getPitch();
+
+                sourceWorld.playSound(player.getLocation(), sound, volume, pitch);
 
                 player.teleport(location);
-                destinationWorld.playSound(location, FeedbackSound.TELEPORT.getSound(), 1, 1);
+                destinationWorld.playSound(location, sound, volume, pitch);
 
                 player.sendMessage(Component
                         .text(String.format(

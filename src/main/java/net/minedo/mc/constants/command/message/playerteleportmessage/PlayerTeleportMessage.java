@@ -2,6 +2,7 @@ package net.minedo.mc.constants.command.message.playerteleportmessage;
 
 import net.minedo.mc.constants.command.type.customcommandtype.CustomCommandType;
 import net.minedo.mc.constants.command.type.playerteleporttype.PlayerTeleportType;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Player teleport command texts.
@@ -44,7 +45,7 @@ public enum PlayerTeleportMessage {
      *
      * @param message text
      */
-    PlayerTeleportMessage(String message) {
+    PlayerTeleportMessage(@NotNull String message) {
         this.message = message;
     }
 
@@ -53,7 +54,7 @@ public enum PlayerTeleportMessage {
      *
      * @return text
      */
-    public String getMessage() {
+    public @NotNull String getMessage() {
         return message;
     }
 

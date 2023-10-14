@@ -1,6 +1,7 @@
 package net.minedo.mc.constants.command.message.regionteleportmessage;
 
 import net.minedo.mc.constants.command.type.customcommandtype.CustomCommandType;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Region teleport command texts.
@@ -20,7 +21,7 @@ public enum RegionTeleportMessage {
      *
      * @param message text
      */
-    RegionTeleportMessage(String message) {
+    RegionTeleportMessage(@NotNull String message) {
         this.message = message;
     }
 
@@ -29,7 +30,7 @@ public enum RegionTeleportMessage {
      *
      * @return text
      */
-    public String getMessage() {
+    public @NotNull String getMessage() {
         return message;
     }
 

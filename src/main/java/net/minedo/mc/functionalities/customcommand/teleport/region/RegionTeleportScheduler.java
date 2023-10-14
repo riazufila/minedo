@@ -2,13 +2,15 @@ package net.minedo.mc.functionalities.customcommand.teleport.region;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.minedo.mc.constants.command.feedbacksound.FeedbackSound;
 import net.minedo.mc.constants.command.message.regionteleportmessage.RegionTeleportMessage;
+import net.minedo.mc.constants.feedbacksound.FeedbackSound;
 import net.minedo.mc.models.region.Region;
 import org.bukkit.Location;
+import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.List;
@@ -23,7 +25,7 @@ public class RegionTeleportScheduler extends BukkitRunnable {
     private final Region region;
     private final List<UUID> globalTeleportingPlayers;
     private final HashMap<UUID, Integer> teleportingPlayers;
-    private int countdown = 4;
+    private int countDown = 4;
 
     /**
      * Initialize region teleport scheduler.
@@ -34,8 +36,10 @@ public class RegionTeleportScheduler extends BukkitRunnable {
      * @param teleportingPlayers       players teleporting to region
      */
     public RegionTeleportScheduler(
-            Player player, Region region, List<UUID> globalTeleportingPlayers,
-            HashMap<UUID, Integer> teleportingPlayers
+            @NotNull Player player,
+            @NotNull Region region,
+            @NotNull List<UUID> globalTeleportingPlayers,
+            @NotNull HashMap<UUID, Integer> teleportingPlayers
     ) {
         this.player = player;
         this.region = region;
@@ -49,7 +53,7 @@ public class RegionTeleportScheduler extends BukkitRunnable {
      * @param location location
      * @return safe location to teleport to
      */
-    private Location getSafeToTeleportLocation(Location location) {
+    private @NotNull Location getSafeToTeleportLocation(@NotNull Location location) {
         World world = this.region.worldType();
 
         return new Location(
@@ -63,19 +67,24 @@ public class RegionTeleportScheduler extends BukkitRunnable {
         World sourceWorld = player.getWorld();
         World destinationWorld = this.region.worldType();
 
-        if (countdown > 0) {
+        if (countDown > 0) {
             player.sendMessage(Component
-                    .text(String.format(RegionTeleportMessage.INFO_COUNTDOWN.getMessage(), countdown))
+                    .text(String.format(RegionTeleportMessage.INFO_COUNTDOWN.getMessage(), countDown))
                     .color(NamedTextColor.YELLOW)
             );
 
-            countdown--;
+            countDown--;
         } else {
             if (player.isOnline()) {
-                sourceWorld.playSound(player.getLocation(), FeedbackSound.TELEPORT.getSound(), 1, 1);
+                FeedbackSound feedbackSound = FeedbackSound.TELEPORT;
+                Sound sound = feedbackSound.getSound();
+                float volume = feedbackSound.getVolume();
+                float pitch = feedbackSound.getPitch();
+
+                sourceWorld.playSound(player.getLocation(), sound, volume, pitch);
 
                 player.teleport(location);
-                destinationWorld.playSound(location, FeedbackSound.TELEPORT.getSound(), 1, 1);
+                destinationWorld.playSound(location, sound, volume, pitch);
 
                 player.sendMessage(Component
                         .text(String.format(

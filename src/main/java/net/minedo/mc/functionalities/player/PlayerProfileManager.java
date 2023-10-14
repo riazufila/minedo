@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
@@ -20,7 +21,7 @@ public class PlayerProfileManager implements Listener {
      *
      * @param player player
      */
-    private void initializePlayer(Player player) {
+    private void initializePlayer(@NotNull Player player) {
         if (!player.hasPlayedBefore()) {
             UUID playerUuid = player.getUniqueId();
 

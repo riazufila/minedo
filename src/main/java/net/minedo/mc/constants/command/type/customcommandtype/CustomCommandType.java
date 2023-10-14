@@ -1,5 +1,7 @@
 package net.minedo.mc.constants.command.type.customcommandtype;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Custom command labels.
  */
@@ -22,7 +24,7 @@ public enum CustomCommandType {
      *
      * @param type command label
      */
-    CustomCommandType(String type) {
+    CustomCommandType(@NotNull String type) {
         this.type = type;
     }
 
@@ -31,7 +33,7 @@ public enum CustomCommandType {
      *
      * @return command label
      */
-    public String getType() {
+    public @NotNull String getType() {
         return type;
     }
 

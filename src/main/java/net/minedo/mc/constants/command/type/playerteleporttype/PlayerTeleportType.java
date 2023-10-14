@@ -1,5 +1,7 @@
 package net.minedo.mc.constants.command.type.playerteleporttype;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Player teleport command arguments.
  */
@@ -17,7 +19,7 @@ public enum PlayerTeleportType {
      *
      * @param type command argument.
      */
-    PlayerTeleportType(String type) {
+    PlayerTeleportType(@NotNull String type) {
         this.type = type;
     }
 
@@ -26,7 +28,7 @@ public enum PlayerTeleportType {
      *
      * @return command argument
      */
-    public String getType() {
+    public @NotNull String getType() {
         return type;
     }
 

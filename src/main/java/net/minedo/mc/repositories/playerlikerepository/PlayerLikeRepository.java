@@ -23,7 +23,7 @@ public final class PlayerLikeRepository {
      *
      * @param playerUuid player UUID
      */
-    public static void insertNewPlayerLike(UUID playerUuid) {
+    public static void insertNewPlayerLike(@NotNull UUID playerUuid) {
         Database database = new Database();
         database.connect();
 
@@ -44,7 +44,7 @@ public final class PlayerLikeRepository {
      * @param playerUuid player UUID
      * @param playerLike player like statistics
      */
-    public static void updatePlayerLike(UUID playerUuid, PlayerLike playerLike) {
+    public static void updatePlayerLike(@NotNull UUID playerUuid, @NotNull PlayerLike playerLike) {
         Database database = new Database();
         database.connect();
 
@@ -78,7 +78,7 @@ public final class PlayerLikeRepository {
      * @param playerUuid player UUID
      * @return player like statistics
      */
-    public static @NotNull PlayerLike getPlayerLikeByPlayerUuid(UUID playerUuid) {
+    public static @NotNull PlayerLike getPlayerLikeByPlayerUuid(@NotNull UUID playerUuid) {
         Database database = new Database();
         database.connect();
 

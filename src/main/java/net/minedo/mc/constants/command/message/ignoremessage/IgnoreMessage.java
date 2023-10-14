@@ -1,6 +1,7 @@
 package net.minedo.mc.constants.command.message.ignoremessage;
 
 import net.minedo.mc.constants.command.type.customcommandtype.CustomCommandType;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Ignore command texts.
@@ -23,7 +24,7 @@ public enum IgnoreMessage {
      *
      * @param message text
      */
-    IgnoreMessage(String message) {
+    IgnoreMessage(@NotNull String message) {
         this.message = message;
     }
 
@@ -32,7 +33,7 @@ public enum IgnoreMessage {
      *
      * @return text
      */
-    public String getMessage() {
+    public @NotNull String getMessage() {
         return message;
     }
 

@@ -1,6 +1,7 @@
 package net.minedo.mc.constants.command.message.narratemessage;
 
 import net.minedo.mc.constants.command.type.customcommandtype.CustomCommandType;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Narrate command texts.
@@ -16,7 +17,7 @@ public enum NarrateMessage {
      *
      * @param message text
      */
-    NarrateMessage(String message) {
+    NarrateMessage(@NotNull String message) {
         this.message = message;
     }
 
@@ -25,7 +26,7 @@ public enum NarrateMessage {
      *
      * @return text
      */
-    public String getMessage() {
+    public @NotNull String getMessage() {
         return message;
     }
 

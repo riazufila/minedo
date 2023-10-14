@@ -5,6 +5,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.minedo.mc.constants.command.message.chattimeoutmessage.ChatTimeoutMessage;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.UUID;
@@ -25,7 +26,7 @@ public class ChatTimeoutRelease extends BukkitRunnable {
      * @param playerChatCount player chat count
      * @param chatLimit       chat limit
      */
-    public ChatTimeoutRelease(Player player, HashMap<UUID, Integer> playerChatCount, int chatLimit) {
+    public ChatTimeoutRelease(@NotNull Player player, @NotNull HashMap<UUID, Integer> playerChatCount, int chatLimit) {
         this.player = player;
         this.playerChatCount = playerChatCount;
         this.chatLimit = chatLimit;

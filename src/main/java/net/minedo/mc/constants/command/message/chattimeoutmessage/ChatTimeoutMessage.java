@@ -1,5 +1,7 @@
 package net.minedo.mc.constants.command.message.chattimeoutmessage;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Chat timeout texts.
  */
@@ -15,7 +17,7 @@ public enum ChatTimeoutMessage {
      *
      * @param message text
      */
-    ChatTimeoutMessage(String message) {
+    ChatTimeoutMessage(@NotNull String message) {
         this.message = message;
     }
 
@@ -24,7 +26,7 @@ public enum ChatTimeoutMessage {
      *
      * @return text
      */
-    public String getMessage() {
+    public @NotNull String getMessage() {
         return message;
     }
 

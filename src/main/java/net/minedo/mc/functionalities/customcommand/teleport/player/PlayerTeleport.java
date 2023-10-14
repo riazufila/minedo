@@ -3,12 +3,13 @@ package net.minedo.mc.functionalities.customcommand.teleport.player;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.minedo.mc.Minedo;
-import net.minedo.mc.constants.command.feedbacksound.FeedbackSound;
 import net.minedo.mc.constants.command.message.globalteleportmessage.GlobalTeleportMessage;
 import net.minedo.mc.constants.command.message.ignoremessage.IgnoreMessage;
 import net.minedo.mc.constants.command.message.playerteleportmessage.PlayerTeleportMessage;
 import net.minedo.mc.constants.command.type.playerteleporttype.PlayerTeleportType;
 import net.minedo.mc.constants.common.Common;
+import net.minedo.mc.constants.feedbacksound.FeedbackSound;
+import net.minedo.mc.functionalities.utils.PlayerUtils;
 import net.minedo.mc.repositories.playerblockedlistrepository.PlayerBlockedRepository;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -40,7 +41,7 @@ public class PlayerTeleport implements CommandExecutor, Listener, TabCompleter {
      *
      * @param globalTeleportingPlayers List of globally teleporting players.
      */
-    public PlayerTeleport(List<UUID> globalTeleportingPlayers) {
+    public PlayerTeleport(@NotNull List<UUID> globalTeleportingPlayers) {
         this.globalTeleportingPlayers = globalTeleportingPlayers;
     }
 
@@ -51,7 +52,7 @@ public class PlayerTeleport implements CommandExecutor, Listener, TabCompleter {
      * @return whether command is valid
      */
 
-    private boolean isCommandValid(String[] args) {
+    private boolean isCommandValid(@NotNull String[] args) {
         if (args.length == 0) {
             return false;
         }
@@ -80,7 +81,9 @@ public class PlayerTeleport implements CommandExecutor, Listener, TabCompleter {
      * @param teleportTasks  teleporting players
      * @return player UUID
      */
-    private @Nullable UUID getPlayerUuidFromTaskId(Integer teleportTaskId, HashMap<UUID, Integer> teleportTasks) {
+    private @Nullable UUID getPlayerUuidFromTaskId(
+            @NotNull Integer teleportTaskId, @NotNull HashMap<UUID, Integer> teleportTasks
+    ) {
         UUID playerUuid = null;
 
         for (Map.Entry<UUID, Integer> entry : teleportTasks.entrySet()) {
@@ -102,9 +105,9 @@ public class PlayerTeleport implements CommandExecutor, Listener, TabCompleter {
      * @param taskId         task ID
      */
     private void removePlayersFromQueueAndCancelRunnable(
-            UUID requesteeUuid, UUID requesterUuid,
-            HashMap<UUID, Integer> requesteeQueue, HashMap<UUID, Integer> requesterQueue,
-            Integer taskId
+            @NotNull UUID requesteeUuid, @NotNull UUID requesterUuid,
+            @NotNull HashMap<UUID, Integer> requesteeQueue, @NotNull HashMap<UUID, Integer> requesterQueue,
+            @NotNull Integer taskId
     ) {
         requesteeQueue.remove(requesteeUuid);
         requesterQueue.remove(requesterUuid);
@@ -114,7 +117,7 @@ public class PlayerTeleport implements CommandExecutor, Listener, TabCompleter {
 
     @Override
     public boolean onCommand(
-            @NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args
+            @NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args
     ) {
         if (!(sender instanceof Player player)) {
             return true;
@@ -194,7 +197,10 @@ public class PlayerTeleport implements CommandExecutor, Listener, TabCompleter {
                         .color(NamedTextColor.YELLOW)
                 );
 
-                otherPlayer.playSound(otherPlayer.getLocation(), FeedbackSound.INFO.getSound(), 1, 1);
+                FeedbackSound feedbackSound = FeedbackSound.INFO;
+
+                otherPlayer.playSound(otherPlayer.getLocation(), feedbackSound.getSound(),
+                        feedbackSound.getVolume(), feedbackSound.getPitch());
                 otherPlayer.sendMessage(Component
                         .text(String.format(
                                 PlayerTeleportMessage.SUCCESS_REQUEST_REQUESTER.getMessage(),
@@ -283,7 +289,10 @@ public class PlayerTeleport implements CommandExecutor, Listener, TabCompleter {
                         .color(NamedTextColor.YELLOW)
                 );
 
-                otherPlayer.playSound(otherPlayer.getLocation(), FeedbackSound.INFO.getSound(), 1, 1);
+                FeedbackSound feedbackSound = FeedbackSound.INFO;
+
+                otherPlayer.playSound(otherPlayer.getLocation(), feedbackSound.getSound(),
+                        feedbackSound.getVolume(), feedbackSound.getPitch());
                 otherPlayer.sendMessage(Component
                         .text(String.format(
                                 PlayerTeleportMessage.INFO_TELEPORTING_REQUESTER.getMessage(),
@@ -329,7 +338,10 @@ public class PlayerTeleport implements CommandExecutor, Listener, TabCompleter {
             );
 
             if (otherPlayer != null && otherPlayer.isOnline()) {
-                otherPlayer.playSound(otherPlayer.getLocation(), FeedbackSound.ERROR.getSound(), 1, 1);
+                FeedbackSound feedbackSound = FeedbackSound.ERROR;
+
+                otherPlayer.playSound(otherPlayer.getLocation(), feedbackSound.getSound(),
+                        feedbackSound.getVolume(), feedbackSound.getPitch());
                 otherPlayer.sendMessage(Component
                         .text(String.format(
                                 PlayerTeleportMessage.ERROR_DECLINED_REQUESTER.getMessage(),
@@ -388,7 +400,10 @@ public class PlayerTeleport implements CommandExecutor, Listener, TabCompleter {
             );
 
             if (otherPlayer != null && otherPlayer.isOnline()) {
-                otherPlayer.playSound(otherPlayer.getLocation(), FeedbackSound.ERROR.getSound(), 1, 1);
+                FeedbackSound feedbackSound = FeedbackSound.ERROR;
+
+                otherPlayer.playSound(otherPlayer.getLocation(), feedbackSound.getSound(),
+                        feedbackSound.getVolume(), feedbackSound.getPitch());
                 otherPlayer.sendMessage(Component
                         .text(String.format(
                                 PlayerTeleportMessage.INFO_DISCARD_REQUESTEE.getMessage(),
@@ -421,7 +436,7 @@ public class PlayerTeleport implements CommandExecutor, Listener, TabCompleter {
 
     @Override
     public List<String> onTabComplete(
-            @NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args
+            @NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args
     ) {
         List<String> completions = new ArrayList<>();
 
@@ -459,7 +474,8 @@ public class PlayerTeleport implements CommandExecutor, Listener, TabCompleter {
      * @param isRequester       whether a requester or not
      */
     private void handleTeleportCancellation(
-            Player player, Integer teleportTaskId, HashMap<UUID, Integer> teleportingPlayer, Boolean isRequester
+            @NotNull Player player, @NotNull Integer teleportTaskId,
+            @NotNull HashMap<UUID, Integer> teleportingPlayer, @NotNull Boolean isRequester
     ) {
         Player otherPlayer = null;
         UUID playerUuid = player.getUniqueId();
@@ -498,9 +514,12 @@ public class PlayerTeleport implements CommandExecutor, Listener, TabCompleter {
      *
      * @param player player
      */
-    private void sendTeleportationCancelled(Player player) {
+    private void sendTeleportationCancelled(@Nullable Player player) {
         if (player != null && player.isOnline()) {
-            player.playSound(player.getLocation(), FeedbackSound.ERROR.getSound(), 1, 1);
+            FeedbackSound feedbackSound = FeedbackSound.ERROR;
+
+            player.playSound(player.getLocation(), feedbackSound.getSound(),
+                    feedbackSound.getVolume(), feedbackSound.getPitch());
             player.sendMessage(Component
                     .text(PlayerTeleportMessage.ERROR_TELEPORTATION_CANCELLED.getMessage())
                     .color(NamedTextColor.RED)
@@ -509,26 +528,24 @@ public class PlayerTeleport implements CommandExecutor, Listener, TabCompleter {
     }
 
     @EventHandler
-    public void onPlayerMove(PlayerMoveEvent event) {
-        if (
-                event.getFrom().getBlockX() != event.getTo().getBlockX() ||
-                        event.getFrom().getBlockY() != event.getTo().getBlockY() ||
-                        event.getFrom().getBlockZ() != event.getTo().getBlockZ()
-        ) {
-            Player player = event.getPlayer();
-            UUID playerUuid = player.getUniqueId();
-            Integer requesterTeleportTaskId = this.teleportingRequesters.get(playerUuid);
-            Integer requesteeTeleportTaskId = this.standingStillRequestees.get(playerUuid);
+    public void onPlayerMove(@NotNull PlayerMoveEvent event) {
+        if (!PlayerUtils.isPlayerMoving(event)) {
+            return;
+        }
 
-            if (requesterTeleportTaskId != null) {
-                this.handleTeleportCancellation(
-                        player, requesterTeleportTaskId, standingStillRequestees, true
-                );
-            } else if (requesteeTeleportTaskId != null) {
-                this.handleTeleportCancellation(
-                        player, requesteeTeleportTaskId, teleportingRequesters, false
-                );
-            }
+        Player player = event.getPlayer();
+        UUID playerUuid = player.getUniqueId();
+        Integer requesterTeleportTaskId = this.teleportingRequesters.get(playerUuid);
+        Integer requesteeTeleportTaskId = this.standingStillRequestees.get(playerUuid);
+
+        if (requesterTeleportTaskId != null) {
+            this.handleTeleportCancellation(
+                    player, requesterTeleportTaskId, standingStillRequestees, true
+            );
+        } else if (requesteeTeleportTaskId != null) {
+            this.handleTeleportCancellation(
+                    player, requesteeTeleportTaskId, teleportingRequesters, false
+            );
         }
     }
 

@@ -1,5 +1,6 @@
 package net.minedo.mc;
 
+import net.minedo.mc.customevents.caller.PlayerNonBlockInteractCaller;
 import net.minedo.mc.functionalities.chat.Chat;
 import net.minedo.mc.functionalities.customcommand.CustomCommand;
 import net.minedo.mc.functionalities.customenchantment.CustomEnchantmentWrapper;
@@ -47,6 +48,7 @@ public class Minedo extends JavaPlugin {
         // Custom enchantments.
         CustomEnchantmentWrapper customEnchantmentWrapper = new CustomEnchantmentWrapper();
         customEnchantmentWrapper.registerCustomEnchantments();
+        pluginManager.registerEvents(customEnchantmentWrapper, this);
 
         // Custom commands.
         CustomCommand customCommand = new CustomCommand();
@@ -70,6 +72,9 @@ public class Minedo extends JavaPlugin {
         // Chat.
         Chat chat = new Chat();
         chat.setupChat();
+
+        // Custom events caller.
+        pluginManager.registerEvents(new PlayerNonBlockInteractCaller(), this);
     }
 
 }

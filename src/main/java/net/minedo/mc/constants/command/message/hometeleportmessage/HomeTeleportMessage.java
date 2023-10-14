@@ -2,6 +2,7 @@ package net.minedo.mc.constants.command.message.hometeleportmessage;
 
 import net.minedo.mc.constants.command.type.customcommandtype.CustomCommandType;
 import net.minedo.mc.constants.command.type.hometype.HomeType;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Home teleport texts.
@@ -39,7 +40,7 @@ public enum HomeTeleportMessage {
      *
      * @param message text
      */
-    HomeTeleportMessage(String message) {
+    HomeTeleportMessage(@NotNull String message) {
         this.message = message;
     }
 
@@ -48,7 +49,7 @@ public enum HomeTeleportMessage {
      *
      * @return text
      */
-    public String getMessage() {
+    public @NotNull String getMessage() {
         return message;
     }
 

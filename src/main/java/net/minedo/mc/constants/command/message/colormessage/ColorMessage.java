@@ -2,6 +2,7 @@ package net.minedo.mc.constants.command.message.colormessage;
 
 import net.minedo.mc.constants.command.type.colortype.ColorType;
 import net.minedo.mc.constants.command.type.customcommandtype.CustomCommandType;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Color command texts.
@@ -27,7 +28,7 @@ public enum ColorMessage {
      *
      * @param message text
      */
-    ColorMessage(String message) {
+    ColorMessage(@NotNull String message) {
         this.message = message;
     }
 
@@ -36,7 +37,7 @@ public enum ColorMessage {
      *
      * @return text
      */
-    public String getMessage() {
+    public @NotNull String getMessage() {
         return message;
     }
 

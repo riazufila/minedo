@@ -2,15 +2,16 @@ package net.minedo.mc.functionalities.regionregeneration;
 
 import net.minedo.mc.Minedo;
 import net.minedo.mc.constants.common.Common;
+import net.minedo.mc.constants.feedbacksound.FeedbackSound;
 import net.minedo.mc.models.region.Region;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
-import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 
@@ -31,7 +32,7 @@ public class RegionRegenerationLauncher extends BukkitRunnable {
      * @param restoringChunks chunks that are restoring
      */
     public RegionRegenerationLauncher(
-            Chunk chunk, Region region, HashMap<String, Integer> restoringChunks
+            @NotNull Chunk chunk, @NotNull Region region, @NotNull HashMap<String, Integer> restoringChunks
     ) {
         this.chunk = chunk;
         this.region = region;
@@ -44,7 +45,7 @@ public class RegionRegenerationLauncher extends BukkitRunnable {
      * @param livingEntity living entity
      * @return whether living entity is within launching ground
      */
-    private boolean isLivingEntityWithinLaunchingGround(LivingEntity livingEntity) {
+    private boolean isLivingEntityWithinLaunchingGround(@NotNull LivingEntity livingEntity) {
         Location location = livingEntity.getLocation();
         int LAUNCHING_GROUND_MAX_HEIGHT = 5;
 
@@ -65,8 +66,11 @@ public class RegionRegenerationLauncher extends BukkitRunnable {
             if (entity instanceof LivingEntity livingEntity
                     && this.isLivingEntityWithinLaunchingGround(livingEntity)
             ) {
+                FeedbackSound feedbackSound = FeedbackSound.REGION_LAUNCH_ENTITIES_ABOVE;
+
                 this.region.worldType().playSound(
-                        livingEntity.getLocation(), Sound.BLOCK_AZALEA_LEAVES_STEP, 1, 1
+                        livingEntity.getLocation(), feedbackSound.getSound(),
+                        feedbackSound.getVolume(), feedbackSound.getPitch()
                 );
 
                 livingEntity.setVelocity(

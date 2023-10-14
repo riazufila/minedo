@@ -4,9 +4,9 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.minedo.mc.Minedo;
-import net.minedo.mc.constants.command.feedbacksound.FeedbackSound;
 import net.minedo.mc.constants.command.message.ignoremessage.IgnoreMessage;
 import net.minedo.mc.constants.command.message.whispermessage.WhisperMessage;
+import net.minedo.mc.constants.feedbacksound.FeedbackSound;
 import net.minedo.mc.repositories.playerblockedlistrepository.PlayerBlockedRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.command.Command;
@@ -32,13 +32,13 @@ public class Message implements CommandExecutor, TabCompleter {
      * @param args arguments
      * @return whether command is valid
      */
-    private boolean isCommandValid(String[] args) {
+    private boolean isCommandValid(@NotNull String[] args) {
         return args.length >= 2;
     }
 
     @Override
     public boolean onCommand(
-            @NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args
+            @NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args
     ) {
         if (!(sender instanceof Player player)) {
             return true;
@@ -68,7 +68,10 @@ public class Message implements CommandExecutor, TabCompleter {
 
             if (PlayerBlockedRepository.isPlayerBlockedByPlayer(
                     player.getUniqueId(), otherPlayer.getUniqueId())) {
-                player.playSound(player.getLocation(), FeedbackSound.ERROR.getSound(), 1, 1);
+                FeedbackSound feedbackSound = FeedbackSound.ERROR;
+
+                player.playSound(player.getLocation(), feedbackSound.getSound(),
+                        feedbackSound.getVolume(), feedbackSound.getPitch());
                 player.sendMessage(Component
                         .text(String.format(
                                 IgnoreMessage.ERROR_INTERACT.getMessage(),
@@ -87,7 +90,11 @@ public class Message implements CommandExecutor, TabCompleter {
                     .decoration(TextDecoration.ITALIC, true);
 
             player.sendMessage(component);
-            otherPlayer.playSound(otherPlayer.getLocation(), FeedbackSound.INFO.getSound(), 1, 1);
+
+            FeedbackSound feedbackSound = FeedbackSound.INFO;
+
+            otherPlayer.playSound(otherPlayer.getLocation(), feedbackSound.getSound(),
+                    feedbackSound.getVolume(), feedbackSound.getPitch());
             otherPlayer.sendMessage(component);
         } else {
             player.sendMessage(Component
@@ -101,7 +108,7 @@ public class Message implements CommandExecutor, TabCompleter {
 
     @Override
     public List<String> onTabComplete(
-            @NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args
+            @NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args
     ) {
         List<String> completions = new ArrayList<>();
 

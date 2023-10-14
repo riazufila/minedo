@@ -105,12 +105,18 @@ INSERT INTO custom_item VALUES
 (6, 'IRON_LEGGINGS', 'Iron Leggings', NULL, 'OBFUSCATED'),
 (7, 'IRON_BOOTS', 'Iron Boots', NULL, 'OBFUSCATED'),
 (8, 'IRON_SWORD', 'Iron Sword', NULL, 'OBFUSCATED'),
-(9, 'SHIELD', 'Shield', NULL, 'OBFUSCATED');
+(9, 'SHIELD', 'Shield', NULL, 'OBFUSCATED'),
+(10, 'NETHERITE_SHOVEL', 'Cataclysm', 'DARK_PURPLE', NULL),
+(11, 'ENCHANTED_BOOK', 'Book of Awakening', 'DARK_PURPLE', NULL),
+(12, 'DIAMOND_SWORD', 'Frostbite', 'DARK_PURPLE', NULL);
 
 INSERT INTO custom_item_lore VALUES
 (1, 'Boots infused with the agility of a rabbit.', 'GREEN', NULL),
 (2, 'The legendary weapon of the thunder God.', 'DARK_PURPLE', NULL),
-(3, 'A weapon by Death, itself.', 'DARK_PURPLE', NULL);
+(3, 'A weapon by Death, itself.', 'DARK_PURPLE', NULL),
+(10, 'Shovel harnessed with raw power.', 'DARK_PURPLE', NULL),
+(11, 'Awakens the beholder\'s power.', 'DARK_PURPLE', NULL),
+(12, 'Crafted from ice, the blade chills enemies.', 'DARK_PURPLE', NULL);
 
 INSERT INTO custom_item_enchantment VALUES
 (1, 'PROTECTION', false, 5),
@@ -127,10 +133,18 @@ INSERT INTO custom_item_enchantment VALUES
 (3, 'MENDING', false, 1),
 (3, 'UNBREAKING', false, 10),
 (3, 'POISON', true, 5),
-(3, 'BLINDNESS', true, 5);
+(3, 'BLINDNESS', true, 5),
+(10, 'SHARPNESS', false, 5),
+(10, 'MENDING', false, 1),
+(10, 'UNBREAKING', false, 10),
+(10, 'EXPLOSION', true, 1),
+(11, 'CATALYST', true, 1),
+(12, 'SHARPNESS', false, 10),
+(12, 'UNBREAKING', false, 10),
+(12, 'ICE', true, 1);
 
 INSERT INTO custom_item_probability VALUES
-(1, 10),
+(1, 20),
 (2, 10),
 (3, 10),
 (4, 100),
@@ -138,7 +152,10 @@ INSERT INTO custom_item_probability VALUES
 (6, 100),
 (7, 100),
 (8, 100),
-(9, 100);
+(9, 100),
+(10, 15),
+(11, 0.03),
+(12, 5);
 
 INSERT INTO region VALUES
 (1, 'Spawn', 'world', -128, 127, -128, 127);

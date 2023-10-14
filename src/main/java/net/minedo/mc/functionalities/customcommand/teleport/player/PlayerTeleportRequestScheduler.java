@@ -2,10 +2,12 @@ package net.minedo.mc.functionalities.customcommand.teleport.player;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.minedo.mc.constants.command.feedbacksound.FeedbackSound;
 import net.minedo.mc.constants.command.message.playerteleportmessage.PlayerTeleportMessage;
+import net.minedo.mc.constants.feedbacksound.FeedbackSound;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.UUID;
@@ -29,8 +31,8 @@ public class PlayerTeleportRequestScheduler extends BukkitRunnable {
      * @param teleportRequestees teleport requestees
      */
     public PlayerTeleportRequestScheduler(
-            Player requester, Player requestee,
-            HashMap<UUID, Integer> teleportRequesters, HashMap<UUID, Integer> teleportRequestees
+            @NotNull Player requester, @NotNull Player requestee,
+            @NotNull HashMap<UUID, Integer> teleportRequesters, @NotNull HashMap<UUID, Integer> teleportRequestees
     ) {
         this.requester = requester;
         this.requestee = requestee;
@@ -43,16 +45,19 @@ public class PlayerTeleportRequestScheduler extends BukkitRunnable {
         teleportRequesters.remove(this.requester.getUniqueId());
         teleportRequestees.remove(this.requestee.getUniqueId());
 
-        this.cancel();
-
         Component timeoutMessage = Component
                 .text(PlayerTeleportMessage.ERROR_REQUEST_TIMEOUT.getMessage())
                 .color(NamedTextColor.RED);
 
-        requester.playSound(requester.getLocation(), FeedbackSound.ERROR.getSound(), 1, 1);
+        FeedbackSound feedbackSound = FeedbackSound.ERROR;
+        Sound sound = feedbackSound.getSound();
+        float volume = feedbackSound.getVolume();
+        float pitch = feedbackSound.getPitch();
+
+        requester.playSound(requester.getLocation(), sound, volume, pitch);
         requester.sendMessage(timeoutMessage);
 
-        requestee.playSound(requestee.getLocation(), FeedbackSound.ERROR.getSound(), 1, 1);
+        requestee.playSound(requestee.getLocation(), sound, volume, pitch);
         requestee.sendMessage(timeoutMessage);
     }
 
