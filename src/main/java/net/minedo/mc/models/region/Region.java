@@ -9,19 +9,21 @@ import java.util.Random;
 /**
  * Region regenerates upon block is broken after a set amount of time.
  *
- * @param name      name of region
- * @param worldType world where the region is in
- * @param minX      minimum x coordinate
- * @param maxX      maximum x coordinate
- * @param minZ      minimum z coordinate
- * @param maxZ      maximum z coordinate
+ * @param name              name of region
+ * @param worldType         world where the region is in
+ * @param minX              minimum x coordinate
+ * @param maxX              maximum x coordinate
+ * @param minZ              minimum z coordinate
+ * @param maxZ              maximum z coordinate
+ * @param modifiedThreshold threshold until region is regenerated
  */
 public record Region(@NotNull String name,
                      @NotNull World worldType,
                      int minX,
                      int maxX,
                      int minZ,
-                     int maxZ) {
+                     int maxZ,
+                     double modifiedThreshold) {
 
     /**
      * Get the center of the region.

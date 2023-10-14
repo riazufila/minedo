@@ -14,9 +14,7 @@ import com.sk89q.worldedit.regions.CuboidRegion;
 import io.papermc.paper.event.entity.EntityMoveEvent;
 import net.minedo.mc.Minedo;
 import net.minedo.mc.constants.common.Common;
-import net.minedo.mc.constants.directory.Directory;
 import net.minedo.mc.constants.feedbacksound.FeedbackSound;
-import net.minedo.mc.constants.filetype.FileType;
 import net.minedo.mc.functionalities.utils.ParticleUtils;
 import net.minedo.mc.interfaces.chunkprocessor.ChunkProcessor;
 import net.minedo.mc.models.region.Region;
@@ -60,26 +58,6 @@ public class RegionRegeneration implements Listener {
      */
     public RegionRegeneration(@NotNull Region region) {
         this.region = region;
-    }
-
-    /**
-     * Get file based on chunk info.
-     *
-     * @param chunkX chunk x
-     * @param chunkZ chunk z
-     * @return file
-     */
-    private @NotNull File getFile(int chunkX, int chunkZ) {
-        String chunkCoordinate = String.format("%d,%d", chunkX, chunkZ);
-
-        String fileName = String.format(
-                "%s-region-(%s).%s",
-                this.region.name().toLowerCase(),
-                chunkCoordinate,
-                FileType.SCHEMATIC.getType()
-        );
-
-        return new File(Directory.SCHEMATIC.getDirectory() + fileName);
     }
 
     /**
@@ -133,16 +111,16 @@ public class RegionRegeneration implements Listener {
     }
 
     /**
-     * Get whether snapshot file exists.
+     * Get whether snapshot exists.
      *
      * @param params params
-     * @return whether snapshot file exists
+     * @return whether snapshot exists
      */
-    private boolean checkSnapshotFileExists(@NotNull Object[] params) {
+    private boolean checkSnapshotExists(@NotNull Object[] params) {
         int chunkX = (int) params[0];
         int chunkZ = (int) params[1];
 
-        File file = this.getFile(chunkX, chunkZ);
+        File file = RegionFileUtils.getFile(this.region, chunkX, chunkZ);
 
         if (!file.exists()) {
             this.logger.severe(String.format(
@@ -156,12 +134,12 @@ public class RegionRegeneration implements Listener {
     }
 
     /**
-     * Create snapshot file.
+     * Create snapshot.
      *
      * @param params params
-     * @return whether snapshot file is created
+     * @return whether snapshot is created
      */
-    private boolean createSnapshotFile(@NotNull Object[] params) {
+    private boolean createSnapshot(@NotNull Object[] params) {
         World world = (World) params[0];
         int chunkMinX = (int) params[1];
         int chunkMaxX = (int) params[2];
@@ -198,7 +176,7 @@ public class RegionRegeneration implements Listener {
             return false;
         }
 
-        File file = this.getFile(chunkX, chunkZ);
+        File file = RegionFileUtils.getFile(this.region, chunkX, chunkZ);
 
         try (ClipboardWriter clipboardWriter = BuiltInClipboardFormat.SPONGE_SCHEMATIC.getWriter(
                 new FileOutputStream(file)
@@ -224,7 +202,7 @@ public class RegionRegeneration implements Listener {
     public boolean getRegionSnapshot() {
         this.logger.info(String.format("Getting %s region snapshot.", this.region.name()));
 
-        return processChunks(this.region.worldType(), this::checkSnapshotFileExists, true);
+        return processChunks(this.region.worldType(), this::checkSnapshotExists, true);
     }
 
     /**
@@ -232,7 +210,7 @@ public class RegionRegeneration implements Listener {
      */
     public void setRegionSnapshot() {
         this.logger.info(String.format("Setting %s region snapshot.", this.region.name()));
-        processChunks(this.region.worldType(), this::createSnapshotFile, false);
+        processChunks(this.region.worldType(), this::createSnapshot, false);
     }
 
     /**
@@ -248,12 +226,12 @@ public class RegionRegeneration implements Listener {
         }
 
         // Run region regeneration scheduler after 30 seconds.
-        RegionRegenerationLauncher regionRegenerationLauncher = new RegionRegenerationLauncher(
+        RegionRegenerationPreparation regionRegenerationPreparation = new RegionRegenerationPreparation(
                 chunk, this.region, this.restoringChunks
         );
 
         long DELAY = 30;
-        int restoringTaskId = regionRegenerationLauncher
+        int restoringTaskId = regionRegenerationPreparation
                 .runTaskLater(Minedo.getInstance(), DELAY * (int) Common.TICK_PER_SECOND.getValue())
                 .getTaskId();
 

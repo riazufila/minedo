@@ -13,9 +13,7 @@ import com.sk89q.worldedit.function.operation.Operations;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.session.ClipboardHolder;
 import net.minedo.mc.constants.common.Common;
-import net.minedo.mc.constants.directory.Directory;
 import net.minedo.mc.constants.feedbacksound.FeedbackSound;
-import net.minedo.mc.constants.filetype.FileType;
 import net.minedo.mc.models.region.Region;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
@@ -30,8 +28,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Region builder runnable.
@@ -101,40 +97,12 @@ public class RegionRegenerationBuilder extends BukkitRunnable {
     public void run() {
         this.logger.info(String.format(
                 "Restoring chunk (%d, %d) in %s region.",
-                chunk.getX(),
-                chunk.getZ(),
+                this.chunk.getX(),
+                this.chunk.getZ(),
                 this.region.name())
         );
 
-        File schematicFile = null;
-        File schematicPath = new File(Directory.SCHEMATIC.getDirectory());
-        File[] files = schematicPath.listFiles();
-
-        if (files == null) {
-            return;
-        }
-
-        String SPAWN_REGION_SCHEMATIC_REGEX = String.format(
-                "%s-region-\\((-?\\d+),(-?\\d+)\\)\\.%s",
-                this.region.name().toLowerCase(),
-                FileType.SCHEMATIC.getType()
-        );
-
-        Pattern pattern = Pattern.compile(SPAWN_REGION_SCHEMATIC_REGEX);
-
-        for (File file : files) {
-            Matcher matcher = pattern.matcher(file.getName());
-
-            if (matcher.matches()) {
-                int chunkX = Integer.parseInt(matcher.group(1));
-                int chunkZ = Integer.parseInt(matcher.group(2));
-
-                if (chunkX == chunk.getX() && chunkZ == chunk.getZ()) {
-                    schematicFile = file;
-                    break;
-                }
-            }
-        }
+        File schematicFile = RegionFileUtils.getSchematicFileForBuilding(this.region, this.chunk);
 
         if (schematicFile == null) {
             return;
