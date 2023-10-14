@@ -46,10 +46,14 @@ public class IceEnchantmentHandler extends CustomEnchantmentHandler implements L
             return;
         }
 
+        final int DEFAULT_DURATION = 3;
         LivingEntity defendingEntity = combatEvent.getDefendingEntity();
+        int enchantmentLevel = combatEvent.getCustomEnchantment().getLevel();
+        int duration = DEFAULT_DURATION * enchantmentLevel;
         int freezeTicks = defendingEntity.getFreezeTicks();
+
         int updatedFreezeTicks = freezeTicks
-                + (combatEvent.getCustomEnchantment().getLevel() * (int) Common.TICK_PER_SECOND.getValue());
+                + (duration * (int) Common.TICK_PER_SECOND.getValue());
 
         defendingEntity.setFreezeTicks(updatedFreezeTicks);
     }

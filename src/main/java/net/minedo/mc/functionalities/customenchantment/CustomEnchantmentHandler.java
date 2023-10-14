@@ -133,12 +133,12 @@ public abstract class CustomEnchantmentHandler extends SimpleCustomEnchantment {
             boolean isAmplified,
             @NotNull CustomEnchantment customEnchantment
     ) {
-        int DEFAULT_DURATION = 3;
-        double INCREMENT_DURATION = 0.2;
+        final int DEFAULT_DURATION = 3;
+        final double INCREMENT_DURATION = 0.2;
         int enchantmentLevel = customEnchantment.getLevel();
         int duration = isAmplified
                 ? (int) (DEFAULT_DURATION + (enchantmentLevel * INCREMENT_DURATION))
-                : DEFAULT_DURATION * customEnchantment.getLevel();
+                : DEFAULT_DURATION * enchantmentLevel;
         int amplifier = isAmplified ? enchantmentLevel : 0;
 
         return new PotionEffect(
