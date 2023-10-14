@@ -12,6 +12,7 @@ import net.minedo.mc.functionalities.customenchantment.CustomEnchantmentWrapper;
 import net.minedo.mc.functionalities.skills.SkillUtils;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.entity.LightningStrike;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -44,14 +45,14 @@ public class LightningEnchantmentHandler extends CustomEnchantmentHandler implem
     /**
      * Run a scheduler to strike lightnings.
      *
-     * @param world         world
-     * @param startLocation start location
-     * @param delay         delay
+     * @param player player
+     * @param delay  delay
      */
-    private void straightLightningRunnable(
-            @NotNull World world, @NotNull Location startLocation, long delay
-    ) {
+    private void straightLightningRunnable(@NotNull Player player, long delay) {
+        World world = player.getWorld();
+        Location startLocation = player.getLocation();
         Location originLocation = startLocation.clone();
+
         new BukkitRunnable() {
 
             final int FIRST_COUNT = 1;
@@ -86,7 +87,7 @@ public class LightningEnchantmentHandler extends CustomEnchantmentHandler implem
                 }
 
                 strikeLocation.setY(world.getHighestBlockYAt(strikeLocation));
-                world.strikeLightning(strikeLocation);
+                world.strikeLightning(strikeLocation).setCausingPlayer(player);
 
                 countDown++;
             }
@@ -108,15 +109,20 @@ public class LightningEnchantmentHandler extends CustomEnchantmentHandler implem
 
         Location location = event.getEntity().getLocation();
         LivingEntity defendingEntity = combatEvent.getDefendingEntity();
+        LivingEntity attackingEntity = combatEvent.getAttackingEntity();
         World world = defendingEntity.getWorld();
 
         if (location.getBlockY() < world.getHighestBlockYAt(location)) {
             return;
         }
 
-        defendingEntity
+        LightningStrike lightningStrike = defendingEntity
                 .getWorld()
                 .strikeLightning(defendingEntity.getLocation());
+
+        if (attackingEntity instanceof Player attackingPlayer) {
+            lightningStrike.setCausingPlayer(attackingPlayer);
+        }
     }
 
     @EventHandler
@@ -140,7 +146,7 @@ public class LightningEnchantmentHandler extends CustomEnchantmentHandler implem
         }
 
         final long DELAY = 5;
-        this.straightLightningRunnable(player.getWorld(), player.getLocation(), DELAY);
+        this.straightLightningRunnable(player, DELAY);
     }
 
 }

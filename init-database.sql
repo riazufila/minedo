@@ -106,15 +106,15 @@ INSERT INTO custom_item VALUES
 (7, 'IRON_BOOTS', 'Iron Boots', NULL, 'OBFUSCATED'),
 (8, 'IRON_SWORD', 'Iron Sword', NULL, 'OBFUSCATED'),
 (9, 'SHIELD', 'Shield', NULL, 'OBFUSCATED'),
-(10, 'MAGMA_CREAM', 'Bomberman', 'DARK_PURPLE', NULL),
-(11, 'NETHER_STAR', 'Nidavellir', 'DARK_PURPLE', NULL);
+(10, 'NETHERITE_SHOVEL', 'Cataclysm', 'DARK_PURPLE', NULL),
+(11, 'ENCHANTED_BOOK', 'Book of Awakening', 'DARK_PURPLE', NULL);
 
 INSERT INTO custom_item_lore VALUES
 (1, 'Boots infused with the agility of a rabbit.', 'GREEN', NULL),
 (2, 'The legendary weapon of the thunder God.', 'DARK_PURPLE', NULL),
 (3, 'A weapon by Death, itself.', 'DARK_PURPLE', NULL),
-(10, 'Suicidal attack.', 'DARK_PURPLE', NULL),
-(11, 'Control the power of lightning.', 'DARK_PURPLE', NULL);
+(10, 'Shovel harnessed with raw power.', 'DARK_PURPLE', NULL),
+(11, 'Holder of this book have the potential of awakening their enchantments.', 'DARK_PURPLE', NULL);
 
 INSERT INTO custom_item_enchantment VALUES
 (1, 'PROTECTION', false, 5),
@@ -132,10 +132,11 @@ INSERT INTO custom_item_enchantment VALUES
 (3, 'UNBREAKING', false, 10),
 (3, 'POISON', true, 5),
 (3, 'BLINDNESS', true, 5),
-(10, 'FLAME', false, 1),
+(10, 'SHARPNESS', false, 5),
+(10, 'MENDING', false, 1),
+(10, 'UNBREAKING', false, 10),
 (10, 'EXPLOSION', true, 1),
-(11, 'LUCK', false, 1),
-(11, 'LIGHTNING', true, 1);
+(11, 'CATALYST', true, 1);
 
 INSERT INTO custom_item_probability VALUES
 (1, 20),
@@ -148,7 +149,7 @@ INSERT INTO custom_item_probability VALUES
 (8, 100),
 (9, 100),
 (10, 15),
-(11, 15);
+(11, 0.03);
 
 INSERT INTO region VALUES
 (1, 'Spawn', 'world', -128, 127, -128, 127);

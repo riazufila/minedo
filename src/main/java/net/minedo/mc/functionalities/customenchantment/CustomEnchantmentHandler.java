@@ -11,6 +11,8 @@ import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.inventory.EntityEquipment;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
@@ -47,21 +49,36 @@ public abstract class CustomEnchantmentHandler extends SimpleCustomEnchantment {
      */
     public @Nullable ItemStack getValidItemForSkill(@NotNull PlayerNonBlockInteractEvent event) {
         Player player = event.getPlayer();
-        ItemStack item = event.getItem();
+        EntityEquipment equipment = player.getEquipment();
+        EquipmentSlot handUsed = event.getHand();
+        ItemStack itemUsed = event.getItem();
+        ItemStack itemInOtherHand = null;
 
-        if (item == null) {
-            item = player.getEquipment().getItemInOffHand();
+        if (handUsed == EquipmentSlot.HAND) {
+            itemInOtherHand = equipment.getItemInOffHand();
+        } else if (handUsed == EquipmentSlot.OFF_HAND) {
+            itemInOtherHand = equipment.getItemInMainHand();
         }
 
-        if (item.isEmpty()
-                || (MaterialTags.ARMOR.isTagged(item.getType())
-                || MaterialTags.SWORDS.isTagged(item.getType())
-                || Tag.ITEMS_TOOLS.isTagged(item.getType()))
+        if ((itemUsed == null || itemUsed.isEmpty())
+                || (itemInOtherHand == null || itemInOtherHand.isEmpty())
         ) {
             return null;
         }
 
-        return item;
+        if (MaterialTags.ARMOR.isTagged(itemUsed.getType())) {
+            return null;
+        }
+
+        Optional<CustomEnchantment> customEnchantmentOptional = CustomEnchantmentWrapper
+                .getCustomEnchantment(itemInOtherHand, CustomEnchantmentType.CATALYST);
+
+        if (customEnchantmentOptional.isEmpty()) {
+            return null;
+        }
+
+
+        return itemUsed;
     }
 
     /**

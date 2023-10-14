@@ -29,6 +29,7 @@ public enum CustomEnchantmentType {
     JUMP,
     STRENGTH,
     EXPLOSION,
-    ICE
+    ICE,
+    CATALYST
 
 }

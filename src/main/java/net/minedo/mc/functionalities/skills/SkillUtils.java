@@ -56,7 +56,6 @@ public final class SkillUtils {
      * @return whether player can use skill
      */
     public static boolean canSkill(@NotNull Player player, @NotNull HashMap<UUID, Integer> playerSkillPoints) {
-
         UUID playerUuid = player.getUniqueId();
         int MAX_SKILL_POINTS = SkillValue.MAX_SKILL_POINTS.getValue();
         Integer skillPoint = playerSkillPoints.get(playerUuid);
