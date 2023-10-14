@@ -181,6 +181,7 @@ public class ExplosionEnchantmentHandler extends CustomEnchantmentHandler implem
         playersExploding.put(playerUuid, explosionTaskId);
     }
 
+    @EventHandler
     public void onPlayerDeath(@NotNull PlayerDeathEvent event) {
         Player player = event.getPlayer();
         UUID playerUuid = player.getUniqueId();

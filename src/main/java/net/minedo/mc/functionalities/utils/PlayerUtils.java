@@ -1,7 +1,6 @@
 package net.minedo.mc.functionalities.utils;
 
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.jetbrains.annotations.NotNull;
 
@@ -32,18 +31,6 @@ public final class PlayerUtils {
         return block.isPassable()
                 || block.isLiquid()
                 || block.isEmpty();
-    }
-
-    /**
-     * Get whether player is falling,
-     *
-     * @param event event
-     * @return whether player is falling
-     */
-    public static boolean isPlayerFalling(@NotNull PlayerMoveEvent event) {
-        Block block = event.getPlayer().getLocation().getBlock().getRelative(BlockFace.DOWN);
-
-        return canPlayerFallThroughBlock(block);
     }
 
 }
