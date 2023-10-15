@@ -62,22 +62,6 @@ public final class ParticleUtils {
      * @param density     particles density
      * @param count       particles count
      * @param dustOptions dust options
-     */
-    public static void spawnParticleOnEntity(
-            @NotNull Entity entity, @NotNull Particle particle, double density,
-            int count, @Nullable Particle.DustOptions dustOptions
-    ) {
-        spawnParticleOnBoundingBox(entity, particle, density, count, dustOptions, null);
-    }
-
-    /**
-     * Spawn particles on an entity.
-     *
-     * @param entity      entity
-     * @param particle    particle as in {@link Particle#values()}
-     * @param density     particles density
-     * @param count       particles count
-     * @param dustOptions dust options
      * @param offset      offset
      */
     public static void spawnParticleOnEntity(

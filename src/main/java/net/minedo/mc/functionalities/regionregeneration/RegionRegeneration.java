@@ -14,26 +14,20 @@ import com.sk89q.worldedit.regions.CuboidRegion;
 import io.papermc.paper.event.entity.EntityMoveEvent;
 import net.minedo.mc.Minedo;
 import net.minedo.mc.constants.common.Common;
-import net.minedo.mc.constants.feedbacksound.FeedbackSound;
 import net.minedo.mc.functionalities.utils.ParticleUtils;
 import net.minedo.mc.interfaces.chunkprocessor.ChunkProcessor;
 import net.minedo.mc.models.region.Region;
 import org.bukkit.*;
 import org.bukkit.block.Block;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Flying;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Monster;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockExplodeEvent;
-import org.bukkit.event.entity.EntityExplodeEvent;
-import org.bukkit.event.entity.EntitySpawnEvent;
-import org.bukkit.event.entity.EntityTeleportEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.player.PlayerRespawnEvent;
-import org.bukkit.util.Vector;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -256,6 +250,18 @@ public class RegionRegeneration implements Listener {
         this.restoreRegionChunk(chunk);
     }
 
+    /**
+     * Get whether entity is allowed to be in region.
+     *
+     * @param entity      entity
+     * @param spawnReason spawn reason
+     * @return whether entity is allowed to be in region
+     */
+    private boolean getEntityIsAllowedInRegion(Entity entity, CreatureSpawnEvent.SpawnReason spawnReason) {
+        return (entity instanceof Monster || entity instanceof Flying)
+                && spawnReason != CreatureSpawnEvent.SpawnReason.NATURAL;
+    }
+
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
         this.regenerate(event.getBlock());
@@ -287,41 +293,6 @@ public class RegionRegeneration implements Listener {
     }
 
     @EventHandler
-    public void onEntityMove(EntityMoveEvent event) {
-        Location location = event.getTo();
-        LivingEntity entity = event.getEntity();
-
-        if (this.region.isWithinRegion(location)
-                && (entity instanceof Monster || entity instanceof Flying)) {
-            Location regionCenter = this.region.getCenter();
-            Vector awayFromCenter = location.toVector().subtract(regionCenter.toVector()).normalize();
-            double MULTIPLIER = 1.0;
-            FeedbackSound feedbackSound = FeedbackSound.HOSTILE_MOB_ENTERING_REGION;
-
-            if (entity.isInsideVehicle()) {
-                entity.leaveVehicle();
-            }
-
-            entity.getWorld().playSound(location, feedbackSound.getSound(),
-                    feedbackSound.getVolume(), feedbackSound.getPitch());
-            ParticleUtils.spawnParticleOnEntity(entity, Particle.CRIT_MAGIC, 1, 5, null);
-            entity.setVelocity(awayFromCenter.multiply(MULTIPLIER));
-        }
-    }
-
-    @EventHandler
-    public void onEntityTeleport(EntityTeleportEvent event) {
-        Location location = event.getTo();
-        Entity entity = event.getEntity();
-
-        if (location != null) {
-            if (this.region.isWithinRegion(location) && (entity instanceof Monster || entity instanceof Flying)) {
-                event.setCancelled(true);
-            }
-        }
-    }
-
-    @EventHandler
     public void onPlayerRespawn(PlayerRespawnEvent event) {
         Location location = event.getPlayer().getLocation();
 
@@ -331,12 +302,56 @@ public class RegionRegeneration implements Listener {
     }
 
     @EventHandler
+    public void onEntityMove(EntityMoveEvent event) {
+        Location location = event.getTo();
+        LivingEntity entity = event.getEntity();
+        CreatureSpawnEvent.SpawnReason spawnReason = event.getEntity().getEntitySpawnReason();
+        boolean isEntityAllowedInRegion = this.getEntityIsAllowedInRegion(entity, spawnReason);
+
+        if (!isEntityAllowedInRegion && this.region.isWithinRegion(location)) {
+            PotionEffectType potionEffectType = entity.getCategory() == EntityCategory.UNDEAD
+                    ? PotionEffectType.HEAL
+                    : PotionEffectType.HARM;
+
+            PotionEffect potionEffect = new PotionEffect(
+                    potionEffectType, PotionEffect.INFINITE_DURATION, 0
+            );
+
+            ParticleUtils.spawnParticleOnEntity(
+                    entity,
+                    Particle.REDSTONE,
+                    2,
+                    1,
+                    new Particle.DustOptions(Color.RED, 0.7f),
+                    0.3
+            );
+
+            entity.addPotionEffect(potionEffect);
+        }
+    }
+
+    @EventHandler
+    public void onEntityTeleport(EntityTeleportEvent event) {
+        Location location = event.getTo();
+        Entity entity = event.getEntity();
+        CreatureSpawnEvent.SpawnReason spawnReason = event.getEntity().getEntitySpawnReason();
+        boolean isEntityAllowedInRegion = this.getEntityIsAllowedInRegion(entity, spawnReason);
+
+        if (location != null) {
+            if (!isEntityAllowedInRegion && this.region.isWithinRegion(location)) {
+                event.setCancelled(true);
+            }
+        }
+    }
+
+    @EventHandler
     public void onEntitySpawn(EntitySpawnEvent event) {
         Location location = event.getLocation();
         Entity entity = event.getEntity();
+        CreatureSpawnEvent.SpawnReason spawnReason = event.getEntity().getEntitySpawnReason();
+        boolean isEntityAllowedInRegion = this.getEntityIsAllowedInRegion(entity, spawnReason);
 
-        if (this.region.isWithinRegion(location)
-                && (entity instanceof Monster || entity instanceof Flying)) {
+        if (!isEntityAllowedInRegion && this.region.isWithinRegion(location)) {
             event.setCancelled(true);
         }
     }
