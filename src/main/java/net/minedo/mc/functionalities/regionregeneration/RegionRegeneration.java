@@ -253,13 +253,41 @@ public class RegionRegeneration implements Listener {
     /**
      * Get whether entity is allowed to be in region.
      *
-     * @param entity      entity
+     * @param entity      living entity
      * @param spawnReason spawn reason
      * @return whether entity is allowed to be in region
      */
-    private boolean getEntityIsAllowedInRegion(Entity entity, CreatureSpawnEvent.SpawnReason spawnReason) {
+    private boolean getEntityIsAllowedInRegion(
+            @NotNull LivingEntity entity, @NotNull CreatureSpawnEvent.SpawnReason spawnReason
+    ) {
         return (entity instanceof Monster || entity instanceof Flying)
                 && spawnReason != CreatureSpawnEvent.SpawnReason.NATURAL;
+    }
+
+    /**
+     * Set entity with potion effects.
+     *
+     * @param entity entity
+     */
+    private void setPotionEffectToBannedEntityInRegions(@NotNull LivingEntity entity) {
+        PotionEffectType potionEffectType = entity.getCategory() == EntityCategory.UNDEAD
+                ? PotionEffectType.HEAL
+                : PotionEffectType.HARM;
+
+        PotionEffect potionEffect = new PotionEffect(
+                potionEffectType, PotionEffect.INFINITE_DURATION, 0
+        );
+
+        ParticleUtils.spawnParticleOnEntity(
+                entity,
+                Particle.REDSTONE,
+                2,
+                1,
+                new Particle.DustOptions(Color.RED, 1.3f),
+                0.3
+        );
+
+        entity.addPotionEffect(potionEffect);
     }
 
     @EventHandler
@@ -309,24 +337,7 @@ public class RegionRegeneration implements Listener {
         boolean isEntityAllowedInRegion = this.getEntityIsAllowedInRegion(entity, spawnReason);
 
         if (!isEntityAllowedInRegion && this.region.isWithinRegion(location)) {
-            PotionEffectType potionEffectType = entity.getCategory() == EntityCategory.UNDEAD
-                    ? PotionEffectType.HEAL
-                    : PotionEffectType.HARM;
-
-            PotionEffect potionEffect = new PotionEffect(
-                    potionEffectType, PotionEffect.INFINITE_DURATION, 0
-            );
-
-            ParticleUtils.spawnParticleOnEntity(
-                    entity,
-                    Particle.REDSTONE,
-                    2,
-                    1,
-                    new Particle.DustOptions(Color.RED, 0.7f),
-                    0.3
-            );
-
-            entity.addPotionEffect(potionEffect);
+            this.setPotionEffectToBannedEntityInRegions(entity);
         }
     }
 
@@ -334,12 +345,17 @@ public class RegionRegeneration implements Listener {
     public void onEntityTeleport(EntityTeleportEvent event) {
         Location location = event.getTo();
         Entity entity = event.getEntity();
+
+        if (!(entity instanceof LivingEntity livingEntity)) {
+            return;
+        }
+
         CreatureSpawnEvent.SpawnReason spawnReason = event.getEntity().getEntitySpawnReason();
-        boolean isEntityAllowedInRegion = this.getEntityIsAllowedInRegion(entity, spawnReason);
+        boolean isEntityAllowedInRegion = this.getEntityIsAllowedInRegion(livingEntity, spawnReason);
 
         if (location != null) {
             if (!isEntityAllowedInRegion && this.region.isWithinRegion(location)) {
-                event.setCancelled(true);
+                this.setPotionEffectToBannedEntityInRegions(livingEntity);
             }
         }
     }
@@ -348,8 +364,13 @@ public class RegionRegeneration implements Listener {
     public void onEntitySpawn(EntitySpawnEvent event) {
         Location location = event.getLocation();
         Entity entity = event.getEntity();
+
+        if (!(entity instanceof LivingEntity livingEntity)) {
+            return;
+        }
+
         CreatureSpawnEvent.SpawnReason spawnReason = event.getEntity().getEntitySpawnReason();
-        boolean isEntityAllowedInRegion = this.getEntityIsAllowedInRegion(entity, spawnReason);
+        boolean isEntityAllowedInRegion = this.getEntityIsAllowedInRegion(livingEntity, spawnReason);
 
         if (!isEntityAllowedInRegion && this.region.isWithinRegion(location)) {
             event.setCancelled(true);
