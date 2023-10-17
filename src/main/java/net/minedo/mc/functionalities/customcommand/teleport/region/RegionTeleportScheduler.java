@@ -75,7 +75,7 @@ public class RegionTeleportScheduler extends BukkitRunnable {
 
             countDown--;
         } else {
-            if (player.isOnline()) {
+            if (player.isOnline() && !player.isDead()) {
                 FeedbackSound feedbackSound = FeedbackSound.TELEPORT;
                 Sound sound = feedbackSound.getSound();
                 float volume = feedbackSound.getVolume();
