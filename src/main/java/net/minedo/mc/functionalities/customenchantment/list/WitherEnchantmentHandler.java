@@ -1,6 +1,7 @@
 package net.minedo.mc.functionalities.customenchantment.list;
 
 import net.minedo.mc.constants.customenchantment.type.CustomEnchantmentType;
+import net.minedo.mc.constants.feedbacksound.FeedbackSound;
 import net.minedo.mc.customevents.PlayerNonBlockInteractEvent;
 import net.minedo.mc.functionalities.customenchantment.CustomEnchantment;
 import net.minedo.mc.functionalities.customenchantment.CustomEnchantmentHandler;
@@ -63,6 +64,12 @@ public class WitherEnchantmentHandler extends CustomEnchantmentHandler implement
 
         Vector velocity = player.getLocation().getDirection().multiply(0.5);
         Projectile projectile = player.launchProjectile(WitherSkull.class, velocity);
+        FeedbackSound feedbackSound = FeedbackSound.WITHER_SKILL;
+
+        player.getWorld().playSound(
+                player, feedbackSound.getSound(), feedbackSound.getVolume(), feedbackSound.getPitch()
+        );
+
         this.launchedProjectiles.put(projectile.getUniqueId(), customEnchantment);
     }
 
