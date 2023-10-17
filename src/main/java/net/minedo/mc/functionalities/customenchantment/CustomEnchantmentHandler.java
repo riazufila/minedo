@@ -1,17 +1,15 @@
 package net.minedo.mc.functionalities.customenchantment;
 
 import com.destroystokyo.paper.MaterialTags;
-import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent;
 import net.minedo.mc.constants.common.Common;
 import net.minedo.mc.constants.customenchantment.type.CustomEnchantmentType;
-import net.minedo.mc.customevents.PlayerNonBlockInteractEvent;
+import net.minedo.mc.functionalities.customenchantment.helper.CombatData;
 import net.minedo.mc.functionalities.skills.SkillUtils;
 import org.bukkit.Material;
 import org.bukkit.Tag;
-import org.bukkit.entity.HumanEntity;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
@@ -40,21 +38,22 @@ public abstract class CustomEnchantmentHandler extends SimpleCustomEnchantment {
     }
 
     /**
-     * Get item used for the skill.
+     * Get valid item used for the skill.
      *
-     * @param event event
-     * @return item used for the skill
+     * @param player        player
+     * @param equipmentSlot equipment slot
+     * @param itemUsed      item used
+     * @return valid item used for the skill
      */
-    private @Nullable ItemStack getValidItemForSkill(@NotNull PlayerNonBlockInteractEvent event) {
-        Player player = event.getPlayer();
+    private @Nullable ItemStack getValidItemForSkill(
+            @NotNull Player player, @Nullable EquipmentSlot equipmentSlot, @Nullable ItemStack itemUsed
+    ) {
         EntityEquipment equipment = player.getEquipment();
-        EquipmentSlot handUsed = event.getHand();
-        ItemStack itemUsed = event.getItem();
         ItemStack itemInOtherHand = null;
 
-        if (handUsed == EquipmentSlot.HAND) {
+        if (equipmentSlot == EquipmentSlot.HAND) {
             itemInOtherHand = equipment.getItemInOffHand();
-        } else if (handUsed == EquipmentSlot.OFF_HAND) {
+        } else if (equipmentSlot == EquipmentSlot.OFF_HAND) {
             itemInOtherHand = equipment.getItemInMainHand();
         }
 
@@ -82,24 +81,27 @@ public abstract class CustomEnchantmentHandler extends SimpleCustomEnchantment {
     /**
      * Get combat data on hit
      *
-     * @param event event
+     * @param defendingEntity defending entity
+     * @param attackingEntity attacking entity
      * @return combat data on hit
      */
-    private @Nullable CombatEvent getCombatDataOnHit(@NotNull EntityDamageByEntityEvent event) {
-        if (!(event.getEntity() instanceof LivingEntity defendingEntity)) {
+    private @Nullable CombatData getCombatDataOnHit(
+            @NotNull Entity defendingEntity, @NotNull Entity attackingEntity
+    ) {
+        if (!(defendingEntity instanceof LivingEntity defendingLivingEntity)) {
             return null;
         }
 
-        if (!(event.getDamager() instanceof LivingEntity attackingEntity)) {
+        if (!(attackingEntity instanceof LivingEntity attackingLivingEntity)) {
             return null;
         }
 
 
-        if (attackingEntity.getEquipment() == null) {
+        if (attackingLivingEntity.getEquipment() == null) {
             return null;
         }
 
-        ItemStack itemInMainHand = attackingEntity.getEquipment().getItemInMainHand();
+        ItemStack itemInMainHand = attackingLivingEntity.getEquipment().getItemInMainHand();
         if (itemInMainHand.isEmpty()) {
             return null;
         }
@@ -109,71 +111,123 @@ public abstract class CustomEnchantmentHandler extends SimpleCustomEnchantment {
             return null;
         }
 
-        if (attackingEntity instanceof Player attackingPlayer) {
+        if (attackingLivingEntity instanceof Player attackingPlayer) {
             if (attackingPlayer.getAttackCooldown() != (float) Common.ATTACK_COOL_DOWN.getValue()) {
                 return null;
             }
         }
 
-        return new CombatEvent(itemInMainHand, attackingEntity, defendingEntity, null);
+        return new CombatData(itemInMainHand, attackingLivingEntity, defendingLivingEntity, null);
     }
 
     /**
      * Check whether player is able to inflict custom enchantment on hit.
      *
-     * @param event event
+     * @param defendingEntity defending entity
+     * @param attackingEntity attacking entity
      * @return whether player is able to inflict custom enchantment on hit
      */
-    public CombatEvent isAbleToInflictCustomEnchantmentOnHit(@NotNull EntityDamageByEntityEvent event) {
-        CombatEvent combatEvent = this.getCombatDataOnHit(event);
+    public CombatData isAbleToInflictCustomEnchantmentOnHit(
+            @NotNull Entity defendingEntity, @NotNull Entity attackingEntity
+    ) {
+        CombatData combatData = this.getCombatDataOnHit(defendingEntity, attackingEntity);
 
-        if (combatEvent == null) {
+        if (combatData == null) {
             return null;
         }
 
         Optional<CustomEnchantment> customEnchantmentOptional = CustomEnchantmentWrapper
-                .getCustomEnchantment(combatEvent.getItem(), this.getCustomEnchantmentType());
+                .getCustomEnchantment(combatData.getItem(), this.getCustomEnchantmentType());
 
         if (customEnchantmentOptional.isEmpty()) {
             return null;
         }
 
-        combatEvent.setCustomEnchantment(customEnchantmentOptional.get());
+        combatData.setCustomEnchantment(customEnchantmentOptional.get());
 
-        return combatEvent;
+        return combatData;
     }
 
     /**
-     * Trigger potion effects on hit.
+     * Get potion effect on hit.
      *
-     * @param event            event
-     * @param potionEffectType potion effect type as in {@link PotionEffectType#values()}
-     * @param isAmplified      whether potion effect can be amplified
+     * @param customEnchantment custom enchantment
+     * @param potionEffectType  potion effect type
+     * @param isAmplified       whether potion effect is amplified
+     * @return potion effect
      */
-    public void triggerPotionEffectsOnHit(
-            @NotNull EntityDamageByEntityEvent event, @NotNull PotionEffectType potionEffectType, boolean isAmplified
+    public PotionEffect getPotionEffectOnHit(
+            @NotNull CustomEnchantment customEnchantment,
+            @NotNull PotionEffectType potionEffectType,
+            boolean isAmplified
     ) {
-        CombatEvent combatEvent = this.isAbleToInflictCustomEnchantmentOnHit(event);
 
-        if (combatEvent == null || combatEvent.getCustomEnchantment() == null) {
-            return;
-        }
-
-        CustomEnchantment customEnchantment = combatEvent.getCustomEnchantment();
         final int DEFAULT_DURATION = 3;
         final double INCREMENT_DURATION = 0.2;
         int enchantmentLevel = customEnchantment.getLevel();
         int duration = isAmplified
                 ? (int) (DEFAULT_DURATION + (enchantmentLevel * INCREMENT_DURATION))
                 : DEFAULT_DURATION * enchantmentLevel;
-        int amplifier = isAmplified ? enchantmentLevel : 0;
+        int amplifier = isAmplified ? enchantmentLevel - 1 : 0;
 
-        PotionEffect potionEffect = new PotionEffect(
+        return new PotionEffect(
                 potionEffectType,
                 duration * (int) Common.TICK_PER_SECOND.getValue(),
                 Math.min(amplifier, this.AMPLIFIER_LIMIT) // Limit maximum potion effect amplifier.
         );
-        combatEvent.getDefendingEntity().addPotionEffect(potionEffect);
+    }
+
+    /**
+     * Trigger potion effects on hit.
+     *
+     * @param defendingEntity  defending entity
+     * @param attackingEntity  attacking entity
+     * @param potionEffectType potion effect type as in {@link PotionEffectType#values()}
+     * @param isAmplified      whether potion effect can be amplified
+     */
+    public void triggerPotionEffectsOnHit(
+            @NotNull Entity defendingEntity,
+            @NotNull Entity attackingEntity,
+            @NotNull PotionEffectType potionEffectType,
+            boolean isAmplified
+    ) {
+        CombatData combatData = this.isAbleToInflictCustomEnchantmentOnHit(defendingEntity, attackingEntity);
+
+        if (combatData == null || combatData.getCustomEnchantment() == null) {
+            return;
+        }
+
+        CustomEnchantment customEnchantment = combatData.getCustomEnchantment();
+        PotionEffect potionEffect = this.getPotionEffectOnHit(customEnchantment, potionEffectType, isAmplified);
+        combatData.getDefendingEntity().addPotionEffect(potionEffect);
+    }
+
+    /**
+     * Get potion effect on hit.
+     *
+     * @param customEnchantment custom enchantment
+     * @param potionEffectType  potion effect type
+     * @param potionEffects     potion effects
+     * @return potion effect
+     */
+    public PotionEffect getPotionEffectOnArmorChange(
+            @NotNull CustomEnchantment customEnchantment,
+            @NotNull PotionEffectType potionEffectType,
+            @NotNull HashMap<PotionEffectType, @NotNull PotionEffect> potionEffects
+
+    ) {
+        int amplifier = customEnchantment.getLevel() - 1;
+
+        if (potionEffects.containsKey(potionEffectType)) {
+            PotionEffect existingPotionEffect = potionEffects.get(potionEffectType);
+            amplifier = amplifier + existingPotionEffect.getAmplifier();
+        }
+
+        return new PotionEffect(
+                potionEffectType,
+                PotionEffect.INFINITE_DURATION,
+                Math.min(amplifier, this.AMPLIFIER_LIMIT) // Limit maximum potion effect amplifier.
+        );
     }
 
     /**
@@ -199,17 +253,8 @@ public abstract class CustomEnchantmentHandler extends SimpleCustomEnchantment {
         }
 
         CustomEnchantment customEnchantment = customEnchantmentOptional.get();
-        int amplifier = customEnchantment.getLevel() - 1;
-
-        if (potionEffects.containsKey(potionEffectType)) {
-            PotionEffect existingPotionEffect = potionEffects.get(potionEffectType);
-            amplifier = amplifier + existingPotionEffect.getAmplifier();
-        }
-
-        PotionEffect potionEffect = new PotionEffect(
-                potionEffectType,
-                PotionEffect.INFINITE_DURATION,
-                Math.min(amplifier, this.AMPLIFIER_LIMIT) // Limit maximum potion effect amplifier.
+        PotionEffect potionEffect = this.getPotionEffectOnArmorChange(
+                customEnchantment, potionEffectType, potionEffects
         );
 
         potionEffects.put(potionEffectType, potionEffect);
@@ -218,14 +263,14 @@ public abstract class CustomEnchantmentHandler extends SimpleCustomEnchantment {
     /**
      * Update potion effects on armor change.
      *
-     * @param event            event
+     * @param player           player
      * @param potionEffectType potion effect type as in {@link PotionEffectType#values()}
      */
     public void updatePotionEffectsOnArmorChange(
-            @NotNull PlayerArmorChangeEvent event,
+            @NotNull Player player,
             @NotNull PotionEffectType potionEffectType
     ) {
-        Inventory inventory = event.getPlayer().getInventory();
+        Inventory inventory = player.getInventory();
         int HEAD_SLOT = 39;
         int CHEST_SLOT = 38;
         int LEGS_SLOT = 37;
@@ -243,37 +288,43 @@ public abstract class CustomEnchantmentHandler extends SimpleCustomEnchantment {
             this.updatePotionEffectsBasedOnItem(potionEffects, item, potionEffectType);
         }
 
-        HumanEntity player = event.getPlayer();
-
         player.removePotionEffect(potionEffectType);
         player.addPotionEffects(potionEffects.values());
     }
 
     /**
-     * Get whether player is able to use skill.
+     * Get custom enchantment if player is able to use skill.
      *
-     * @param event             event
      * @param player            player
+     * @param equipmentSlot     equipment slot
+     * @param itemUsed          item used
      * @param playerSkillPoints player skill points
-     * @return whether player is able to use skill
+     * @return custom enchantment
      */
-    public boolean isPlayerAbleToSkill(
-            PlayerNonBlockInteractEvent event, Player player, HashMap<UUID, Integer> playerSkillPoints
+    public CustomEnchantment getCustomEnchantmentOnSKill(
+            @NotNull Player player,
+            @Nullable EquipmentSlot equipmentSlot,
+            @Nullable ItemStack itemUsed,
+            @NotNull HashMap<UUID, Integer> playerSkillPoints
     ) {
-        ItemStack item = this.getValidItemForSkill(event);
+        ItemStack item = this.getValidItemForSkill(player, equipmentSlot, itemUsed);
 
         if (item == null) {
-            return false;
+            return null;
         }
 
         Optional<CustomEnchantment> customEnchantmentOptional = CustomEnchantmentWrapper
                 .getCustomEnchantment(item, this.getCustomEnchantmentType());
 
         if (customEnchantmentOptional.isEmpty()) {
-            return false;
+            return null;
         }
 
-        return SkillUtils.canSkill(player, playerSkillPoints);
+        if (!SkillUtils.canSkill(player, playerSkillPoints)) {
+            return null;
+        }
+
+        return customEnchantmentOptional.get();
     }
 
 }

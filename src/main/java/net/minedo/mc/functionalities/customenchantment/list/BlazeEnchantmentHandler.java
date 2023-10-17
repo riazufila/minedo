@@ -2,6 +2,7 @@ package net.minedo.mc.functionalities.customenchantment.list;
 
 import net.minedo.mc.constants.customenchantment.type.CustomEnchantmentType;
 import net.minedo.mc.customevents.PlayerNonBlockInteractEvent;
+import net.minedo.mc.functionalities.customenchantment.CustomEnchantment;
 import net.minedo.mc.functionalities.customenchantment.CustomEnchantmentHandler;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -12,6 +13,8 @@ import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.ProjectileHitEvent;
+import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
@@ -39,9 +42,14 @@ public class BlazeEnchantmentHandler extends CustomEnchantmentHandler implements
     @EventHandler
     public void onInteract(@NotNull PlayerNonBlockInteractEvent event) {
         Player player = event.getPlayer();
-        boolean isAbleToSkill = super.isPlayerAbleToSkill(event, player, this.playerSkillPoints);
+        EquipmentSlot equipmentSlot = event.getHand();
+        ItemStack itemUsed = event.getItem();
 
-        if (!isAbleToSkill) {
+        CustomEnchantment customEnchantment = super.getCustomEnchantmentOnSKill(
+                player, equipmentSlot, itemUsed, this.playerSkillPoints
+        );
+
+        if (customEnchantment == null) {
             return;
         }
 

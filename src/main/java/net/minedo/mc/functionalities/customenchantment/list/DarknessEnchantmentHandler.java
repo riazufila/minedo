@@ -2,6 +2,7 @@ package net.minedo.mc.functionalities.customenchantment.list;
 
 import net.minedo.mc.constants.customenchantment.type.CustomEnchantmentType;
 import net.minedo.mc.functionalities.customenchantment.CustomEnchantmentHandler;
+import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -22,7 +23,9 @@ public class DarknessEnchantmentHandler extends CustomEnchantmentHandler impleme
 
     @EventHandler
     public void onHit(@NotNull EntityDamageByEntityEvent event) {
-        super.triggerPotionEffectsOnHit(event, PotionEffectType.DARKNESS, false);
+        Entity defender = event.getEntity();
+        Entity attacker = event.getDamager();
+        super.triggerPotionEffectsOnHit(defender, attacker, PotionEffectType.DARKNESS, false);
     }
 
 }

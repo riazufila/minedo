@@ -2,10 +2,11 @@ package net.minedo.mc.functionalities.customenchantment.list;
 
 import net.minedo.mc.Minedo;
 import net.minedo.mc.constants.customenchantment.type.CustomEnchantmentType;
-import net.minedo.mc.functionalities.customenchantment.CombatEvent;
 import net.minedo.mc.functionalities.customenchantment.CustomEnchantmentHandler;
+import net.minedo.mc.functionalities.customenchantment.helper.CombatData;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -29,13 +30,15 @@ public class BeheaderEnchantmentHandler extends CustomEnchantmentHandler impleme
 
     @EventHandler
     public void onHit(@NotNull EntityDamageByEntityEvent event) {
-        CombatEvent combatEvent = super.isAbleToInflictCustomEnchantmentOnHit(event);
+        Entity defender = event.getEntity();
+        Entity attacker = event.getDamager();
+        CombatData combatData = super.isAbleToInflictCustomEnchantmentOnHit(defender, attacker);
 
-        if (combatEvent == null || combatEvent.getCustomEnchantment() == null) {
+        if (combatData == null || combatData.getCustomEnchantment() == null) {
             return;
         }
 
-        LivingEntity defendingEntity = combatEvent.getDefendingEntity();
+        LivingEntity defendingEntity = combatData.getDefendingEntity();
 
         if (!(defendingEntity instanceof Player)) {
             return;

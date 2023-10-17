@@ -5,16 +5,20 @@ import net.minedo.mc.constants.common.Common;
 import net.minedo.mc.constants.customenchantment.type.CustomEnchantmentType;
 import net.minedo.mc.constants.feedbacksound.FeedbackSound;
 import net.minedo.mc.customevents.PlayerNonBlockInteractEvent;
-import net.minedo.mc.functionalities.customenchantment.CombatEvent;
+import net.minedo.mc.functionalities.customenchantment.CustomEnchantment;
 import net.minedo.mc.functionalities.customenchantment.CustomEnchantmentHandler;
+import net.minedo.mc.functionalities.customenchantment.helper.CombatData;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.LightningStrike;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
@@ -96,15 +100,17 @@ public class LightningEnchantmentHandler extends CustomEnchantmentHandler implem
 
     @EventHandler
     public void onHit(@NotNull EntityDamageByEntityEvent event) {
-        CombatEvent combatEvent = super.isAbleToInflictCustomEnchantmentOnHit(event);
+        Entity defender = event.getEntity();
+        Entity attacker = event.getDamager();
+        CombatData combatData = super.isAbleToInflictCustomEnchantmentOnHit(defender, attacker);
 
-        if (combatEvent == null || combatEvent.getCustomEnchantment() == null) {
+        if (combatData == null || combatData.getCustomEnchantment() == null) {
             return;
         }
 
         Location location = event.getEntity().getLocation();
-        LivingEntity defendingEntity = combatEvent.getDefendingEntity();
-        LivingEntity attackingEntity = combatEvent.getAttackingEntity();
+        LivingEntity defendingEntity = combatData.getDefendingEntity();
+        LivingEntity attackingEntity = combatData.getAttackingEntity();
         World world = defendingEntity.getWorld();
 
         if (location.getBlockY() < world.getHighestBlockYAt(location)) {
@@ -123,9 +129,14 @@ public class LightningEnchantmentHandler extends CustomEnchantmentHandler implem
     @EventHandler
     public void onInteract(@NotNull PlayerNonBlockInteractEvent event) {
         Player player = event.getPlayer();
-        boolean isAbleToSkill = super.isPlayerAbleToSkill(event, player, this.playerSkillPoints);
+        EquipmentSlot equipmentSlot = event.getHand();
+        ItemStack itemUsed = event.getItem();
 
-        if (!isAbleToSkill) {
+        CustomEnchantment customEnchantment = super.getCustomEnchantmentOnSKill(
+                player, equipmentSlot, itemUsed, this.playerSkillPoints
+        );
+
+        if (customEnchantment == null) {
             return;
         }
 

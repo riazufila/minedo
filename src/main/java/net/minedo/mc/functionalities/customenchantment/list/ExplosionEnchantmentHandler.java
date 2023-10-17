@@ -5,20 +5,24 @@ import net.minedo.mc.constants.common.Common;
 import net.minedo.mc.constants.customenchantment.type.CustomEnchantmentType;
 import net.minedo.mc.constants.feedbacksound.FeedbackSound;
 import net.minedo.mc.customevents.PlayerNonBlockInteractEvent;
-import net.minedo.mc.functionalities.customenchantment.CombatEvent;
+import net.minedo.mc.functionalities.customenchantment.CustomEnchantment;
 import net.minedo.mc.functionalities.customenchantment.CustomEnchantmentHandler;
+import net.minedo.mc.functionalities.customenchantment.helper.CombatData;
 import net.minedo.mc.functionalities.utils.ParticleUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.block.BlockFace;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -118,13 +122,15 @@ public class ExplosionEnchantmentHandler extends CustomEnchantmentHandler implem
 
     @EventHandler
     public void onHit(@NotNull EntityDamageByEntityEvent event) {
-        CombatEvent combatEvent = super.isAbleToInflictCustomEnchantmentOnHit(event);
+        Entity defender = event.getEntity();
+        Entity attacker = event.getDamager();
+        CombatData combatData = super.isAbleToInflictCustomEnchantmentOnHit(defender, attacker);
 
-        if (combatEvent == null || combatEvent.getCustomEnchantment() == null) {
+        if (combatData == null || combatData.getCustomEnchantment() == null) {
             return;
         }
 
-        LivingEntity defendingEntity = combatEvent.getDefendingEntity();
+        LivingEntity defendingEntity = combatData.getDefendingEntity();
         final float EXPLOSION_POWER = 1.0f;
         defendingEntity
                 .getLocation()
@@ -134,15 +140,19 @@ public class ExplosionEnchantmentHandler extends CustomEnchantmentHandler implem
     @EventHandler
     public void onInteract(@NotNull PlayerNonBlockInteractEvent event) {
         Player player = event.getPlayer();
+        EquipmentSlot equipmentSlot = event.getHand();
+        ItemStack itemUsed = event.getItem();
         UUID playerUuid = player.getUniqueId();
 
         if (playersExploding.get(playerUuid) != null) {
             return;
         }
 
-        boolean isAbleToSkill = super.isPlayerAbleToSkill(event, player, this.playerSkillPoints);
+        CustomEnchantment customEnchantment = super.getCustomEnchantmentOnSKill(
+                player, equipmentSlot, itemUsed, this.playerSkillPoints
+        );
 
-        if (!isAbleToSkill) {
+        if (customEnchantment == null) {
             return;
         }
 

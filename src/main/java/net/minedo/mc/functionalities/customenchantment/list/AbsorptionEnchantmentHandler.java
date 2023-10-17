@@ -3,6 +3,8 @@ package net.minedo.mc.functionalities.customenchantment.list;
 import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent;
 import net.minedo.mc.constants.customenchantment.type.CustomEnchantmentType;
 import net.minedo.mc.functionalities.customenchantment.CustomEnchantmentHandler;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -23,12 +25,15 @@ public class AbsorptionEnchantmentHandler extends CustomEnchantmentHandler imple
 
     @EventHandler
     public void onHit(@NotNull EntityDamageByEntityEvent event) {
-        super.triggerPotionEffectsOnHit(event, PotionEffectType.ABSORPTION, true);
+        Entity defender = event.getEntity();
+        Entity attacker = event.getDamager();
+        super.triggerPotionEffectsOnHit(defender, attacker, PotionEffectType.ABSORPTION, true);
     }
 
     @EventHandler
     public void onPlayerArmorChange(@NotNull PlayerArmorChangeEvent event) {
-        super.updatePotionEffectsOnArmorChange(event, PotionEffectType.ABSORPTION);
+        Player player = event.getPlayer();
+        super.updatePotionEffectsOnArmorChange(player, PotionEffectType.ABSORPTION);
     }
 
 }

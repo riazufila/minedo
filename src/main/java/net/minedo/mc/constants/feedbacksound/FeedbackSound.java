@@ -13,7 +13,8 @@ public enum FeedbackSound {
     REGION_LAUNCH_ENTITIES_ABOVE(Sound.BLOCK_AZALEA_LEAVES_STEP, 1, 1.6f),
     REGION_REGENERATING(Sound.BLOCK_AZALEA_LEAVES_PLACE, 1, 0.7f),
     EXPLOSION_SKILL(Sound.ENTITY_CREEPER_PRIMED, 1, 1),
-    ICE_SKILL(Sound.ENTITY_GENERIC_EXPLODE, 1, 1.7f);
+    ICE_SKILL(Sound.ENTITY_GENERIC_EXPLODE, 1, 1.7f),
+    WITHER_SKILL(Sound.ENTITY_WITHER_SHOOT, 1, 1.3f);
 
     private final Sound sound;
     private final float volume;

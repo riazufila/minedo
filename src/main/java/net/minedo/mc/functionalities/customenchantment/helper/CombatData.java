@@ -1,14 +1,15 @@
-package net.minedo.mc.functionalities.customenchantment;
+package net.minedo.mc.functionalities.customenchantment.helper;
 
+import net.minedo.mc.functionalities.customenchantment.CustomEnchantment;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Combat event information
+ * Combat data information.
  */
-public class CombatEvent {
+public class CombatData {
 
     private final ItemStack item;
     private final LivingEntity attackingEntity;
@@ -16,14 +17,14 @@ public class CombatEvent {
     private CustomEnchantment customEnchantment;
 
     /**
-     * Combat event information
+     * Combat data information
      *
      * @param item              item used for the combat
      * @param attackingEntity   entity that attacked
      * @param defendingEntity   entity that defended
      * @param customEnchantment custom enchantment
      */
-    public CombatEvent(
+    public CombatData(
             @NotNull ItemStack item, @NotNull LivingEntity attackingEntity,
             @NotNull LivingEntity defendingEntity, @Nullable CustomEnchantment customEnchantment
     ) {
