@@ -62,7 +62,7 @@ public class HomeTeleportScheduler extends BukkitRunnable {
 
             countDown--;
         } else {
-            if (player.isOnline()) {
+            if (player.isOnline() && !player.isDead()) {
                 FeedbackSound feedbackSound = FeedbackSound.TELEPORT;
                 Sound sound = feedbackSound.getSound();
                 float volume = feedbackSound.getVolume();
@@ -79,6 +79,11 @@ public class HomeTeleportScheduler extends BukkitRunnable {
                                 home.name()
                         ))
                         .color(NamedTextColor.GREEN)
+                );
+            } else {
+                player.sendMessage(Component
+                        .text(HomeTeleportMessage.ERROR_UNSUITABLE_CONDITION.getMessage())
+                        .color(NamedTextColor.RED)
                 );
             }
 

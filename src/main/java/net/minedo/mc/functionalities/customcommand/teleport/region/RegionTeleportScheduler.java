@@ -93,6 +93,11 @@ public class RegionTeleportScheduler extends BukkitRunnable {
                         ))
                         .color(NamedTextColor.GREEN)
                 );
+            } else {
+                player.sendMessage(Component
+                        .text(RegionTeleportMessage.ERROR_UNSUITABLE_CONDITION.getMessage())
+                        .color(NamedTextColor.RED)
+                );
             }
 
             this.globalTeleportingPlayers.remove(player.getUniqueId());

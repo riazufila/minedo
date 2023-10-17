@@ -12,7 +12,8 @@ public enum RegionTeleportMessage {
     INFO_TELEPORTING("Teleporting to %s in 5.."),
     INFO_COUNTDOWN("%s.."),
     ERROR_USAGE(String.format("Usage: /%s <region>", CustomCommandType.REGION_TELEPORT.getType())),
-    ERROR_TELEPORTATION_CANCELLED("Teleportation cancelled.");
+    ERROR_TELEPORTATION_CANCELLED("Teleportation cancelled."),
+    ERROR_UNSUITABLE_CONDITION("Not in a condition to teleport.");
 
     private final String message;
 
