@@ -4,6 +4,7 @@ import net.minedo.mc.constants.common.Common;
 import net.minedo.mc.constants.customenchantment.type.CustomEnchantmentType;
 import net.minedo.mc.constants.feedbacksound.FeedbackSound;
 import net.minedo.mc.customevents.PlayerNonBlockInteractEvent;
+import net.minedo.mc.functionalities.customenchantment.CustomEnchantment;
 import net.minedo.mc.functionalities.customenchantment.CustomEnchantmentHandler;
 import net.minedo.mc.functionalities.customenchantment.helper.CombatData;
 import net.minedo.mc.functionalities.utils.ShapeUtils;
@@ -65,8 +66,11 @@ public class IceEnchantmentHandler extends CustomEnchantmentHandler implements L
         EquipmentSlot equipmentSlot = event.getHand();
         ItemStack itemUsed = event.getItem();
 
-        boolean isAbleToSkill = super.isPlayerAbleToSkill(player, equipmentSlot, itemUsed, this.playerSkillPoints);
-        if (!isAbleToSkill) {
+        CustomEnchantment customEnchantment = super.getCustomEnchantmentOnSKill(
+                player, equipmentSlot, itemUsed, this.playerSkillPoints
+        );
+
+        if (customEnchantment == null) {
             return;
         }
 

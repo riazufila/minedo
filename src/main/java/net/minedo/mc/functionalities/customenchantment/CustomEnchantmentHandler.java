@@ -149,6 +149,35 @@ public abstract class CustomEnchantmentHandler extends SimpleCustomEnchantment {
     }
 
     /**
+     * Get potion effect on hit.
+     *
+     * @param customEnchantment custom enchantment
+     * @param potionEffectType  potion effect type
+     * @param isAmplified       whether potion effect is amplified
+     * @return potion effect
+     */
+    public PotionEffect getPotionEffectOnHit(
+            @NotNull CustomEnchantment customEnchantment,
+            @NotNull PotionEffectType potionEffectType,
+            boolean isAmplified
+    ) {
+
+        final int DEFAULT_DURATION = 3;
+        final double INCREMENT_DURATION = 0.2;
+        int enchantmentLevel = customEnchantment.getLevel();
+        int duration = isAmplified
+                ? (int) (DEFAULT_DURATION + (enchantmentLevel * INCREMENT_DURATION))
+                : DEFAULT_DURATION * enchantmentLevel;
+        int amplifier = isAmplified ? enchantmentLevel - 1 : 0;
+
+        return new PotionEffect(
+                potionEffectType,
+                duration * (int) Common.TICK_PER_SECOND.getValue(),
+                Math.min(amplifier, this.AMPLIFIER_LIMIT) // Limit maximum potion effect amplifier.
+        );
+    }
+
+    /**
      * Trigger potion effects on hit.
      *
      * @param defendingEntity  defending entity
@@ -169,20 +198,36 @@ public abstract class CustomEnchantmentHandler extends SimpleCustomEnchantment {
         }
 
         CustomEnchantment customEnchantment = combatData.getCustomEnchantment();
-        final int DEFAULT_DURATION = 3;
-        final double INCREMENT_DURATION = 0.2;
-        int enchantmentLevel = customEnchantment.getLevel();
-        int duration = isAmplified
-                ? (int) (DEFAULT_DURATION + (enchantmentLevel * INCREMENT_DURATION))
-                : DEFAULT_DURATION * enchantmentLevel;
-        int amplifier = isAmplified ? enchantmentLevel : 0;
+        PotionEffect potionEffect = this.getPotionEffectOnHit(customEnchantment, potionEffectType, isAmplified);
+        combatData.getDefendingEntity().addPotionEffect(potionEffect);
+    }
 
-        PotionEffect potionEffect = new PotionEffect(
+    /**
+     * Get potion effect on hit.
+     *
+     * @param customEnchantment custom enchantment
+     * @param potionEffectType  potion effect type
+     * @param potionEffects     potion effects
+     * @return potion effect
+     */
+    public PotionEffect getPotionEffectOnArmorChange(
+            @NotNull CustomEnchantment customEnchantment,
+            @NotNull PotionEffectType potionEffectType,
+            @NotNull HashMap<PotionEffectType, @NotNull PotionEffect> potionEffects
+
+    ) {
+        int amplifier = customEnchantment.getLevel() - 1;
+
+        if (potionEffects.containsKey(potionEffectType)) {
+            PotionEffect existingPotionEffect = potionEffects.get(potionEffectType);
+            amplifier = amplifier + existingPotionEffect.getAmplifier();
+        }
+
+        return new PotionEffect(
                 potionEffectType,
-                duration * (int) Common.TICK_PER_SECOND.getValue(),
+                PotionEffect.INFINITE_DURATION,
                 Math.min(amplifier, this.AMPLIFIER_LIMIT) // Limit maximum potion effect amplifier.
         );
-        combatData.getDefendingEntity().addPotionEffect(potionEffect);
     }
 
     /**
@@ -208,17 +253,8 @@ public abstract class CustomEnchantmentHandler extends SimpleCustomEnchantment {
         }
 
         CustomEnchantment customEnchantment = customEnchantmentOptional.get();
-        int amplifier = customEnchantment.getLevel() - 1;
-
-        if (potionEffects.containsKey(potionEffectType)) {
-            PotionEffect existingPotionEffect = potionEffects.get(potionEffectType);
-            amplifier = amplifier + existingPotionEffect.getAmplifier();
-        }
-
-        PotionEffect potionEffect = new PotionEffect(
-                potionEffectType,
-                PotionEffect.INFINITE_DURATION,
-                Math.min(amplifier, this.AMPLIFIER_LIMIT) // Limit maximum potion effect amplifier.
+        PotionEffect potionEffect = this.getPotionEffectOnArmorChange(
+                customEnchantment, potionEffectType, potionEffects
         );
 
         potionEffects.put(potionEffectType, potionEffect);
@@ -257,15 +293,15 @@ public abstract class CustomEnchantmentHandler extends SimpleCustomEnchantment {
     }
 
     /**
-     * Get whether player is able to use skill.
+     * Get custom enchantment if player is able to use skill.
      *
      * @param player            player
      * @param equipmentSlot     equipment slot
      * @param itemUsed          item used
      * @param playerSkillPoints player skill points
-     * @return whether player is able to use skill
+     * @return custom enchantment
      */
-    public boolean isPlayerAbleToSkill(
+    public CustomEnchantment getCustomEnchantmentOnSKill(
             @NotNull Player player,
             @Nullable EquipmentSlot equipmentSlot,
             @Nullable ItemStack itemUsed,
@@ -274,17 +310,21 @@ public abstract class CustomEnchantmentHandler extends SimpleCustomEnchantment {
         ItemStack item = this.getValidItemForSkill(player, equipmentSlot, itemUsed);
 
         if (item == null) {
-            return false;
+            return null;
         }
 
         Optional<CustomEnchantment> customEnchantmentOptional = CustomEnchantmentWrapper
                 .getCustomEnchantment(item, this.getCustomEnchantmentType());
 
         if (customEnchantmentOptional.isEmpty()) {
-            return false;
+            return null;
         }
 
-        return SkillUtils.canSkill(player, playerSkillPoints);
+        if (!SkillUtils.canSkill(player, playerSkillPoints)) {
+            return null;
+        }
+
+        return customEnchantmentOptional.get();
     }
 
 }
