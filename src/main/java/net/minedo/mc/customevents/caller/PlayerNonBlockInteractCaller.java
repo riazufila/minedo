@@ -5,6 +5,7 @@ import net.minedo.mc.constants.common.Common;
 import net.minedo.mc.customevents.PlayerNonBlockInteractEvent;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
+import org.bukkit.block.Chest;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -44,6 +45,12 @@ public class PlayerNonBlockInteractCaller implements Listener {
                     BlockState currentBlockState = CLICKED_BLOCK.getState();
 
                     if (previousBlockState.equals(currentBlockState)) {
+                        // Known block state to be equal before and after interaction.
+                        // Check only the previousBlockState in case block changed after.
+                        if (previousBlockState instanceof Chest) {
+                            return;
+                        }
+
                         blockUnchangedEvent.callEvent();
                     }
                 }
