@@ -32,7 +32,7 @@ public enum HomeTeleportMessage {
     ERROR_HOME_NAME_NOT_UNIQUE("Home name exists."),
     ERROR_HOME_DOES_NOT_EXISTS("Home doesn't exists."),
     ERROR_TELEPORTATION_CANCELLED("Teleportation cancelled."),
-    ERROR_UNSUITABLE_CONDITION("Not in a condition to teleport.");
+    ERROR_UNSUITABLE_CONDITION("Unsuitable condition to teleport.");
 
     private final String message;
 
