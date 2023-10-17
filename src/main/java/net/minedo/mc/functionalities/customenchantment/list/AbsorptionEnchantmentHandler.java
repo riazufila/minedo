@@ -23,12 +23,12 @@ public class AbsorptionEnchantmentHandler extends CustomEnchantmentHandler imple
 
     @EventHandler
     public void onHit(@NotNull EntityDamageByEntityEvent event) {
-        super.triggerCustomEffectsOnHit(event, PotionEffectType.ABSORPTION, true);
+        super.triggerPotionEffectsOnHit(event, PotionEffectType.ABSORPTION, true);
     }
 
     @EventHandler
     public void onPlayerArmorChange(@NotNull PlayerArmorChangeEvent event) {
-        super.updateCustomEffectsOnArmorChange(event, PotionEffectType.ABSORPTION);
+        super.updatePotionEffectsOnArmorChange(event, PotionEffectType.ABSORPTION);
     }
 
 }

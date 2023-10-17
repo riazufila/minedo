@@ -23,12 +23,12 @@ public class HasteEnchantmentHandler extends CustomEnchantmentHandler implements
 
     @EventHandler
     public void onHit(@NotNull EntityDamageByEntityEvent event) {
-        super.triggerCustomEffectsOnHit(event, PotionEffectType.FAST_DIGGING, true);
+        super.triggerPotionEffectsOnHit(event, PotionEffectType.FAST_DIGGING, true);
     }
 
     @EventHandler
     public void onPlayerArmorChange(@NotNull PlayerArmorChangeEvent event) {
-        super.updateCustomEffectsOnArmorChange(event, PotionEffectType.FAST_DIGGING);
+        super.updatePotionEffectsOnArmorChange(event, PotionEffectType.FAST_DIGGING);
     }
 
 }

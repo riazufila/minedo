@@ -23,12 +23,12 @@ public class PoisonEnchantmentHandler extends CustomEnchantmentHandler implement
 
     @EventHandler
     public void onHit(@NotNull EntityDamageByEntityEvent event) {
-        super.triggerCustomEffectsOnHit(event, PotionEffectType.POISON, true);
+        super.triggerPotionEffectsOnHit(event, PotionEffectType.POISON, true);
     }
 
     @EventHandler
     public void onPlayerArmorChange(@NotNull PlayerArmorChangeEvent event) {
-        super.updateCustomEffectsOnArmorChange(event, PotionEffectType.POISON);
+        super.updatePotionEffectsOnArmorChange(event, PotionEffectType.POISON);
     }
 
 }

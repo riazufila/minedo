@@ -23,12 +23,12 @@ public class WeaknessEnchantmentHandler extends CustomEnchantmentHandler impleme
 
     @EventHandler
     public void onHit(@NotNull EntityDamageByEntityEvent event) {
-        super.triggerCustomEffectsOnHit(event, PotionEffectType.WEAKNESS, true);
+        super.triggerPotionEffectsOnHit(event, PotionEffectType.WEAKNESS, true);
     }
 
     @EventHandler
     public void onPlayerArmorChange(@NotNull PlayerArmorChangeEvent event) {
-        super.updateCustomEffectsOnArmorChange(event, PotionEffectType.WEAKNESS);
+        super.updatePotionEffectsOnArmorChange(event, PotionEffectType.WEAKNESS);
     }
 
 }

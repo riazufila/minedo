@@ -23,12 +23,12 @@ public class ConfusionEnchantmentHandler extends CustomEnchantmentHandler implem
 
     @EventHandler
     public void onHit(@NotNull EntityDamageByEntityEvent event) {
-        super.triggerCustomEffectsOnHit(event, PotionEffectType.CONFUSION, false);
+        super.triggerPotionEffectsOnHit(event, PotionEffectType.CONFUSION, false);
     }
 
     @EventHandler
     public void onPlayerArmorChange(@NotNull PlayerArmorChangeEvent event) {
-        super.updateCustomEffectsOnArmorChange(event, PotionEffectType.CONFUSION);
+        super.updatePotionEffectsOnArmorChange(event, PotionEffectType.CONFUSION);
     }
 
 }

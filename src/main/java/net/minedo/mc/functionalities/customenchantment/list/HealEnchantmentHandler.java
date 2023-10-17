@@ -23,12 +23,12 @@ public class HealEnchantmentHandler extends CustomEnchantmentHandler implements 
 
     @EventHandler
     public void onHit(@NotNull EntityDamageByEntityEvent event) {
-        super.triggerCustomEffectsOnHit(event, PotionEffectType.HEAL, true);
+        super.triggerPotionEffectsOnHit(event, PotionEffectType.HEAL, true);
     }
 
     @EventHandler
     public void onPlayerArmorChange(@NotNull PlayerArmorChangeEvent event) {
-        super.updateCustomEffectsOnArmorChange(event, PotionEffectType.HEAL);
+        super.updatePotionEffectsOnArmorChange(event, PotionEffectType.HEAL);
     }
 
 }

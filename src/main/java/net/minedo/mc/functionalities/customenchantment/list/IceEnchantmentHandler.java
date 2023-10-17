@@ -36,7 +36,7 @@ public class IceEnchantmentHandler extends CustomEnchantmentHandler implements L
 
     @EventHandler
     public void onHit(@NotNull EntityDamageByEntityEvent event) {
-        CombatEvent combatEvent = super.isAbleToInflictCustomEnchantmentHits(event);
+        CombatEvent combatEvent = super.isAbleToInflictCustomEnchantmentOnHit(event);
 
         if (combatEvent == null || combatEvent.getCustomEnchantment() == null) {
             return;

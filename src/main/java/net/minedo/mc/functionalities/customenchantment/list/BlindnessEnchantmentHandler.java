@@ -23,12 +23,12 @@ public class BlindnessEnchantmentHandler extends CustomEnchantmentHandler implem
 
     @EventHandler
     public void onHit(@NotNull EntityDamageByEntityEvent event) {
-        super.triggerCustomEffectsOnHit(event, PotionEffectType.BLINDNESS, false);
+        super.triggerPotionEffectsOnHit(event, PotionEffectType.BLINDNESS, false);
     }
 
     @EventHandler
     public void onPlayerArmorChange(@NotNull PlayerArmorChangeEvent event) {
-        super.updateCustomEffectsOnArmorChange(event, PotionEffectType.BLINDNESS);
+        super.updatePotionEffectsOnArmorChange(event, PotionEffectType.BLINDNESS);
     }
 
 }

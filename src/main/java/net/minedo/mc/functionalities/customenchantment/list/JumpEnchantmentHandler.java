@@ -23,12 +23,12 @@ public class JumpEnchantmentHandler extends CustomEnchantmentHandler implements 
 
     @EventHandler
     public void onHit(@NotNull EntityDamageByEntityEvent event) {
-        super.triggerCustomEffectsOnHit(event, PotionEffectType.JUMP, true);
+        super.triggerPotionEffectsOnHit(event, PotionEffectType.JUMP, true);
     }
 
     @EventHandler
     public void onPlayerArmorChange(@NotNull PlayerArmorChangeEvent event) {
-        super.updateCustomEffectsOnArmorChange(event, PotionEffectType.JUMP);
+        super.updatePotionEffectsOnArmorChange(event, PotionEffectType.JUMP);
     }
 
 }

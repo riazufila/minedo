@@ -23,12 +23,12 @@ public class GlowingEnchantmentHandler extends CustomEnchantmentHandler implemen
 
     @EventHandler
     public void onHit(@NotNull EntityDamageByEntityEvent event) {
-        super.triggerCustomEffectsOnHit(event, PotionEffectType.GLOWING, false);
+        super.triggerPotionEffectsOnHit(event, PotionEffectType.GLOWING, false);
     }
 
     @EventHandler
     public void onPlayerArmorChange(@NotNull PlayerArmorChangeEvent event) {
-        super.updateCustomEffectsOnArmorChange(event, PotionEffectType.GLOWING);
+        super.updatePotionEffectsOnArmorChange(event, PotionEffectType.GLOWING);
     }
 
 }

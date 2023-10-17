@@ -23,12 +23,12 @@ public class SpeedEnchantmentHandler extends CustomEnchantmentHandler implements
 
     @EventHandler
     public void onHit(@NotNull EntityDamageByEntityEvent event) {
-        super.triggerCustomEffectsOnHit(event, PotionEffectType.SPEED, true);
+        super.triggerPotionEffectsOnHit(event, PotionEffectType.SPEED, true);
     }
 
     @EventHandler
     public void onPlayerArmorChange(@NotNull PlayerArmorChangeEvent event) {
-        super.updateCustomEffectsOnArmorChange(event, PotionEffectType.SPEED);
+        super.updatePotionEffectsOnArmorChange(event, PotionEffectType.SPEED);
     }
 
 }
