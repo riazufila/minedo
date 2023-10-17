@@ -63,7 +63,11 @@ public class PlayerTeleportScheduler extends BukkitRunnable {
 
             countDown--;
         } else {
-            if (teleportingPlayer.isOnline() && stillPlayer.isOnline()) {
+            if (teleportingPlayer.isOnline()
+                    && stillPlayer.isOnline()
+                    && !teleportingPlayer.isDead()
+                    && !stillPlayer.isDead()
+            ) {
                 FeedbackSound feedbackSound = FeedbackSound.TELEPORT;
                 Sound sound = feedbackSound.getSound();
                 float volume = feedbackSound.getVolume();
@@ -92,18 +96,18 @@ public class PlayerTeleportScheduler extends BukkitRunnable {
                         ))
                         .color(NamedTextColor.GREEN)
                 );
-            } else if (!teleportingPlayer.isOnline()) {
+            } else if (!teleportingPlayer.isOnline() || teleportingPlayer.isDead()) {
                 stillPlayer.sendMessage(Component
                         .text(String.format(
-                                PlayerTeleportMessage.ERROR_TELEPORT_TARGET_OFFLINE.getMessage(),
+                                PlayerTeleportMessage.ERROR_TELEPORT_TARGET_MISSING.getMessage(),
                                 this.teleportingPlayer.getName()
                         ))
                         .color(NamedTextColor.RED)
                 );
-            } else if (!stillPlayer.isOnline()) {
+            } else if (!stillPlayer.isOnline() || stillPlayer.isDead()) {
                 teleportingPlayer.sendMessage(Component
                         .text(String.format(
-                                PlayerTeleportMessage.ERROR_TELEPORT_TARGET_OFFLINE.getMessage(),
+                                PlayerTeleportMessage.ERROR_TELEPORT_TARGET_MISSING.getMessage(),
                                 this.stillPlayer.getName()
                         ))
                         .color(NamedTextColor.RED)

@@ -75,7 +75,7 @@ public class RegionTeleportScheduler extends BukkitRunnable {
 
             countDown--;
         } else {
-            if (player.isOnline()) {
+            if (player.isOnline() && !player.isDead()) {
                 FeedbackSound feedbackSound = FeedbackSound.TELEPORT;
                 Sound sound = feedbackSound.getSound();
                 float volume = feedbackSound.getVolume();
@@ -92,6 +92,11 @@ public class RegionTeleportScheduler extends BukkitRunnable {
                                 this.region.name().toLowerCase()
                         ))
                         .color(NamedTextColor.GREEN)
+                );
+            } else {
+                player.sendMessage(Component
+                        .text(RegionTeleportMessage.ERROR_UNSUITABLE_CONDITION.getMessage())
+                        .color(NamedTextColor.RED)
                 );
             }
 
