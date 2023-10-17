@@ -1,14 +1,12 @@
 package net.minedo.mc.functionalities.customenchantment;
 
 import com.destroystokyo.paper.MaterialTags;
-import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent;
 import net.minedo.mc.constants.common.Common;
 import net.minedo.mc.constants.customenchantment.type.CustomEnchantmentType;
 import net.minedo.mc.functionalities.skills.SkillUtils;
 import org.bukkit.Material;
 import org.bukkit.Tag;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.EntityEquipment;
@@ -228,14 +226,14 @@ public abstract class CustomEnchantmentHandler extends SimpleCustomEnchantment {
     /**
      * Update potion effects on armor change.
      *
-     * @param event            event
+     * @param player           player
      * @param potionEffectType potion effect type as in {@link PotionEffectType#values()}
      */
     public void updatePotionEffectsOnArmorChange(
-            @NotNull PlayerArmorChangeEvent event,
+            @NotNull Player player,
             @NotNull PotionEffectType potionEffectType
     ) {
-        Inventory inventory = event.getPlayer().getInventory();
+        Inventory inventory = player.getInventory();
         int HEAD_SLOT = 39;
         int CHEST_SLOT = 38;
         int LEGS_SLOT = 37;
@@ -252,8 +250,6 @@ public abstract class CustomEnchantmentHandler extends SimpleCustomEnchantment {
         for (ItemStack item : itemsAtArmorSlot) {
             this.updatePotionEffectsBasedOnItem(potionEffects, item, potionEffectType);
         }
-
-        HumanEntity player = event.getPlayer();
 
         player.removePotionEffect(potionEffectType);
         player.addPotionEffects(potionEffects.values());
