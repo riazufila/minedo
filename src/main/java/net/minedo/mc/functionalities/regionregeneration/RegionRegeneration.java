@@ -260,8 +260,11 @@ public class RegionRegeneration implements Listener {
     private boolean getEntityIsAllowedInRegion(
             @NotNull LivingEntity entity, @NotNull CreatureSpawnEvent.SpawnReason spawnReason
     ) {
-        return (entity instanceof Monster || entity instanceof Flying)
-                && spawnReason != CreatureSpawnEvent.SpawnReason.NATURAL;
+        if (!(entity instanceof Monster || entity instanceof Flying)) {
+            return true;
+        }
+
+        return spawnReason != CreatureSpawnEvent.SpawnReason.NATURAL;
     }
 
     /**
