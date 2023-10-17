@@ -5,7 +5,6 @@ import net.minedo.mc.constants.customenchantment.type.CustomEnchantmentType;
 import net.minedo.mc.functionalities.customenchantment.CustomEnchantmentHandler;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 
@@ -19,11 +18,6 @@ public class JumpEnchantmentHandler extends CustomEnchantmentHandler implements 
      */
     public JumpEnchantmentHandler() {
         super(CustomEnchantmentType.JUMP);
-    }
-
-    @EventHandler
-    public void onHit(@NotNull EntityDamageByEntityEvent event) {
-        super.triggerPotionEffectsOnHit(event, PotionEffectType.JUMP, true);
     }
 
     @EventHandler

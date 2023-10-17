@@ -10,7 +10,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Grants regeneration.
+ * Gives regeneration.
  */
 public class RegenerationEnchantmentHandler extends CustomEnchantmentHandler implements Listener {
 

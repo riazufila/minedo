@@ -10,7 +10,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Inflicts glow.
+ * Gives glowing effect.
  */
 public class GlowingEnchantmentHandler extends CustomEnchantmentHandler implements Listener {
 
