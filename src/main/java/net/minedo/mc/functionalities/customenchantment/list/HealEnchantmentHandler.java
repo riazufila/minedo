@@ -10,7 +10,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Inflict heal.
+ * Causes instant health.
  */
 public class HealEnchantmentHandler extends CustomEnchantmentHandler implements Listener {
 

@@ -10,7 +10,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Grants fire resistance.
+ * Causes fire resistance.
  */
 public class FireResistanceEnchantmentHandler extends CustomEnchantmentHandler implements Listener {
 

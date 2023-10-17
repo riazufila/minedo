@@ -10,7 +10,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Grants absorption.
+ * Gives absorption.
  */
 public class AbsorptionEnchantmentHandler extends CustomEnchantmentHandler implements Listener {
 

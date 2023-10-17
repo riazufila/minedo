@@ -10,7 +10,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Inflicts harm.
+ * Causes instant damage.
  */
 public class HarmEnchantmentHandler extends CustomEnchantmentHandler implements Listener {
 
