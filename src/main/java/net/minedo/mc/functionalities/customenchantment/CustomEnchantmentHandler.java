@@ -3,6 +3,7 @@ package net.minedo.mc.functionalities.customenchantment;
 import com.destroystokyo.paper.MaterialTags;
 import net.minedo.mc.constants.common.Common;
 import net.minedo.mc.constants.customenchantment.type.CustomEnchantmentType;
+import net.minedo.mc.functionalities.customenchantment.helper.CombatData;
 import net.minedo.mc.functionalities.skills.SkillUtils;
 import org.bukkit.Material;
 import org.bukkit.Tag;
@@ -84,7 +85,7 @@ public abstract class CustomEnchantmentHandler extends SimpleCustomEnchantment {
      * @param attackingEntity attacking entity
      * @return combat data on hit
      */
-    private @Nullable CombatEvent getCombatDataOnHit(
+    private @Nullable CombatData getCombatDataOnHit(
             @NotNull Entity defendingEntity, @NotNull Entity attackingEntity
     ) {
         if (!(defendingEntity instanceof LivingEntity defendingLivingEntity)) {
@@ -116,7 +117,7 @@ public abstract class CustomEnchantmentHandler extends SimpleCustomEnchantment {
             }
         }
 
-        return new CombatEvent(itemInMainHand, attackingLivingEntity, defendingLivingEntity, null);
+        return new CombatData(itemInMainHand, attackingLivingEntity, defendingLivingEntity, null);
     }
 
     /**
@@ -126,25 +127,25 @@ public abstract class CustomEnchantmentHandler extends SimpleCustomEnchantment {
      * @param attackingEntity attacking entity
      * @return whether player is able to inflict custom enchantment on hit
      */
-    public CombatEvent isAbleToInflictCustomEnchantmentOnHit(
+    public CombatData isAbleToInflictCustomEnchantmentOnHit(
             @NotNull Entity defendingEntity, @NotNull Entity attackingEntity
     ) {
-        CombatEvent combatEvent = this.getCombatDataOnHit(defendingEntity, attackingEntity);
+        CombatData combatData = this.getCombatDataOnHit(defendingEntity, attackingEntity);
 
-        if (combatEvent == null) {
+        if (combatData == null) {
             return null;
         }
 
         Optional<CustomEnchantment> customEnchantmentOptional = CustomEnchantmentWrapper
-                .getCustomEnchantment(combatEvent.getItem(), this.getCustomEnchantmentType());
+                .getCustomEnchantment(combatData.getItem(), this.getCustomEnchantmentType());
 
         if (customEnchantmentOptional.isEmpty()) {
             return null;
         }
 
-        combatEvent.setCustomEnchantment(customEnchantmentOptional.get());
+        combatData.setCustomEnchantment(customEnchantmentOptional.get());
 
-        return combatEvent;
+        return combatData;
     }
 
     /**
@@ -161,13 +162,13 @@ public abstract class CustomEnchantmentHandler extends SimpleCustomEnchantment {
             @NotNull PotionEffectType potionEffectType,
             boolean isAmplified
     ) {
-        CombatEvent combatEvent = this.isAbleToInflictCustomEnchantmentOnHit(defendingEntity, attackingEntity);
+        CombatData combatData = this.isAbleToInflictCustomEnchantmentOnHit(defendingEntity, attackingEntity);
 
-        if (combatEvent == null || combatEvent.getCustomEnchantment() == null) {
+        if (combatData == null || combatData.getCustomEnchantment() == null) {
             return;
         }
 
-        CustomEnchantment customEnchantment = combatEvent.getCustomEnchantment();
+        CustomEnchantment customEnchantment = combatData.getCustomEnchantment();
         final int DEFAULT_DURATION = 3;
         final double INCREMENT_DURATION = 0.2;
         int enchantmentLevel = customEnchantment.getLevel();
@@ -181,7 +182,7 @@ public abstract class CustomEnchantmentHandler extends SimpleCustomEnchantment {
                 duration * (int) Common.TICK_PER_SECOND.getValue(),
                 Math.min(amplifier, this.AMPLIFIER_LIMIT) // Limit maximum potion effect amplifier.
         );
-        combatEvent.getDefendingEntity().addPotionEffect(potionEffect);
+        combatData.getDefendingEntity().addPotionEffect(potionEffect);
     }
 
     /**

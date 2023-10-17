@@ -5,8 +5,8 @@ import net.minedo.mc.constants.common.Common;
 import net.minedo.mc.constants.customenchantment.type.CustomEnchantmentType;
 import net.minedo.mc.constants.feedbacksound.FeedbackSound;
 import net.minedo.mc.customevents.PlayerNonBlockInteractEvent;
-import net.minedo.mc.functionalities.customenchantment.CombatEvent;
 import net.minedo.mc.functionalities.customenchantment.CustomEnchantmentHandler;
+import net.minedo.mc.functionalities.customenchantment.helper.CombatData;
 import net.minedo.mc.functionalities.utils.ParticleUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
@@ -123,13 +123,13 @@ public class ExplosionEnchantmentHandler extends CustomEnchantmentHandler implem
     public void onHit(@NotNull EntityDamageByEntityEvent event) {
         Entity defender = event.getEntity();
         Entity attacker = event.getDamager();
-        CombatEvent combatEvent = super.isAbleToInflictCustomEnchantmentOnHit(defender, attacker);
+        CombatData combatData = super.isAbleToInflictCustomEnchantmentOnHit(defender, attacker);
 
-        if (combatEvent == null || combatEvent.getCustomEnchantment() == null) {
+        if (combatData == null || combatData.getCustomEnchantment() == null) {
             return;
         }
 
-        LivingEntity defendingEntity = combatEvent.getDefendingEntity();
+        LivingEntity defendingEntity = combatData.getDefendingEntity();
         final float EXPLOSION_POWER = 1.0f;
         defendingEntity
                 .getLocation()

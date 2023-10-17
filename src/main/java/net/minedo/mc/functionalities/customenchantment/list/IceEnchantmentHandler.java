@@ -4,8 +4,8 @@ import net.minedo.mc.constants.common.Common;
 import net.minedo.mc.constants.customenchantment.type.CustomEnchantmentType;
 import net.minedo.mc.constants.feedbacksound.FeedbackSound;
 import net.minedo.mc.customevents.PlayerNonBlockInteractEvent;
-import net.minedo.mc.functionalities.customenchantment.CombatEvent;
 import net.minedo.mc.functionalities.customenchantment.CustomEnchantmentHandler;
+import net.minedo.mc.functionalities.customenchantment.helper.CombatData;
 import net.minedo.mc.functionalities.utils.ShapeUtils;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -41,15 +41,15 @@ public class IceEnchantmentHandler extends CustomEnchantmentHandler implements L
     public void onHit(@NotNull EntityDamageByEntityEvent event) {
         Entity defender = event.getEntity();
         Entity attacker = event.getDamager();
-        CombatEvent combatEvent = super.isAbleToInflictCustomEnchantmentOnHit(defender, attacker);
+        CombatData combatData = super.isAbleToInflictCustomEnchantmentOnHit(defender, attacker);
 
-        if (combatEvent == null || combatEvent.getCustomEnchantment() == null) {
+        if (combatData == null || combatData.getCustomEnchantment() == null) {
             return;
         }
 
         final int DEFAULT_DURATION = 3;
-        LivingEntity defendingEntity = combatEvent.getDefendingEntity();
-        int enchantmentLevel = combatEvent.getCustomEnchantment().getLevel();
+        LivingEntity defendingEntity = combatData.getDefendingEntity();
+        int enchantmentLevel = combatData.getCustomEnchantment().getLevel();
         int duration = DEFAULT_DURATION * enchantmentLevel;
         int freezeTicks = defendingEntity.getFreezeTicks();
 

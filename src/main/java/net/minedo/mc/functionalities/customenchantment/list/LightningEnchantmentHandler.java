@@ -5,8 +5,8 @@ import net.minedo.mc.constants.common.Common;
 import net.minedo.mc.constants.customenchantment.type.CustomEnchantmentType;
 import net.minedo.mc.constants.feedbacksound.FeedbackSound;
 import net.minedo.mc.customevents.PlayerNonBlockInteractEvent;
-import net.minedo.mc.functionalities.customenchantment.CombatEvent;
 import net.minedo.mc.functionalities.customenchantment.CustomEnchantmentHandler;
+import net.minedo.mc.functionalities.customenchantment.helper.CombatData;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
@@ -101,15 +101,15 @@ public class LightningEnchantmentHandler extends CustomEnchantmentHandler implem
     public void onHit(@NotNull EntityDamageByEntityEvent event) {
         Entity defender = event.getEntity();
         Entity attacker = event.getDamager();
-        CombatEvent combatEvent = super.isAbleToInflictCustomEnchantmentOnHit(defender, attacker);
+        CombatData combatData = super.isAbleToInflictCustomEnchantmentOnHit(defender, attacker);
 
-        if (combatEvent == null || combatEvent.getCustomEnchantment() == null) {
+        if (combatData == null || combatData.getCustomEnchantment() == null) {
             return;
         }
 
         Location location = event.getEntity().getLocation();
-        LivingEntity defendingEntity = combatEvent.getDefendingEntity();
-        LivingEntity attackingEntity = combatEvent.getAttackingEntity();
+        LivingEntity defendingEntity = combatData.getDefendingEntity();
+        LivingEntity attackingEntity = combatData.getAttackingEntity();
         World world = defendingEntity.getWorld();
 
         if (location.getBlockY() < world.getHighestBlockYAt(location)) {
