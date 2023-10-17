@@ -259,7 +259,10 @@ public abstract class CustomEnchantmentHandler extends SimpleCustomEnchantment {
      * @return whether player is able to use skill
      */
     public boolean isPlayerAbleToSkill(
-            Player player, EquipmentSlot equipmentSlot, ItemStack itemUsed, HashMap<UUID, Integer> playerSkillPoints
+            @NotNull Player player,
+            @Nullable EquipmentSlot equipmentSlot,
+            @Nullable ItemStack itemUsed,
+            @NotNull HashMap<UUID, Integer> playerSkillPoints
     ) {
         ItemStack item = this.getValidItemForSkill(player, equipmentSlot, itemUsed);
 
