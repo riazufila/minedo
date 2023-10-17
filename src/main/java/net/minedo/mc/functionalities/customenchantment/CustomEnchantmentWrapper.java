@@ -83,6 +83,7 @@ public class CustomEnchantmentWrapper implements Listener {
         List<CustomEnchantmentHandler> customEnchantmentHandlers = new ArrayList<>();
 
         customEnchantmentHandlers.add(new AbsorptionEnchantmentHandler());
+        customEnchantmentHandlers.add(new BeheaderEnchantmentHandler());
         customEnchantmentHandlers.add(new BlindnessEnchantmentHandler());
         customEnchantmentHandlers.add(new ConfusionEnchantmentHandler());
         customEnchantmentHandlers.add(new DarknessEnchantmentHandler());
