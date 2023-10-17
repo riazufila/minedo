@@ -30,6 +30,7 @@ public enum CustomEnchantmentType {
     STRENGTH,
     EXPLOSION,
     ICE,
-    CATALYST
+    CATALYST,
+    FIREBALL
 
 }

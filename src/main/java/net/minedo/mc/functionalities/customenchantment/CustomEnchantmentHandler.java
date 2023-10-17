@@ -5,6 +5,7 @@ import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent;
 import net.minedo.mc.constants.common.Common;
 import net.minedo.mc.constants.customenchantment.type.CustomEnchantmentType;
 import net.minedo.mc.customevents.PlayerNonBlockInteractEvent;
+import net.minedo.mc.functionalities.skills.SkillUtils;
 import org.bukkit.Material;
 import org.bukkit.Tag;
 import org.bukkit.entity.HumanEntity;
@@ -20,10 +21,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Custom enchantment handler abstract class. Custom enchantments should all extends from this.
@@ -47,7 +45,7 @@ public abstract class CustomEnchantmentHandler extends SimpleCustomEnchantment {
      * @param event event
      * @return item used for the skill
      */
-    public @Nullable ItemStack getValidItemForSkill(@NotNull PlayerNonBlockInteractEvent event) {
+    private @Nullable ItemStack getValidItemForSkill(@NotNull PlayerNonBlockInteractEvent event) {
         Player player = event.getPlayer();
         EntityEquipment equipment = player.getEquipment();
         EquipmentSlot handUsed = event.getHand();
@@ -265,6 +263,33 @@ public abstract class CustomEnchantmentHandler extends SimpleCustomEnchantment {
 
         player.removePotionEffect(potionEffectType);
         player.addPotionEffects(potionEffects.values());
+    }
+
+    /**
+     * Get whether player is able to use skill.
+     *
+     * @param event             event
+     * @param player            player
+     * @param playerSkillPoints player skill points
+     * @return whether player is able to use skill
+     */
+    public boolean isPlayerAbleToSkill(
+            PlayerNonBlockInteractEvent event, Player player, HashMap<UUID, Integer> playerSkillPoints
+    ) {
+        ItemStack item = this.getValidItemForSkill(event);
+
+        if (item == null) {
+            return false;
+        }
+
+        Optional<CustomEnchantment> customEnchantmentOptional = CustomEnchantmentWrapper
+                .getCustomEnchantment(item, this.getCustomEnchantmentType());
+
+        if (customEnchantmentOptional.isEmpty()) {
+            return false;
+        }
+
+        return SkillUtils.canSkill(player, playerSkillPoints);
     }
 
 }
