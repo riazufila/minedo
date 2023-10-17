@@ -8,6 +8,7 @@ import net.minedo.mc.functionalities.customenchantment.CustomEnchantmentHandler;
 import net.minedo.mc.functionalities.utils.ShapeUtils;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Particle;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.*;
@@ -105,10 +106,32 @@ public class WitherEnchantmentHandler extends CustomEnchantmentHandler implement
         for (int radius = 1; radius <= RADIUS; radius++) {
             for (Location spherePoint : ShapeUtils.getSphere(hitLocation, radius)) {
                 Material currentLocationBlockType = spherePoint.getBlock().getType();
+                int coordinateBlockX = spherePoint.getBlockX();
+                int coordinateBlockY = spherePoint.getBlockY();
+                int coordinateBlockZ = spherePoint.getBlockZ();
+                int coordinateHighestBlockY = world.getHighestBlockYAt(
+                        coordinateBlockX, coordinateBlockZ
+                );
 
                 if (currentLocationBlockType == Material.AIR) {
                     continue;
                 }
+
+                if (coordinateBlockY == coordinateHighestBlockY) {
+                    world.spawnParticle(
+                            Particle.SOUL,
+                            coordinateBlockX,
+                            coordinateBlockY,
+                            coordinateBlockZ,
+                            1,
+                            0.3,
+                            1.3,
+                            0.3,
+                            0)
+                    ;
+                }
+
+
                 world.getBlockAt(spherePoint).setType(Material.SOUL_SAND);
             }
         }
