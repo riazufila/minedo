@@ -23,12 +23,12 @@ public class RegenerationEnchantmentHandler extends CustomEnchantmentHandler imp
 
     @EventHandler
     public void onHit(@NotNull EntityDamageByEntityEvent event) {
-        super.triggerCustomEffectsOnHit(event, PotionEffectType.REGENERATION, true);
+        super.triggerPotionEffectsOnHit(event, PotionEffectType.REGENERATION, true);
     }
 
     @EventHandler
     public void onPlayerArmorChange(@NotNull PlayerArmorChangeEvent event) {
-        super.updateCustomEffectsOnArmorChange(event, PotionEffectType.REGENERATION);
+        super.updatePotionEffectsOnArmorChange(event, PotionEffectType.REGENERATION);
     }
 
 }

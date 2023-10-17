@@ -23,12 +23,12 @@ public class HarmEnchantmentHandler extends CustomEnchantmentHandler implements 
 
     @EventHandler
     public void onHit(@NotNull EntityDamageByEntityEvent event) {
-        super.triggerCustomEffectsOnHit(event, PotionEffectType.HARM, true);
+        super.triggerPotionEffectsOnHit(event, PotionEffectType.HARM, true);
     }
 
     @EventHandler
     public void onPlayerArmorChange(@NotNull PlayerArmorChangeEvent event) {
-        super.updateCustomEffectsOnArmorChange(event, PotionEffectType.HARM);
+        super.updatePotionEffectsOnArmorChange(event, PotionEffectType.HARM);
     }
 
 }

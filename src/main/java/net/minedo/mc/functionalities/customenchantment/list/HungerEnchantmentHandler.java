@@ -23,12 +23,12 @@ public class HungerEnchantmentHandler extends CustomEnchantmentHandler implement
 
     @EventHandler
     public void onHit(@NotNull EntityDamageByEntityEvent event) {
-        super.triggerCustomEffectsOnHit(event, PotionEffectType.HUNGER, true);
+        super.triggerPotionEffectsOnHit(event, PotionEffectType.HUNGER, true);
     }
 
     @EventHandler
     public void onPlayerArmorChange(@NotNull PlayerArmorChangeEvent event) {
-        super.updateCustomEffectsOnArmorChange(event, PotionEffectType.HUNGER);
+        super.updatePotionEffectsOnArmorChange(event, PotionEffectType.HUNGER);
     }
 
 }

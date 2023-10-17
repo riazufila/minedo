@@ -23,12 +23,12 @@ public class FireResistanceEnchantmentHandler extends CustomEnchantmentHandler i
 
     @EventHandler
     public void onHit(@NotNull EntityDamageByEntityEvent event) {
-        super.triggerCustomEffectsOnHit(event, PotionEffectType.FIRE_RESISTANCE, false);
+        super.triggerPotionEffectsOnHit(event, PotionEffectType.FIRE_RESISTANCE, false);
     }
 
     @EventHandler
     public void onPlayerArmorChange(@NotNull PlayerArmorChangeEvent event) {
-        super.updateCustomEffectsOnArmorChange(event, PotionEffectType.FIRE_RESISTANCE);
+        super.updatePotionEffectsOnArmorChange(event, PotionEffectType.FIRE_RESISTANCE);
     }
 
 }

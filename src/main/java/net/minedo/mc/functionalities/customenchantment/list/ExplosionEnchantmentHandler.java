@@ -6,10 +6,7 @@ import net.minedo.mc.constants.customenchantment.type.CustomEnchantmentType;
 import net.minedo.mc.constants.feedbacksound.FeedbackSound;
 import net.minedo.mc.customevents.PlayerNonBlockInteractEvent;
 import net.minedo.mc.functionalities.customenchantment.CombatEvent;
-import net.minedo.mc.functionalities.customenchantment.CustomEnchantment;
 import net.minedo.mc.functionalities.customenchantment.CustomEnchantmentHandler;
-import net.minedo.mc.functionalities.customenchantment.CustomEnchantmentWrapper;
-import net.minedo.mc.functionalities.skills.SkillUtils;
 import net.minedo.mc.functionalities.utils.ParticleUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
@@ -22,14 +19,12 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
-import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -66,7 +61,7 @@ public class ExplosionEnchantmentHandler extends CustomEnchantmentHandler implem
                 Location location = player.getLocation().getBlock().getRelative(BlockFace.UP).getLocation();
 
                 if (player.isOnline() && countDown > delay) {
-                    player.getWorld().createExplosion(location, EXPLOSION_POWER);
+                    location.createExplosion(EXPLOSION_POWER);
                     playersExploding.remove(player.getUniqueId());
 
                     this.cancel();
@@ -123,7 +118,7 @@ public class ExplosionEnchantmentHandler extends CustomEnchantmentHandler implem
 
     @EventHandler
     public void onHit(@NotNull EntityDamageByEntityEvent event) {
-        CombatEvent combatEvent = super.isAbleToInflictCustomEnchantmentHits(event);
+        CombatEvent combatEvent = super.isAbleToInflictCustomEnchantmentOnHit(event);
 
         if (combatEvent == null || combatEvent.getCustomEnchantment() == null) {
             return;
@@ -132,8 +127,8 @@ public class ExplosionEnchantmentHandler extends CustomEnchantmentHandler implem
         LivingEntity defendingEntity = combatEvent.getDefendingEntity();
         final float EXPLOSION_POWER = 1.0f;
         defendingEntity
-                .getWorld()
-                .createExplosion(defendingEntity.getLocation(), EXPLOSION_POWER);
+                .getLocation()
+                .createExplosion(EXPLOSION_POWER);
     }
 
     @EventHandler
@@ -145,21 +140,9 @@ public class ExplosionEnchantmentHandler extends CustomEnchantmentHandler implem
             return;
         }
 
-        ItemStack item = super.getValidItemForSkill(event);
+        boolean isAbleToSkill = super.isPlayerAbleToSkill(event, player, this.playerSkillPoints);
 
-        if (item == null) {
-            return;
-        }
-
-        Optional<CustomEnchantment> customEnchantmentOptional = CustomEnchantmentWrapper
-                .getCustomEnchantment(item, this.getCustomEnchantmentType());
-
-
-        if (customEnchantmentOptional.isEmpty()) {
-            return;
-        }
-
-        if (!SkillUtils.canSkill(player, this.playerSkillPoints)) {
+        if (!isAbleToSkill) {
             return;
         }
 

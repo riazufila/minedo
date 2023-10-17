@@ -5,10 +5,7 @@ import net.minedo.mc.constants.customenchantment.type.CustomEnchantmentType;
 import net.minedo.mc.constants.feedbacksound.FeedbackSound;
 import net.minedo.mc.customevents.PlayerNonBlockInteractEvent;
 import net.minedo.mc.functionalities.customenchantment.CombatEvent;
-import net.minedo.mc.functionalities.customenchantment.CustomEnchantment;
 import net.minedo.mc.functionalities.customenchantment.CustomEnchantmentHandler;
-import net.minedo.mc.functionalities.customenchantment.CustomEnchantmentWrapper;
-import net.minedo.mc.functionalities.skills.SkillUtils;
 import net.minedo.mc.functionalities.utils.ShapeUtils;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -18,7 +15,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -40,7 +36,7 @@ public class IceEnchantmentHandler extends CustomEnchantmentHandler implements L
 
     @EventHandler
     public void onHit(@NotNull EntityDamageByEntityEvent event) {
-        CombatEvent combatEvent = super.isAbleToInflictCustomEnchantmentHits(event);
+        CombatEvent combatEvent = super.isAbleToInflictCustomEnchantmentOnHit(event);
 
         if (combatEvent == null || combatEvent.getCustomEnchantment() == null) {
             return;
@@ -61,20 +57,9 @@ public class IceEnchantmentHandler extends CustomEnchantmentHandler implements L
     @EventHandler
     public void onInteract(@NotNull PlayerNonBlockInteractEvent event) {
         Player player = event.getPlayer();
-        ItemStack item = super.getValidItemForSkill(event);
+        boolean isAbleToSkill = super.isPlayerAbleToSkill(event, player, this.playerSkillPoints);
 
-        if (item == null) {
-            return;
-        }
-
-        Optional<CustomEnchantment> customEnchantmentOptional = CustomEnchantmentWrapper
-                .getCustomEnchantment(item, this.getCustomEnchantmentType());
-
-        if (customEnchantmentOptional.isEmpty()) {
-            return;
-        }
-
-        if (!SkillUtils.canSkill(player, this.playerSkillPoints)) {
+        if (!isAbleToSkill) {
             return;
         }
 

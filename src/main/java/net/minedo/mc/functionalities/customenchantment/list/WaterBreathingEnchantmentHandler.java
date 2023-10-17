@@ -23,12 +23,12 @@ public class WaterBreathingEnchantmentHandler extends CustomEnchantmentHandler i
 
     @EventHandler
     public void onHit(@NotNull EntityDamageByEntityEvent event) {
-        super.triggerCustomEffectsOnHit(event, PotionEffectType.WATER_BREATHING, true);
+        super.triggerPotionEffectsOnHit(event, PotionEffectType.WATER_BREATHING, true);
     }
 
     @EventHandler
     public void onPlayerArmorChange(@NotNull PlayerArmorChangeEvent event) {
-        super.updateCustomEffectsOnArmorChange(event, PotionEffectType.WATER_BREATHING);
+        super.updatePotionEffectsOnArmorChange(event, PotionEffectType.WATER_BREATHING);
     }
 
 }

@@ -66,6 +66,7 @@ CREATE TABLE custom_item_lore (
     text VARCHAR(250) NOT NULL,
     color VARCHAR(20) DEFAULT NULL,
     decoration VARCHAR(10) DEFAULT NULL,
+    CONSTRAINT custom_item_id_text_UNIQUE UNIQUE (custom_item_id, text),
     FOREIGN KEY (custom_item_id) REFERENCES custom_item (id)
 );
 
@@ -74,6 +75,7 @@ CREATE TABLE custom_item_enchantment (
     enchantment varchar(50) NOT NULL,
     is_custom TINYINT(1) NOT NULL,
     level INT NOT NULL,
+    CONSTRAINT custom_item_id_enchantment_UNIQUE UNIQUE (custom_item_id, enchantment),
     FOREIGN KEY (custom_item_id) REFERENCES custom_item (id)
 );
 

@@ -23,12 +23,12 @@ public class InvisibilityEnchantmentHandler extends CustomEnchantmentHandler imp
 
     @EventHandler
     public void onHit(@NotNull EntityDamageByEntityEvent event) {
-        super.triggerCustomEffectsOnHit(event, PotionEffectType.INVISIBILITY, true);
+        super.triggerPotionEffectsOnHit(event, PotionEffectType.INVISIBILITY, true);
     }
 
     @EventHandler
     public void onPlayerArmorChange(@NotNull PlayerArmorChangeEvent event) {
-        super.updateCustomEffectsOnArmorChange(event, PotionEffectType.INVISIBILITY);
+        super.updatePotionEffectsOnArmorChange(event, PotionEffectType.INVISIBILITY);
     }
 
 }

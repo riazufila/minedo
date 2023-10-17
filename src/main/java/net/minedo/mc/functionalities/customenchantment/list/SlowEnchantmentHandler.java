@@ -23,12 +23,12 @@ public class SlowEnchantmentHandler extends CustomEnchantmentHandler implements 
 
     @EventHandler
     public void onHit(@NotNull EntityDamageByEntityEvent event) {
-        super.triggerCustomEffectsOnHit(event, PotionEffectType.SLOW, true);
+        super.triggerPotionEffectsOnHit(event, PotionEffectType.SLOW, true);
     }
 
     @EventHandler
     public void onPlayerArmorChange(@NotNull PlayerArmorChangeEvent event) {
-        super.updateCustomEffectsOnArmorChange(event, PotionEffectType.SLOW);
+        super.updatePotionEffectsOnArmorChange(event, PotionEffectType.SLOW);
     }
 
 }

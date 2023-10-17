@@ -23,12 +23,12 @@ public class DarknessEnchantmentHandler extends CustomEnchantmentHandler impleme
 
     @EventHandler
     public void onHit(@NotNull EntityDamageByEntityEvent event) {
-        super.triggerCustomEffectsOnHit(event, PotionEffectType.DARKNESS, false);
+        super.triggerPotionEffectsOnHit(event, PotionEffectType.DARKNESS, false);
     }
 
     @EventHandler
     public void onPlayerArmorChange(@NotNull PlayerArmorChangeEvent event) {
-        super.updateCustomEffectsOnArmorChange(event, PotionEffectType.DARKNESS);
+        super.updatePotionEffectsOnArmorChange(event, PotionEffectType.DARKNESS);
     }
 
 

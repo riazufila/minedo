@@ -23,12 +23,12 @@ public class HealthBoostEnchantmentHandler extends CustomEnchantmentHandler impl
 
     @EventHandler
     public void onHit(@NotNull EntityDamageByEntityEvent event) {
-        super.triggerCustomEffectsOnHit(event, PotionEffectType.HEALTH_BOOST, true);
+        super.triggerPotionEffectsOnHit(event, PotionEffectType.HEALTH_BOOST, true);
     }
 
     @EventHandler
     public void onPlayerArmorChange(@NotNull PlayerArmorChangeEvent event) {
-        super.updateCustomEffectsOnArmorChange(event, PotionEffectType.HEALTH_BOOST);
+        super.updatePotionEffectsOnArmorChange(event, PotionEffectType.HEALTH_BOOST);
     }
 
 }

@@ -23,12 +23,12 @@ public class ResistanceEnchantmentHandler extends CustomEnchantmentHandler imple
 
     @EventHandler
     public void onHit(@NotNull EntityDamageByEntityEvent event) {
-        super.triggerCustomEffectsOnHit(event, PotionEffectType.DAMAGE_RESISTANCE, true);
+        super.triggerPotionEffectsOnHit(event, PotionEffectType.DAMAGE_RESISTANCE, true);
     }
 
     @EventHandler
     public void onPlayerArmorChange(@NotNull PlayerArmorChangeEvent event) {
-        super.updateCustomEffectsOnArmorChange(event, PotionEffectType.DAMAGE_RESISTANCE);
+        super.updatePotionEffectsOnArmorChange(event, PotionEffectType.DAMAGE_RESISTANCE);
     }
 
 }

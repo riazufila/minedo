@@ -23,12 +23,12 @@ public class StrengthEnchantmentHandler extends CustomEnchantmentHandler impleme
 
     @EventHandler
     public void onHit(@NotNull EntityDamageByEntityEvent event) {
-        super.triggerCustomEffectsOnHit(event, PotionEffectType.INCREASE_DAMAGE, true);
+        super.triggerPotionEffectsOnHit(event, PotionEffectType.INCREASE_DAMAGE, true);
     }
 
     @EventHandler
     public void onPlayerArmorChange(@NotNull PlayerArmorChangeEvent event) {
-        super.updateCustomEffectsOnArmorChange(event, PotionEffectType.INCREASE_DAMAGE);
+        super.updatePotionEffectsOnArmorChange(event, PotionEffectType.INCREASE_DAMAGE);
     }
 
 }
