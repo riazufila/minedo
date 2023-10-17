@@ -113,7 +113,7 @@ public class WitherEnchantmentHandler extends CustomEnchantmentHandler implement
                         coordinateBlockX, coordinateBlockZ
                 );
 
-                if (currentLocationBlockType == Material.AIR) {
+                if (currentLocationBlockType == Material.AIR || currentLocationBlockType == Material.BEDROCK) {
                     continue;
                 }
 

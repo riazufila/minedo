@@ -80,6 +80,12 @@ public class IceEnchantmentHandler extends CustomEnchantmentHandler implements L
         Location playerLocation = player.getLocation();
 
         for (Location spherePoint : ShapeUtils.getSphere(playerLocation, RADIUS)) {
+            Material currentLocationBlockType = spherePoint.getBlock().getType();
+
+            if (currentLocationBlockType == Material.BEDROCK) {
+                continue;
+            }
+
             Random random = new Random();
             List<Material> potentialBlocks = new ArrayList<>() {{
                 add(Material.ICE);
