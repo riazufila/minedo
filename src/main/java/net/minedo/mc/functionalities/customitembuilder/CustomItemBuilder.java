@@ -22,6 +22,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.world.ChunkPopulateEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
@@ -48,7 +49,11 @@ public class CustomItemBuilder implements Listener {
                 ItemStack item = this.getCustomItem();
 
                 if (item != null) {
-                    container.getInventory().addItem(item);
+                    Inventory inventory = container.getInventory();
+                    Random random = new Random();
+                    int index = random.nextInt(inventory.getSize());
+
+                    inventory.setItem(index, item);
                 }
             }
         }
