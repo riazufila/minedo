@@ -23,16 +23,16 @@ import java.util.UUID;
 /**
  * Spawn fireball projectile.
  */
-public class FireballEnchantmentHandler extends CustomEnchantmentHandler implements Listener {
+public class BlazeEnchantmentHandler extends CustomEnchantmentHandler implements Listener {
 
     private final List<UUID> launchedProjectiles = new ArrayList<>();
     private final HashMap<UUID, Integer> playerSkillPoints;
 
     /**
-     * Initialize fireball enchantment handler.
+     * Initialize blaze enchantment handler.
      */
-    public FireballEnchantmentHandler(@NotNull HashMap<UUID, Integer> playerSkillPoints) {
-        super(CustomEnchantmentType.FIREBALL);
+    public BlazeEnchantmentHandler(@NotNull HashMap<UUID, Integer> playerSkillPoints) {
+        super(CustomEnchantmentType.BLAZE);
         this.playerSkillPoints = playerSkillPoints;
     }
 

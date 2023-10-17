@@ -112,7 +112,8 @@ INSERT INTO custom_item VALUES
 (10, 'NETHERITE_SHOVEL', 'Cataclysm', 'DARK_PURPLE', NULL),
 (11, 'ENCHANTED_BOOK', 'Book of Awakening', 'DARK_PURPLE', NULL),
 (12, 'DIAMOND_SWORD', 'Frostbite', 'DARK_PURPLE', NULL),
-(13, 'GOLDEN_AXE', 'Collector\'s Axe', 'DARK_PURPLE', NULL);
+(13, 'GOLDEN_AXE', 'Collector\'s Axe', 'DARK_PURPLE', NULL),
+(14, 'NETHERITE_SWORD', 'Scorching Sword', 'DARK_PURPLE', NULL);
 
 INSERT INTO custom_item_lore VALUES
 (1, 'Boots infused with the agility of a rabbit.', 'GREEN', NULL),
@@ -121,7 +122,8 @@ INSERT INTO custom_item_lore VALUES
 (10, 'Shovel harnessed with raw power.', 'DARK_PURPLE', NULL),
 (11, 'Awakens the beholder\'s power.', 'DARK_PURPLE', NULL),
 (12, 'Crafted from ice, the blade chills enemies.', 'DARK_PURPLE', NULL),
-(13, 'Every collector dreamt of this weapon.', 'DARK_PURPLE', NULL);
+(13, 'Every collector dreamt of this weapon.', 'DARK_PURPLE', NULL),
+(14, 'Found buried deep within a volcano.', 'DARK_PURPLE', NULL);
 
 INSERT INTO custom_item_enchantment VALUES
 (1, 'PROTECTION', false, 5),
@@ -149,7 +151,12 @@ INSERT INTO custom_item_enchantment VALUES
 (12, 'ICE', true, 1),
 (13, 'SHARPNESS', false, 3),
 (13, 'UNBREAKING', false, 3),
-(13, 'BEHEADER', true, 1);
+(13, 'BEHEADER', true, 1),
+(14, 'SHARPNESS', false, 6),
+(14, 'FIRE_ASPECT', false, 10),
+(14, 'UNBREAKING', false, 10),
+(14, 'MENDING', false, 1),
+(14, 'BLAZE', true, 1);
 
 INSERT INTO custom_item_probability VALUES
 (1, 20),
@@ -164,7 +171,8 @@ INSERT INTO custom_item_probability VALUES
 (10, 15),
 (11, 0.03),
 (12, 5),
-(13, 0.01);
+(13, 0.01),
+(14, 5);
 
 INSERT INTO region VALUES
 (1, 'Spawn', 'world', -128, 127, -128, 127, 0.1);

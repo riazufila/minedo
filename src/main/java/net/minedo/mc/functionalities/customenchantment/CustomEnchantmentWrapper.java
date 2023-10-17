@@ -88,7 +88,7 @@ public class CustomEnchantmentWrapper implements Listener {
         customEnchantmentHandlers.add(new ConfusionEnchantmentHandler());
         customEnchantmentHandlers.add(new DarknessEnchantmentHandler());
         customEnchantmentHandlers.add(new ExplosionEnchantmentHandler(this.playerSkillPoints));
-        customEnchantmentHandlers.add(new FireballEnchantmentHandler(this.playerSkillPoints));
+        customEnchantmentHandlers.add(new BlazeEnchantmentHandler(this.playerSkillPoints));
         customEnchantmentHandlers.add(new FireResistanceEnchantmentHandler());
         customEnchantmentHandlers.add(new GlowingEnchantmentHandler());
         customEnchantmentHandlers.add(new HarmEnchantmentHandler());
