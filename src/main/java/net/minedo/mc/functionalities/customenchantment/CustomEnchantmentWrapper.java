@@ -108,7 +108,7 @@ public class CustomEnchantmentWrapper implements Listener {
         customEnchantmentHandlers.add(new StrengthEnchantmentHandler());
         customEnchantmentHandlers.add(new WaterBreathingEnchantmentHandler());
         customEnchantmentHandlers.add(new WeaknessEnchantmentHandler());
-        customEnchantmentHandlers.add(new WitherEnchantmentHandler());
+        customEnchantmentHandlers.add(new WitherEnchantmentHandler(this.playerSkillPoints));
 
         for (CustomEnchantmentHandler customEnchantmentHandler : customEnchantmentHandlers) {
             if (customEnchantmentHandler instanceof Listener listener) {
