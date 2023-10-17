@@ -45,7 +45,9 @@ public class WitherEnchantmentHandler extends CustomEnchantmentHandler implement
 
     @EventHandler
     public void onHit(@NotNull EntityDamageByEntityEvent event) {
-        super.triggerPotionEffectsOnHit(event, PotionEffectType.WITHER, true);
+        Entity defender = event.getEntity();
+        Entity attacker = event.getDamager();
+        super.triggerPotionEffectsOnHit(defender, attacker, PotionEffectType.WITHER, true);
     }
 
     @EventHandler

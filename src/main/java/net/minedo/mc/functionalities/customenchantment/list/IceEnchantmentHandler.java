@@ -10,6 +10,7 @@ import net.minedo.mc.functionalities.utils.ShapeUtils;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -38,7 +39,9 @@ public class IceEnchantmentHandler extends CustomEnchantmentHandler implements L
 
     @EventHandler
     public void onHit(@NotNull EntityDamageByEntityEvent event) {
-        CombatEvent combatEvent = super.isAbleToInflictCustomEnchantmentOnHit(event);
+        Entity defender = event.getEntity();
+        Entity attacker = event.getDamager();
+        CombatEvent combatEvent = super.isAbleToInflictCustomEnchantmentOnHit(defender, attacker);
 
         if (combatEvent == null || combatEvent.getCustomEnchantment() == null) {
             return;

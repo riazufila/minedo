@@ -7,10 +7,10 @@ import net.minedo.mc.constants.customenchantment.type.CustomEnchantmentType;
 import net.minedo.mc.functionalities.skills.SkillUtils;
 import org.bukkit.Material;
 import org.bukkit.Tag;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
@@ -82,24 +82,27 @@ public abstract class CustomEnchantmentHandler extends SimpleCustomEnchantment {
     /**
      * Get combat data on hit
      *
-     * @param event event
+     * @param defendingEntity defending entity
+     * @param attackingEntity attacking entity
      * @return combat data on hit
      */
-    private @Nullable CombatEvent getCombatDataOnHit(@NotNull EntityDamageByEntityEvent event) {
-        if (!(event.getEntity() instanceof LivingEntity defendingEntity)) {
+    private @Nullable CombatEvent getCombatDataOnHit(
+            @NotNull Entity defendingEntity, @NotNull Entity attackingEntity
+    ) {
+        if (!(defendingEntity instanceof LivingEntity defendingLivingEntity)) {
             return null;
         }
 
-        if (!(event.getDamager() instanceof LivingEntity attackingEntity)) {
+        if (!(attackingEntity instanceof LivingEntity attackingLivingEntity)) {
             return null;
         }
 
 
-        if (attackingEntity.getEquipment() == null) {
+        if (attackingLivingEntity.getEquipment() == null) {
             return null;
         }
 
-        ItemStack itemInMainHand = attackingEntity.getEquipment().getItemInMainHand();
+        ItemStack itemInMainHand = attackingLivingEntity.getEquipment().getItemInMainHand();
         if (itemInMainHand.isEmpty()) {
             return null;
         }
@@ -109,23 +112,26 @@ public abstract class CustomEnchantmentHandler extends SimpleCustomEnchantment {
             return null;
         }
 
-        if (attackingEntity instanceof Player attackingPlayer) {
+        if (attackingLivingEntity instanceof Player attackingPlayer) {
             if (attackingPlayer.getAttackCooldown() != (float) Common.ATTACK_COOL_DOWN.getValue()) {
                 return null;
             }
         }
 
-        return new CombatEvent(itemInMainHand, attackingEntity, defendingEntity, null);
+        return new CombatEvent(itemInMainHand, attackingLivingEntity, defendingLivingEntity, null);
     }
 
     /**
      * Check whether player is able to inflict custom enchantment on hit.
      *
-     * @param event event
+     * @param defendingEntity defending entity
+     * @param attackingEntity attacking entity
      * @return whether player is able to inflict custom enchantment on hit
      */
-    public CombatEvent isAbleToInflictCustomEnchantmentOnHit(@NotNull EntityDamageByEntityEvent event) {
-        CombatEvent combatEvent = this.getCombatDataOnHit(event);
+    public CombatEvent isAbleToInflictCustomEnchantmentOnHit(
+            @NotNull Entity defendingEntity, @NotNull Entity attackingEntity
+    ) {
+        CombatEvent combatEvent = this.getCombatDataOnHit(defendingEntity, attackingEntity);
 
         if (combatEvent == null) {
             return null;
@@ -146,14 +152,18 @@ public abstract class CustomEnchantmentHandler extends SimpleCustomEnchantment {
     /**
      * Trigger potion effects on hit.
      *
-     * @param event            event
+     * @param defendingEntity  defending entity
+     * @param attackingEntity  attacking entity
      * @param potionEffectType potion effect type as in {@link PotionEffectType#values()}
      * @param isAmplified      whether potion effect can be amplified
      */
     public void triggerPotionEffectsOnHit(
-            @NotNull EntityDamageByEntityEvent event, @NotNull PotionEffectType potionEffectType, boolean isAmplified
+            @NotNull Entity defendingEntity,
+            @NotNull Entity attackingEntity,
+            @NotNull PotionEffectType potionEffectType,
+            boolean isAmplified
     ) {
-        CombatEvent combatEvent = this.isAbleToInflictCustomEnchantmentOnHit(event);
+        CombatEvent combatEvent = this.isAbleToInflictCustomEnchantmentOnHit(defendingEntity, attackingEntity);
 
         if (combatEvent == null || combatEvent.getCustomEnchantment() == null) {
             return;

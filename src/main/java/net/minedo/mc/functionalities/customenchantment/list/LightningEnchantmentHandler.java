@@ -9,6 +9,7 @@ import net.minedo.mc.functionalities.customenchantment.CombatEvent;
 import net.minedo.mc.functionalities.customenchantment.CustomEnchantmentHandler;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.LightningStrike;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -98,7 +99,9 @@ public class LightningEnchantmentHandler extends CustomEnchantmentHandler implem
 
     @EventHandler
     public void onHit(@NotNull EntityDamageByEntityEvent event) {
-        CombatEvent combatEvent = super.isAbleToInflictCustomEnchantmentOnHit(event);
+        Entity defender = event.getEntity();
+        Entity attacker = event.getDamager();
+        CombatEvent combatEvent = super.isAbleToInflictCustomEnchantmentOnHit(defender, attacker);
 
         if (combatEvent == null || combatEvent.getCustomEnchantment() == null) {
             return;

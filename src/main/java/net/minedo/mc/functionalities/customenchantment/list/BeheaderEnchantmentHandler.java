@@ -6,6 +6,7 @@ import net.minedo.mc.functionalities.customenchantment.CombatEvent;
 import net.minedo.mc.functionalities.customenchantment.CustomEnchantmentHandler;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -29,7 +30,9 @@ public class BeheaderEnchantmentHandler extends CustomEnchantmentHandler impleme
 
     @EventHandler
     public void onHit(@NotNull EntityDamageByEntityEvent event) {
-        CombatEvent combatEvent = super.isAbleToInflictCustomEnchantmentOnHit(event);
+        Entity defender = event.getEntity();
+        Entity attacker = event.getDamager();
+        CombatEvent combatEvent = super.isAbleToInflictCustomEnchantmentOnHit(defender, attacker);
 
         if (combatEvent == null || combatEvent.getCustomEnchantment() == null) {
             return;
