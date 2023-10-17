@@ -15,6 +15,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -57,8 +59,10 @@ public class IceEnchantmentHandler extends CustomEnchantmentHandler implements L
     @EventHandler
     public void onInteract(@NotNull PlayerNonBlockInteractEvent event) {
         Player player = event.getPlayer();
-        boolean isAbleToSkill = super.isPlayerAbleToSkill(event, player, this.playerSkillPoints);
+        EquipmentSlot equipmentSlot = event.getHand();
+        ItemStack itemUsed = event.getItem();
 
+        boolean isAbleToSkill = super.isPlayerAbleToSkill(player, equipmentSlot, itemUsed, this.playerSkillPoints);
         if (!isAbleToSkill) {
             return;
         }

@@ -4,7 +4,6 @@ import com.destroystokyo.paper.MaterialTags;
 import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent;
 import net.minedo.mc.constants.common.Common;
 import net.minedo.mc.constants.customenchantment.type.CustomEnchantmentType;
-import net.minedo.mc.customevents.PlayerNonBlockInteractEvent;
 import net.minedo.mc.functionalities.skills.SkillUtils;
 import org.bukkit.Material;
 import org.bukkit.Tag;
@@ -40,21 +39,22 @@ public abstract class CustomEnchantmentHandler extends SimpleCustomEnchantment {
     }
 
     /**
-     * Get item used for the skill.
+     * Get valid item used for the skill.
      *
-     * @param event event
-     * @return item used for the skill
+     * @param player        player
+     * @param equipmentSlot equipment slot
+     * @param itemUsed      item used
+     * @return valid item used for the skill
      */
-    private @Nullable ItemStack getValidItemForSkill(@NotNull PlayerNonBlockInteractEvent event) {
-        Player player = event.getPlayer();
+    private @Nullable ItemStack getValidItemForSkill(
+            @NotNull Player player, @Nullable EquipmentSlot equipmentSlot, @Nullable ItemStack itemUsed
+    ) {
         EntityEquipment equipment = player.getEquipment();
-        EquipmentSlot handUsed = event.getHand();
-        ItemStack itemUsed = event.getItem();
         ItemStack itemInOtherHand = null;
 
-        if (handUsed == EquipmentSlot.HAND) {
+        if (equipmentSlot == EquipmentSlot.HAND) {
             itemInOtherHand = equipment.getItemInOffHand();
-        } else if (handUsed == EquipmentSlot.OFF_HAND) {
+        } else if (equipmentSlot == EquipmentSlot.OFF_HAND) {
             itemInOtherHand = equipment.getItemInMainHand();
         }
 
@@ -252,15 +252,16 @@ public abstract class CustomEnchantmentHandler extends SimpleCustomEnchantment {
     /**
      * Get whether player is able to use skill.
      *
-     * @param event             event
      * @param player            player
+     * @param equipmentSlot     equipment slot
+     * @param itemUsed          item used
      * @param playerSkillPoints player skill points
      * @return whether player is able to use skill
      */
     public boolean isPlayerAbleToSkill(
-            PlayerNonBlockInteractEvent event, Player player, HashMap<UUID, Integer> playerSkillPoints
+            Player player, EquipmentSlot equipmentSlot, ItemStack itemUsed, HashMap<UUID, Integer> playerSkillPoints
     ) {
-        ItemStack item = this.getValidItemForSkill(event);
+        ItemStack item = this.getValidItemForSkill(player, equipmentSlot, itemUsed);
 
         if (item == null) {
             return false;

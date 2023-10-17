@@ -19,6 +19,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -134,14 +136,15 @@ public class ExplosionEnchantmentHandler extends CustomEnchantmentHandler implem
     @EventHandler
     public void onInteract(@NotNull PlayerNonBlockInteractEvent event) {
         Player player = event.getPlayer();
+        EquipmentSlot equipmentSlot = event.getHand();
+        ItemStack itemUsed = event.getItem();
         UUID playerUuid = player.getUniqueId();
 
         if (playersExploding.get(playerUuid) != null) {
             return;
         }
 
-        boolean isAbleToSkill = super.isPlayerAbleToSkill(event, player, this.playerSkillPoints);
-
+        boolean isAbleToSkill = super.isPlayerAbleToSkill(player, equipmentSlot, itemUsed, this.playerSkillPoints);
         if (!isAbleToSkill) {
             return;
         }
