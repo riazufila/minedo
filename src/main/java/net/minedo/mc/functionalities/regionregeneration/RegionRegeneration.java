@@ -33,7 +33,9 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.logging.Logger;
 
 /**
@@ -251,6 +253,32 @@ public class RegionRegeneration implements Listener {
     }
 
     /**
+     * Regenerate.
+     *
+     * @param blocks blocks
+     */
+    private void regenerate(@NotNull List<Block> blocks) {
+        List<Chunk> chunks = new ArrayList<>();
+
+        for (Block block : blocks) {
+            Chunk chunk = block.getChunk();
+
+            if (chunks.contains(chunk)) {
+                continue;
+            }
+
+            // Check if block destroyed is in region.
+            if (!this.region.isWithinRegion(block.getLocation())) {
+                return;
+            }
+
+            // Restore chunk.
+            this.restoreRegionChunk(chunk);
+            chunks.add(chunk);
+        }
+    }
+
+    /**
      * Get whether entity is allowed to be in region.
      *
      * @param entity      living entity
@@ -300,12 +328,12 @@ public class RegionRegeneration implements Listener {
 
     @EventHandler
     public void onEntityExplode(EntityExplodeEvent event) {
-        this.regenerate(event.getLocation().getBlock());
+        this.regenerate(event.blockList());
     }
 
     @EventHandler
     public void onBlockExplode(BlockExplodeEvent event) {
-        this.regenerate(event.getBlock());
+        this.regenerate(event.blockList());
     }
 
     @EventHandler
