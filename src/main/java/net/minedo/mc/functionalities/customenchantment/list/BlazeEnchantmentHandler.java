@@ -75,7 +75,7 @@ public class BlazeEnchantmentHandler extends CustomEnchantmentHandler implements
 
         final float EXPLOSION_POWER = 1.9f;
         Location hitLocation = hitEntity != null ? hitEntity.getLocation() : hitBlock.getLocation();
-        hitLocation.createExplosion(EXPLOSION_POWER);
+        hitLocation.createExplosion(EXPLOSION_POWER, true);
 
         this.launchedProjectiles.remove(projectileUuid);
     }

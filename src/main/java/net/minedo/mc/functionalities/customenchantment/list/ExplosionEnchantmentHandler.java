@@ -65,7 +65,7 @@ public class ExplosionEnchantmentHandler extends CustomEnchantmentHandler implem
                 Location location = player.getLocation().getBlock().getRelative(BlockFace.UP).getLocation();
 
                 if (player.isOnline() && countDown > delay) {
-                    location.createExplosion(EXPLOSION_POWER);
+                    location.createExplosion(EXPLOSION_POWER, true);
                     playersExploding.remove(player.getUniqueId());
 
                     this.cancel();
@@ -134,7 +134,7 @@ public class ExplosionEnchantmentHandler extends CustomEnchantmentHandler implem
         final float EXPLOSION_POWER = 1.0f;
         defendingEntity
                 .getLocation()
-                .createExplosion(EXPLOSION_POWER);
+                .createExplosion(EXPLOSION_POWER, true);
     }
 
     @EventHandler
