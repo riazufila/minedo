@@ -15,10 +15,8 @@ import com.sk89q.worldedit.session.ClipboardHolder;
 import net.minedo.mc.constants.common.Common;
 import net.minedo.mc.constants.feedbacksound.FeedbackSound;
 import net.minedo.mc.models.region.Region;
-import org.bukkit.Chunk;
-import org.bukkit.Location;
-import org.bukkit.Particle;
-import org.bukkit.World;
+import org.bukkit.*;
+import org.bukkit.block.Block;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
@@ -81,6 +79,31 @@ public class RegionRegenerationBuilder extends BukkitRunnable {
     }
 
     /**
+     * Get the lowest coordinate Y of a given coordinate X and Z.
+     *
+     * @param world       world
+     * @param coordinateX coordinate X
+     * @param coordinateZ coordinate Z
+     * @return the lowest coordinate Y of a given coordinate X and Z
+     */
+    private int getLowestBlockYAt(World world, int coordinateX, int coordinateZ) {
+        int minimumWorldHeight = world.getMinHeight();
+        int highestBlock = world.getHighestBlockYAt(coordinateX, coordinateZ);
+        int lowestBlock = minimumWorldHeight;
+
+        for (int coordinateY = minimumWorldHeight; coordinateY <= highestBlock; coordinateY++) {
+            Block block = world.getBlockAt(coordinateX, coordinateY, coordinateZ);
+
+            if (block.getType() != Material.AIR) {
+                lowestBlock = coordinateY;
+                break;
+            }
+        }
+
+        return lowestBlock;
+    }
+
+    /**
      * Play sound at center of chunk.
      *
      * @param chunk chunk
@@ -134,23 +157,39 @@ public class RegionRegenerationBuilder extends BukkitRunnable {
 
             BlockVector3 minimumPoint = clipboard.getMinimumPoint();
             BlockVector3 maximumPoint = clipboard.getMaximumPoint();
+            int minCoordinateX = minimumPoint.getX();
+            int maxCoordinateX = maximumPoint.getX();
+            int minCoordinateZ = minimumPoint.getZ();
+            int maxCoordinateZ = maximumPoint.getZ();
 
-            // Add particles to the top part of the chunk.
-            for (int x = minimumPoint.getX(); x <= maximumPoint.getX(); x++) {
-                for (int z = minimumPoint.getZ(); z <= maximumPoint.getZ(); z++) {
-                    int y = world.getHighestBlockYAt(x, z);
-                    // Spawn the particle effect
-                    world.spawnParticle(
-                            Particle.COMPOSTER,
-                            x,
-                            y,
-                            z,
-                            7,
-                            0.3,
-                            1.3,
-                            0.3,
-                            0
-                    );
+            // Add particles to the outlines of the chunk that is exposed.
+            for (int x = minCoordinateX; x <= maxCoordinateX; x++) {
+                for (int z = minCoordinateZ; z <= maxCoordinateZ; z++) {
+                    for (int y = minimumPoint.getY(); y <= maximumPoint.getY(); y++) {
+                        int highestBlock = world.getHighestBlockYAt(x, z);
+                        int lowestBlock = this.getLowestBlockYAt(world, x, z);
+                        boolean isOutline = ((x == minCoordinateX
+                                || x == maxCoordinateX
+                                || z == minCoordinateZ
+                                || z == maxCoordinateZ)
+                                && (y >= lowestBlock && y <= highestBlock))
+                                || y == lowestBlock
+                                || y == highestBlock;
+
+                        if (isOutline) {
+                            world.spawnParticle(
+                                    Particle.COMPOSTER,
+                                    x,
+                                    y,
+                                    z,
+                                    1,
+                                    1.5,
+                                    1.5,
+                                    1.5,
+                                    0
+                            );
+                        }
+                    }
                 }
             }
         } catch (IOException e) {
