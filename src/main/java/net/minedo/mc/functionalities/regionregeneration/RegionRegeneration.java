@@ -174,7 +174,7 @@ public class RegionRegeneration implements Listener {
 
         File file = RegionFileUtils.getFile(this.region, chunkX, chunkZ);
 
-        try (ClipboardWriter clipboardWriter = BuiltInClipboardFormat.SPONGE_SCHEMATIC.getWriter(
+        try (ClipboardWriter clipboardWriter = BuiltInClipboardFormat.FAST.getWriter(
                 new FileOutputStream(file)
         )) {
             clipboardWriter.write(blockArrayClipboard);
