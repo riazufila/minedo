@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public enum Directory {
 
-    SCHEMATIC("plugins/WorldEdit/schematics/");
+    SCHEMATIC("plugins/FastAsyncWorldEdit/schematics/");
 
     private final String path;
 
