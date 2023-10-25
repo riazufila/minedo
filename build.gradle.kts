@@ -9,16 +9,16 @@ version = "1.0.0"
 repositories {
     mavenCentral()
     maven("https://repo.papermc.io/repository/maven-public/")
-    maven("https://maven.enginehub.org/repo/")
 }
 
 dependencies {
     // Paper API.
-    compileOnly("io.papermc.paper:paper-api:1.20.1-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.20.2-R0.1-SNAPSHOT")
 
-    // WorldEdit API.
-    compileOnly("com.sk89q.worldedit:worldedit-core:7.2.9")
-    compileOnly("com.sk89q.worldedit:worldedit-bukkit:7.2.9")
+    // FAWE API.
+    implementation(platform("com.intellectualsites.bom:bom-newest:1.35"))
+    compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Core:2.8.1")
+    compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit:2.8.1") { isTransitive = false }
 
     // dotenv.
     implementation("io.github.cdimascio:dotenv-java:3.0.0")
